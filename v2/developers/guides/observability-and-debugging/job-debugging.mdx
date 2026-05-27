@@ -53,7 +53,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
     <TableRow>
       <TableCell>**401**</TableCell>
       <TableCell>Invalid, missing, or malformed API key</TableCell>
-      <TableCell>Check the `Authorization: Bearer <key>` header. No colon after Bearer. No whitespace in key value. Community gateway does not require a key.</TableCell>
+      <TableCell>Check the `Authorization: Bearer <key>` header. No colon after Bearer. No whitespace in key value. Community Gateway does not require a key.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**422**</TableCell>
@@ -62,17 +62,17 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
     </TableRow>
     <TableRow>
       <TableCell>**503**</TableCell>
-      <TableCell>Model is cold: being loaded by an orchestrator. Expected load time: 30 seconds to 5 minutes.</TableCell>
+      <TableCell>Model is cold: being loaded by an Orchestrator. Expected load time: 30 seconds to 5 minutes.</TableCell>
       <TableCell>Wait and retry with exponential backoff. This is expected behaviour, not a failure.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**429**</TableCell>
-      <TableCell>Rate limit exceeded on the gateway</TableCell>
+      <TableCell>Rate limit exceeded on the Gateway</TableCell>
       <TableCell>Back off and retry after the rate limit window resets.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**500**</TableCell>
-      <TableCell>Inference error on the orchestrator (model crash, OOM, or unexpected input)</TableCell>
+      <TableCell>Inference error on the Orchestrator (model crash, OOM, or unexpected input)</TableCell>
       <TableCell>Check the error body for detail. Retry once. If persistent, check model_id and input dimensions.</TableCell>
     </TableRow>
   </tbody>
@@ -82,7 +82,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 ## Cold model timeouts
 
-A model is "cold" when no orchestrator on the network has it loaded in GPU memory. The first request triggers a model load, which takes 30 seconds to 5 minutes depending on model size and GPU.
+A model is "cold" when no Orchestrator on the network has it loaded in GPU memory. The first request triggers a model load, which takes 30 seconds to 5 minutes depending on model size and GPU.
 
 A cold model returns a `503` or a long pending response. This is not an error in your code.
 
@@ -122,7 +122,7 @@ async function callWithRetry(fn: () => Promise<any>, maxRetries = 5): Promise<an
 
 When a request hangs with no response, check in this order:
 
-1. **Network connectivity** to the gateway:
+1. **Network connectivity** to the Gateway:
    ```bash icon="terminal"
    curl -I https://dream-gateway.livepeer.cloud/text-to-image
    # Expect: HTTP 405 (method not allowed on GET is correct)
@@ -137,9 +137,9 @@ When a request hangs with no response, check in this order:
 
 3. **Model availability**: use a known warm model to confirm the integration works, then switch to your target model.
 
-4. **Gateway availability**: if using a self-hosted or third-party gateway, confirm the gateway process is running and the HTTP port is reachable. For self-hosted gateways, check `livepeer_cli -status` and the TicketBroker deposit balance.
+4. **Gateway availability**: if using a self-hosted or third-party Gateway, confirm the Gateway process is running and the HTTP port is reachable. For self-hosted Gateways, check `livepeer_cli -status` and the TicketBroker deposit balance.
 
-5. **Orchestrator availability**: check `tools.livepeer.cloud/ai/network-capabilities` to confirm orchestrators are advertising the pipeline and model you need.
+5. **Orchestrator availability**: check `tools.livepeer.cloud/ai/network-capabilities` to confirm Orchestrators are advertising the pipeline and model you need.
 
 <CustomDivider />
 
@@ -187,6 +187,6 @@ If the above steps do not resolve the issue:
 
 - **Discord:** `#lounge` and `#ai-research` channels in the [Livepeer Discord](https://discord.gg/livepeer). Include your request body (redact API keys), the response status, and the response body.
 - **Forum:** [forum.livepeer.org](https://forum.livepeer.org) for in-depth debugging questions.
-- **GitHub:** File an issue against [livepeer/ai-runner](https://github.com/livepeer/ai-runner/issues) for AI failures or [livepeer/go-livepeer](https://github.com/livepeer/go-livepeer/issues) for video and node issues.
+- **GitHub:** File an issue against [Livepeer/ai-runner](https://github.com/livepeer/ai-runner/issues) for AI failures or [livepeer/go-livepeer](https://github.com/livepeer/go-livepeer/issues) for video and node issues.
 
 See [help](/v2/developers/guides/help) for the full channel reference.

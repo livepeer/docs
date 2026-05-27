@@ -28,7 +28,7 @@ lifecycleStage: setup
   <GatewayOffChainWarning />
   <Steps titleSize="h3">
     <Step title="Install Gateway Software">
- Pull the docker image from <Icon icon="arrow-up-right" color="var(--accent)" /> [Livepeer Docker Hub]("https://hub.docker.com/r/livepeer/go-livepeer")
+ Pull the Docker image from <Icon icon="arrow-up-right" color="var(--accent)" /> [Livepeer Docker Hub]("https://hub.docker.com/r/livepeer/go-livepeer")
       <CustomCodeBlock
         {...DOCKER_CODE.install}
         wrap
@@ -37,7 +37,7 @@ lifecycleStage: setup
     <Step title="Configure Gateway">
  <Badge color="blue">Video</Badge> {" "} <Badge color="purple">AI</Badge>
 
- Create the `docker-compose.yml` file that defines the <Badge color="green">dual</Badge> gateway service.
+ Create the `docker-compose.yml` file that defines the <Badge color="green">dual</Badge> Gateway service.
 
       <OrchAddrNote />
 
@@ -92,7 +92,7 @@ lifecycleStage: setup
       <Tabs>
         <Tab title="Video" icon="camera-movie">
  {/* You need a test video file (test-video.mp4) in your current directory to use the command */}
- Send a video stream to the gateway:
+ Send a video stream to the Gateway:
           <TestVideoDownload>
             <DownloadButton
               label="test-video.mp4"
@@ -111,12 +111,12 @@ lifecycleStage: setup
             wrap
             />
  Tips:
-              - Replace localhost with your gateway's IP if running remotely
+              - Replace localhost with your Gateway's IP if running remotely
               - The stream name (test) becomes part of the HLS playback URL
         </Tab>
         <Tab title="AI" icon="user-robot">
- To test AI functionality in Livepeer, you can make HTTP requests to the AI endpoints exposed by your gateway.
- The gateway routes these requests to orchestrators with AI workers for processing.
+ To test AI functionality in Livepeer, you can make HTTP requests to the AI endpoints exposed by your Gateway.
+ The Gateway routes these requests to Orchestrators with AI workers for processing.
 
           <CustomCodeBlock
             {...BASH_CODE.testHTTPingest}
@@ -180,7 +180,7 @@ lifecycleStage: setup
         - Stream metrics (created, started, ended)
         - Transcoding metrics (success rate, latency)
         - Payment metrics (tickets sent, deposits)
-        - AI-specific metrics (attempts, orchestrators available)
+        - AI-specific metrics (attempts, Orchestrators available)
 
  *See More Metrics Options Below:*
         <Accordion title="Prometheus Metrics" icon="monitor-waveform">
@@ -201,12 +201,12 @@ lifecycleStage: setup
         <Accordion title="CLI Monitoring Commands" icon="terminal">
  *CLI Monitoring Commands*
 
- Check gateway status:
+ Check Gateway status:
         ```bash
         curl http://localhost:5935/status
         ```
 
- Monitor available orchestrators:
+ Monitor available Orchestrators:
         ```bash
         curl http://localhost:5935/getOrchestrators
         ```
@@ -236,7 +236,7 @@ lifecycleStage: setup
         <Accordion title="AI-Specific Monitoring" icon="user-robot">
  *AI-Specific Monitoring*
 
- For AI workflows, the gateway sends detailed events including:
+ For AI workflows, the Gateway sends detailed events including:
         - Stream request events
         - Orchestrator selection info
         - Ingest metrics
@@ -290,7 +290,7 @@ lifecycleStage: setup
  {/* The -orchAddr flag is required and must point to a running orchestrator */}
  {/* For production use, consider adding authentication via -authWebhookUrl flags.go:136 */}
 
- Useful [CLI Commands](/v2/gateways/resources/reference/technical/cli-commands) <Icon icon="arrow-up-right" />
+ Useful [CLI Commands](/v2/Gateways/resources/reference/technical/cli-commands) <Icon icon="arrow-up-right" />
       <CustomCodeBlock
         {...CLI_CODE.cliOptions}
       />

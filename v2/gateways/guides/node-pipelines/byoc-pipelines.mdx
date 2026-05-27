@@ -44,12 +44,12 @@ import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-BYOC (Bring Your Own Container) extends what AI (and other) workloads a gateway can route by allowing orchestrators to run custom Docker inference containers and advertise them as capabilities.
+BYOC (Bring Your Own Container) extends what AI (and other) workloads a Gateway can route by allowing Orchestrators to run custom Docker inference containers and advertise them as capabilities.
 
-BYOC is a routing and policy concern, not a model hosting concern. Gateways configure how requests reach BYOC-capable orchestrators; the orchestrators handle everything inside the container.
+BYOC is a routing and policy concern, not a model hosting concern. Gateways configure how requests reach BYOC-capable Orchestrators; the Orchestrators handle everything inside the container.
 
 <Note>
-  the gateway operator perspective on BYOC. For the orchestrator and developer side - building containers, registering capabilities, and deploying inference servers - see the <LinkArrow href="/v2/developers/build/byoc" label="Developer BYOC guide" newline={false} />.
+  the Gateway operator perspective on BYOC. For the Orchestrator and developer side - building containers, registering capabilities, and deploying inference servers - see the <LinkArrow href="/v2/developers/build/byoc" label="Developer BYOC guide" newline={false} />.
 </Note>
 
 <CustomDivider style={{margin: "0 0 -2rem 0"}} />
@@ -59,7 +59,7 @@ BYOC is a routing and policy concern, not a model hosting concern. Gateways conf
 
 ## BYOC Routing
 
-BYOC orchestrators advertise custom capabilities using the same protocol as standard AI orchestrators. The difference is that instead of running a managed `ai-runner` container for a known pipeline (such as `text-to-image`), they run a custom Docker container that exposes any inference API they choose.
+BYOC Orchestrators advertise custom capabilities using the same protocol as standard AI Orchestrators. The difference is that instead of running a managed `ai-runner` container for a known pipeline (such as `text-to-image`), they run a custom Docker container that exposes any inference API they choose.
 
 Gateway routes to them using the same `-orchAddr` flag and the same `AISessionManager` used for standard AI pipelines. The distinction is in how you think about the routing contract.
 
@@ -85,25 +85,25 @@ flowchart LR
 
 <CardGroup cols={2}>
   <Card title="What you do" icon="check">
-    Route requests by capability and service policy. Monitor per-capability health and error rates. Configure retry policy for BYOC-specific failure modes (cold starts, model loading). Set price ceilings per capability. Maintain failover to alternative orchestrators when a BYOC node degrades.
+    Route requests by capability and service policy. Monitor per-capability health and error rates. Configure retry policy for BYOC-specific failure modes (cold starts, model loading). Set price ceilings per capability. Maintain failover to alternative Orchestrators when a BYOC node degrades.
   </Card>
   <Card title="What you don't do" icon="xmark">
-    Run model containers. Host model weights. Expose orchestrator-internal model identifiers as public API contracts. Manage GPU allocation. Control what runs inside the BYOC container.
+    Run model containers. Host model weights. Expose Orchestrator-internal model identifiers as public API contracts. Manage GPU allocation. Control what runs inside the BYOC container.
   </Card>
 </CardGroup>
 
 <Note>
-    Prioritise real-time, GPU-bound, frame-based capabilities when selecting BYOC orchestrators to connect to. <br/> <br/>
-    Poor-fit batch workloads (large LLMs, multi-minute jobs, stateful pipelines) behind BYOC will degrade routing quality and increase latency for all jobs on the same orchestrator.
+    Prioritise real-time, GPU-bound, frame-based capabilities when selecting BYOC Orchestrators to connect to. <br/> <br/>
+    Poor-fit batch workloads (large LLMs, multi-minute jobs, stateful pipelines) behind BYOC will degrade routing quality and increase latency for all jobs on the same Orchestrator.
 </Note>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
 ## Capability Contracts
 
-BYOC routing treats capabilities as stable API contracts, not model names. Orchestrators advertise capability descriptors (`image-to-image`, `depth`, `segmentation`, `style-transfer`). Your gateway routes on the capability - the orchestrator decides which model or container implementation serves it.
+BYOC routing treats capabilities as stable API contracts, not model names. Orchestrators advertise capability descriptors (`image-to-image`, `depth`, `segmentation`, `style-transfer`). Your Gateway routes on the capability - the Orchestrator decides which model or container implementation serves it.
 
-This means orchestrators can update models without breaking your routing, multiple orchestrators can compete to serve the same capability, and performance-based routing automatically favours faster or cheaper implementations.
+This means Orchestrators can update models without breaking your routing, multiple Orchestrators can compete to serve the same capability, and performance-based routing automatically favours faster or cheaper implementations.
 
 <Note> **Anti-pattern:** Coupling your routing to model names. If you are making routing decisions based on `SG161222/RealVisXL_V4.0_Lightning` instead of `image-to-image`, you are working against the architecture. </Note>
 
@@ -115,7 +115,7 @@ BYOC capabilities on the network fall into broad latency profiles. Understanding
 
 <AccordionGroup>
   <Accordion title="Low-latency capabilities" icon="bolt">
-    Capabilities like `style-transfer`, `image-to-image`, and `video-to-video` where orchestrators keep models warm with persistent GPU residency. Expect sub-second latency per frame.
+    Capabilities like `style-transfer`, `image-to-image`, and `video-to-video` where Orchestrators keep models warm with persistent GPU residency. Expect sub-second latency per frame.
 
     **Routing guidance:** low retry timeout (5-10s), stable latency - high variance indicates GPU contention. Low price ceiling acceptable.
   </Accordion>
@@ -145,16 +145,16 @@ These constraints apply to BYOC containers on the network. Gateway operators enf
 
 <AccordionGroup>
   <Accordion title="Stateless execution" icon="database">
-    The network assumes short, repeatable, stateless units of work. BYOC containers that maintain long-lived state between requests break retry and failover semantics. If a request fails and the gateway retries on a different orchestrator, a stateful container will produce inconsistent results.
+    The network assumes short, repeatable, stateless units of work. BYOC containers that maintain long-lived state between requests break retry and failover semantics. If a request fails and the Gateway retries on a different Orchestrator, a stateful container will produce inconsistent results.
   </Accordion>
   <Accordion title="Cold start under 10s" icon="snowflake">
-    Containers that take more than 10 seconds to serve their first inference will be deprioritised by gateways tracking per-orchestrator latency. Prefer orchestrators that keep models warm. When evaluating a new BYOC orchestrator, send a test request and measure cold-start latency before committing to high-traffic routing.
+    Containers that take more than 10 seconds to serve their first inference will be deprioritised by Gateways tracking per-Orchestrator latency. Prefer Orchestrators that keep models warm. When evaluating a new BYOC Orchestrator, send a test request and measure cold-start latency before committing to high-traffic routing.
   </Accordion>
   <Accordion title="VRAM efficiency" icon="memory">
-    Containers that use excessive VRAM reduce the orchestrator's ability to serve concurrent jobs. For real-time pipelines, prefer fp16 or quantised models - they use less VRAM with minimal quality loss.
+    Containers that use excessive VRAM reduce the Orchestrator's ability to serve concurrent jobs. For real-time pipelines, prefer fp16 or quantised models - they use less VRAM with minimal quality loss.
   </Accordion>
   <Accordion title="Capability accuracy" icon="check">
-    The capability descriptor advertised must match what the container can actually serve. Mismatches cause routing failures and degrade the orchestrator's reputation score.
+    The capability descriptor advertised must match what the container can actually serve. Mismatches cause routing failures and degrade the Orchestrator's reputation score.
   </Accordion>
   <Accordion title="Livepeer AI worker API" icon="code">
     The container must expose an HTTP endpoint implementing the Livepeer AI worker API. See the <LinkArrow href="/v2/developers/build/byoc" label="Developer BYOC guide" newline={false} /> for the full API contract and container requirements.
@@ -168,7 +168,7 @@ These constraints apply to BYOC containers on the network. Gateway operators enf
 
 ## Health Tracking
 
-BYOC routing requires per-capability health tracking instead of per-orchestrator tracking. An orchestrator may serve `image-to-image` perfectly while its `depth` capability is degraded. Track them independently.
+BYOC routing requires per-capability health tracking instead of per-Orchestrator tracking. An Orchestrator may serve `image-to-image` perfectly while its `depth` capability is degraded. Track them independently.
 
 BYOC containers may have longer cold-start times than standard `ai-runner` pipelines. See <LinkArrow href="/v2/gateways/guides/node-pipelines/pipeline-configuration" label="Pipeline Configuration" newline={false} /> for retry timeout settings (`-aiProcessingRetryTimeout`).
 
@@ -176,10 +176,10 @@ BYOC containers may have longer cold-start times than standard `ai-runner` pipel
 
 - Cold-start delays: container loading model from disk for the first time
 - GPU out-of-memory: container allocated too much VRAM, evicting other models
-- Container crash: Docker container exited, orchestrator not yet restarting it
+- Container crash: Docker container exited, Orchestrator not yet restarting it
 - API mismatch: container endpoint returns unexpected schema
 
-For each failure mode, the `AISessionManager` will attempt to route to an alternative orchestrator. If no alternative is available, the request fails with an error returned to the client.
+For each failure mode, the `AISessionManager` will attempt to route to an alternative Orchestrator. If no alternative is available, the request fails with an error returned to the client.
 
 {/* ============================================================
     8. CAPABILITY DISCOVERY
@@ -189,7 +189,7 @@ For each failure mode, the `AISessionManager` will attempt to route to an altern
 
 BYOC capability discovery uses the same mechanisms as standard AI discovery. See <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines#orchestrator-discovery" label="AI Pipelines - Orchestrator Discovery" newline={false} /> and <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines#finding-ai-models" label="AI Pipelines - Finding AI Models" newline={false} /> for the full list of discovery methods and tools.
 
-When you identify a BYOC-capable orchestrator, add them to your `-orchAddr` list. The `AISessionManager` will route BYOC requests to them when their advertised capability matches the request.
+When you identify a BYOC-capable Orchestrator, add them to your `-orchAddr` list. The `AISessionManager` will route BYOC requests to them when their advertised capability matches the request.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -200,7 +200,7 @@ When you identify a BYOC-capable orchestrator, add them to your `-orchAddr` list
     Pipeline taxonomy - video, batch AI, real-time AI, and BYOC.
   </Card>
   <Card title="AI Pipelines" icon="brain" href="/v2/gateways/guides/node-pipelines/ai-pipelines">
-    Standard AI pipeline routing, orchestrator discovery, and AISessionManager details.
+    Standard AI pipeline routing, Orchestrator discovery, and AISessionManager details.
   </Card>
   <Card title="Pipeline Configuration" icon="sliders" href="/v2/gateways/guides/node-pipelines/pipeline-configuration">
     Retry timeouts, AI routing flags, and per-capability price ceiling configuration.

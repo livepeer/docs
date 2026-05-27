@@ -68,8 +68,8 @@ import { CenteredContainer, BorderedBox } from "/snippets/components/wrappers/co
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-A **Payment Clearinghouse** is a third-party service that takes over all Ethereum-related responsibilities from gateway operators and application developers.
-Instead of managing ETH, private keys, and PM internals, the operator registers with a clearinghouse, receives an API key, and routes gateway traffic through it.
+A **Payment Clearinghouse** is a third-party service that takes over all Ethereum-related responsibilities from Gateway operators and application developers.
+Instead of managing ETH, private keys, and PM internals, the operator registers with a clearinghouse, receives an API key, and routes Gateway traffic through it.
 The clearinghouse handles ETH custody, PM signing, Orchestrator settlement, and billing.
 
 A Payment Clearinghouse is an abstraction implementation of a <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="remote signer" newline={false} /> with additional commercial services including:
@@ -82,7 +82,7 @@ A Payment Clearinghouse is an abstraction implementation of a <LinkArrow href="/
 
 ## Architecture
 
-A clearinghouse sits between application developers and the Livepeer network. From the developer's perspective it looks like a traditional API provider.
+A clearinghouse sits between application developers and the Livepeer Network. From the developer's perspective it looks like a traditional API provider.
 From the network's perspective it looks like a Gateway using remote signers.
 
 ``` icon="terminal"
@@ -171,7 +171,7 @@ The intended developer experience is designed to abstract pain points:
   </StyledStep>
 
   <StyledStep title="Configure the gateway or SDK">
-    Point the `go-livepeer` gateway at the clearinghouse signer address:
+    Point the `go-livepeer` Gateway at the clearinghouse signer address:
 
     ```bash icon="terminal"
     livepeer \
@@ -182,7 +182,7 @@ The intended developer experience is designed to abstract pain points:
       ...
     ```
 
-    Or, if the clearinghouse provides a full gateway-as-service endpoint, configure the Livepeer SDK with the API key directly:
+    Or, if the clearinghouse provides a full Gateway-as-service endpoint, configure the Livepeer SDK with the API key directly:
 
     ```python icon="terminal"
     # Livepeer Python SDK example (conceptual)
@@ -192,7 +192,7 @@ The intended developer experience is designed to abstract pain points:
 </StyledStep>
 
   <StyledStep title="Route jobs and monitor usage">
-    Submit jobs through the gateway as normal. The clearinghouse handles all PM mechanics. Usage reports come from the clearinghouse, billed in its chosen currency: fiat, stablecoins, or internal credits.
+    Submit jobs through the Gateway as normal. The clearinghouse handles all PM mechanics. Usage reports come from the clearinghouse, billed in its chosen currency: fiat, stablecoins, or internal credits.
 
     Orchestrators are paid from the clearinghouse's ETH pool and settle on-chain without any action from the Gateway operator.
   </StyledStep>
@@ -202,7 +202,7 @@ The intended developer experience is designed to abstract pain points:
 
 ## Building A Clearinghouse
 
-For operators building gateway-as-a-service infrastructure (a "Provider" or NaaP operator), the minimum components are:
+For operators building Gateway-as-a-service infrastructure (a "Provider" or NaaP operator), the minimum components are:
 
 <StyledTable>
   <TableRow header>
@@ -249,7 +249,7 @@ For the NaaP <Badge color="surface-destructive">Design Stage Only!</Badge> (Netw
 While a fully productionised public clearinghouse matures, the following access points exist:
 
 **Community remote signer (testing):** `https://signer.eliteencoder.net/` - hosted by Elite Encoder, free ETH for testing. Uses SIWE auth and per-user JWT tokens. Not for production without understanding custody implications.
-**Livepeer Tools:** [tools.livepeer.cloud](https://tools.livepeer.cloud) - the current community tool suite for network monitoring and Gateway observability. Not a clearinghouse, but a useful surface for understanding network state.
+**Livepeer Tools:** [tools.Livepeer.cloud](https://tools.livepeer.cloud) - the current community tool suite for network monitoring and Gateway observability. Not a clearinghouse, but a useful surface for understanding network state.
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
 ## Operator Choice Matrix
@@ -284,7 +284,7 @@ Reference to help guide Gateway Operator decisions on using a Clearinghouse.
     Decision guide for choosing between self-managed, remote signer, and clearinghouse.
   </Card>
   <Card title="NaaP Multi-Tenancy" icon="users" href="/v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy">
-    <Badge color="surface-destructive">Design Stage Only!</Badge> <br/> Network as a Platform architecture for multi-tenant gateway operation.
+    <Badge color="surface-destructive">Design Stage Only!</Badge> <br/> Network as a Platform architecture for multi-tenant Gateway operation.
   </Card>
   <Card title="go-livepeer PR #3822" icon="github" href="https://github.com/livepeer/go-livepeer/pull/3822">
     Implementation PR for remote signer and clearinghouse protocol support.

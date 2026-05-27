@@ -35,50 +35,50 @@ purpose: concept
 */}
 
 Livepeer uses both its native token - LPT, and Ethereum (ETH) to power its network and compensate actors for their contributions.
-The Livepeer protocol uses a dynamic inflation rate and stake-for-access model to ensure the network's security and functionality.
+The Livepeer Protocol uses a dynamic inflation rate and stake-for-access model to ensure the network's security and functionality.
 
-We'll cover the LPT tokenomics and why delegating to orchestrators remains important even as inflation tapers off.
+We'll cover the LPT tokenomics and why delegating to Orchestrators remains important even as inflation tapers off.
 
 ## Money Flow: LPT Token Economics
 
 ### 1. **Staking Flow (Delegators → Orchestrators)**
 
 **Step 1: Token Approval**
-Before bonding, delegators must approve the BondingManager to transfer their LPT tokens.
+Before bonding, Delegators must approve the BondingManager to transfer their LPT tokens.
 
 **Step 2: Bonding**
 Delegators call `Bond(amount, orchestratorAddress)` which:
-- Transfers LPT from delegator to BondingManager
-- Updates orchestrator's delegated stake
+- Transfers LPT from Delegator to BondingManager
+- Updates Orchestrator's delegated stake
 - Calculates pool position hints for gas optimisation
 - Updates the transcoder pool sorted by stake
 
 **Step 3: Orchestrator Registration**
-To become an orchestrator, a node must:
+To become an Orchestrator, a node must:
 - First bond LPT to itself
 - Call `Transcoder(rewardCut, feeShare)` with commission parameters
 - Register service URI via `SetServiceURI()`
 
-The transcoder pool maintains orchestrators sorted by delegated stake as a linked list, with hints optimising insertions.
+The transcoder pool maintains Orchestrators sorted by delegated stake as a linked list, with hints optimising insertions.
 
 ### 2. **Reward Flow (Minter → Orchestrators → Delegators)**
 
-Each round, active orchestrators can call `Reward()` to mint inflationary tokens:
+Each round, active Orchestrators can call `Reward()` to mint inflationary tokens:
 
 **Reward Calculation Process**:
 1. Orchestrator calls `Reward()` on BondingManager
 2. BondingManager queries `CurrentMintableTokens()` from Minter
 3. Minter calculates: `mintable = inflation * totalSupply / bonded`
-4. Reward distributed proportionally to orchestrator's stake
+4. Reward distributed proportionally to Orchestrator's stake
 5. Orchestrator keeps their commission (rewardCut)
-6. Remaining rewards distributed to delegators proportionally
+6. Remaining rewards distributed to Delegators proportionally
 
 **Claiming Earnings**:
 Delegators must call `ClaimEarnings(endRound)` to realise their accumulated rewards and fees from past rounds.
 
 ### 3. **Payment Flow (Broadcasters → Orchestrators)**
 
-The payment system uses probabilistic micropayments to minimise on-chain transactions:
+The payment system uses Probabilistic Micropayments to minimise on-chain transactions:
 
 **Step 1: Broadcaster Deposits**
 Broadcasters fund their account via `FundDepositAndReserve()`:
@@ -88,7 +88,7 @@ Broadcasters fund their account via `FundDepositAndReserve()`:
 **Step 2: Off-Chain Ticket Creation**
 For each video segment processed:
 - Broadcaster creates a signed ticket with faceValue and winProb
-- Ticket sent off-chain to orchestrator via HTTP headers
+- Ticket sent off-chain to Orchestrator via HTTP headers
 - Most tickets don't win (e.g., 1% win probability)
 
 **Step 3: Ticket Validation & Queuing**
@@ -102,7 +102,7 @@ Orchestrator validates ticket:
 When sufficient funds available:
 - Orchestrator calls `RedeemWinningTicket(ticket, sig, recipientRand)`
 - TicketBroker validates ticket against on-chain state
-- Transfers `faceValue` from broadcaster's reserve to orchestrator
+- Transfers `faceValue` from broadcaster's reserve to Orchestrator
 - Updates `claimedReserve` in BondingManager
 
 This achieves ~99% cost reduction vs. Per-segment on-chain payments while maintaining fair compensation through probabilistic expected value.
@@ -110,9 +110,9 @@ This achieves ~99% cost reduction vs. Per-segment on-chain payments while mainta
 ### 4. **Fee Flow (Broadcasters → Orchestrators → Delegators)**
 
 Orchestrators earn fees from ticket redemptions:
-- Fees accumulate in orchestrator's earnings pool
+- Fees accumulate in Orchestrator's earnings pool
 - Orchestrator keeps their commission (feeShare)
-- Remaining fees distributed to delegators
+- Remaining fees distributed to Delegators
 - Delegators claim via `ClaimEarnings()`
 
 ### 5. **Withdrawal Flows**
@@ -157,7 +157,7 @@ The client implements sophisticated gas price management, using 2x base fee with
 
 This creates a circular economy where:
 - Staking secures the network and earns inflation rewards
-- Active orchestrators earn fees from broadcasters
+- Active Orchestrators earn fees from broadcasters
 - Delegators participate in rewards without running infrastructure
 - Probabilistic payments enable cost-efficient micropayments
 - All flows tracked on-chain with minimal gas overhead

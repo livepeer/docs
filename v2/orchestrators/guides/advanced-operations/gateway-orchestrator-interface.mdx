@@ -35,14 +35,14 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Tip>
-  The most common combined deployment is an off-chain gateway routing to a dedicated on-chain orchestrator. The gateway handles inbound client traffic; the orchestrator handles on-chain protocol participation. Running both roles on one machine is supported but requires deliberate port separation.
+  The most common combined deployment is an off-chain Gateway routing to a dedicated on-chain Orchestrator. The Gateway handles inbound client traffic; the Orchestrator handles on-chain protocol participation. Running both roles on one machine is supported but requires deliberate port separation.
 </Tip>
 
 ---
 
-Run both a gateway and an orchestrator when you need control over client traffic, routing, and workload execution end to end. The deployment patterns, port separation, self-routing choices, and price alignment rules that matter when one operator owns both roles.
+Run both a Gateway and an Orchestrator when you need control over client traffic, routing, and workload execution end to end. The deployment patterns, port separation, self-routing choices, and price alignment rules that matter when one operator owns both roles.
 
-For detailed gateway setup, see the <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} /> guide. For orchestrator setup, start with the <LinkArrow href="/v2/orchestrators/setup/guide" label="Orchestrator Setup Guide" newline={false} />.
+For detailed Gateway setup, see the <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} /> guide. For Orchestrator setup, start with the <LinkArrow href="/v2/orchestrators/setup/guide" label="Orchestrator Setup Guide" newline={false} />.
 
 <CustomDivider />
 
@@ -53,25 +53,25 @@ Three deployment patterns cover most use cases:
 <BorderedBox variant="accent">
   <Tabs>
     <Tab title="Off-chain gateway + on-chain orchestrator" icon="cloud">
-      **The most common pattern.** The gateway runs without on-chain participation – it holds no ETH, no keystore, and connects to your orchestrator directly via `-orchAddr`. The orchestrator runs with full on-chain registration and stake.
+      **The most common pattern.** The Gateway runs without on-chain participation – it holds no ETH, no keystore, and connects to your Orchestrator directly via `-orchAddr`. The Orchestrator runs with full on-chain registration and stake.
 
-      The gateway routes jobs to the orchestrator via direct address specification, bypassing protocol discovery. Payment is handled by a remote signer or clearinghouse connected to the gateway.
+      The Gateway routes jobs to the Orchestrator via direct address specification, bypassing protocol discovery. Payment is handled by a remote signer or clearinghouse connected to the Gateway.
 
-      This pattern suits operators who want gateway capability without managing ETH deposits in the gateway process itself. The orchestrator handles all on-chain protocol activity.
+      This pattern suits operators who want Gateway capability without managing ETH deposits in the Gateway process itself. The Orchestrator handles all on-chain protocol activity.
 
       **Port layout:** Gateway on `:7935` (HTTP) and `:7935` (RTMP). Orchestrator on `:8935` (serviceAddr). No port conflict.
     </Tab>
     <Tab title="Same machine (combined)" icon="server">
-      Both gateway and orchestrator processes run on one machine. Each runs as a separate go-livepeer process with different flags and different ports.
+      Both Gateway and Orchestrator processes run on one machine. Each runs as a separate go-livepeer process with different flags and different ports.
 
-      This pattern suits operators with a single high-capacity machine who want to eliminate network latency between gateway and orchestrator. Combined with an AI worker, this is the densest configuration possible for a single node.
+      This pattern suits operators with a single high-capacity machine who want to eliminate network latency between Gateway and Orchestrator. Combined with an AI worker, this is the densest configuration possible for a single node.
 
       **Port conflict risk is high on same-machine deployments.** Assign distinct ports to each role. See port allocation below.
     </Tab>
     <Tab title="Separate machines" icon="network-wired">
-      Gateway and orchestrator run on separate machines connected over the network. The gateway is configured with `-orchAddr <orchestrator-ip>:8935` for an off-chain gateway, or discovers the orchestrator via on-chain registration if running on-chain.
+      Gateway and Orchestrator run on separate machines connected over the network. The Gateway is configured with `-orchAddr <orchestrator-ip>:8935` for an off-chain Gateway, or discovers the Orchestrator via on-chain registration if running on-chain.
 
-      This pattern is appropriate at scale. A gateway that faces external traffic scales independently from orchestrator registration and staking.
+      This pattern is appropriate at scale. A Gateway that faces external traffic scales independently from Orchestrator registration and staking.
     </Tab>
   </Tabs>
 </BorderedBox>
@@ -108,7 +108,7 @@ The two roles use different network interfaces and ports. On a single machine, a
       <TableCell>Orchestrator</TableCell>
       <TableCell>`-serviceAddr`</TableCell>
       <TableCell>`:8935`</TableCell>
-      <TableCell>Public address gateways connect to for job execution</TableCell>
+      <TableCell>Public address Gateways connect to for job execution</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>Orchestrator</TableCell>
@@ -119,7 +119,7 @@ The two roles use different network interfaces and ports. On a single machine, a
   </tbody>
 </StyledTable>
 
-The default gateway and orchestrator ports stay separate on the same machine. Verify no other process is bound to them before starting both roles:
+The default Gateway and Orchestrator ports stay separate on the same machine. Verify no other process is bound to them before starting both roles:
 
 ```bash icon="terminal" title="Check gateway and orchestrator ports"
 ss -tlnp | grep -E ':7935|:8935|:1935|:7936'
@@ -131,33 +131,33 @@ ss -tlnp | grep -E ':7935|:8935|:1935|:7936'
 
 ## Self-routing
 
-Self-routing is when a gateway you control routes jobs to an orchestrator you also control.
+Self-routing is when a Gateway you control routes jobs to an Orchestrator you also control.
 
-**Off-chain gateway to own orchestrator:** Configure the gateway with `-orchAddr <your-orchestrator-ip>:8935`. The gateway routes all jobs to the specified address. This is explicit self-routing – the gateway sends all work to your orchestrator.
+**Off-chain Gateway to own Orchestrator:** Configure the Gateway with `-orchAddr <your-orchestrator-ip>:8935`. The Gateway routes all jobs to the specified address. This is explicit self-routing – the Gateway sends all work to your Orchestrator.
 
-**On-chain gateway discovering own orchestrator:** If both your gateway and orchestrator are on-chain, the gateway discovers your orchestrator through the normal protocol selection process, alongside all other active orchestrators. Your orchestrator competes on price and stake like any other.
+**On-chain Gateway discovering own Orchestrator:** If both your Gateway and Orchestrator are on-chain, the Gateway discovers your Orchestrator through the normal protocol selection process, alongside all other active Orchestrators. Your Orchestrator competes on price and stake like any other.
 
 Self-routing via explicit `-orchAddr` is appropriate when:
 - Testing AI inference quality before serving jobs to clients
 - Running a dedicated internal service (e.g. Transcoding your own content)
 - You want guaranteed routing to your own infrastructure without depending on protocol selection
 
-Self-routing through on-chain discovery remains competitive. Your orchestrator still has to win on price, stake, and performance to receive the job. Use an off-chain gateway with direct `-orchAddr` when routing must stay dedicated.
+Self-routing through on-chain discovery remains competitive. Your Orchestrator still has to win on price, stake, and performance to receive the job. Use an off-chain Gateway with direct `-orchAddr` when routing must stay dedicated.
 
-**Pricing alignment:** The gateway's `-maxPricePerUnit` (or `-maxPricePerCapability` for AI) must be at or above the orchestrator's `-pricePerUnit` (or `price_per_unit` in `aiModels.json`). A gateway with a cap below the orchestrator's advertised price will fail to route any jobs to it.
+**Pricing alignment:** The Gateway's `-maxPricePerUnit` (or `-maxPricePerCapability` for AI) must be at or above the Orchestrator's `-pricePerUnit` (or `price_per_unit` in `aiModels.json`). A Gateway with a cap below the Orchestrator's advertised price will fail to route any jobs to it.
 
 <CustomDivider />
 
 ## Pricing alignment
 
-When you control both gateway and orchestrator, configure the gateway's caps relative to the orchestrator's advertised prices:
+When you control both Gateway and Orchestrator, configure the Gateway's caps relative to the Orchestrator's advertised prices:
 
 ```text icon="terminal" title="Price cap alignment rule"
 gateway -maxPricePerUnit  ≥  orchestrator -pricePerUnit
 gateway -maxPricePerCapability  ≥  orchestrator aiModels.json price_per_unit (per pipeline)
 ```
 
-A gateway cap exactly equal to the orchestrator price is sufficient for self-routing but leaves no margin for `autoAdjustPrice` adjustments (which increase the advertised price during gas spikes). Set the gateway cap 20 to 30% above the orchestrator base price to prevent job failures during gas price increases.
+A Gateway cap exactly equal to the Orchestrator price is sufficient for self-routing but leaves no margin for `autoAdjustPrice` adjustments (which increase the advertised price during gas spikes). Set the Gateway cap 20 to 30% above the Orchestrator base price to prevent job failures during gas price increases.
 
 Example video pricing alignment:
 
@@ -183,7 +183,7 @@ Each role produces its own Prometheus metrics. On a single machine, ensure both 
 
 **Gateway metrics to watch:**
 - `livepeer_broadcaster_sessions_total` – active inbound sessions
-- `livepeer_broadcaster_upload_errors` – upload failures (may indicate orchestrator issues)
+- `livepeer_broadcaster_upload_errors` – upload failures (may indicate Orchestrator issues)
 
 {/* FACT CHECK: Confirm the exact Prometheus metric names for gateway (broadcaster) metrics in the current go-livepeer release. The names above follow older documentation patterns and should be verified against the current metrics export. */}
 
@@ -204,15 +204,15 @@ journalctl -u livepeer-orchestrator -f
 
 <CardGroup cols={2}>
   <Card title="Gateway Setup" icon="server" href="/v2/gateways/quickstart/gateway-setup" arrow horizontal>
-    Full gateway configuration guide including payment mode selection and pipeline configuration.
+    Full Gateway configuration guide including payment mode selection and pipeline configuration.
   </Card>
   <Card title="Gateway Relationships" icon="handshake" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" arrow horizontal>
-    How gateways discover and select orchestrators – selection criteria from the orchestrator side.
+    How Gateways discover and select Orchestrators – selection criteria from the Orchestrator side.
   </Card>
   <Card title="Dual Mode Configuration" icon="layer-group" href="/v2/orchestrators/guides/deployment-details/dual-mode-configuration" arrow horizontal>
     Running video transcoding and AI inference from a single go-livepeer process.
   </Card>
   <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" arrow horizontal>
-    Aligning orchestrator price with gateway caps for self-routing and commercial relationships.
+    Aligning Orchestrator price with Gateway caps for self-routing and commercial relationships.
   </Card>
 </CardGroup>

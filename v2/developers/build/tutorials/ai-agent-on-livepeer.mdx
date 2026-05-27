@@ -41,7 +41,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 This tutorial is adapted from the [Livepeer Agent SPE guide on Mirror.xyz](https://mirror.xyz/agent-spe.eth/oxs8VxEvKN88IeTwD-YQMucoDGqfNRz_mIlbUKkwOTg), published as part of the Agent SPE incentive programme. The original tutorial was written by the Agent SPE team and made available under an open licence.
 </Note>
 
-[Eliza](https://github.com/elizaos/eliza) is an open-source multi-agent framework (ai16z) that supports pluggable model providers. The Livepeer plugin routes Eliza's LLM inference requests to the Livepeer AI gateway, where they run on decentralised GPU infrastructure instead of centralised cloud providers.
+[Eliza](https://github.com/elizaos/eliza) is an open-source multi-agent framework (ai16z) that supports pluggable model providers. The Livepeer plugin routes Eliza's LLM inference requests to the Livepeer AI Gateway, where they run on decentralised GPU infrastructure instead of centralised cloud providers.
 
 **What you will build:** An Eliza agent that uses Livepeer as its LLM backend, running `meta-llama/Meta-Llama-3.1-8B-Instruct` (or any Ollama-compatible model) on the network.
 
@@ -51,8 +51,8 @@ This tutorial is adapted from the [Livepeer Agent SPE guide on Mirror.xyz](https
 
 - Node.js 22 or later
 - pnpm (`npm install -g pnpm`)
-- For development: no API key required (the community gateway at `dream-gateway.livepeer.cloud` is unauthenticated)
-- For production: an API key from a gateway provider
+- For development: no API key required (the community Gateway at `dream-gateway.livepeer.cloud` is unauthenticated)
+- For production: an API key from a Gateway provider
 
 <CustomDivider />
 
@@ -84,7 +84,7 @@ This tutorial is adapted from the [Livepeer Agent SPE guide on Mirror.xyz](https
     AGENT_NAME=LivepeerAgent
     ```
 
-    The `LIVEPEER_GATEWAY_URL` points to the community gateway for development. For production, replace with your gateway provider URL and uncomment `LIVEPEER_API_KEY`.
+    The `LIVEPEER_GATEWAY_URL` points to the community Gateway for development. For production, replace with your Gateway provider URL and uncomment `LIVEPEER_API_KEY`.
   </StyledStep>
 
   <StyledStep title="Create a character file" icon="user">
@@ -133,7 +133,7 @@ This tutorial is adapted from the [Livepeer Agent SPE guide on Mirror.xyz](https
     pnpm start --characters="characters/my-agent.character.json"
     ```
 
-    On first run, Eliza initialises the agent, loads the character file, and connects to the Livepeer gateway. You should see:
+    On first run, Eliza initialises the agent, loads the character file, and connects to the Livepeer Gateway. You should see:
 
     ```
     [INFO] Starting agent: LivepeerAgent
@@ -142,7 +142,7 @@ This tutorial is adapted from the [Livepeer Agent SPE guide on Mirror.xyz](https
     [INFO] Agent ready
     ```
 
-    If the LLM pipeline is cold (model not yet loaded on any orchestrator), the first request may take 30-90 seconds. Subsequent requests are fast once the model is warm.
+    If the LLM pipeline is cold (model not yet loaded on any Orchestrator), the first request may take 30-90 seconds. Subsequent requests are fast once the model is warm.
   </StyledStep>
 
   <StyledStep title="Test the agent" icon="flask">
@@ -169,7 +169,7 @@ This tutorial is adapted from the [Livepeer Agent SPE guide on Mirror.xyz](https
 
 ## Extending the agent
 
-**Switch the model.** Change `settings.model` in your character file to any Ollama-compatible model available on the Livepeer network. See [model support](/v2/developers/build/ai-and-agents/model-support) for supported variants and warm availability.
+**Switch the model.** Change `settings.model` in your character file to any Ollama-compatible model available on the Livepeer Network. See [model support](/v2/developers/build/ai-and-agents/model-support) for supported variants and warm availability.
 
 **Add memory and knowledge.** Eliza supports RAG (retrieval-augmented generation) via knowledge files and vector stores. Add entries to the `knowledge` array in your character file to give the agent domain-specific context.
 

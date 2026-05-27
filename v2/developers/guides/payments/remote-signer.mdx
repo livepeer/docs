@@ -32,14 +32,14 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>The remote signer takes on the gateway's Ethereum responsibilities (ticket generation, bookkeeping, and signing) so that gateway implementations in Python, the browser, or mobile do not need any Ethereum dependency.</Tip>
+  <Tip>The remote signer takes on the Gateway's Ethereum responsibilities (ticket generation, bookkeeping, and signing) so that Gateway implementations in Python, the browser, or mobile do not need any Ethereum dependency.</Tip>
 </CenteredContainer>
 
 ---
 
-The Livepeer gateway is responsible for two distinct concerns: media routing (receiving video, submitting segments to orchestrators, returning transcoded output) and Ethereum payment operations (PM bookkeeping, ticket generation, signing, ETH balance management). Historically these were coupled inside the single go-livepeer process.
+The Livepeer Gateway is responsible for two distinct concerns: media routing (receiving video, submitting segments to Orchestrators, returning transcoded output) and Ethereum payment operations (PM bookkeeping, ticket generation, signing, ETH balance management). Historically these were coupled inside the single go-livepeer process.
 
-The remote signer architecture, introduced in go-livepeer PRs #3791 and #3822, separates them. The signer service holds the Ethereum key and handles all payment logic. The gateway handles media. A gateway client makes HTTP calls to the signer for each payment operation; the signer returns signed tickets and updated payment state.
+The remote signer architecture, introduced in go-livepeer PRs #3791 and #3822, separates them. The signer service holds the Ethereum key and handles all payment logic. The Gateway handles media. A Gateway client makes HTTP calls to the signer for each payment operation; the signer returns signed tickets and updated payment state.
 
 <CustomDivider />
 
@@ -47,11 +47,11 @@ The remote signer architecture, introduced in go-livepeer PRs #3791 and #3822, s
 
 Three problems motivated the design:
 
-**Gateway diversity.** Before remote signing, implementing a Livepeer gateway required deep knowledge of the PM mechanism. The `livepeer-python-gateway` is the first non-Go gateway implementation, enabled directly by this architecture.
+**Gateway diversity.** Before remote signing, implementing a Livepeer Gateway required deep knowledge of the PM mechanism. The `livepeer-python-gateway` is the first non-Go Gateway implementation, enabled directly by this architecture.
 
 **Security posture.** In the monolith design, the Ethereum signing key sits in the same process that handles untrusted media from users. A media-path exploit could compromise the key. Remote signing removes the key from the hot path.
 
-**Clearinghouses.** The remote signer design allows a third-party clearinghouse to operate the signer on behalf of multiple gateways. Each gateway operator pays the clearinghouse in a traditional currency; the clearinghouse settles with orchestrators via PM under the hood. Gateway operators no longer need to hold ETH or manage Arbitrum operations.
+**Clearinghouses.** The remote signer design allows a third-party clearinghouse to operate the signer on behalf of multiple Gateways. Each Gateway operator pays the clearinghouse in a traditional currency; the clearinghouse settles with Orchestrators via PM under the hood. Gateway operators no longer need to hold ETH or manage Arbitrum operations.
 
 <CustomDivider />
 
@@ -59,9 +59,9 @@ Three problems motivated the design:
 
 The signing protocol covers two operations: the `GetOrchestratorInfo` authentication signature and per-job payment tickets.
 
-**GetOrchestratorInfo signature:** The gateway sends a static signature with each `GetOrchestratorInfo` RPC to authenticate the request. Because this signature never changes while the key is in use, the signer returns it once on startup and the gateway caches it.
+**GetOrchestratorInfo signature:** The Gateway sends a static signature with each `GetOrchestratorInfo` RPC to authenticate the request. Because this signature never changes while the key is in use, the signer returns it once on startup and the Gateway caches it.
 
-**Payment ticket signing:** For each PM payment, the gateway calls `signTicket` on the signer service:
+**Payment ticket signing:** For each PM payment, the Gateway calls `signTicket` on the signer service:
 
 ```
 Gateway → Signer: signTicket(signerState, ticketParams)
@@ -74,7 +74,7 @@ Gateway → Signer: signTicket(updatedSignerState, updatedTicketParams)
 ...
 ```
 
-The `signerState` carries the accumulated PM session bookkeeping (elapsed time, balance tracking, nonce counters). The signer updates this state on each call and returns it alongside the signed ticket. The gateway stores and forwards the state; it never interprets it.
+The `signerState` carries the accumulated PM session bookkeeping (elapsed time, balance tracking, nonce counters). The signer updates this state on each call and returns it alongside the signed ticket. The Gateway stores and forwards the state; it never interprets it.
 
 <CustomDivider />
 
@@ -82,12 +82,12 @@ The `signerState` carries the accumulated PM session bookkeeping (elapsed time, 
 
 The signer is intentionally stateless across calls. It does not persist session state between requests and does not require a shared database when running multiple instances.
 
-The client (gateway) carries the state. On the first signing call of a session, the gateway sends `signerState=null`; the signer creates a fresh state from the provided orchestrator info. On each subsequent call, the gateway sends the `signerState` returned from the previous call.
+The client (Gateway) carries the state. On the first signing call of a session, the Gateway sends `signerState=null`; the signer creates a fresh state from the provided Orchestrator info. On each subsequent call, the Gateway sends the `signerState` returned from the previous call.
 
 Consequences of this design:
 
 - Multiple signer instances can run without coordination: any instance can handle any request, because the full session state arrives with every call
-- Restarting the signer does not lose session state: the gateway retains the last known state and resumes correctly
+- Restarting the signer does not lose session state: the Gateway retains the last known state and resumes correctly
 - Sending stale or null state after the first call leads to nonce repetition and invalid tickets. Gateway implementations must persist and forward state correctly
 
 <CustomDivider />
@@ -98,7 +98,7 @@ Remote signing is implemented for Live AI (`live-video-to-video`) only. Batch AI
 
 Transcoding handles payments differently: tickets are signed with the segment hash, placing signing in the hot path. This is incompatible with the async remote signing model, and transcoding is considered a legacy workload with no active development.
 
-The service registry (orchestrator discovery via Arbitrum contract) is also not handled by the remote signer. Discovery is a separate concern; local gateway clients use explicit orchestrator URI lists or external discovery services.
+The service registry (Orchestrator discovery via Arbitrum contract) is also not handled by the remote signer. Discovery is a separate concern; local Gateway clients use explicit Orchestrator URI lists or external discovery services.
 
 <CustomDivider />
 
@@ -106,7 +106,7 @@ The service registry (orchestrator discovery via Arbitrum contract) is also not 
 
 **Hot key removal.** The Ethereum key is no longer co-located with media processing. An exploit from malicious video input cannot reach the signing key.
 
-**Reduced blast radius.** In the monolith, all gateway instances share a single Ethereum key. With remote signing, gateway instances do not hold the key at all. Compromise of a gateway binary does not yield the key.
+**Reduced blast radius.** In the monolith, all Gateway instances share a single Ethereum key. With remote signing, Gateway instances do not hold the key at all. Compromise of a Gateway binary does not yield the key.
 
 **Guardrails over open signing.** The signer implements the PM protocol with proper guardrails (balance checks, nonce tracking, fee limits) instead of blindly signing arbitrary payloads. This limits the damage from an exploited signer compared to a general signing endpoint.
 
@@ -120,7 +120,7 @@ The service registry (orchestrator discovery via Arbitrum contract) is also not 
 
 <CardGroup cols={2}>
   <Card title="Alt-Gateway Overview" icon="server" href="/v2/developers/build/alt-gateways/overview" arrow horizontal>
-    livepeer-python-gateway and the off-chain client pattern enabled by remote signing.
+    livepeer-python-Gateway and the off-chain client pattern enabled by remote signing.
   </Card>
   <Card title="Per-Second Compute" icon="clock" href="/v2/developers/guides/payments/per-second-compute" arrow horizontal>
     How LivePaymentSender state flows through the signing protocol for live AI.
@@ -129,6 +129,6 @@ The service registry (orchestrator discovery via Arbitrum contract) is also not 
     The PM mechanism whose ticket generation and bookkeeping the remote signer handles.
   </Card>
   <Card title="Payments Overview" icon="grid" href="/v2/developers/guides/payments/overview" arrow horizontal>
-    On-chain vs off-chain gateway payment modes.
+    On-chain vs off-chain Gateway payment modes.
   </Card>
 </CardGroup>

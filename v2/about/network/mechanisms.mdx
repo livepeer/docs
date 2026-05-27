@@ -36,7 +36,7 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Scroll
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Quote>
-The Network's mechanics live off-chain. Discovery, capability matching, session selection, job dispatch, and ticket plumbing all run between gateway and orchestrator without touching the chain. The chain comes in at three triggers: deposit, winning-ticket redemption, and per-round reward.
+The Network's mechanics live off-chain. Discovery, capability matching, session selection, job dispatch, and ticket plumbing all run between Gateway and Orchestrator without touching the chain. The chain comes in at three triggers: deposit, winning-ticket redemption, and per-round reward.
 </Quote>
 
 <CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
@@ -50,7 +50,7 @@ Seven mechanisms run continuously across the Network. Each answers a different c
   itemsList={[
     {
       Mechanism: <Subtitle variant="changelog">**Orchestrator Discovery**</Subtitle>,
-      'What it coordinates': 'Gateway finds candidate orchestrators by reading the on-chain registry and the operator pool',
+      'What it coordinates': 'Gateway finds candidate Orchestrators by reading the on-chain registry and the operator pool',
       'Where it runs': 'Gateway-side, against subgraph or `ServiceRegistry`',
     },
     {
@@ -60,27 +60,27 @@ Seven mechanisms run continuously across the Network. Each answers a different c
     },
     {
       Mechanism: <Subtitle variant="changelog">**Session Selection**</Subtitle>,
-      'What it coordinates': 'Gateway scores candidates, filters on capability and price, opens a session with the chosen orchestrator',
+      'What it coordinates': 'Gateway scores candidates, filters on capability and price, opens a session with the chosen Orchestrator',
       'Where it runs': 'Gateway-side, parallel `GetOrchestratorInfo` RPC',
     },
     {
       Mechanism: <Subtitle variant="changelog">**Job Dispatch**</Subtitle>,
       'What it coordinates': 'Per-segment or per-frame work hand-off, with a ticket attached to each unit',
-      'Where it runs': 'Gateway-to-orchestrator HTTP for batch; trickle protocol for real-time',
+      'Where it runs': 'Gateway-to-Orchestrator HTTP for batch; trickle protocol for real-time',
     },
     {
       Mechanism: <Subtitle variant="changelog">**Ticket Plumbing**</Subtitle>,
       'What it coordinates': 'Off-chain construction, signing, validation, and accumulation of probabilistic micropayment tickets',
-      'Where it runs': 'In-band with each segment; signed by gateway, validated by orchestrator',
+      'Where it runs': 'In-band with each segment; signed by Gateway, validated by Orchestrator',
     },
     {
       Mechanism: <Subtitle variant="changelog">**Settlement Triggers**</Subtitle>,
-      'What it coordinates': 'When the off-chain layer reaches into the on-chain Protocol: gateway funding, winning-ticket redemption, per-round reward',
-      'Where it runs': 'On Arbitrum One; triggered by gateway or orchestrator based on local state',
+      'What it coordinates': 'When the off-chain layer reaches into the on-chain Protocol: Gateway funding, winning-ticket redemption, per-round reward',
+      'Where it runs': 'On Arbitrum One; triggered by Gateway or Orchestrator based on local state',
     },
     {
       Mechanism: <Subtitle variant="changelog">**Round Heartbeat**</Subtitle>,
-      'What it coordinates': 'How the off-chain Network reacts to round transitions: active set lock, reward call window, parameter freeze',
+      'What it coordinates': 'How the off-chain Network reacts to round transitions: Active Set lock, reward call window, parameter freeze',
       'Where it runs': 'Detected off-chain via `RoundsManager`; observed by every participant',
     },
   ]}
@@ -103,7 +103,7 @@ Every property the Network preserves traces back to a specific protocol decision
       'Implemented in': '`pm/` package in `go-livepeer`; `TicketBroker` contract on Arbitrum One',
     },
     {
-      'Network property': <Subtitle variant="changelog">**Active set election**</Subtitle>,
+      'Network property': <Subtitle variant="changelog">**Active Set election**</Subtitle>,
       'Ratified by': 'Streamflow spec; LIP-83 round-length adjustment',
       'Implemented in': '`BondingManager`, `RoundsManager` contracts',
     },
@@ -135,22 +135,22 @@ Every property the Network preserves traces back to a specific protocol decision
   ]}
 />
 
-AI extension was bootstrapped without a dedicated LIP. From 2023, the LIP-90 SPE convention authorised AI work by funding the AI Video Special Purpose Entity through Stages 1 to 4, demonstrating a deliberate property of the SPE model: pipeline-level capability does not need a hard fork. LIP-100 (Cascade, proposed May 2025) later formalised AI-first gateways as a protocol-level upgrade, ratifying what the SPE pipeline had already shipped.
+AI extension was bootstrapped without a dedicated LIP. From 2023, the LIP-90 SPE convention authorised AI work by funding the AI Video Special Purpose Entity through Stages 1 to 4, demonstrating a deliberate property of the SPE model: pipeline-level capability does not need a hard fork. LIP-100 (Cascade, proposed May 2025) later formalised AI-first Gateways as a protocol-level upgrade, ratifying what the SPE pipeline had already shipped.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## Orchestrator Discovery
 
-Discovery is the first thing a gateway does. It reads the on-chain registry to get a list of operator addresses, then resolves each address to a service URI and asks for capability and price.
+Discovery is the first thing a Gateway does. It reads the on-chain registry to get a list of operator addresses, then resolves each address to a service URI and asks for capability and price.
 
-The discovery loop lives in `discovery/discovery.go`. A gateway holds an `OrchestratorPool` of `[]*url.URL` candidate orchestrators, loaded from the Livepeer subgraph or supplied as a static list. The gateway calls `GetOrchestratorInfo` on each in parallel.
+The discovery loop lives in `discovery/discovery.go`. A Gateway holds an `OrchestratorPool` of `[]*url.URL` candidate Orchestrators, loaded from the Livepeer subgraph or supplied as a static list. The Gateway calls `GetOrchestratorInfo` on each in parallel.
 
 <DynamicTableV2
   headerList={['Step', 'What happens']}
   itemsList={[
     {
       Step: <Subtitle variant="changelog">**1. Pool load**</Subtitle>,
-      'What happens': 'Gateway loads candidate orchestrator URIs from the subgraph (`Transcoder.serviceURI`) or from configured static list',
+      'What happens': 'Gateway loads candidate Orchestrator URIs from the subgraph (`Transcoder.serviceURI`) or from configured static list',
     },
     {
       Step: <Subtitle variant="changelog">**2. Parallel probe**</Subtitle>,
@@ -158,22 +158,22 @@ The discovery loop lives in `discovery/discovery.go`. A gateway holds an `Orches
     },
     {
       Step: <Subtitle variant="changelog">**3. Latency sort**</Subtitle>,
-      'What happens': 'Successful responses are sorted ascending by measured RPC latency. Suspended orchestrators (those that previously failed jobs) are filtered through `suspensionqueue`',
+      'What happens': 'Successful responses are sorted ascending by measured RPC latency. Suspended Orchestrators (those that previously failed jobs) are filtered through `suspensionqueue`',
     },
     {
       Step: <Subtitle variant="changelog">**4. Pool refresh**</Subtitle>,
-      'What happens': 'The candidate list refreshes periodically; orchestrators that drop out of the active set are removed when their stake falls below the threshold',
+      'What happens': 'The candidate list refreshes periodically; Orchestrators that drop out of the Active Set are removed when their stake falls below the threshold',
     },
   ]}
 />
 
-The pool is a moving target. Active orchestrators come and go each round; suspensions clear after a cooldown. Discovery reruns on every new session and on a periodic refresh.
+The pool is a moving target. Active Orchestrators come and go each round; suspensions clear after a cooldown. Discovery reruns on every new session and on a periodic refresh.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## Capability Advertising
 
-Capability advertising is what an orchestrator publishes so a gateway can decide whether to send work. The advertisement is the response to `GetOrchestratorInfo` and carries everything the gateway needs to evaluate the operator.
+Capability advertising is what an Orchestrator publishes so a Gateway can decide whether to send work. The advertisement is the response to `GetOrchestratorInfo` and carries everything the Gateway needs to evaluate the operator.
 
 <DynamicTableV2
   headerList={['Field', 'What it carries']}
@@ -192,7 +192,7 @@ Capability advertising is what an orchestrator publishes so a gateway can decide
     },
     {
       Field: <Subtitle variant="changelog">**TicketParams**</Subtitle>,
-      'What it carries': '`faceValue`, `winProb`, `recipientRandHash`, `seed`, `expirationBlock`, `expirationParams`. The gateway uses these to construct valid tickets',
+      'What it carries': '`faceValue`, `winProb`, `recipientRandHash`, `seed`, `expirationBlock`, `expirationParams`. The Gateway uses these to construct valid tickets',
     },
     {
       Field: <Subtitle variant="changelog">**Address**</Subtitle>,
@@ -205,41 +205,41 @@ Capability advertising is what an orchestrator publishes so a gateway can decide
   ]}
 />
 
-Capability matching uses `caps.bitstring.CompatibleWith()` defined in `core/capabilities.go`. The check at the gateway is a simple AND across the bitstrings: the gateway's required capability bits must be a subset of the orchestrator's offered bits, and all per-model constraints must be satisfiable.
+Capability matching uses `caps.bitstring.CompatibleWith()` defined in `core/capabilities.go`. The check at the Gateway is a simple AND across the bitstrings: the Gateway's required capability bits must be a subset of the Orchestrator's offered bits, and all per-model constraints must be satisfiable.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## Session Selection
 
-Selection is the gateway's decision: of the candidates that returned valid `OrchestratorInfo`, which one to open the session with. The decision combines capability match, price ceiling, latency, and operator reputation.
+Selection is the Gateway's decision: of the candidates that returned valid `OrchestratorInfo`, which one to open the session with. The decision combines capability match, price ceiling, latency, and operator reputation.
 
 <DynamicTableV2
   headerList={['Selection criterion', 'How the gateway applies it']}
   itemsList={[
     {
       'Selection criterion': <Subtitle variant="changelog">**Capability match**</Subtitle>,
-      'How the gateway applies it': 'Hard filter. An orchestrator that does not advertise the required capability is not considered',
+      'How the Gateway applies it': 'Hard filter. An Orchestrator that does not advertise the required capability is not considered',
     },
     {
       'Selection criterion': <Subtitle variant="changelog">**Price ceiling**</Subtitle>,
-      'How the gateway applies it': 'Hard filter. Gateway has a max price-per-unit for the workload; orchestrators above the ceiling are dropped',
+      'How the Gateway applies it': 'Hard filter. Gateway has a max price-per-unit for the workload; Orchestrators above the ceiling are dropped',
     },
     {
       'Selection criterion': <Subtitle variant="changelog">**Latency**</Subtitle>,
-      'How the gateway applies it': 'Soft sort. Sorted ascending by the RPC round-trip measured during discovery',
+      'How the Gateway applies it': 'Soft sort. Sorted ascending by the RPC round-trip measured during discovery',
     },
     {
       'Selection criterion': <Subtitle variant="changelog">**Reputation**</Subtitle>,
-      'How the gateway applies it': 'Soft penalty. Orchestrators that previously failed jobs are suspended for a cooldown; persistent failures push them down the candidate list',
+      'How the Gateway applies it': 'Soft penalty. Orchestrators that previously failed jobs are suspended for a cooldown; persistent failures push them down the candidate list',
     },
     {
       'Selection criterion': <Subtitle variant="changelog">**Stake weight**</Subtitle>,
-      'How the gateway applies it': 'Optional. Some gateways prefer higher-staked orchestrators as a reliability proxy; not enforced at the protocol layer',
+      'How the Gateway applies it': 'Optional. Some Gateways prefer higher-staked Orchestrators as a reliability proxy; not enforced at the protocol layer',
     },
   ]}
 />
 
-Once selected, the gateway opens a session by sending the first segment with an attached ticket. The orchestrator validates the ticket, queues the segment, and processes the work. The session stays open for the duration of the job; for live workloads it stays open until the stream ends.
+Once selected, the Gateway opens a session by sending the first segment with an attached ticket. The Orchestrator validates the ticket, queues the segment, and processes the work. The session stays open for the duration of the job; for live workloads it stays open until the stream ends.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
@@ -247,7 +247,7 @@ Once selected, the gateway opens a session by sending the first segment with an 
 
 Job dispatch is the per-unit hand-off. Each segment or frame travels with a ticket attached.
 
-The dispatch loop is in `core/orchestrator.go:transcodeSegmentLoop`. Each orchestrator session has a `SegmentChan` of buffer size `maxSegmentChannels = 4`. The gateway POSTs each segment with a `TicketSenderParams`; the orchestrator's `ProcessPayment` validates the ticket via `Recipient.ReceiveTicket`, debits the gateway's session balance, and routes the segment to either a local transcoder or, if `TranscoderManager` is set, a remote transcoder selected by `selectTranscoder` from the `byLoadFactor`-sorted pool.
+The dispatch loop is in `core/orchestrator.go:transcodeSegmentLoop`. Each Orchestrator session has a `SegmentChan` of buffer size `maxSegmentChannels = 4`. The Gateway POSTs each segment with a `TicketSenderParams`; the Orchestrator's `ProcessPayment` validates the ticket via `Recipient.ReceiveTicket`, debits the Gateway's session balance, and routes the segment to either a local transcoder or, if `TranscoderManager` is set, a remote transcoder selected by `selectTranscoder` from the `byLoadFactor`-sorted pool.
 
 <DynamicTableV2
   headerList={['Workload class', 'Transport', 'Cadence', 'Failure recovery']}
@@ -283,7 +283,7 @@ A single `OrchestratorNode` accepts at most `MaxSessions` concurrent sessions (d
 
 Tickets are how value moves off-chain. Every dispatched segment carries one. Most are losing tickets that never settle; only winning tickets reach the chain.
 
-A ticket is a signed message with five fields the gateway sets and one the orchestrator validates:
+A ticket is a signed message with five fields the Gateway sets and one the Orchestrator validates:
 
 <DynamicTableV2
   headerList={['Ticket field', 'Set by', 'Purpose']}
@@ -291,7 +291,7 @@ A ticket is a signed message with five fields the gateway sets and one the orche
     {
       'Ticket field': <Subtitle variant="changelog">**`faceValue`**</Subtitle>,
       'Set by': 'Gateway',
-      Purpose: 'ETH paid to the orchestrator on a winning ticket',
+      Purpose: 'ETH paid to the Orchestrator on a winning ticket',
     },
     {
       'Ticket field': <Subtitle variant="changelog">**`winProb`**</Subtitle>,
@@ -301,7 +301,7 @@ A ticket is a signed message with five fields the gateway sets and one the orche
     {
       'Ticket field': <Subtitle variant="changelog">**`recipientRandHash`**</Subtitle>,
       'Set by': 'Orchestrator (in advertisement)',
-      Purpose: 'Hash committing the orchestrator to a randomness value; revealed at redemption',
+      Purpose: 'Hash committing the Orchestrator to a randomness value; revealed at redemption',
     },
     {
       'Ticket field': <Subtitle variant="changelog">**`seed`**</Subtitle>,
@@ -321,10 +321,10 @@ A ticket is a signed message with five fields the gateway sets and one the orche
   ]}
 />
 
-The win check combines `seed`, the orchestrator's `recipientRand`, and the round's stored block hash: `H(sig, recipientRand) < winProb × 2^256`. Neither party can predict winners alone. The orchestrator queues winning tickets locally and redeems them on-chain in batches when gas conditions are favourable.
+The win check combines `seed`, the Orchestrator's `recipientRand`, and the round's stored block hash: `H(sig, recipientRand) < winProb × 2^256`. Neither party can predict winners alone. The Orchestrator queues winning tickets locally and redeems them on-chain in batches when gas conditions are favourable.
 
 <Tip>
-The expected value of any single ticket is `faceValue × winProb`. A gateway sets the win probability so that per-segment expected payment matches the work being purchased. Orchestrators batch winning tickets and choose redemption timing.
+The expected value of any single ticket is `faceValue × winProb`. A Gateway sets the win probability so that per-segment expected payment matches the work being purchased. Orchestrators batch winning tickets and choose redemption timing.
 </Tip>
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
@@ -339,26 +339,26 @@ Settlement is when the off-chain layer reaches into the on-chain Protocol. Three
     {
       Trigger: <Subtitle variant="changelog">**Gateway funding**</Subtitle>,
       'Initiated by': 'Gateway calls `fundDepositAndReserve()` on `TicketBroker`',
-      'On-chain effect': 'ETH moves from gateway wallet to its `TicketBroker` account; deposit covers active session liquidity, reserve covers redemption if deposit is exhausted',
+      'On-chain effect': 'ETH moves from Gateway wallet to its `TicketBroker` account; deposit covers active session liquidity, reserve covers redemption if deposit is exhausted',
     },
     {
       Trigger: <Subtitle variant="changelog">**Winning ticket redemption**</Subtitle>,
       'Initiated by': 'Orchestrator calls `redeemWinningTicket()` on `TicketBroker`',
-      'On-chain effect': 'Contract validates ticket against on-chain state, transfers ETH from gateway deposit to orchestrator fee pool via `BondingManager`. Emits `WinningTicketRedeemed` and `WinningTicketTransfer`',
+      'On-chain effect': 'Contract validates ticket against on-chain state, transfers ETH from Gateway deposit to Orchestrator fee pool via `BondingManager`. Emits `WinningTicketRedeemed` and `WinningTicketTransfer`',
     },
     {
       Trigger: <Subtitle variant="changelog">**Per-round reward**</Subtitle>,
-      'Initiated by': 'Active orchestrator calls `reward()` once per round',
-      'On-chain effect': 'Mints round inflation via `Minter`, routes treasury cut, distributes remainder by stake share, accrues delegator share to claim queue. Emits `Reward`',
+      'Initiated by': 'Active Orchestrator calls `reward()` once per round',
+      'On-chain effect': 'Mints round inflation via `Minter`, routes treasury cut, distributes remainder by stake share, accrues Delegator share to claim queue. Emits `Reward`',
     },
   ]}
 />
 
-Three more on-chain events are gateway-side and run alongside but outside the per-job loop:
+Three more on-chain events are Gateway-side and run alongside but outside the per-job loop:
 
-- **Gateway exit:** gateway calls `unlock()` then `withdraw()` on `TicketBroker` to recover unredeemed deposit and reserve
-- **Bond changes:** delegator or orchestrator calls `bond()`, `unbond()`, `rebond()`, `withdrawStake()` on `BondingManager`
-- **Service URI updates:** orchestrator calls `setServiceURI()` on `ServiceRegistry` when its endpoint changes
+- **Gateway exit:** Gateway calls `unlock()` then `withdraw()` on `TicketBroker` to recover unredeemed deposit and reserve
+- **Bond changes:** Delegator or Orchestrator calls `bond()`, `unbond()`, `rebond()`, `withdrawStake()` on `BondingManager`
+- **Service URI updates:** Orchestrator calls `setServiceURI()` on `ServiceRegistry` when its endpoint changes
 
 For the on-chain mechanics that back each trigger, see <LinkArrow href="/v2/about/protocol/mechanisms" label="Protocol Core Mechanisms" newline={false} />.
 
@@ -373,11 +373,11 @@ Rounds are the on-chain Protocol's clock. Round transitions ripple through the o
   itemsList={[
     {
       'Round event': <Subtitle variant="changelog">**Round opens**</Subtitle>,
-      'How the Network reacts': 'Active set locks for the new round. Any orchestrator that bonded mid-round becomes eligible at this boundary. Active orchestrators record the new round number locally for reward-call eligibility',
+      'How the Network reacts': 'Active Set locks for the new round. Any Orchestrator that bonded mid-round becomes eligible at this boundary. Active Orchestrators record the new round number locally for reward-call eligibility',
     },
     {
       'Round event': <Subtitle variant="changelog">**Reward call window**</Subtitle>,
-      'How the Network reacts': 'Each active orchestrator can call `reward()` at most once per round. The off-chain logic schedules this call early in the round to avoid the round-end lock. Missing the call forfeits the round\'s LPT inflation share',
+      'How the Network reacts': 'Each active Orchestrator can call `reward()` at most once per round. The off-chain logic schedules this call early in the round to avoid the round-end lock. Missing the call forfeits the round\'s LPT inflation share',
     },
     {
       'Round event': <Subtitle variant="changelog">**Round-end lock**</Subtitle>,
@@ -385,15 +385,15 @@ Rounds are the on-chain Protocol's clock. Round transitions ripple through the o
     },
     {
       'Round event': <Subtitle variant="changelog">**Round close → next round opens**</Subtitle>,
-      'How the Network reacts': 'Anyone (typically an orchestrator) calls `initializeRound()`. Round number increments; new active set is fixed; new mintable rewards are unlocked',
+      'How the Network reacts': 'Anyone (typically an Orchestrator) calls `initializeRound()`. Round number increments; new Active Set is fixed; new mintable rewards are unlocked',
     },
   ]}
 />
 
-The off-chain Network does not stop or slow down at round boundaries. Job dispatch, ticket exchange, and discovery continue. What changes is which orchestrators are eligible for the next round's reward call and which are now in the active set.
+The off-chain Network does not stop or slow down at round boundaries. Job dispatch, ticket exchange, and discovery continue. What changes is which Orchestrators are eligible for the next round's reward call and which are now in the Active Set.
 
 <Tip>
-Round length on Arbitrum One is approximately 21 hours (~5,760 L2 blocks). A given orchestrator that misses `reward()` in a round forfeits that round's LPT inflation for itself and its delegators. The off-chain operator software typically schedules the reward call early in each round to avoid the round-end lock.
+Round length on Arbitrum One is approximately 21 hours (~5,760 L2 blocks). A given Orchestrator that misses `reward()` in a round forfeits that round's LPT inflation for itself and its Delegators. The off-chain operator software typically schedules the reward call early in each round to avoid the round-end lock.
 </Tip>
 
 <CustomDivider />
@@ -405,7 +405,7 @@ Round length on Arbitrum One is approximately 21 hours (~5,760 L2 blocks). A giv
     Topology, traffic planes, on-chain anchor.
   </Card>
   <Card title={<CustomCardTitle icon="store" title="Marketplace" />} href="/v2/about/network/marketplace" horizontal arrow>
-    Market shape, settlement boundary, probabilistic micropayments, trust.
+    Market shape, settlement boundary, Probabilistic Micropayments, trust.
   </Card>
   <Card title={<CustomCardTitle icon="route" title="Job Pipelines" />} href="/v2/about/network/job-pipelines" horizontal arrow>
     Workload classes, lifecycle, state machine, failure modes.

@@ -32,12 +32,12 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>Most developers never need to run a gateway. The community gateway handles development; a managed gateway provider handles production. Self-host only when you need pricing control, data residency, or custom orchestrator routing.</Tip>
+  <Tip>Most developers never need to run a Gateway. The community Gateway handles development; a managed Gateway provider handles production. Self-host only when you need pricing control, data residency, or custom Orchestrator routing.</Tip>
 </CenteredContainer>
 
 <CustomDivider />
 
-A gateway is the node that routes your AI inference or video transcoding requests to orchestrators on the Livepeer network. Every request to the network goes through a gateway. The question is whose gateway you use.
+A Gateway is the node that routes your AI inference or video transcoding requests to Orchestrators on the Livepeer Network. Every request to the network goes through a Gateway. The question is whose Gateway you use.
 
 <CustomDivider />
 
@@ -56,7 +56,7 @@ A gateway is the node that routes your AI inference or video transcoding request
   <tbody>
     <TableRow>
       <TableCell>**Development**</TableCell>
-      <TableCell>Community gateway (`dream-gateway.livepeer.cloud`)</TableCell>
+      <TableCell>Community Gateway (`dream-gateway.livepeer.cloud`)</TableCell>
       <TableCell>None</TableCell>
       <TableCell>Free</TableCell>
       <TableCell>None (shared infrastructure, no SLA)</TableCell>
@@ -72,17 +72,17 @@ A gateway is the node that routes your AI inference or video transcoding request
       <TableCell>**Production (self-hosted)**</TableCell>
       <TableCell>go-livepeer in broadcaster mode</TableCell>
       <TableCell>Your own auth layer</TableCell>
-      <TableCell>Direct orchestrator settlement (no margin)</TableCell>
-      <TableCell>Full: orchestrator selection, pricing, failover, auth model</TableCell>
+      <TableCell>Direct Orchestrator settlement (no margin)</TableCell>
+      <TableCell>Full: Orchestrator selection, pricing, failover, auth model</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
 <CustomDivider />
 
-## Community gateway
+## Community Gateway
 
-The community gateway at `dream-gateway.livepeer.cloud` is operated by the Cloud SPE for development access. It accepts unauthenticated requests and routes to the active orchestrator set.
+The community Gateway at `dream-gateway.livepeer.cloud` is operated by the Cloud SPE for development access. It accepts unauthenticated requests and routes to the active Orchestrator set.
 
 ```bash icon="terminal"
 curl -X POST https://dream-gateway.livepeer.cloud/text-to-image \
@@ -90,15 +90,15 @@ curl -X POST https://dream-gateway.livepeer.cloud/text-to-image \
   -d '{"prompt": "a mountain at dawn", "model_id": "SG161222/RealVisXL_V4.0_Lightning"}'
 ```
 
-The community gateway is shared infrastructure with no SLA. It is rate-limited for sustained high-volume traffic. Do not ship user-facing production applications on the community gateway.
+The community Gateway is shared infrastructure with no SLA. It is rate-limited for sustained high-volume traffic. Do not ship user-facing production applications on the community Gateway.
 
 **When to use:** prototyping, integration testing, first inference call, tutorials.
 
 <CustomDivider />
 
-## Managed gateway provider
+## Managed Gateway provider
 
-A managed gateway provider gives you an API key and a gateway endpoint. Requests are authenticated, rate-limited per your tier, and the provider handles orchestrator routing and payment settlement.
+A managed Gateway provider gives you an API key and a Gateway endpoint. Requests are authenticated, rate-limited per your tier, and the provider handles Orchestrator routing and payment settlement.
 
 ```bash icon="terminal"
 curl -X POST https://provider-gateway.example.com/text-to-image \
@@ -107,15 +107,15 @@ curl -X POST https://provider-gateway.example.com/text-to-image \
   -d '{"prompt": "a mountain at dawn", "model_id": "SG161222/RealVisXL_V4.0_Lightning"}'
 ```
 
-The request shape is identical to the community gateway. Switching from community to managed requires changing the base URL and adding the `Authorization` header.
+The request shape is identical to the community Gateway. Switching from community to managed requires changing the base URL and adding the `Authorization` header.
 
 **When to use:** production applications where you want no infrastructure overhead and accept the provider's pricing and routing decisions.
 
 <CustomDivider />
 
-## Self-hosted gateway
+## Self-hosted Gateway
 
-Running go-livepeer in broadcaster mode gives direct network access. You control which orchestrators receive your jobs, what price you pay per unit, and how authentication works.
+Running go-livepeer in broadcaster mode gives direct network access. You control which Orchestrators receive your jobs, what price you pay per unit, and how authentication works.
 
 ```bash icon="terminal"
 livepeer \
@@ -128,9 +128,9 @@ livepeer \
   -httpAddr 127.0.0.1:8935
 ```
 
-Self-hosted gateways require:
+Self-hosted Gateways require:
 
-| Requirement | AI gateway (off-chain) | Video gateway (on-chain) |
+| Requirement | AI Gateway (off-chain) | Video Gateway (on-chain) |
 |---|---|---|
 | Operating system | Linux (or Docker) | Linux |
 | ETH on Arbitrum One | Not required for off-chain mode | Required (TicketBroker deposit) |
@@ -140,23 +140,23 @@ Self-hosted gateways require:
 | Time to first request | ~15 minutes with Docker | Longer (ETH account setup + deposit funding) |
 
 <Warning>
-Self-hosted AI gateways require Linux. Windows and macOS binaries for go-livepeer with AI support are not currently available.
+Self-hosted AI Gateways require Linux. Windows and macOS binaries for go-livepeer with AI support are not currently available.
 </Warning>
 
-**When to use:** your monthly API spend is material, you need to specify which orchestrators handle your jobs, you need the inference path to stay within your own infrastructure, or you need a custom auth/billing model.
+**When to use:** your monthly API spend is material, you need to specify which Orchestrators handle your jobs, you need the inference path to stay within your own infrastructure, or you need a custom auth/billing model.
 
 <CustomDivider />
 
 ## Self-hosting decision
 
-The natural path for most developers: start with the community gateway, build and validate your application, move to a managed provider for production, then self-host as usage grows and the cost or control trade-offs become worth the overhead.
+The natural path for most developers: start with the community Gateway, build and validate your application, move to a managed provider for production, then self-host as usage grows and the cost or control trade-offs become worth the overhead.
 
 | Signal | Action |
 |---|---|
-| First inference call, prototyping | Stay on community gateway |
+| First inference call, prototyping | Stay on community Gateway |
 | Shipping to users, need reliability | Move to managed provider |
 | Monthly spend is material | Evaluate self-hosting for direct settlement |
-| Need custom orchestrator routing | Self-host |
+| Need custom Orchestrator routing | Self-host |
 | Data must stay within your infrastructure | Self-host |
 | Need custom auth or per-user billing | Self-host + [pymthouse](/v2/developers/guides/payments/clearinghouse-pattern) |
 
@@ -166,12 +166,12 @@ There is no hard threshold at which you must switch. The signals are cost, contr
 
 ## Orchestrator session lifecycle
 
-When a gateway receives a job, it selects an orchestrator from its candidate list (explicit `-orchAddr` or network discovery), sends a `GetOrchestratorInfo` request, negotiates capabilities and pricing, and routes the job. For live AI (`live-video-to-video`), the session persists for the stream duration; the gateway routes all frames to the same orchestrator until the session ends or the orchestrator fails.
+When a Gateway receives a job, it selects an Orchestrator from its candidate list (explicit `-orchAddr` or network discovery), sends a `GetOrchestratorInfo` request, negotiates capabilities and pricing, and routes the job. For live AI (`live-video-to-video`), the session persists for the stream duration; the Gateway routes all frames to the same Orchestrator until the session ends or the Orchestrator fails.
 
-For batch jobs, each request may go to a different orchestrator. The gateway applies stake-weighted selection with price filtering for each request independently.
+For batch jobs, each request may go to a different Orchestrator. The Gateway applies stake-weighted selection with price filtering for each request independently.
 
-Session management is automatic in go-livepeer. For custom gateway implementations, the `livepeer-python-gateway` reference implementation exposes the session lifecycle through `OrchestratorSession` and `SelectionCursor` classes. See [alt-gateways](/v2/developers/build/alt-gateways/overview) for the Python gateway architecture.
+Session management is automatic in go-livepeer. For custom Gateway implementations, the `livepeer-python-gateway` reference implementation exposes the session lifecycle through `OrchestratorSession` and `SelectionCursor` classes. See [alt-Gateways](/v2/developers/build/alt-Gateways/overview) for the Python Gateway architecture.
 
 <CustomDivider />
 
-The [local gateway setup](/v2/developers/guides/local-development/local-gateway) walks through running a self-hosted broadcaster node step by step. The [production checklist](/v2/developers/guides/production-hardening-checklist) covers what to verify before moving to real traffic.
+The [local Gateway setup](/v2/developers/guides/local-development/local-Gateway) walks through running a self-hosted broadcaster node step by step. The [production checklist](/v2/developers/guides/production-hardening-checklist) covers what to verify before moving to real traffic.

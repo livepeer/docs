@@ -58,7 +58,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
 <CustomDivider />
 
-A <Badge color="green">Dual Mode</Badge> orchestrator serves video transcoding and AI inference jobs from a single go-livepeer process. Video transcoding routes through NVENC and NVDEC, the fixed-function hardware blocks built into NVIDIA GPUs. AI inference runs on CUDA compute. Because these two execution paths use separate hardware resources, adding AI capabilities to a running video node requires no changes to your on-chain registration, staking, or existing transcoding configuration.
+A <Badge color="green">Dual Mode</Badge> Orchestrator serves video transcoding and AI inference jobs from a single go-livepeer process. Video transcoding routes through NVENC and NVDEC, the fixed-function hardware blocks built into NVIDIA GPUs. AI inference runs on CUDA compute. Because these two execution paths use separate hardware resources, adding AI capabilities to a running video node requires no changes to your on-chain registration, staking, or existing transcoding configuration.
 
 <Note>
   Dual Mode requires Linux. The AI Runner container supports Linux only.
@@ -68,7 +68,7 @@ A <Badge color="green">Dual Mode</Badge> orchestrator serves video transcoding a
 
 ## What Changes
 
-A video-only orchestrator and a Dual Mode orchestrator run the same go-livepeer binary. The difference is configuration: Dual Mode adds three flags and one `aiModels.json` file to your existing setup.
+A video-only Orchestrator and a Dual Mode Orchestrator run the same go-livepeer binary. The difference is configuration: Dual Mode adds three flags and one `aiModels.json` file to your existing setup.
 
 <StyledTable variant="bordered">
   <thead>
@@ -105,7 +105,7 @@ A video-only orchestrator and a Dual Mode orchestrator run the same go-livepeer 
       <TableCell>16 GB recommended; 8 GB viable for LLM-only pipelines</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>**Active set**</TableCell>
+      <TableCell>**Active Set**</TableCell>
       <TableCell>Required for video job eligibility</TableCell>
       <TableCell>AI job eligibility routes through capability advertisement</TableCell>
       <TableCell>Required for video; AI routes via capability advertisement</TableCell>
@@ -128,7 +128,7 @@ Confirm these prerequisites before starting:
 - **Hardware:** NVIDIA GPU with 16 GB VRAM or more. 8 GB is sufficient for LLM pipelines via the Ollama runner. Most diffusion model pipelines require 16 GB or more. See <LinkArrow href="/v2/orchestrators/guides/operator-considerations/requirements" label="Hardware Requirements" /> for per-GPU capability guidance.
 - **OS:** Linux. The AI Runner container is Linux-only.
 - **Docker and NVIDIA Container Toolkit:** Docker installed and the NVIDIA Container Toolkit configured so that `nvidia-smi` runs successfully inside a container.
-- **For video transcoding:** Your Arbitrum wallet is funded with ETH for gas, your node is activated via `livepeer_cli`, and you are staked with enough LPT to be eligible for the active set.
+- **For video transcoding:** Your Arbitrum wallet is funded with ETH for gas, your node is activated via `livepeer_cli`, and you are staked with enough LPT to be eligible for the Active Set.
 - **AI model weights:** Model weights downloaded to your host machine before starting the AI Runner. See <LinkArrow href="/v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup" label="AI Pipelines" /> for download instructions.
 
 <CustomDivider />
@@ -141,13 +141,13 @@ Select the path that matches your current state.
 <Tabs>
   <Tab title="Starting fresh" icon="bolt">
 
-    These steps set up a Dual Mode orchestrator from scratch on a machine with no existing Livepeer configuration. Complete all four steps in order.
+    These steps set up a Dual Mode Orchestrator from scratch on a machine with no existing Livepeer configuration. Complete all four steps in order.
 
     <StyledSteps iconColor="var(--lp-color-accent)" titleColor="var(--accent)">
 
       <StyledStep title="Download model weights" icon="download">
 
-        Model weights must be present on the host machine before go-livepeer starts the AI Runner containers. Use the download script from the official AI runner image to pull your chosen model.
+        Model weights must be present on the host machine before go-livepeer starts the AI Runner containers. Use the download script from the official AI Runner image to pull your chosen model.
 
         ```bash icon="terminal" title="Run the dual-mode container"
         docker run --rm \
@@ -185,7 +185,7 @@ Select the path that matches your current state.
 
       <StyledStep title="Start go-livepeer" icon="docker">
 
-        The command below starts a Dual Mode orchestrator. It combines the standard video transcoding flags with the three AI-specific additions.
+        The command below starts a Dual Mode Orchestrator. It combines the standard video transcoding flags with the three AI-specific additions.
 
         ```bash icon="terminal" title="Run the dual-mode container"
         docker run \
@@ -239,16 +239,16 @@ Select the path that matches your current state.
 
       <StyledStep title="Activate on-chain" icon="link">
 
-        Run `livepeer_cli` to register as an Orchestrator, set the reward cut and fee cut, and
+        Run `livepeer_cli` to register as an Orchestrator, set the Reward Cut and Fee Cut, and
         stake LPT. This step is required to receive video transcoding jobs. AI inference jobs route
-        through capability advertisement and start reaching a node before it enters the active set
+        through capability advertisement and start reaching a node before it enters the Active Set
         for video work.
 
         ```bash icon="terminal" title="Run livepeer_cli"
         livepeer_cli
         ```
 
-        Select the "Invoke multi-step become an orchestrator" option. After activation, your node must reach the top 100 orchestrators by total stake to enter the active set and begin receiving video jobs. Check your standing on <LinkArrow href="https://explorer.livepeer.org/orchestrators" label="Livepeer Explorer" />.
+        Select the "Invoke multi-step become an Orchestrator" option. After activation, your node must reach the top 100 Orchestrators by total stake to enter the Active Set and begin receiving video jobs. Check your standing on <LinkArrow href="https://explorer.livepeer.org/orchestrators" label="Livepeer Explorer" />.
 
       </StyledStep>
 
@@ -258,7 +258,7 @@ Select the path that matches your current state.
 
   <Tab title="Adding AI to existing node" icon="circle-plus">
 
-    A running video transcoding orchestrator adds AI inference through three changes only: a model download, a new `aiModels.json`, and three additional flags in the start command. On-chain registration, staking, and transcoding configuration stay unchanged.
+    A running video transcoding Orchestrator adds AI inference through three changes only: a model download, a new `aiModels.json`, and three additional flags in the start command. On-chain registration, staking, and transcoding configuration stay unchanged.
 
     <StyledSteps iconColor="var(--lp-color-accent)" titleColor="var(--accent)">
 
@@ -346,7 +346,7 @@ The response includes a `pipelines` array listing your registered AI capabilitie
 
 **Check external network visibility:**
 
-Your node's capabilities, including warm models, are visible externally at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Search by service address or ETH account address to confirm the network sees the AI pipelines alongside transcoding registration.
+Your node's capabilities, including warm models, are visible externally at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Search by service address or ETH account address to confirm the network sees the AI pipelines alongside transcoding registration.
 
         AI pipelines that remain absent externally for two to three minutes after startup usually
         point to a container startup or registration issue. Inspect the container logs:
@@ -355,7 +355,7 @@ Your node's capabilities, including warm models, are visible externally at [tool
 docker logs livepeer_dual_orchestrator 2>&1 | grep -i "ai-runner\|container\|pipeline\|error"
 ```
 
-For a full error reference including AI runner startup failures and capability registration issues, see <LinkArrow href="/v2/orchestrators/resources/faq" label="Orchestrator FAQ" />.
+For a full error reference including AI Runner startup failures and capability registration issues, see <LinkArrow href="/v2/orchestrators/resources/faq" label="Orchestrator FAQ" />.
 
 <CustomDivider />
 
@@ -400,9 +400,9 @@ The table below maps common GPU classes to AI pipeline combinations that are via
 
 ### Earnings
 
-Dual Mode operators earn from two revenue streams with independent demand patterns. Transcoding fees track network video demand. AI inference fees track per-capability demand from application developers. Both are paid in ETH via probabilistic micropayments.
+Dual Mode operators earn from two revenue streams with independent demand patterns. Transcoding fees track network video demand. AI inference fees track per-capability demand from application developers. Both are paid in ETH via Probabilistic Micropayments.
 
-Current per-pipeline AI pricing and per-orchestrator earnings are live on <LinkArrow href="https://explorer.livepeer.org" label="Livepeer Explorer" /> and <LinkArrow href="https://tools.livepeer.cloud" label="tools.livepeer.cloud" />. Market rates shift as network supply and demand change, so third-party figures age quickly.
+Current per-pipeline AI pricing and per-Orchestrator earnings are live on <LinkArrow href="https://explorer.livepeer.org" label="Livepeer Explorer" /> and <LinkArrow href="https://tools.livepeer.cloud" label="tools.livepeer.cloud" />. Market rates shift as network supply and demand change, so third-party figures age quickly.
 
 <CustomDivider />
 
@@ -413,13 +413,13 @@ Current per-pipeline AI pricing and per-orchestrator earnings are live on <LinkA
     Full `aiModels.json` schema, per-pipeline VRAM requirements, model download commands, and warm model management.
   </Card>
   <Card title="Gateway Relationships" icon="diagram-project" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" arrow horizontal>
-    How gateways discover your capabilities and select your node for both video and AI jobs.
+    How Gateways discover your capabilities and select your node for both video and AI jobs.
   </Card>
   <Card title="Earnings and Pricing" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow horizontal>
     Setting competitive prices for video transcoding and AI inference to maximise job volume from both revenue streams.
   </Card>
   <Card title="Orchestrator FAQ" icon="circle-question" href="/v2/orchestrators/resources/faq" arrow horizontal>
-    Common errors and fixes: AI runner startup failures, VRAM out-of-memory, and capability registration issues.
+    Common errors and fixes: AI Runner startup failures, VRAM out-of-memory, and capability registration issues.
   </Card>
 </CardGroup>
 

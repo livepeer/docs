@@ -43,19 +43,19 @@ This architecture is called Cascade. Daydream uses Cascade for its generative vi
 
 ## Cascade Architecture
 
-Cascade routes a live stream through four components: a gateway, an orchestrator, an ai-runner container running a real-time pipeline, and the trickle protocol connecting them.
+Cascade routes a live stream through four components: a Gateway, an Orchestrator, an ai-runner container running a real-time pipeline, and the trickle protocol connecting them.
 
 The trickle protocol (from `github.com/j0sh/http-trickle`) is an HTTP-based streaming protocol that splits a media stream into short sequential segments, delivering each segment as soon as it is produced instead of buffering for a fixed window. This allows the pipeline to begin processing frames before the stream has been fully received, keeping end-to-end latency low.
 
 The request flow:
 
-1. A source sends a stream (WebRTC or RTMP) to a gateway endpoint
-2. The gateway opens a persistent `POST /live/video-to-video` session with an orchestrator
-3. The orchestrator forwards frames to an `ai-runner` container running a ComfyUI or custom real-time pipeline
+1. A source sends a stream (WebRTC or RTMP) to a Gateway endpoint
+2. The Gateway opens a persistent `POST /live/video-to-video` session with an Orchestrator
+3. The Orchestrator forwards frames to an `ai-runner` container running a ComfyUI or custom real-time pipeline
 4. The pipeline applies model inference per frame and returns transformed frames over the trickle channel
-5. The gateway delivers the output stream back to the client
+5. The Gateway delivers the output stream back to the client
 
-The orchestrator and ai-runner communicate over trickle. Dynamic parameter updates can be sent to the running pipeline without interrupting the stream, using the `POST /live/video-to-video/update` endpoint.
+The Orchestrator and ai-runner communicate over trickle. Dynamic parameter updates can be sent to the running pipeline without interrupting the stream, using the `POST /live/video-to-video/update` endpoint.
 
 <CustomDivider />
 
@@ -80,7 +80,7 @@ See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/
 
 PyTrickle (`livepeer/pytrickle`) is the Python SDK for building custom real-time processing services over the trickle protocol. Where ComfyStream wraps ComfyUI, PyTrickle provides the lower-level `FrameProcessor` abstraction for arbitrary Python processing logic: AI models, custom filters, streaming analytics, or any async frame-by-frame computation.
 
-A PyTrickle service exposes an HTTP API that the Livepeer orchestrator connects to directly. The service handles video decoding, frame delivery, and video encoding; you implement `process_video_async` and optionally `process_audio_async`.
+A PyTrickle service exposes an HTTP API that the Livepeer Orchestrator connects to directly. The service handles video decoding, frame delivery, and video encoding; you implement `process_video_async` and optionally `process_audio_async`.
 
 See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview" label="PyTrickle Overview" newline={false} /> for installation and the `FrameProcessor` pattern.
 
@@ -92,17 +92,17 @@ A developer working on a real-time pipeline needs:
 
 1. A ComfyUI installation with the workflow they want to apply to video
 2. ComfyStream installed as a custom node, or a PyTrickle service implementing the pipeline
-3. A Livepeer gateway endpoint routing the `live-video-to-video` pipeline to an orchestrator that supports real-time AI
+3. A Livepeer Gateway endpoint routing the `live-video-to-video` pipeline to an Orchestrator that supports real-time AI
 
-For development, the public community gateway at `dream-gateway.livepeer.cloud` routes real-time AI jobs to orchestrators with available Cascade capacity. For production, a self-hosted gateway or a dedicated gateway partner provides guaranteed capacity and predictable routing.
+For development, the public community Gateway at `dream-gateway.livepeer.cloud` routes real-time AI jobs to Orchestrators with available Cascade capacity. For production, a self-hosted Gateway or a dedicated Gateway partner provides guaranteed capacity and predictable routing.
 
 <Note>
-  Real-time AI is in beta. Pipeline availability depends on orchestrators running the `ai-runner` container with real-time support enabled. Check `tools.livepeer.cloud/ai/network-capabilities` for current warm orchestrators on the `live-video-to-video` pipeline.
+  Real-time AI is in beta. Pipeline availability depends on Orchestrators running the `ai-runner` container with real-time support enabled. Check `tools.livepeer.cloud/ai/network-capabilities` for current warm Orchestrators on the `live-video-to-video` pipeline.
 </Note>
 
 <CustomDivider />
 
-The [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart) is the fastest path to a working real-time pipeline. For custom Python models outside ComfyUI, start with [PyTrickle](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview).
+The [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/ComfyStream/ComfyStream-quickstart) is the fastest path to a working real-time pipeline. For custom Python models outside ComfyUI, start with [PyTrickle](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview).
 
 ## Related Pages
 
@@ -123,7 +123,7 @@ The [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/comf
     arrow
     horizontal
   >
-    Running ComfyStream as a registered BYOC container on Livepeer orchestrators.
+    Running ComfyStream as a registered BYOC container on Livepeer Orchestrators.
   </Card>
   <Card
     title="PyTrickle Overview"

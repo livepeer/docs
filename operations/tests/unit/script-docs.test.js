@@ -886,10 +886,12 @@ function buildAggregateMarkdown() {
   lines.push(`**Type key:** ${typeKeyParts.join(' · ')}`, '');
 
   // Grouped tables — one ## section per type
+  const renderedTypes = [];
   for (const type of TYPE_ORDER) {
     const section = buildTypeGroupSection(type, registry);
     if (section) {
       lines.push(section, '');
+      renderedTypes.push(type);
     }
   }
 
@@ -900,6 +902,22 @@ function buildAggregateMarkdown() {
   // Unclassified audit accordion
   const unclassifiedSection = buildUnclassifiedAccordion(registry);
   if (unclassifiedSection) lines.push(unclassifiedSection, '');
+
+  // Drift assertion: the May 2026 catalog regression silently dropped 2 of 7
+  // types when the generator was hard-coded to 5. Guard against the next
+  // instance of that bug class — if a canonical type renders zero rows, warn
+  // loudly and (under --strict-catalog or CATALOG_STRICT=1) fail the build.
+  const missingTypes = TYPE_ORDER.filter((t) => !renderedTypes.includes(t));
+  if (missingTypes.length > 0) {
+    const strict = process.argv.includes('--strict-catalog') || process.env.CATALOG_STRICT === '1';
+    const labels = missingTypes.map((t) => `${TYPE_ICONS[t] || ''} ${t}`).join(', ');
+    process.stderr.write(`\n⚠️  CATALOG DRIFT: ${missingTypes.length} canonical type(s) absent from catalog: ${labels}\n`);
+    process.stderr.write(`Either retire the type from TYPE_ORDER (governance decision) or add/reclassify scripts.\n`);
+    if (strict) {
+      process.stderr.write(`[--strict-catalog] failing build.\n`);
+      process.exit(1);
+    }
+  }
 
   return lines.join('\n');
 }

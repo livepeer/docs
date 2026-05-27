@@ -36,7 +36,7 @@ import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Quote>
-Every Livepeer Network metric is exposed through one of five surfaces: the Explorer, the subgraph, the performance leaderboard API, the orchestrator pricing endpoint, and the AI capabilities API. This page lists every metric, names the surface that emits it, gives the canonical definition, and links to where to read it.
+Every Livepeer Network metric is exposed through one of five surfaces: the Explorer, the subgraph, the performance leaderboard API, the Orchestrator pricing endpoint, and the AI capabilities API. This page lists every metric, names the surface that emits it, gives the canonical definition, and links to where to read it.
 </Quote>
 
 <CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
@@ -68,14 +68,14 @@ Primary network metrics are emitted by the following surfaces:
   <Card title={<CustomCardTitle icon="tags" title="Orchestrator Pricing Endpoint" />} cta="Open Endpoint" href="https://nyc.livepeer.com/orchestratorStats" horizontal>
     **Read at:** `nyc.livepeer.com/orchestratorStats`
 
-    **Cadence:** Updated by orchestrators advertising prices
+    **Cadence:** Updated by Orchestrators advertising prices
 
     **Auth:** None
   </Card>
   <Card title={<CustomCardTitle icon="microchip" title="AI Capabilities API" />} cta="View Reference" href="#endpoints-quick-reference" horizontal>
     **Read at:** `<AI_METRICS_SERVER_URL>/api/pipelines`
 
-    **Cadence:** Per orchestrator capability advertisement
+    **Cadence:** Per Orchestrator capability advertisement
 
     **Auth:** None
   </Card>
@@ -85,7 +85,7 @@ Primary network metrics are emitted by the following surfaces:
 
 ### Round Status
 
-The protocol advances in rounds. A round is roughly 21 hours on Arbitrum One; the precise length is the `roundLength` parameter measured in L1 blocks. Round state controls when orchestrators can call `reward`, when stake changes take effect, and when daily aggregates close.
+The protocol advances in rounds. A round is roughly 21 hours on Arbitrum One; the precise length is the `roundLength` parameter measured in L1 blocks. Round state controls when Orchestrators can call `reward`, when stake changes take effect, and when daily aggregates close.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
@@ -104,7 +104,7 @@ The protocol advances in rounds. A round is roughly 21 hours on Arbitrum One; th
     },
     {
       Metric: <Subtitle variant="changelog">**`currentRound.initialized`**</Subtitle>,
-      'What it is': 'Boolean. True once any orchestrator has called `RoundsManager.initializeRound()` for this round. Reward calls and bond changes require initialization.',
+      'What it is': 'Boolean. True once any Orchestrator has called `RoundsManager.initializeRound()` for this round. Reward calls and bond changes require initialization.',
       Surface: 'Subgraph (`Round.initialized`)',
       'Where to read it': 'Explorer round status shows "Pending" until initialized',
     },
@@ -128,7 +128,7 @@ The protocol advances in rounds. A round is roughly 21 hours on Arbitrum One; th
     },
     {
       Metric: <Subtitle variant="changelog">**`lockPeriod`**</Subtitle>,
-      'What it is': 'Number of rounds an unbonding delegator must wait before withdrawing. Set by governance; currently 7 rounds.',
+      'What it is': 'Number of rounds an unbonding Delegator must wait before withdrawing. Set by governance; currently 7 rounds.',
       Surface: 'Subgraph (`Protocol.lockPeriod`); on-chain `BondingManager.unbondingPeriod()`',
       'Where to read it': 'Subgraph `protocol` query',
     },
@@ -139,7 +139,7 @@ The protocol advances in rounds. A round is roughly 21 hours on Arbitrum One; th
 
 ### Economic Metrics
 
-LPT stake metrics measure how much LPT is bonded to orchestrators, what proportion of supply that represents, and how stake is distributed across the network. These metrics determine the active set, drive inflation, and gate every governance vote.
+LPT stake metrics measure how much LPT is bonded to Orchestrators, what proportion of supply that represents, and how stake is distributed across the network. These metrics determine the Active Set, drive inflation, and gate every governance vote.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
@@ -152,13 +152,13 @@ LPT stake metrics measure how much LPT is bonded to orchestrators, what proporti
     },
     {
       Metric: <Subtitle variant="changelog">**`totalActiveStake`**</Subtitle>,
-      'What it is': 'Sum of bonded LPT across all active orchestrators in the active set. Excludes stake bonded to inactive orchestrators.',
+      'What it is': 'Sum of bonded LPT across all active Orchestrators in the Active Set. Excludes stake bonded to inactive Orchestrators.',
       Surface: 'Subgraph (`Protocol.totalActiveStake`); on-chain `BondingManager.getTotalBonded()`',
       'Where to read it': 'Subgraph `protocol` query',
     },
     {
       Metric: <Subtitle variant="changelog">**`participationRate`**</Subtitle>,
-      'What it is': 'Percent of LPT bonded to orchestrators. Computed `totalActiveStake / totalSupply`. Drives inflation: when below the target rate, inflation rises; when above, inflation falls.',
+      'What it is': 'Percent of LPT bonded to Orchestrators. Computed `totalActiveStake / totalSupply`. Drives inflation: when below the target rate, inflation rises; when above, inflation falls.',
       Surface: 'Subgraph (`Protocol.participationRate`, `Day.participationRate`); Explorer homepage chart',
       'Where to read it': '[`explorer.livepeer.org`](https://explorer.livepeer.org/) → Participation Rate panel',
     },
@@ -176,7 +176,7 @@ LPT stake metrics measure how much LPT is bonded to orchestrators, what proporti
     },
     {
       Metric: <Subtitle variant="changelog">**`lptPriceEth`**</Subtitle>,
-      'What it is': 'LPT price in ETH. Used by gateways to compute settlement amounts. Sourced from on-chain price oracle.',
+      'What it is': 'LPT price in ETH. Used by Gateways to compute settlement amounts. Sourced from on-chain price oracle.',
       Surface: 'Subgraph (`Protocol.lptPriceEth`)',
       'Where to read it': 'Subgraph `protocol` query',
     },
@@ -193,46 +193,46 @@ LPT stake metrics measure how much LPT is bonded to orchestrators, what proporti
 
 ### Decentralisation Metrics
 
-The active set is the bounded list of orchestrators eligible to receive video work each round. Membership is determined by stake. These metrics measure the size, composition, and turnover of the set.
+The Active Set is the bounded list of Orchestrators eligible to receive video work each round. Membership is determined by stake. These metrics measure the size, composition, and turnover of the set.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`activeTranscoderCount`**</Subtitle>,
-      'What it is': 'Count of orchestrators in the current active set. Capped at `numActiveTranscoders` (currently 100).',
+      'What it is': 'Count of Orchestrators in the current Active Set. Capped at `numActiveTranscoders` (currently 100).',
       Surface: 'Subgraph (`Protocol.activeTranscoderCount`, `Day.activeTranscoderCount`); Explorer homepage chart',
       'Where to read it': '[`explorer.livepeer.org`](https://explorer.livepeer.org/) → Orchestrators panel',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.active`**</Subtitle>,
-      'What it is': 'Boolean per-orchestrator. True if `activationRound <= currentRound < deactivationRound`.',
+      'What it is': 'Boolean per-Orchestrator. True if `activationRound <= currentRound < deactivationRound`.',
       Surface: 'Subgraph (`Transcoder.active`)',
       'Where to read it': '[`explorer.livepeer.org/orchestrators`](https://explorer.livepeer.org/orchestrators)',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.status`**</Subtitle>,
-      'What it is': 'Lifecycle state. Values: `NotRegistered`, `Registered`. Distinct from `active`: an orchestrator can be registered but not in the active set this round.',
+      'What it is': 'Lifecycle state. Values: `NotRegistered`, `Registered`. Distinct from `active`: an Orchestrator can be registered but not in the Active Set this round.',
       Surface: 'Subgraph (`Transcoder.status`)',
       'Where to read it': 'Subgraph `transcoders` query',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.activationRound`**</Subtitle>,
-      'What it is': 'Round at which this orchestrator entered the active set. Set by `BondingManager.bond()` when stake exceeds the active-set threshold.',
+      'What it is': 'Round at which this Orchestrator entered the Active Set. Set by `BondingManager.bond()` when stake exceeds the active-set threshold.',
       Surface: 'Subgraph (`Transcoder.activationRound`)',
-      'Where to read it': 'Per-orchestrator account page; subgraph `transcoderActivatedEvents` query',
+      'Where to read it': 'Per-Orchestrator account page; subgraph `transcoderActivatedEvents` query',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.deactivationRound`**</Subtitle>,
-      'What it is': 'Round at which this orchestrator will leave the active set. Defaults to `MaxUint256` (never).',
+      'What it is': 'Round at which this Orchestrator will leave the Active Set. Defaults to `MaxUint256` (never).',
       Surface: 'Subgraph (`Transcoder.deactivationRound`)',
       'Where to read it': 'Subgraph `orchestrators` query',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.activationTimestamp`**</Subtitle>,
-      'What it is': 'Unix timestamp at which this orchestrator first activated. Used to compute "age" on Explorer.',
+      'What it is': 'Unix timestamp at which this Orchestrator first activated. Used to compute "age" on Explorer.',
       Surface: 'Subgraph (`Transcoder.activationTimestamp`)',
-      'Where to read it': 'Per-orchestrator account page',
+      'Where to read it': 'Per-Orchestrator account page',
     },
   ]}
 />
@@ -241,56 +241,56 @@ The active set is the bounded list of orchestrators eligible to receive video wo
 
 ### Staking Metrics
 
-Each orchestrator has its own stake position. These metrics describe how much LPT is bonded to a specific orchestrator and how that stake is split between the orchestrator's own bond and delegators.
+Each Orchestrator has its own stake position. These metrics describe how much LPT is bonded to a specific Orchestrator and how that stake is split between the Orchestrator's own bond and Delegators.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.totalStake`**</Subtitle>,
-      'What it is': 'Total LPT bonded to this orchestrator: own bond plus delegator bonds. Determines active-set ranking.',
+      'What it is': 'Total LPT bonded to this Orchestrator: own bond plus Delegator bonds. Determines active-set ranking.',
       Surface: 'Subgraph (`Transcoder.totalStake`); on-chain `BondingManager.transcoderTotalStake()`',
       'Where to read it': '[`explorer.livepeer.org/orchestrators`](https://explorer.livepeer.org/orchestrators) → Total Stake column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.delegator.bondedAmount`**</Subtitle>,
-      'What it is': 'The orchestrator\'s own self-bonded LPT (orchestrators are also delegators to themselves).',
+      'What it is': 'The Orchestrator\'s own self-bonded LPT (Orchestrators are also Delegators to themselves).',
       Surface: 'Subgraph (`Transcoder.delegator.bondedAmount`)',
-      'Where to read it': 'Per-orchestrator account page → "Self-stake"',
+      'Where to read it': 'Per-Orchestrator account page → "Self-stake"',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.delegators.count`**</Subtitle>,
-      'What it is': 'Number of distinct delegator addresses bonded to this orchestrator.',
+      'What it is': 'Number of distinct Delegator addresses bonded to this Orchestrator.',
       Surface: 'Subgraph (`Transcoder.delegators` array length)',
-      'Where to read it': 'Per-orchestrator account page → Delegators tab',
+      'Where to read it': 'Per-Orchestrator account page → Delegators tab',
     },
     {
       Metric: <Subtitle variant="changelog">**`Delegator.bondedAmount`**</Subtitle>,
-      'What it is': 'LPT a delegator has bonded to their chosen orchestrator. Includes accumulated rewards if `claimEarnings` has been called recently.',
+      'What it is': 'LPT a Delegator has bonded to their chosen Orchestrator. Includes accumulated rewards if `claimEarnings` has been called recently.',
       Surface: 'Subgraph (`Delegator.bondedAmount`); on-chain `BondingManager.pendingStake()` for live amount',
       'Where to read it': 'Per-account page when wallet is connected',
     },
     {
       Metric: <Subtitle variant="changelog">**`Delegator.principal`**</Subtitle>,
-      'What it is': 'Cumulative LPT a delegator has bonded over time, before rewards. Tracks the input side of bonding.',
+      'What it is': 'Cumulative LPT a Delegator has bonded over time, before rewards. Tracks the input side of bonding.',
       Surface: 'Subgraph (`Delegator.principal`)',
       'Where to read it': 'Per-account page',
     },
     {
       Metric: <Subtitle variant="changelog">**`Delegator.unbonded`**</Subtitle>,
-      'What it is': 'Cumulative LPT a delegator has unbonded over time.',
+      'What it is': 'Cumulative LPT a Delegator has unbonded over time.',
       Surface: 'Subgraph (`Delegator.unbonded`)',
       'Where to read it': 'Per-account page',
     },
     {
       Metric: <Subtitle variant="changelog">**`Delegator.startRound`**</Subtitle>,
-      'What it is': 'Round at which the delegator\'s current stake position became active. Used to compute earnings windows.',
+      'What it is': 'Round at which the Delegator\'s current stake position became active. Used to compute earnings windows.',
       Surface: 'Subgraph (`Delegator.startRound`)',
       'Where to read it': 'Per-account page',
     },
     {
       Metric: <Subtitle variant="changelog">**`Delegator.lastClaimRound`**</Subtitle>,
-      'What it is': 'Most recent round through which the delegator has claimed earnings. Stake compounds on `claimEarnings()` calls.',
+      'What it is': 'Most recent round through which the Delegator has claimed earnings. Stake compounds on `claimEarnings()` calls.',
       Surface: 'Subgraph (`Delegator.lastClaimRound`); on-chain `BondingManager.getDelegator().lastClaimRound`',
       'Where to read it': 'Per-account page → Earnings tab',
     },
@@ -302,7 +302,7 @@ Each orchestrator has its own stake position. These metrics describe how much LP
     },
     {
       Metric: <Subtitle variant="changelog">**`delegatorsCount`**</Subtitle>,
-      'What it is': 'Total distinct delegator addresses across the whole network.',
+      'What it is': 'Total distinct Delegator addresses across the whole network.',
       Surface: 'Subgraph (`Protocol.delegatorsCount`, `Day.delegatorsCount`); Explorer homepage chart',
       'Where to read it': '[`explorer.livepeer.org`](https://explorer.livepeer.org/) → Delegators panel',
     },
@@ -313,34 +313,34 @@ Each orchestrator has its own stake position. These metrics describe how much LP
 
 ### Commission Parameters
 
-Reward cut and fee cut are the orchestrator's commission rates: how much of the round\'s LPT inflation rewards and ETH fees the orchestrator keeps before splitting the rest to delegators by stake share.
+Reward Cut and Fee Cut are the Orchestrator's commission rates: how much of the round\'s LPT inflation rewards and ETH fees the Orchestrator keeps before splitting the rest to Delegators by stake share.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.rewardCut`**</Subtitle>,
-      'What it is': 'Percent of inflation reward the orchestrator retains; remainder distributed to delegators by stake share. Stored as PPM (parts per million); divide by 10000 to get percent.',
+      'What it is': 'Percent of inflation reward the Orchestrator retains; remainder distributed to Delegators by stake share. Stored as PPM (parts per million); divide by 10000 to get percent.',
       Surface: 'Subgraph (`Transcoder.rewardCut`); on-chain `BondingManager.getTranscoder().rewardCut`',
       'Where to read it': '[`explorer.livepeer.org/orchestrators`](https://explorer.livepeer.org/orchestrators) → Reward Cut column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.feeShare`**</Subtitle>,
-      'What it is': 'Percent of ETH fees distributed to delegators (the inverse direction from `rewardCut`). PPM format. `(1 - feeShare)` is the orchestrator\'s fee cut.',
+      'What it is': 'Percent of ETH fees distributed to Delegators (the inverse direction from `rewardCut`). PPM format. `(1 - feeShare)` is the Orchestrator\'s Fee Cut.',
       Surface: 'Subgraph (`Transcoder.feeShare`); on-chain `BondingManager.getTranscoder().feeShare`',
       'Where to read it': '[`explorer.livepeer.org/orchestrators`](https://explorer.livepeer.org/orchestrators) → Fee Cut column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.rewardCutUpdateTimestamp`**</Subtitle>,
-      'What it is': 'Unix timestamp at which the orchestrator last changed `rewardCut`. Lets delegators see how recently the rate was adjusted.',
+      'What it is': 'Unix timestamp at which the Orchestrator last changed `rewardCut`. Lets Delegators see how recently the rate was adjusted.',
       Surface: 'Subgraph (`Transcoder.rewardCutUpdateTimestamp`)',
-      'Where to read it': 'Per-orchestrator account page; subgraph `transcoderUpdateEvents` query',
+      'Where to read it': 'Per-Orchestrator account page; subgraph `transcoderUpdateEvents` query',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.feeShareUpdateTimestamp`**</Subtitle>,
       'What it is': 'Unix timestamp of the last `feeShare` change.',
       Surface: 'Subgraph (`Transcoder.feeShareUpdateTimestamp`)',
-      'Where to read it': 'Per-orchestrator account page',
+      'Where to read it': 'Per-Orchestrator account page',
     },
   ]}
 />
@@ -349,32 +349,32 @@ Reward cut and fee cut are the orchestrator's commission rates: how much of the 
 
 ### Reward Pools
 
-Each round, every active orchestrator can call `BondingManager.reward()` to mint that round\'s share of inflation into a `Pool`. Pools record what was minted, who minted it, and how it gets split.
+Each round, every active Orchestrator can call `BondingManager.reward()` to mint that round\'s share of inflation into a `Pool`. Pools record what was minted, who minted it, and how it gets split.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`Pool.rewardTokens`**</Subtitle>,
-      'What it is': 'LPT minted by this orchestrator in this round\'s reward call. Null if the orchestrator did not call `reward()` that round.',
+      'What it is': 'LPT minted by this Orchestrator in this round\'s reward call. Null if the Orchestrator did not call `reward()` that round.',
       Surface: 'Subgraph (`Pool.rewardTokens`)',
-      'Where to read it': 'Per-orchestrator account page → "Rewards Called" indicator per round',
+      'Where to read it': 'Per-Orchestrator account page → "Rewards Called" indicator per round',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.lastRewardRound`**</Subtitle>,
-      'What it is': 'Most recent round in which the orchestrator successfully called `reward()`. A gap indicates missed rounds.',
+      'What it is': 'Most recent round in which the Orchestrator successfully called `reward()`. A gap indicates missed rounds.',
       Surface: 'Subgraph (`Transcoder.lastRewardRound`)',
       'Where to read it': '[`explorer.livepeer.org/orchestrators`](https://explorer.livepeer.org/orchestrators) → "Called Reward" badge',
     },
     {
       Metric: <Subtitle variant="changelog">**`Pool.feeShare`** / **`Pool.rewardCut`**</Subtitle>,
-      'What it is': 'Per-pool snapshot of the orchestrator\'s `feeShare` and `rewardCut` at the time the pool was created. Used to compute historical earnings splits.',
+      'What it is': 'Per-pool snapshot of the Orchestrator\'s `feeShare` and `rewardCut` at the time the pool was created. Used to compute historical earnings splits.',
       Surface: 'Subgraph (`Pool.feeShare`, `Pool.rewardCut`)',
       'Where to read it': 'Subgraph custom queries on `Pool` entity',
     },
     {
       Metric: <Subtitle variant="changelog">**`Pool.totalStake`**</Subtitle>,
-      'What it is': 'Snapshot of the orchestrator\'s `totalStake` at the time the pool was created. Lets historical earnings calculations reproduce the per-delegator split.',
+      'What it is': 'Snapshot of the Orchestrator\'s `totalStake` at the time the pool was created. Lets historical earnings calculations reproduce the per-Delegator split.',
       Surface: 'Subgraph (`Pool.totalStake`)',
       'Where to read it': 'Subgraph custom queries on `Pool` entity',
     },
@@ -385,7 +385,7 @@ Each round, every active orchestrator can call `BondingManager.reward()` to mint
 
 ### Activity Metrics
 
-Fee volume is the ETH paid for jobs settled through winning tickets, with USD-equivalent computed at settlement time. The same fee flow generates per-orchestrator metrics, per-gateway metrics, and the network-wide aggregate.
+Fee volume is the ETH paid for jobs settled through winning tickets, with USD-equivalent computed at settlement time. The same fee flow generates per-Orchestrator metrics, per-Gateway metrics, and the network-wide aggregate.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
@@ -410,31 +410,31 @@ Fee volume is the ETH paid for jobs settled through winning tickets, with USD-eq
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.totalVolumeETH`**</Subtitle>,
-      'What it is': 'Cumulative ETH redeemed by this orchestrator across its history.',
+      'What it is': 'Cumulative ETH redeemed by this Orchestrator across its history.',
       Surface: 'Subgraph (`Transcoder.totalVolumeETH`)',
-      'Where to read it': 'Per-orchestrator account page → Earnings',
+      'Where to read it': 'Per-Orchestrator account page → Earnings',
     },
     {
       Metric: <Subtitle variant="changelog">**`Transcoder.thirtyDayVolumeETH`** / **`sixtyDayVolumeETH`** / **`ninetyDayVolumeETH`**</Subtitle>,
-      'What it is': 'Rolling-window ETH redemption volume for an orchestrator over the last 30, 60, or 90 days. The 30-day metric is the default sort key on the orchestrator list.',
+      'What it is': 'Rolling-window ETH redemption volume for an Orchestrator over the last 30, 60, or 90 days. The 30-day metric is the default sort key on the Orchestrator list.',
       Surface: 'Subgraph (`Transcoder.thirtyDayVolumeETH` etc.)',
       'Where to read it': '[`explorer.livepeer.org/orchestrators`](https://explorer.livepeer.org/orchestrators) → Fees (30d) column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Broadcaster.totalVolumeETH`**</Subtitle>,
-      'What it is': 'Cumulative ETH paid by this gateway through winning ticket settlements.',
+      'What it is': 'Cumulative ETH paid by this Gateway through winning ticket settlements.',
       Surface: 'Subgraph (`Broadcaster.totalVolumeETH`)',
       'Where to read it': '[`explorer.livepeer.org/gateways`](https://explorer.livepeer.org/gateways) → Total Volume column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Broadcaster.ninetyDayVolumeETH`**</Subtitle>,
-      'What it is': 'Rolling 90-day ETH paid by this gateway. Default sort key on the gateways page.',
+      'What it is': 'Rolling 90-day ETH paid by this Gateway. Default sort key on the Gateways page.',
       Surface: 'Subgraph (`Broadcaster.ninetyDayVolumeETH`)',
       'Where to read it': '[`explorer.livepeer.org/gateways`](https://explorer.livepeer.org/gateways) → 90d Volume column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Delegator.withdrawnFees`**</Subtitle>,
-      'What it is': 'Cumulative ETH a delegator has withdrawn from their share of orchestrator fees. Read with `claimEarnings` history to compute fee earnings rate.',
+      'What it is': 'Cumulative ETH a Delegator has withdrawn from their share of Orchestrator fees. Read with `claimEarnings` history to compute fee earnings rate.',
       Surface: 'Subgraph (`Delegator.withdrawnFees`)',
       'Where to read it': 'Per-account page → Fees',
     },
@@ -469,7 +469,7 @@ Usage is converted from fee volume into estimated minutes of compute delivered. 
 
 ### Performance Leaderboard
 
-The leaderboard is populated by a metrics server (`leaderboard-serverless.vercel.app` for transcoding, separate URL for AI) that runs reference test jobs against every active orchestrator from each region. Scores reflect how each orchestrator answers those test jobs.
+The leaderboard is populated by a metrics server (`leaderboard-serverless.vercel.app` for transcoding, separate URL for AI) that runs reference test jobs against every active Orchestrator from each region. Scores reflect how each Orchestrator answers those test jobs.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
@@ -482,13 +482,13 @@ The leaderboard is populated by a metrics server (`leaderboard-serverless.vercel
     },
     {
       Metric: <Subtitle variant="changelog"><strong><code>{'successRates.{region}'}</code></strong> (%)</Subtitle>,
-      'What it is': 'Percent of test jobs the orchestrator successfully completed in the last measurement window for this region.',
+      'What it is': 'Percent of test jobs the Orchestrator successfully completed in the last measurement window for this region.',
       Surface: 'Leaderboard API (`/api/aggregated_stats`)',
       'Where to read it': '[`explorer.livepeer.org/leaderboard`](https://explorer.livepeer.org/leaderboard) → Success Rate column',
     },
     {
       Metric: <Subtitle variant="changelog"><strong><code>{'roundTripScores.{region}'}</code></strong> (Latency Score, 0-10)</Subtitle>,
-      'What it is': 'Latency score per region. Transcoding: average test segment duration vs round-trip time. AI: average round-trip time vs the median across orchestrators.',
+      'What it is': 'Latency score per region. Transcoding: average test segment duration vs round-trip time. AI: average round-trip time vs the median across Orchestrators.',
       Surface: 'Leaderboard API (`/api/aggregated_stats`)',
       'Where to read it': '[`explorer.livepeer.org/leaderboard`](https://explorer.livepeer.org/leaderboard) → Latency Score column',
     },
@@ -500,15 +500,15 @@ The leaderboard is populated by a metrics server (`leaderboard-serverless.vercel
     },
     {
       Metric: <Subtitle variant="changelog">**`pricePerPixel`**</Subtitle>,
-      'What it is': 'Per-orchestrator advertised price-per-pixel for transcoding work. Read from `nyc.livepeer.com/orchestratorStats`.',
+      'What it is': 'Per-Orchestrator advertised price-per-pixel for transcoding work. Read from `nyc.livepeer.com/orchestratorStats`.',
       Surface: 'Pricing endpoint (joined into leaderboard response)',
       'Where to read it': '[`nyc.livepeer.com/orchestratorStats`](https://nyc.livepeer.com/orchestratorStats); leaderboard rows',
     },
     {
       Metric: <Subtitle variant="changelog">**`topAIScore`**</Subtitle>,
-      'What it is': 'The highest-scoring AI pipeline/model/region combination for an orchestrator. Includes `value`, `region`, `model`, `pipeline`.',
+      'What it is': 'The highest-scoring AI pipeline/model/region combination for an Orchestrator. Includes `value`, `region`, `model`, `pipeline`.',
       Surface: 'Leaderboard API (computed across pipelines)',
-      'Where to read it': 'Leaderboard with pipeline filter set; per-orchestrator account page',
+      'Where to read it': 'Leaderboard with pipeline filter set; per-Orchestrator account page',
     },
   ]}
 />
@@ -541,7 +541,7 @@ The leaderboard runs from a fixed set of measurement regions, each typed by the 
 
 ### AI Capabilities
 
-AI pipeline capabilities are advertised by orchestrators and aggregated by the AI metrics server. These metrics describe what AI work is available on the network and where.
+AI pipeline capabilities are advertised by Orchestrators and aggregated by the AI metrics server. These metrics describe what AI work is available on the network and where.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
@@ -559,8 +559,8 @@ AI pipeline capabilities are advertised by orchestrators and aggregated by the A
       'Where to read it': 'Leaderboard model selector',
     },
     {
-      Metric: <Subtitle variant="changelog">**Per-orchestrator capability bitstring**</Subtitle>,
-      'What it is': 'On-chain advertised capability flags. Encodes which transcoding profiles and which AI pipelines this orchestrator can serve.',
+      Metric: <Subtitle variant="changelog">**Per-Orchestrator capability bitstring**</Subtitle>,
+      'What it is': 'On-chain advertised capability flags. Encodes which transcoding profiles and which AI pipelines this Orchestrator can serve.',
       Surface: 'On-chain `ServiceRegistry.getServiceURI()` and `BondingManager.getTranscoder().capabilities`',
       'Where to read it': 'See [`/v2/about/network/interfaces#capability-bitstring`](/v2/about/network/interfaces); subgraph `Transcoder` entity',
     },
@@ -571,34 +571,34 @@ AI pipeline capabilities are advertised by orchestrators and aggregated by the A
 
 ### Gateway Columns
 
-Gateways prepay for jobs by funding a deposit and a reserve in the `TicketBroker` contract. These metrics show the prepaid funds and how recently the gateway has been active.
+Gateways prepay for jobs by funding a deposit and a reserve in the `TicketBroker` contract. These metrics show the prepaid funds and how recently the Gateway has been active.
 
 <DynamicTableV2
   headerList={['Metric', 'What it is', 'Surface', 'Where to read it']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`Broadcaster.deposit`**</Subtitle>,
-      'What it is': 'ETH the gateway has deposited to fund winning ticket redemptions. Drained as winning tickets are redeemed.',
+      'What it is': 'ETH the Gateway has deposited to fund winning ticket redemptions. Drained as winning tickets are redeemed.',
       Surface: 'Subgraph (`Broadcaster.deposit`); on-chain `TicketBroker.getSenderInfo().sender.deposit`',
       'Where to read it': '[`explorer.livepeer.org/gateways`](https://explorer.livepeer.org/gateways) → Deposit column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Broadcaster.reserve`**</Subtitle>,
-      'What it is': 'ETH held in reserve for an orchestrator to claim if the deposit is exhausted mid-session. Per-orchestrator share is `reserve / activeTranscoderCount`.',
+      'What it is': 'ETH held in reserve for an Orchestrator to claim if the deposit is exhausted mid-session. Per-Orchestrator share is `reserve / activeTranscoderCount`.',
       Surface: 'Subgraph (`Broadcaster.reserve`); on-chain `TicketBroker.getSenderInfo().reserve.fundsRemaining`',
       'Where to read it': '[`explorer.livepeer.org/gateways`](https://explorer.livepeer.org/gateways) → Reserve column',
     },
     {
       Metric: <Subtitle variant="changelog">**`Broadcaster.firstActiveDay`**</Subtitle>,
-      'What it is': 'Unix-day index of the first day this gateway redeemed a winning ticket. Establishes when the gateway joined.',
+      'What it is': 'Unix-day index of the first day this Gateway redeemed a winning ticket. Establishes when the Gateway joined.',
       Surface: 'Subgraph (`Broadcaster.firstActiveDay`)',
-      'Where to read it': 'Per-gateway account page',
+      'Where to read it': 'Per-Gateway account page',
     },
     {
       Metric: <Subtitle variant="changelog">**`Broadcaster.lastActiveDay`**</Subtitle>,
-      'What it is': 'Unix-day index of the most recent day this gateway redeemed a winning ticket. Used to filter the gateways page to recently-active gateways.',
+      'What it is': 'Unix-day index of the most recent day this Gateway redeemed a winning ticket. Used to filter the Gateways page to recently-active Gateways.',
       Surface: 'Subgraph (`Broadcaster.lastActiveDay`)',
-      'Where to read it': 'Per-gateway account page',
+      'Where to read it': 'Per-Gateway account page',
     },
   ]}
 />
@@ -614,7 +614,7 @@ The treasury is a separate on-chain pool of LPT funded by a percentage of each r
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`treasuryRewardCutRate`**</Subtitle>,
-      'What it is': 'Percent of each round\'s minted LPT routed to the treasury before distribution to orchestrators and delegators. Set by governance.',
+      'What it is': 'Percent of each round\'s minted LPT routed to the treasury before distribution to Orchestrators and Delegators. Set by governance.',
       Surface: 'On-chain `BondingManager.treasuryRewardCutRate()`',
       'Where to read it': '[`explorer.livepeer.org/treasury`](https://explorer.livepeer.org/treasury); LIP that set it',
     },
@@ -698,7 +698,7 @@ Every state-changing protocol call is indexed as an event on the subgraph and sh
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`BondEvent`**</Subtitle>,
-      'What it is': 'Stake bonded by a delegator to an orchestrator. Includes new delegator, additional bond, and switch-delegate cases.',
+      'What it is': 'Stake bonded by a Delegator to an Orchestrator. Includes new Delegator, additional bond, and switch-delegate cases.',
       Surface: 'Subgraph (`BondEvent`)',
       'Where to read it': '[`explorer.livepeer.org/transactions`](https://explorer.livepeer.org/transactions)',
     },
@@ -710,13 +710,13 @@ Every state-changing protocol call is indexed as an event on the subgraph and sh
     },
     {
       Metric: <Subtitle variant="changelog">**`RewardEvent`**</Subtitle>,
-      'What it is': 'Per-round reward call. Includes the `rewardTokens` minted and the orchestrator that called.',
+      'What it is': 'Per-round reward call. Includes the `rewardTokens` minted and the Orchestrator that called.',
       Surface: 'Subgraph (`RewardEvent`)',
-      'Where to read it': 'Transactions page; per-orchestrator account page',
+      'Where to read it': 'Transactions page; per-Orchestrator account page',
     },
     {
       Metric: <Subtitle variant="changelog">**`WinningTicketRedeemedEvent`**</Subtitle>,
-      'What it is': 'Per-redemption: gateway, recipient (orchestrator or redeemer), face value, auxiliary data.',
+      'What it is': 'Per-redemption: Gateway, recipient (Orchestrator or redeemer), face value, auxiliary data.',
       Surface: 'Subgraph (`WinningTicketRedeemedEvent`)',
       'Where to read it': 'Transactions page',
     },
@@ -724,19 +724,19 @@ Every state-changing protocol call is indexed as an event on the subgraph and sh
       Metric: <Subtitle variant="changelog">**`DepositFundedEvent`** / **`ReserveFundedEvent`**</Subtitle>,
       'What it is': 'Gateway deposits or reserve top-ups.',
       Surface: 'Subgraph',
-      'Where to read it': 'Per-gateway account page',
+      'Where to read it': 'Per-Gateway account page',
     },
     {
       Metric: <Subtitle variant="changelog">**`TranscoderActivatedEvent`** / **`TranscoderDeactivatedEvent`**</Subtitle>,
       'What it is': 'Active-set entry and exit events.',
       Surface: 'Subgraph (`transcoderActivatedEvents` query)',
-      'Where to read it': 'Per-orchestrator account page → Activity',
+      'Where to read it': 'Per-Orchestrator account page → Activity',
     },
     {
       Metric: <Subtitle variant="changelog">**`TranscoderUpdateEvent`**</Subtitle>,
       'What it is': 'Per-update: change to `rewardCut`, `feeShare`, or service URI.',
       Surface: 'Subgraph (`transcoderUpdateEvents` query)',
-      'Where to read it': 'Per-orchestrator account page',
+      'Where to read it': 'Per-Orchestrator account page',
     },
   ]}
 />
@@ -752,13 +752,13 @@ These metrics live on the operator\'s own `go-livepeer` node, not on the Explore
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**`livepeer_segments_received_total`**</Subtitle>,
-      'What it is': 'Total transcoding segments received by this orchestrator. Prometheus counter.',
+      'What it is': 'Total transcoding segments received by this Orchestrator. Prometheus counter.',
       Surface: '`go-livepeer` Prometheus endpoint',
       'Where to read it': '`http://<orchestrator>:7935/metrics`',
     },
     {
       Metric: <Subtitle variant="changelog">**`livepeer_segments_uploaded_total`**</Subtitle>,
-      'What it is': 'Total transcoded segments returned to gateways.',
+      'What it is': 'Total transcoded segments returned to Gateways.',
       Surface: '`go-livepeer` Prometheus endpoint',
       'Where to read it': '`http://<orchestrator>:7935/metrics`',
     },
@@ -782,7 +782,7 @@ These metrics live on the operator\'s own `go-livepeer` node, not on the Explore
     },
     {
       Metric: <Subtitle variant="changelog">**`pricePerUnit` / `pixelsPerUnit`**</Subtitle>,
-      'What it is': 'The orchestrator\'s advertised price per unit of work. Pushed to the pricing endpoint and read by gateways during selection.',
+      'What it is': 'The Orchestrator\'s advertised price per unit of work. Pushed to the pricing endpoint and read by Gateways during selection.',
       Surface: 'Operator config (`-pricePerUnit`, `-pixelsPerUnit` flags); pricing endpoint',
       'Where to read it': '`livepeer_cli` (option 1, Get node info); `nyc.livepeer.com/orchestratorStats`',
     },
@@ -830,7 +830,7 @@ For people writing scripts or dashboards, the canonical endpoints in one block:
 
   Aggregated stats: `https://leaderboard-serverless.vercel.app/api/aggregated_stats`
 
-  Per-orchestrator: `https://leaderboard-serverless.vercel.app/api/raw_stats?orchestrator=<address>`
+  Per-Orchestrator: `https://leaderboard-serverless.vercel.app/api/raw_stats?orchestrator=<address>`
 
   <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**Performance leaderboard (AI)**</Subtitle>
 
@@ -840,7 +840,7 @@ For people writing scripts or dashboards, the canonical endpoints in one block:
 
   <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**Pricing**</Subtitle>
 
-  All orchestrators: `https://nyc.livepeer.com/orchestratorStats`
+  All Orchestrators: `https://nyc.livepeer.com/orchestratorStats`
 
   <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**Explorer pages**</Subtitle>
 
@@ -875,9 +875,9 @@ For people writing scripts or dashboards, the canonical endpoints in one block:
 
 Three classes of data exist but are not exposed publicly. Anyone building dashboards or doing research should know what is missing.
 
-- **Per-segment job content**. Individual transcoded segments and AI inference outputs are exchanged off-chain between gateway and orchestrator. They are not retained, not indexed, and not visible after delivery.
-- **Non-winning probabilistic tickets**. Most tickets do not win and are never submitted on-chain. The off-chain ticket exchange is private to the gateway-orchestrator pair.
-- **Per-session price agreement**. Specific orchestrator selection decisions and per-job price agreements happen during the gateway-to-orchestrator handshake. Aggregate pricing is visible (`pricePerPixel`, capability advertisement); session-level decisions are not.
+- **Per-segment job content**. Individual transcoded segments and AI inference outputs are exchanged off-chain between Gateway and Orchestrator. They are not retained, not indexed, and not visible after delivery.
+- **Non-winning probabilistic tickets**. Most tickets do not win and are never submitted on-chain. The off-chain ticket exchange is private to the Gateway-Orchestrator pair.
+- **Per-session price agreement**. Specific Orchestrator selection decisions and per-job price agreements happen during the Gateway-to-Orchestrator handshake. Aggregate pricing is visible (`pricePerPixel`, capability advertisement); session-level decisions are not.
 
 These omissions are by design. The marketplace runs at a cadence the chain cannot match; what stays off-chain is high-frequency ephemeral coordination with no audit value once the work is delivered.
 

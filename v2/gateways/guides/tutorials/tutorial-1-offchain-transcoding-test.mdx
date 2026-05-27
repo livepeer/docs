@@ -48,7 +48,7 @@ This is Tutorial 1 of 3. It covers the off-chain video transcoding path - the fa
 
 This tutorial runs a complete Livepeer Gateway-Orchestrator pipeline on a single machine, transcodes a sample video stream, and verifies the output - all without any Ethereum wallet, GPU, or network registration.
 
-**Time:** ~15 minutes | **Cost:** zero | **Requirements:** Linux (amd64), Docker or go-livepeer binary, ffmpeg
+**Time:** ~15 minutes | **Cost:** zero | **Requirements:** Linux (amd64), Docker or go-livepeer binary, FFmpeg
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -95,7 +95,7 @@ chmod +x livepeer livepeer_cli
 Prefer Docker? Use `livepeer/go-livepeer:master` and swap the binary commands for `docker run livepeer/go-livepeer:master [flags]`. Mount a host directory with `-v ~/.lpData:/root/.lpData` so session state persists. The flags are identical.
 </Tip>
 
-**ffmpeg** (for the test stream):
+**FFmpeg** (for the test stream):
 
 ```bash icon="terminal" Install ffmpeg
 # Ubuntu / Debian
@@ -216,7 +216,7 @@ The `-gateway` flag replaces the old `-broadcaster` flag used in most pre-2024 c
       </TableRow>
       <TableRow>
         <TableCell>`-rtmpAddr 127.0.0.1:1935`</TableCell>
-        <TableCell>RTMP ingest port - where ffmpeg publishes</TableCell>
+        <TableCell>RTMP ingest port - where FFmpeg publishes</TableCell>
       </TableRow>
       <TableRow>
         <TableCell>`-httpAddr 127.0.0.1:8935`</TableCell>
@@ -274,7 +274,7 @@ The `-gateway` flag replaces the old `-broadcaster` flag used in most pre-2024 c
 
     The stream key (`test_stream`) can be anything. The Gateway accepts all stream keys in off-chain mode.
 
-    **Expected ffmpeg output:**
+    **Expected FFmpeg output:**
     ```text icon="terminal" Expected Output
     Output #0, flv, to 'rtmp://127.0.0.1:1935/live/test_stream':
       Stream #0:0: Video: h264, yuv420p, 1280x720, 2000 kb/s, 30 fps
@@ -282,7 +282,7 @@ The `-gateway` flag replaces the old `-broadcaster` flag used in most pre-2024 c
     ```
 
     <Tip>
-    The `-re` flag in Option B tells ffmpeg to read the input at its native frame rate, simulating a live stream. Without it, ffmpeg pushes the entire file as fast as possible, which can overwhelm the local Orchestrator buffer. Always use `-re` with pre-recorded files.
+    The `-re` flag in Option B tells FFmpeg to read the input at its native frame rate, simulating a live stream. Without it, FFmpeg pushes the entire file as fast as possible, which can overwhelm the local Orchestrator buffer. Always use `-re` with pre-recorded files.
     </Tip>
   </StyledStep>
 
@@ -325,7 +325,7 @@ The `-gateway` flag replaces the old `-broadcaster` flag used in most pre-2024 c
     ```
 
     <Tip>
-    If the playlist returns a 404, wait 3-5 seconds after ffmpeg starts - the Gateway needs to receive the first few segments before writing the playlist. If it still fails, check the Gateway terminal for connection errors.
+    If the playlist returns a 404, wait 3-5 seconds after FFmpeg starts - the Gateway needs to receive the first few segments before writing the playlist. If it still fails, check the Gateway terminal for connection errors.
     </Tip>
   </StyledStep>
 </StyledSteps>
@@ -365,11 +365,11 @@ ffmpeg
   </Accordion>
 
   <Accordion title="ffmpeg exits with 'Connection refused'" icon="plug-circle-xmark">
-    The Gateway RTMP server is not running, or the wrong port is specified. Check that the Gateway terminal shows `RTMP Server listening on rtmp://127.0.0.1:1935`. If `-rtmpAddr` was changed, update the ffmpeg command to match.
+    The Gateway RTMP server is not running, or the wrong port is specified. Check that the Gateway terminal shows `RTMP Server listening on rtmp://127.0.0.1:1935`. If `-rtmpAddr` was changed, update the FFmpeg command to match.
   </Accordion>
 
   <Accordion title="HLS playlist returns 404" icon="file-circle-xmark">
-    Check the stream key is consistent between ffmpeg and curl. If `test_stream` was used in ffmpeg, the playlist is at `/stream/test_stream.m3u8`. Also check that ffmpeg is still running - the Gateway only creates the playlist once it has received and forwarded at least one segment.
+    Check the stream key is consistent between FFmpeg and curl. If `test_stream` was used in FFmpeg, the playlist is at `/stream/test_stream.m3u8`. Also check that FFmpeg is still running - the Gateway only creates the playlist once it has received and forwarded at least one segment.
   </Accordion>
 
   <Accordion title="Playlist exists but has zero segments" icon="file-circle-question">

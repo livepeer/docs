@@ -37,14 +37,14 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Scroll
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Quote>
-The Network exposes four reachable surfaces. Clients enter through a gateway. Gateways and orchestrators handshake through `OrchestratorInfo`. Real-time frames move over the trickle protocol. The chain is read directly through Arbitrum One.
+The Network exposes four reachable surfaces. Clients enter through a Gateway. Gateways and Orchestrators handshake through `OrchestratorInfo`. Real-time frames move over the trickle protocol. The chain is read directly through Arbitrum One.
 </Quote>
 
 <CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
 
 ## Network Interfaces
 
-A developer integrating with Livepeer touches different surfaces depending on their role. An application developer calls a gateway. A gateway implementation talks to orchestrators. An orchestrator implementation talks to its workers and to the chain. The four surfaces below are described at the conceptual level; reference specs and code live in the Developers and Gateways tabs.
+A developer integrating with Livepeer touches different surfaces depending on their role. An application developer calls a Gateway. A Gateway implementation talks to Orchestrators. An Orchestrator implementation talks to its workers and to the chain. The four surfaces below are described at the conceptual level; reference specs and code live in the Developers and Gateways tabs.
 
 <DynamicTableV2
   headerList={['Surface', 'Who uses it', 'What it carries']}
@@ -56,18 +56,18 @@ A developer integrating with Livepeer touches different surfaces depending on th
     },
     {
       Surface: <Subtitle variant="changelog">**Orchestrator handshake**</Subtitle>,
-      'Who uses it': 'Gateways discovering and selecting orchestrators',
+      'Who uses it': 'Gateways discovering and selecting Orchestrators',
       'What it carries': '`GetOrchestratorInfo` requests, capability advertisement, ticket parameter exchange, session establishment',
     },
     {
       Surface: <Subtitle variant="changelog">**Real-time frame transport**</Subtitle>,
-      'Who uses it': 'Gateway and orchestrator AI worker, for live video-to-video pipelines',
+      'Who uses it': 'Gateway and Orchestrator AI worker, for live video-to-video pipelines',
       'What it carries': 'Per-frame video data over the trickle protocol; sub-second round-trip',
     },
     {
       Surface: <Subtitle variant="changelog">**On-chain anchor reads**</Subtitle>,
       'Who uses it': 'Anyone querying network state',
-      'What it carries': 'Stake, active set, deposits, service URIs, governance state through Arbitrum One contracts and the subgraph',
+      'What it carries': 'Stake, Active Set, deposits, service URIs, governance state through Arbitrum One contracts and the subgraph',
     },
   ]}
 />
@@ -100,9 +100,9 @@ flowchart LR
 
 ## Gateway Entry Surface
 
-The gateway is the front door. Application developers do not talk to orchestrators or to the chain directly; they talk to a gateway. The gateway then handles discovery, payment, and result delivery on the application's behalf.
+The Gateway is the front door. Application developers do not talk to Orchestrators or to the chain directly; they talk to a Gateway. The Gateway then handles discovery, payment, and result delivery on the application's behalf.
 
-Three entry transports are supported by gateway implementations today:
+Three entry transports are supported by Gateway implementations today:
 
 <DynamicTableV2
   headerList={['Transport', 'Workload', 'Notes']}
@@ -125,9 +125,9 @@ Three entry transports are supported by gateway implementations today:
   ]}
 />
 
-A developer integrating with Livepeer typically uses one of the language SDKs against a hosted gateway (Studio, Daydream) or a self-operated gateway. The gateway URL is an HTTPS endpoint; authentication and rate limiting are gateway-side decisions, not protocol-level.
+A developer integrating with Livepeer typically uses one of the language SDKs against a hosted Gateway (Studio, Daydream) or a self-operated Gateway. The Gateway URL is an HTTPS endpoint; authentication and rate limiting are Gateway-side decisions, not protocol-level.
 
-The HTTP surface a gateway exposes covers four families of route. Specific paths vary slightly between gateway implementations; the families are stable.
+The HTTP surface a Gateway exposes covers four families of route. Specific paths vary slightly between Gateway implementations; the families are stable.
 
 <DynamicTableV2
   headerList={['Route family', 'Example paths', 'What it does']}
@@ -161,7 +161,7 @@ The HTTP surface a gateway exposes covers four families of route. Specific paths
 
 ## Orchestrator Handshake
 
-The handshake between gateway and orchestrator is a session-level RPC. The gateway calls `GetOrchestratorInfo`; the orchestrator returns its capability set, its current price-per-unit, and the ticket parameters the gateway must use.
+The handshake between Gateway and Orchestrator is a session-level RPC. The Gateway calls `GetOrchestratorInfo`; the Orchestrator returns its capability set, its current price-per-unit, and the ticket parameters the Gateway must use.
 
 <ScrollableDiagram title="OrchestratorInfo Handshake and Session Setup" maxHeight="600px">
 
@@ -184,17 +184,17 @@ sequenceDiagram
 
 </ScrollableDiagram>
 
-The handshake establishes the session. Once open, the gateway dispatches segments or frames with tickets attached. Tickets are signed by the gateway against the parameters the orchestrator returned in the handshake; the orchestrator validates each ticket before performing the work. Most tickets do not win; only winning tickets are submitted to `TicketBroker` for on-chain settlement.
+The handshake establishes the session. Once open, the Gateway dispatches segments or frames with tickets attached. Tickets are signed by the Gateway against the parameters the Orchestrator returned in the handshake; the Orchestrator validates each ticket before performing the work. Most tickets do not win; only winning tickets are submitted to `TicketBroker` for on-chain settlement.
 
 ### Capability Bitstrings
 
-`OrchestratorInfo.Capabilities` is a bitstring carrying every capability the orchestrator offers, plus a per-capability constraint map keyed by model identifier. Each entry records whether the model is warm-loaded, the orchestrator's per-model concurrency capacity, and the runner version. The compatibility check at the gateway is a simple AND across the bitstrings: the gateway's required capability bits must be a subset of the orchestrator's offered bits, plus all per-model constraints must be satisfiable.
+`OrchestratorInfo.Capabilities` is a bitstring carrying every capability the Orchestrator offers, plus a per-capability constraint map keyed by model identifier. Each entry records whether the model is warm-loaded, the Orchestrator's per-model concurrency capacity, and the runner version. The compatibility check at the Gateway is a simple AND across the bitstrings: the Gateway's required capability bits must be a subset of the Orchestrator's offered bits, plus all per-model constraints must be satisfiable.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## Trickle Protocol
 
-For real-time AI workloads, the segment-and-result pattern is too slow. Frames need to move between gateway and orchestrator at sub-second latency, with audio and metadata streaming alongside. The trickle protocol is the transport.
+For real-time AI workloads, the segment-and-result pattern is too slow. Frames need to move between Gateway and Orchestrator at sub-second latency, with audio and metadata streaming alongside. The trickle protocol is the transport.
 
 Trickle is a Livepeer-developed transport with three properties that matter for real-time AI:
 
@@ -204,7 +204,7 @@ Trickle is a Livepeer-developed transport with three properties that matter for 
   - **Operator-controllable.** A built-in HTTP control API lets operators update model parameters mid-stream, which is what makes interactive pipelines like ComfyStream possible.
 </BorderedBox>
 
-The trickle protocol is implemented in the `pytrickle` Python library and in the `go-livepeer` AI worker. ComfyStream and other real-time pipelines depend on it. Real-time AI integrators typically run a `pytrickle`-based gateway client or use a hosted gateway that implements the protocol on the client's behalf.
+The trickle protocol is implemented in the `pytrickle` Python library and in the `go-livepeer` AI worker. ComfyStream and other real-time pipelines depend on it. Real-time AI integrators typically run a `pytrickle`-based Gateway client or use a hosted Gateway that implements the protocol on the client's behalf.
 
 The protocol shape: a publisher posts to `POST /channel/seq` with a monotonically increasing sequence number; subscribers fetch with `GET /channel/seq` for a specific segment, or `GET /channel/-1` for the live edge. Subscribers can preconnect on `seq+1` to remove latency between segment boundaries. Audio, video, and control flow as parallel channels on the same connection, distinguished by channel name.
 
@@ -231,7 +231,7 @@ Network state is publicly readable on Arbitrum One. Anyone can query the protoco
     },
     {
       'Read path': <Subtitle variant="changelog">**Network Capabilities API**</Subtitle>,
-      'What it returns': 'Aggregated capability data across orchestrators (off-chain advertised capabilities beyond what the on-chain registry alone exposes)',
+      'What it returns': 'Aggregated capability data across Orchestrators (off-chain advertised capabilities beyond what the on-chain registry alone exposes)',
       'When to use': 'Capability filtering richer than `ServiceRegistry` alone',
     },
   ]}
@@ -252,6 +252,6 @@ Network state is publicly readable on Arbitrum One. Anyone can query the protoco
     SDKs, APIs, and code-level reference.
   </Card>
   <Card title={<CustomCardTitle icon="torii-gate" title="Run a Gateway" />} href="/v2/gateways/portal" horizontal arrow>
-    Operator-side gateway implementation.
+    Operator-side Gateway implementation.
   </Card>
 </Columns>

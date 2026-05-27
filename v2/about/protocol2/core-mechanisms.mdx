@@ -71,7 +71,7 @@ The Livepeer Protocol defines multiple key operational rules for the network and
 
 <CustomCardTitle variant="tab" icon="warning" title="**AI vs Video Mechanisms**" />
 
-AI services do not participate in the same reward distribution or round-based active set election as video Orchestrators
+AI services do not participate in the same reward distribution or round-based Active Set election as video Orchestrators
 <FrameQuote>
 The video transcoding system and AI system are architecturally separate and operate independently.
 </FrameQuote>
@@ -84,7 +84,7 @@ This separation allows AI services to operate without requiring LPT staking, mak
    itemsList={[
       { "Component": <Subtitle variant="changelog">Protocol Rewards</Subtitle>, "Video Orchestrators": "Inflationary LPT rewards", "AI Services": "None" },
       { "Component": <Subtitle variant="changelog">Staking Required</Subtitle>, "Video Orchestrators": "Yes - LPT bonding to transcoderPool", "AI Services": "No" },
-      { "Component": <Subtitle variant="changelog">Active Set Benefits</Subtitle>, "Video Orchestrators": "Stake-weighted election to active set", "AI Services": "No active set concept" },
+      { "Component": <Subtitle variant="changelog">Active Set Benefits</Subtitle>, "Video Orchestrators": "Stake-weighted election to Active Set", "AI Services": "No Active Set concept" },
       { "Component": <Subtitle variant="changelog">Fee Earnings</Subtitle>, "Video Orchestrators": "Yes via TicketBroker integration", "AI Services": "None in protocol" },
    ]}
 />
@@ -107,7 +107,7 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
    <Tab title="Rounds" icon="clock">
       ### Rounds and Timing
 
-        The Livepeer protocol uses a round-based system, where each round represents a fixed-length epoch in blocks, to coordinate reward distribution and staking activities.
+        The Livepeer Protocol uses a round-based system, where each round represents a fixed-length epoch in blocks, to coordinate reward distribution and staking activities.
 
         **Mechanism**
             1. Rounds have a fixed length in blocks (configured in `RoundsManager`)
@@ -161,10 +161,10 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
         **Mechanism**
 
             - Orchestrators bond Livepeer Token (LPT) to participate in the network.
-            - Bonded stake weight determines the proportion of new LPT minted each round that an orchestrator receives and governs its ranking in the network.
-            - Delegators are LPT holders who delegate to an orchestrator of their choice and share in its rewards (% set by the Orchestrator).
-            - Staking gives both orchestrators and delegators voting power in governance (delegators via the Orchestrators vote).
-            - Misbehaviour (e.g. Double‑claiming payments, downtime) can trigger slashing, burning a portion of the orchestrator’s stake and that of its delegators.
+            - Bonded stake weight determines the proportion of new LPT minted each round that an Orchestrator receives and governs its ranking in the network.
+            - Delegators are LPT holders who delegate to an Orchestrator of their choice and share in its rewards (% set by the Orchestrator).
+            - Staking gives both Orchestrators and Delegators voting power in governance (Delegators via the Orchestrators vote).
+            - Misbehaviour (e.g. Double‑claiming payments, downtime) can trigger slashing, burning a portion of the Orchestrator’s stake and that of its Delegators.
 
         These mechanisms create a strong reputational incentive to act honestly and maintain service quality.
 
@@ -173,20 +173,20 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
         The Staking and delegation mechanism allows token holders to:
 
             1. Bond tokens to themselves or other addresses using bond()
-            2. Register as transcoders with transcoder() specifying reward cut and fee share
+            2. Register as transcoders with transcoder() specifying Reward Cut and fee share
             3. Unbond tokens with unbond() which creates an unbonding lock
             4. Withdraw tokens after the unbonding period with withdrawStake()
 
-        The protocol maintains a limited active set of transcoders, ordered by total stake, which are eligible to perform transcoding work and earn rewards.
+        The protocol maintains a limited Active Set of transcoders, ordered by total stake, which are eligible to perform transcoding work and earn rewards.
 
         **Implementation Mechanics**
 
         Orchestrators must bond Livepeer Token (LPT) to participate.
-        Bonded stake determines the proportion of new LPT minted each round that an orchestrator receives and governs its ranking in the network.
+        Bonded stake determines the proportion of new LPT minted each round that an Orchestrator receives and governs its ranking in the network.
 
-        Delegators are LPT holders who delegate to an orchestrator of their choice and share in its rewards. Staking gives both orchestrators and delegators voting power in governance.
+        Delegators are LPT holders who delegate to an Orchestrator of their choice and share in its rewards. Staking gives both Orchestrators and Delegators voting power in governance.
 
-        Misbehaviour (e.g. Double‑claiming payments, downtime) can trigger slashing, burning a portion of the orchestrator’s stake and that of its delegators.
+        Misbehaviour (e.g. Double‑claiming payments, downtime) can trigger slashing, burning a portion of the Orchestrator’s stake and that of its Delegators.
         This creates a strong incentive to act honestly and maintain uptime.
 
    </Tab>
@@ -202,21 +202,21 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
 
         **Mechanisms**
         The reward system is designed to incentivise honest participation and compensate for infrastructure costs.
-        It also creates a strong incentive for delegators to carefully select reliable orchestrators to delegate to, as their rewards are directly tied to the performance and behaviour of the orchestrator they support.
+        It also creates a strong incentive for Delegators to carefully select reliable Orchestrators to delegate to, as their rewards are directly tied to the performance and behaviour of the Orchestrator they support.
 
         **Functions**
 
         - **Dynamic inflation and rewards:**
 
-        Livepeer uses a dynamic inflation model. New LPT is minted every round and distributed to orchestrators and delegators proportional to their stake and participation. If less than 50 % of the LPT supply is staked, inflation increases to encourage more staking; if more than 50 % is staked, inflation decreases. This adaptive system balances security (high stake) with token dilution. Inflation rewards are in addition to the ETH fees earned from work, providing a dual revenue stream for orchestrators and delegators.
+        Livepeer uses a dynamic inflation model. New LPT is minted every round and distributed to Orchestrators and Delegators proportional to their stake and participation. If less than 50 % of the LPT supply is staked, inflation increases to encourage more staking; if more than 50 % is staked, inflation decreases. This adaptive system balances security (high stake) with token dilution. Inflation rewards are in addition to the ETH fees earned from work, providing a dual revenue stream for Orchestrators and Delegators.
 
         - **Slashing and quality enforcement:**
 
-        To maintain service quality, the protocol includes slashing conditions. Orchestrators that misbehave by submitting invalid results, double‑claiming tickets or going offline can have their LPT stake partially burned. Delegators who bond to a misbehaving orchestrator share in the penalty, incentivising careful selection of operators. Slashing protects the integrity of the system and aligns incentives towards honest behaviour.
+        To maintain service quality, the protocol includes slashing conditions. Orchestrators that misbehave by submitting invalid results, double‑claiming tickets or going offline can have their LPT stake partially burned. Delegators who bond to a misbehaving Orchestrator share in the penalty, incentivising careful selection of operators. Slashing protects the integrity of the system and aligns incentives towards honest behaviour.
 
         **Implementation Mechanics**
 
-        Rewards accumulate in earnings pools which are claimed by delegators through claimEarnings() or automatically when performing bonding operations.
+        Rewards accumulate in earnings pools which are claimed by Delegators through claimEarnings() or automatically when performing bonding operations.
 
         The reward system distributes newly minted tokens based on:
 
@@ -224,9 +224,9 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
             2. The protocol's current inflation rate (managed by the Minter)
             3. The transcoder's rewardCut parameter which determines commission percentage
             4. The treasury's treasuryRewardCutRate which allocates a portion to the protocol treasury
-            5. The remaining rewards distributed proportionally to delegators
+            5. The remaining rewards distributed proportionally to Delegators
 
-        Rewards accumulate in earnings pools which are claimed by delegators through claimEarnings() or automatically when performing bonding operations.
+        Rewards accumulate in earnings pools which are claimed by Delegators through claimEarnings() or automatically when performing bonding operations.
 
    </Tab>
    <Tab title="Payments" icon="money-bill-transfer">
@@ -234,20 +234,20 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
         **Mechanisms**
         **Functions**
         **Implementation Mechanics**
-        The probabilistic micropayment system allows broadcasters to pay orchestrators efficiently at high throughput. It works as follows:
+        The probabilistic micropayment system allows broadcasters to pay Orchestrators efficiently at high throughput. It works as follows:
 
             1. Broadcasters fund their account with a deposit and reserve via fundDepositAndReserve()
             2. For each video segment, the broadcaster creates a signed ticket with faceValue and winProb
-            3. Tickets are submitted off-chain to the orchestrator
+            3. Tickets are submitted off-chain to the Orchestrator
             4. Orchestrators redeem winning tickets on-chain via redeemWinningTicket()
-            5. Funds are transferred from the broadcaster's reserve to the orchestrator's account
+            5. Funds are transferred from the broadcaster's reserve to the Orchestrator's account
 
         This system allows for efficient microtransactions without requiring every payment to be recorded on-chain.
 
         ---
         2.2 Payment and probabilistic tickets
 
-        Broadcasters fund an ETH deposit on‑chain. With each transcoded segment, they send an off‑chain probabilistic payment ticket to the orchestrator. Each ticket has a win probability and face value. Winning tickets can be redeemed on‑chain for ETH, debiting the broadcaster’s deposit; losing tickets are worthless. This mechanism drastically reduces on‑chain transactions while ensuring that orchestrators are paid fairly. Since the probability of winning and the face value are known, broadcasters can predict their costs, and orchestrators can estimate expected earnings.
+        Broadcasters fund an ETH deposit on‑chain. With each transcoded segment, they send an off‑chain probabilistic payment ticket to the Orchestrator. Each ticket has a win probability and face value. Winning tickets can be redeemed on‑chain for ETH, debiting the broadcaster’s deposit; losing tickets are worthless. This mechanism drastically reduces on‑chain transactions while ensuring that Orchestrators are paid fairly. Since the probability of winning and the face value are known, broadcasters can predict their costs, and Orchestrators can estimate expected earnings.
 
    </Tab>
    <Tab title="Upgrades" icon="arrow-up-from-bracket">
@@ -282,7 +282,7 @@ Note that Staking, Rewards and Payments operate differently for AI pipelines
       - Unbonding period length
       - Round length and lock parameters
       - Inflation rate and target bonding rate
-      - Treasury reward cut rate
+      - Treasury Reward Cut rate
 
    </Tab>
 </Tabs>

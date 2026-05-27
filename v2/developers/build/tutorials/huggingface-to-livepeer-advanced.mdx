@@ -30,7 +30,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <Tip>
-  You have a Hugging Face model and you want to serve it on the Livepeer network. There are three
+  You have a Hugging Face model and you want to serve it on the Livepeer Network. There are three
   structurally distinct ways to do that, each with a different scope of work and a different verification
   path. This page tells you which one fits your model, then walks each path end-to-end.
 </Tip>
@@ -38,14 +38,14 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 ---
 
 Livepeer's AI inference layer is implemented as a set of pipeline runners
-([`livepeer/ai-worker`](https://github.com/livepeer/ai-worker)) coordinated by the orchestrator process
+([`livepeer/ai-worker`](https://github.com/livepeer/ai-worker)) coordinated by the Orchestrator process
 ([`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer)). Where your model fits in that layer
 determines which path you take.
 
 **What you will verify (whichever path you take):**
 - Your model loads cleanly inside its runner or container
-- Your orchestrator advertises the capability on `tools.livepeer.cloud/ai/network-capabilities`
-- A request through your self-hosted gateway returns a successful inference result
+- Your Orchestrator advertises the capability on `tools.livepeer.cloud/ai/network-capabilities`
+- A request through your self-hosted Gateway returns a successful inference result
 
 None of the paths use Studio or Daydream. All verification runs through your own infrastructure plus public
 dashboards.
@@ -65,18 +65,18 @@ dashboards.
   <tbody>
     <TableRow>
       <TableCell>**Path 1**: existing pipeline</TableCell>
-      <TableCell>Configure an existing pipeline. Declare the model in `aiModels.json`, pre-download weights, restart the orchestrator. No code written.</TableCell>
-      <TableCell>Any gateway calling Livepeer AI</TableCell>
+      <TableCell>Configure an existing pipeline. Declare the model in `aiModels.json`, pre-download weights, restart the Orchestrator. No code written.</TableCell>
+      <TableCell>Any Gateway calling Livepeer AI</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Path 2**: custom pipeline</TableCell>
       <TableCell>Build a Python package extending `ai-runner[realtime]` or `ai-runner[batch]`, ship as a Docker image, submit upstream PRs to `livepeer/ai-worker` and `livepeer/go-livepeer`.</TableCell>
-      <TableCell>Any gateway, after PRs land</TableCell>
+      <TableCell>Any Gateway, after PRs land</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Path 3**: BYOC</TableCell>
       <TableCell>Bring Your Own Container. Wrap the model in a container exposing the BYOC contract (`/health` plus your job endpoints). Orchestrator advertises it as an external capability.</TableCell>
-      <TableCell>Only gateways implementing your capability</TableCell>
+      <TableCell>Only Gateways implementing your capability</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -196,31 +196,31 @@ Two upstream PRs are required today, because the pipeline registry is not yet dy
 
 - one to `livepeer/ai-worker/runner/dl_checkpoints.sh`, adding your pipeline to the model preparation switch
 - one to `livepeer/go-livepeer/ai/worker/docker.go`, adding your pipeline name to the `livePipelineToImage`
-  map so the orchestrator knows which container to launch
+  map so the Orchestrator knows which container to launch
 
-Until those PRs land, no orchestrator other than yours can run your pipeline.
+Until those PRs land, no Orchestrator other than yours can run your pipeline.
 
 If you accept that scope, **take Path 2.** If not, or your model needs a different protocol than the runner's
 FastAPI shape, **continue to Question 3.**
 
 ### BYOC container (Question 3)
 
-The BYOC contract, defined in `livepeer/go-livepeer` and visible in the orchestrator's external-capability
+The BYOC contract, defined in `livepeer/go-livepeer` and visible in the Orchestrator's external-capability
 handling code, requires:
 
 - a `/health` endpoint that returns 200 when the container is ready
-- one or more job-handling endpoints whose protocol is whatever you publish to gateways using your capability
+- one or more job-handling endpoints whose protocol is whatever you publish to Gateways using your capability
 - a stable container image and version
 
-The orchestrator advertises the capability under a name you choose. Gateways that have implemented the
+The Orchestrator advertises the capability under a name you choose. Gateways that have implemented the
 matching client side route work to it. There is no upstream PR required: BYOC is the path that exists
 precisely so model providers can ship without modifying `livepeer/ai-worker` or `livepeer/go-livepeer`.
 
-The trade-off: BYOC requires gateway-side implementation work for any gateway operator who wants to call your
-capability. You are shipping both a model and a small protocol that gateways must adopt.
+The trade-off: BYOC requires Gateway-side implementation work for any Gateway operator who wants to call your
+capability. You are shipping both a model and a small protocol that Gateways must adopt.
 
-**Take Path 3** if your model needs a non-standard protocol and you are willing to coordinate with gateway
-operators (or run your own gateway) to drive adoption.
+**Take Path 3** if your model needs a non-standard protocol and you are willing to coordinate with Gateway
+operators (or run your own Gateway) to drive adoption.
 
 <CustomDivider />
 
@@ -237,8 +237,8 @@ These are identical regardless of path. They are prerequisites, not part of any 
   </thead>
   <tbody>
     <TableRow>
-      <TableCell>Active orchestrator on Arbitrum One</TableCell>
-      <TableCell>In the active set on [`explorer.livepeer.org`](https://explorer.livepeer.org), with a reachable `serviceAddr`.</TableCell>
+      <TableCell>Active Orchestrator on Arbitrum One</TableCell>
+      <TableCell>In the Active Set on [`explorer.livepeer.org`](https://explorer.livepeer.org), with a reachable `serviceAddr`.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>NVIDIA GPU sized for your model</TableCell>
@@ -254,7 +254,7 @@ These are identical regardless of path. They are prerequisites, not part of any 
     </TableRow>
     <TableRow>
       <TableCell>Verification surface</TableCell>
-      <TableCell>[`tools.livepeer.cloud/ai/network-capabilities`](https://tools.livepeer.cloud/ai/network-capabilities) plus a self-hosted gateway test, ideally before any public traffic.</TableCell>
+      <TableCell>[`tools.livepeer.cloud/ai/network-capabilities`](https://tools.livepeer.cloud/ai/network-capabilities) plus a self-hosted Gateway test, ideally before any public traffic.</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -289,19 +289,19 @@ These are identical regardless of path. They are prerequisites, not part of any 
       <TableCell>**Time to verifiable on-network**</TableCell>
       <TableCell>Hours</TableCell>
       <TableCell>Weeks (gated on PR review)</TableCell>
-      <TableCell>Days (gated on gateway-side adoption)</TableCell>
+      <TableCell>Days (gated on Gateway-side adoption)</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Reach**</TableCell>
-      <TableCell>Any gateway calling Livepeer AI</TableCell>
-      <TableCell>Any gateway, after PRs land</TableCell>
-      <TableCell>Only gateways implementing your capability</TableCell>
+      <TableCell>Any Gateway calling Livepeer AI</TableCell>
+      <TableCell>Any Gateway, after PRs land</TableCell>
+      <TableCell>Only Gateways implementing your capability</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Verification**</TableCell>
-      <TableCell>Capabilities tool + gateway test</TableCell>
+      <TableCell>Capabilities tool + Gateway test</TableCell>
       <TableCell>Same, after PRs merge</TableCell>
-      <TableCell>Capability listing + custom gateway test</TableCell>
+      <TableCell>Capability listing + custom Gateway test</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -311,11 +311,11 @@ These are identical regardless of path. They are prerequisites, not part of any 
 ## Path 1: Configure an existing pipeline
 
 By the end of Path 1, a Hugging Face model conforming to one of the built-in pipeline shapes is running on
-your Livepeer orchestrator, advertised to the network, and callable through your self-hosted gateway. The
+your Livepeer Orchestrator, advertised to the network, and callable through your self-hosted Gateway. The
 example is `SG161222/RealVisXL_V4.0_Lightning` on the `text-to-image` pipeline.
 
 You are not writing code. You are declaring the model, pre-downloading weights, and restarting the
-orchestrator with the AI flags. The runner does the rest.
+Orchestrator with the AI flags. The runner does the rest.
 
 ### Step 1: Pick the model directory
 
@@ -414,16 +414,16 @@ declared pipeline, mounts the models directory, starts the runner container, wai
 ### Step 5: Verify on the capabilities tool
 
 [`tools.livepeer.cloud/ai/network-capabilities`](https://tools.livepeer.cloud/ai/network-capabilities) shows
-live capability advertisements from active orchestrators.
+live capability advertisements from active Orchestrators.
 
-Find your orchestrator address and check that `text-to-image` appears with
+Find your Orchestrator address and check that `text-to-image` appears with
 `SG161222/RealVisXL_V4.0_Lightning` under it.
 
 If it does not appear:
 
 <AccordionGroup>
   <Accordion title="Active set check" icon="circle-exclamation">
-    Confirm your orchestrator is in the active set on [`explorer.livepeer.org`](https://explorer.livepeer.org).
+    Confirm your Orchestrator is in the Active Set on [`explorer.livepeer.org`](https://explorer.livepeer.org).
   </Accordion>
   <Accordion title="Runner container check" icon="docker">
     Check `docker ps -a` for an exited runner container, then `docker logs <id>` for the cause. CUDA
@@ -434,13 +434,13 @@ If it does not appear:
   </Accordion>
 </AccordionGroup>
 
-### Step 6: Test through your own gateway
+### Step 6: Test through your own Gateway
 
 #### Direct runner test
 
 The runner is a FastAPI app. See
 [`livepeer/ai-worker/runner/src/runner/main.py`](https://github.com/livepeer/ai-worker/blob/main/runner/src/runner/main.py).
-It runs on a port the orchestrator prints at startup.
+It runs on a port the Orchestrator prints at startup.
 
 ```bash icon="terminal" title="runner-direct.sh"
 curl -X POST http://localhost:<runner-port>/text-to-image \
@@ -459,9 +459,9 @@ curl -X POST http://localhost:<runner-port>/text-to-image \
 Four-step inference and guidance scale 2.0 follow the SDXL Lightning recommendation on the model card. This
 confirms the model is loaded and inference works. It does not confirm network reachability.
 
-#### Self-hosted gateway test
+#### Self-hosted Gateway test
 
-Run a second `go-livepeer` instance as a gateway pinned to your orchestrator:
+Run a second `go-livepeer` instance as a Gateway pinned to your Orchestrator:
 
 ```bash icon="terminal" title="start-gateway.sh"
 go-livepeer \
@@ -495,8 +495,8 @@ means your model is reachable across the protocol layer.
 You have completed Path 1 when:
 
 1. The runner container is up and the model is in VRAM (`docker ps`, `nvidia-smi`)
-2. The model appears on `tools.livepeer.cloud/ai/network-capabilities` under your orchestrator
-3. A request through your self-hosted gateway returns a successful inference result
+2. The model appears on `tools.livepeer.cloud/ai/network-capabilities` under your Orchestrator
+3. A request through your self-hosted Gateway returns a successful inference result
 
 To swap models, change `model_id` in `aiModels.json` and `MODEL_ID` in the download command. The pipeline
 name stays the same as long as the new model fits the same I/O shape.
@@ -513,7 +513,7 @@ name stays the same as long as the new model fits the same I/O shape.
 
 ## Path 2: Build a custom pipeline
 
-By the end of Path 2, you have a Python package implementing the Livepeer AI runner `Pipeline` interface, a
+By the end of Path 2, you have a Python package implementing the Livepeer AI Runner `Pipeline` interface, a
 Docker image built on top of `livepeer/ai-runner:live-base`, and the upstream PRs prepared against
 `livepeer/ai-worker` and `livepeer/go-livepeer`. After those PRs merge, your pipeline runs on the network the
 same way the built-in pipelines do.
@@ -532,7 +532,7 @@ equivalent file in scope-runner.
 
 ### Step 1: Initialise the project
 
-The Livepeer AI runner uses [uv](https://docs.astral.sh/uv/) for dependency management. Source:
+The Livepeer AI Runner uses [uv](https://docs.astral.sh/uv/) for dependency management. Source:
 `pyproject.toml` and `uv.lock` in
 [`livepeer/ai-worker/runner`](https://github.com/livepeer/ai-worker/tree/main/runner).
 
@@ -755,7 +755,7 @@ polls before declaring the capability available.
 
 Two PRs are required because the pipeline registry is not yet dynamic.
 
-#### PR 1: livepeer/ai-worker
+#### PR 1: Livepeer/ai-worker
 
 Edit
 [`runner/dl_checkpoints.sh`](https://github.com/livepeer/ai-worker/blob/main/runner/dl_checkpoints.sh).
@@ -801,10 +801,10 @@ var livePipelineToImage = map[string]string{
 }
 ```
 
-The string `"my-pipeline"` must match the `name` in your `PipelineSpec` and the value an orchestrator places
+The string `"my-pipeline"` must match the `name` in your `PipelineSpec` and the value an Orchestrator places
 in `aiModels.json`.
 
-### Step 7: Configure your orchestrator (after PRs merge)
+### Step 7: Configure your Orchestrator (after PRs merge)
 
 Once both PRs merge and a new `go-livepeer` release is built, declare the pipeline in `aiModels.json`:
 
@@ -834,20 +834,20 @@ You have completed the local part of Path 2 when:
 3. The container starts, `/health` returns 200, and your pipeline endpoints respond
 4. Both upstream PRs are filed with reproducible test instructions
 
-You have completed the on-network part when both PRs merge, your orchestrator advertises the pipeline on the
-capabilities tool, and a self-hosted gateway request succeeds.
+You have completed the on-network part when both PRs merge, your Orchestrator advertises the pipeline on the
+capabilities tool, and a self-hosted Gateway request succeeds.
 
 <CustomDivider />
 
 ## Path 3: Bring Your Own Container
 
 By the end of Path 3, your Hugging Face model is wrapped in a container of your design, registered as a BYOC
-external capability on your Livepeer orchestrator, and reachable through a gateway that has implemented the
+external capability on your Livepeer Orchestrator, and reachable through a Gateway that has implemented the
 matching client side.
 
 BYOC is the path that does not require modifying `livepeer/ai-worker` or `livepeer/go-livepeer`. The
-trade-off is that gateways must implement your capability's protocol on their side. You are coordinating with
-gateway operators or running your own gateway.
+trade-off is that Gateways must implement your capability's protocol on their side. You are coordinating with
+Gateway operators or running your own Gateway.
 
 ### BYOC Fit Criteria
 
@@ -866,7 +866,7 @@ pipeline schema.
 
 ### The BYOC contract
 
-The orchestrator's BYOC integration requires:
+The Orchestrator's BYOC integration requires:
 
 <StyledTable variant="bordered">
   <thead>
@@ -882,11 +882,11 @@ The orchestrator's BYOC integration requires:
     </TableRow>
     <TableRow>
       <TableCell>Job-handling endpoints</TableCell>
-      <TableCell>Paths, methods, request schemas, and response schemas are entirely up to you. They form a small protocol that gateways must implement on the client side.</TableCell>
+      <TableCell>Paths, methods, request schemas, and response schemas are entirely up to you. They form a small protocol that Gateways must implement on the client side.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>Capability name</TableCell>
-      <TableCell>The string the orchestrator uses to advertise. Conventionally lowercase-with-hyphens. Pick something specific (`my-org-protein-folder` not `model`).</TableCell>
+      <TableCell>The string the Orchestrator uses to advertise. Conventionally lowercase-with-hyphens. Pick something specific (`my-org-protein-folder` not `model`).</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>Stable container image and version</TableCell>
@@ -895,7 +895,7 @@ The orchestrator's BYOC integration requires:
   </tbody>
 </StyledTable>
 
-The orchestrator does not care what runs inside the container as long as `/health` and the job endpoints
+The Orchestrator does not care what runs inside the container as long as `/health` and the job endpoints
 behave.
 
 ### Step 1: Wrap your model in a container
@@ -990,13 +990,13 @@ curl -X POST http://localhost:8000/infer \
 If `/health` returns 200 only after the model has loaded, and `/infer` returns sensible output, the container
 itself is sound.
 
-### Step 2: Run the container alongside your orchestrator
+### Step 2: Run the container alongside your Orchestrator
 
-The orchestrator launches an external capability container or connects to an already-running one (depending
+The Orchestrator launches an external capability container or connects to an already-running one (depending
 on your BYOC configuration). The container must be on the same host (or a private network reachable from the
-orchestrator host) and addressable by hostname or IP.
+Orchestrator host) and addressable by hostname or IP.
 
-A docker-compose example for orchestrator-side hosting:
+A docker-compose example for Orchestrator-side hosting:
 
 ```yaml icon="docker" title="docker-compose.yml"
 services:
@@ -1026,44 +1026,44 @@ services:
 
 Configure `go-livepeer` with the external capability. The exact flag and config-file shape is documented
 inline in `livepeer/go-livepeer`. Search the repository for `ExternalCapability` and the BYOC capability
-registration in the orchestrator startup path. The configuration declares:
+registration in the Orchestrator startup path. The configuration declares:
 
 - the capability name (your wire identifier)
-- the URL where the orchestrator reaches your container (typically `http://localhost:8000` for same-host
+- the URL where the Orchestrator reaches your container (typically `http://localhost:8000` for same-host
   setups)
 - the price (currency, units, rate)
 - the URL fragment or path for `/health`
 
-Restart `go-livepeer` with the BYOC flags. The orchestrator polls your container's `/health`, and once it
+Restart `go-livepeer` with the BYOC flags. The Orchestrator polls your container's `/health`, and once it
 returns 200, advertises the capability.
 
 ### Step 4: Verify the capability is advertised
 
 [`tools.livepeer.cloud/ai/network-capabilities`](https://tools.livepeer.cloud/ai/network-capabilities) shows
-external capabilities alongside built-in pipelines for active orchestrators. Find your orchestrator and
+external capabilities alongside built-in pipelines for active Orchestrators. Find your Orchestrator and
 confirm the capability name appears.
 
 If it does not:
 
 <AccordionGroup>
   <Accordion title="Active set status" icon="circle-exclamation">
-    Confirm orchestrator active-set status on [`explorer.livepeer.org`](https://explorer.livepeer.org).
+    Confirm Orchestrator active-set status on [`explorer.livepeer.org`](https://explorer.livepeer.org).
   </Accordion>
   <Accordion title="Health from orchestrator host" icon="heart-pulse">
-    Confirm `/health` returns 200 from the orchestrator's perspective: `curl http://<container-host>:8000/health`
-    from the orchestrator host.
+    Confirm `/health` returns 200 from the Orchestrator's perspective: `curl http://<container-host>:8000/health`
+    from the Orchestrator host.
   </Accordion>
   <Accordion title="Capability registration logs" icon="file-lines">
     Check `go-livepeer` startup logs for capability registration messages and errors.
   </Accordion>
 </AccordionGroup>
 
-### Step 5: Test through a self-hosted gateway
+### Step 5: Test through a self-hosted Gateway
 
-This is the step where BYOC differs most from Paths 1 and 2. The gateway must know how to call your
-capability. There is no built-in gateway behaviour for unknown capabilities.
+This is the step where BYOC differs most from Paths 1 and 2. The Gateway must know how to call your
+capability. There is no built-in Gateway behaviour for unknown capabilities.
 
-#### Run a self-hosted gateway
+#### Run a self-hosted Gateway
 
 ```bash icon="terminal" title="start-gateway.sh"
 go-livepeer \
@@ -1075,21 +1075,21 @@ go-livepeer \
 
 #### Implement the BYOC client
 
-The gateway-side BYOC client is currently the active development surface. Reference: the SDK work at
+The Gateway-side BYOC client is currently the active development surface. Reference: the SDK work at
 [`j0sh/livepeer-python-gateway`](https://github.com/j0sh/livepeer-python-gateway) and the BYOC support PR at
 [`livepeer/go-livepeer#3866`](https://github.com/livepeer/go-livepeer/pull/3866).
 
-For initial verification, the simplest gateway-side test is to use `go-livepeer`'s BYOC API directly,
-bypassing custom SDK selection logic. Send a job through the gateway's BYOC endpoint, naming your capability
+For initial verification, the simplest Gateway-side test is to use `go-livepeer`'s BYOC API directly,
+bypassing custom SDK selection logic. Send a job through the Gateway's BYOC endpoint, naming your capability
 and supplying the request body your container expects.
 
-A working request through the gateway means:
+A working request through the Gateway means:
 
-- the gateway discovered your orchestrator's capability advertisement
-- the gateway negotiated a payment ticket with your orchestrator
-- the orchestrator routed the job to your container
+- the Gateway discovered your Orchestrator's capability advertisement
+- the Gateway negotiated a payment ticket with your Orchestrator
+- the Orchestrator routed the job to your container
 - your container produced a response
-- the response made it back through the gateway to the caller
+- the response made it back through the Gateway to the caller
 
 ### Path 3 done
 
@@ -1097,7 +1097,7 @@ You have completed Path 3 when:
 
 1. The container starts cleanly with NVIDIA GPU access and `/health` only returns 200 after model load
 2. `go-livepeer` advertises the capability and it appears on the network capabilities tool
-3. A request through your self-hosted gateway, addressed to your capability name, returns the expected output
+3. A request through your self-hosted Gateway, addressed to your capability name, returns the expected output
    from your container
 
 <CustomDivider />
@@ -1106,26 +1106,26 @@ You have completed Path 3 when:
 
 <AccordionGroup>
   <Accordion title="Discovery and selection (BYOC)" icon="route">
-    BYOC currently uses "first response wins" selection at the gateway. The start-stream request can include
-    an allowlist or blocklist of orchestrators.
+    BYOC currently uses "first response wins" selection at the Gateway. The start-stream request can include
+    an allowlist or blocklist of Orchestrators.
   </Accordion>
   <Accordion title="Reach (BYOC)" icon="signal">
-    Your capability is callable only by gateways that have implemented your client-side protocol. Until other
-    gateway operators adopt your capability, you are running both ends – orchestrator and
-    gateway – yourself. This is normal for BYOC during bootstrap.
+    Your capability is callable only by Gateways that have implemented your client-side protocol. Until other
+    Gateway operators adopt your capability, you are running both ends – Orchestrator and
+    Gateway – yourself. This is normal for BYOC during bootstrap.
   </Accordion>
   <Accordion title="Iterating on the protocol (BYOC)" icon="code-branch">
     You control the request and response schemas. Version them explicitly (path-prefix `/v1/infer`, etc.) so
-    changes do not silently break gateway clients.
+    changes do not silently break Gateway clients.
   </Accordion>
   <Accordion title="Pricing (all paths)" icon="coins">
-    Setting price-per-pixel above the network median means your orchestrator receives no jobs. Compare
+    Setting price-per-pixel above the network median means your Orchestrator receives no jobs. Compare
     against the rates visible on the network capabilities dashboard before going live.
   </Accordion>
   <Accordion title="Warm and cold trade-off (Paths 1 and 2)" icon="temperature-half">
     `warm: true` holds the model in VRAM continuously. SDXL-class models occupy roughly 12 GB; on a 24 GB
     card you can warm one SDXL plus a smaller pipeline. Cold models share VRAM via swap on first request;
-    price them lower because the cold-start latency makes them less attractive to gateways.
+    price them lower because the cold-start latency makes them less attractive to Gateways.
   </Accordion>
 </AccordionGroup>
 
@@ -1135,7 +1135,7 @@ You have completed Path 3 when:
 
 - **Studio.** Not used in any verification step. All inference verification runs through a self-hosted
   `go-livepeer -gateway`.
-- **Daydream.** Not referenced as a runtime, a verification surface, or a recommended gateway. The
+- **Daydream.** Not referenced as a runtime, a verification surface, or a recommended Gateway. The
   custom-pipeline reference repo (`daydreamlive/scope-runner`) is cited as a code example, not as a runtime
   path the reader uses.
 - **VRAM thresholds without a source.** Where a VRAM figure appears, it is grounded in the model card or the
@@ -1150,7 +1150,7 @@ You have completed Path 3 when:
 <AccordionGroup>
   <Accordion title="Path 1 sources" icon="github">
     - [`livepeer/ai-worker`](https://github.com/livepeer/ai-worker) – runner architecture, pipelines, `dl_checkpoints.sh`
-    - [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) – orchestrator, gateway, AI worker flags
+    - [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) – Orchestrator, Gateway, AI worker flags
     - [`livepeer/go-livepeer/ai/worker/docker.go`](https://github.com/livepeer/go-livepeer/blob/master/ai/worker/docker.go) – pipeline-to-image map
     - [`livepeer/ai-worker/runner/src/runner/main.py`](https://github.com/livepeer/ai-worker/blob/main/runner/src/runner/main.py) – FastAPI app
     - [`huggingface.co/SG161222/RealVisXL_V4.0_Lightning`](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning) – model card, sampling params
@@ -1163,9 +1163,9 @@ You have completed Path 3 when:
     - [`huggingface_hub`](https://github.com/huggingface/huggingface_hub) – `snapshot_download` for model preparation
   </Accordion>
   <Accordion title="Path 3 sources" icon="cube">
-    - [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) – orchestrator, gateway, external capability handling
-    - [`livepeer/go-livepeer#3866`](https://github.com/livepeer/go-livepeer/pull/3866) – BYOC gateway support PR
-    - [`j0sh/livepeer-python-gateway`](https://github.com/j0sh/livepeer-python-gateway) – Python gateway SDK including BYOC client work
+    - [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) – Orchestrator, Gateway, external capability handling
+    - [`livepeer/go-livepeer#3866`](https://github.com/livepeer/go-livepeer/pull/3866) – BYOC Gateway support PR
+    - [`j0sh/livepeer-python-gateway`](https://github.com/j0sh/livepeer-python-gateway) – Python Gateway SDK including BYOC client work
     - `nvidia/cuda` Docker images – base layer for GPU containers
   </Accordion>
   <Accordion title="Common references" icon="link">
@@ -1195,12 +1195,12 @@ Complete the "HuggingFace to Livepeer advanced paths" tutorial by producing thre
     The single canonical Path 1 walkthrough on its own page, without the multi-path scaffolding.
   </Card>
   <Card title="Full AI Pipeline Tutorial" icon="diagram-project" href="/v2/orchestrators/guides/tutorials/full-ai-pipeline-tutorial" arrow horizontal>
-    Local end-to-end pipeline: gateway routes inference to orchestrator and the result returns through the full pipeline.
+    Local end-to-end pipeline: Gateway routes inference to Orchestrator and the result returns through the full pipeline.
   </Card>
   <Card title="Realtime AI Tutorial" icon="video" href="/v2/orchestrators/guides/tutorials/realtime-ai-tutorial" arrow horizontal>
     Live video-to-video pipeline: continuous WebRTC stream in, transformed stream out.
   </Card>
   <Card title="BYOC CPU Tutorial" icon="microchip" href="/v2/orchestrators/guides/tutorials/byoc-cpu-tutorial" arrow horizontal>
-    BYOC end-to-end on CPU: a focused BYOC walkthrough from the orchestrator side.
+    BYOC end-to-end on CPU: a focused BYOC walkthrough from the Orchestrator side.
   </Card>
 </CardGroup>

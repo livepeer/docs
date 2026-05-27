@@ -46,12 +46,12 @@ import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-A gateway's **node type** determines which workloads it can route:
+A Gateway's **node type** determines which workloads it can route:
 - <Badge color="blue">Video</Badge> transcoding,
 - <Badge color="purple">AI</Badge> inference (batch and real-time), or
 - <Badge color="green">Dual</Badge> (both pipelines on a single node).
 
-Each pipeline is the control-plane path between an application request and orchestrator execution.
+Each pipeline is the control-plane path between an application request and Orchestrator execution.
 
 {/* ============================================================
     1. GATEWAY VS ORCHESTRATOR
@@ -60,15 +60,15 @@ Each pipeline is the control-plane path between an application request and orche
 ## Gateway Role
 
 <Note>
-  This explains how pipelines work from the gateway operator's perspective. For orchestrator-side configuration (running AI workers, hosting models), see the Orchestrators section.
+  This explains how pipelines work from the Gateway operator's perspective. For Orchestrator-side configuration (running AI workers, hosting models), see the Orchestrators section.
 </Note>
 
 <CardGroup cols={2}>
   <Card title="Gateway responsibilities" icon="server">
-    Accepts requests, matches orchestrator capabilities, enforces price and latency policy, handles retries and failover, returns outputs to the client.
+    Accepts requests, matches Orchestrator capabilities, enforces price and latency policy, handles retries and failover, returns outputs to the client.
   </Card>
   <Card title="Orchestrator responsibilities" icon="microchip">
-    Runs GPU inference or transcoding, hosts model weights, executes compute, returns results to the gateway.
+    Runs GPU inference or transcoding, hosts model weights, executes compute, returns results to the Gateway.
   </Card>
 </CardGroup>
 
@@ -82,7 +82,7 @@ Each pipeline is the control-plane path between an application request and orche
 ## Node Types
 <Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge>
 
-Livepeer gateways route four categories of work. Each has different ingest patterns, payment models, and orchestrator requirements. A <Badge color="green">Dual</Badge> node runs both video and AI pipelines on a single node.
+Livepeer Gateways route four categories of work. Each has different ingest patterns, payment models, and Orchestrator requirements. A <Badge color="green">Dual</Badge> node runs both video and AI pipelines on a single node.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
@@ -102,17 +102,17 @@ flowchart LR
 
 ### Video Transcoding
 
-The gateway ingests a live or recorded video stream via RTMP or HTTP, segments it, and distributes transcoding work to orchestrators. Orchestrators return multiple encoded renditions, which the gateway assembles for HLS delivery.
+The Gateway ingests a live or recorded video stream via RTMP or HTTP, segments it, and distributes transcoding work to Orchestrators. Orchestrators return multiple encoded renditions, which the Gateway assembles for HLS delivery.
 
-On-chain video gateways use the Livepeer probabilistic micropayment (PM) system: each segment carries a payment ticket redeemed on Arbitrum One. An ETH deposit and reserve balance on the TicketBroker contract are required.
+On-chain video Gateways use the Livepeer probabilistic micropayment (PM) system: each segment carries a payment ticket redeemed on Arbitrum One. An ETH deposit and reserve balance on the TicketBroker contract are required.
 
 **Ports:** RTMP ingest on `:1935`, HTTP ingest and API on `:8935`, CLI on `:5935`.
 
 ### Batch AI Inference
 
-The gateway accepts HTTP requests for AI pipelines (text-to-image, audio-to-text, LLM, and others), routes each request to an orchestrator advertising the requested pipeline and model, and returns the inference result. This is a request/response pattern - the gateway sends a request and waits for the result.
+The Gateway accepts HTTP requests for AI pipelines (text-to-image, audio-to-text, LLM, and others), routes each request to an Orchestrator advertising the requested pipeline and model, and returns the inference result. This is a request/response pattern - the Gateway sends a request and waits for the result.
 
-Off-chain AI gateways require no ETH deposit. The gateway targets orchestrators directly via `-orchAddr`. For on-chain AI (dual node type), the PM system applies.
+Off-chain AI Gateways require no ETH deposit. The Gateway targets Orchestrators directly via `-orchAddr`. For on-chain AI (dual node type), the PM system applies.
 
 **Port:** HTTP API on `:8935` (set via `-httpAddr`, enabled by `-httpIngest`).
 
@@ -122,7 +122,7 @@ See <LinkArrow href="/v2/developers/build/model-support" label="Model Support" n
 
 Real-time AI processes live video streams frame-by-frame through AI models with strict latency targets. Unlike batch inference (request/response), real-time AI maintains a persistent stream connection - frames flow in continuously and transformed frames flow out.
 
-The primary framework is **ComfyStream**, an open-source ComfyUI plugin that enables developers to build real-time AI video workflows (style transfer, avatars, live effects, real-time agents). **Daydream** is the hosted reference implementation - developers can use it without running their own gateway.
+The primary framework is **ComfyStream**, an open-source ComfyUI plugin that enables developers to build real-time AI video workflows (style transfer, avatars, live effects, real-time agents). **Daydream** is the hosted reference implementation - developers can use it without running their own Gateway.
 
 Real-time AI runs on <Badge color="purple">AI</Badge> or <Badge color="green">Dual</Badge> nodes. It uses the `live-video-to-video` pipeline type and the trickle streaming protocol instead of the REST AI Jobs API. Billing is per-second, not per-pixel.
 
@@ -135,13 +135,13 @@ Real-time AI runs on <Badge color="purple">AI</Badge> or <Badge color="green">Du
     Build real-time AI video workflows with ComfyUI nodes.
   </Card>
   <Card title="Daydream" icon="cloud" href="/v2/solutions/daydream/overview">
-    Hosted real-time AI video - no gateway required.
+    Hosted real-time AI video - no Gateway required.
   </Card>
 </CardGroup>
 
 ### BYOC Pipelines
 
-BYOC (Bring Your Own Container) allows any workload that can be containerised to run on Livepeer orchestrators. The gateway routes by capability descriptor (`image-to-image`, `depth`, `segmentation`) instead of by model name.
+BYOC (Bring Your Own Container) allows any workload that can be containerised to run on Livepeer Orchestrators. The Gateway routes by capability descriptor (`image-to-image`, `depth`, `segmentation`) instead of by model name.
 
 BYOC supports **both GPU and CPU** containers. GPU workloads (diffusion models, vision models, video-to-video) are the primary use case, but CPU-only deployments are also supported - see the BYOC CPU tutorial for a passthrough pipeline example.
 
@@ -150,7 +150,7 @@ BYOC supports **both GPU and CPU** containers. GPU workloads (diffusion models, 
 **What does not fit:** long-running training or fine-tuning jobs, workloads requiring large persistent state, high-latency multi-minute jobs. The network assumes short, stateless, repeatable units of work. Containers that maintain long-lived state between requests break retry and failover semantics.
 
 <Note>
-BYOC requires a gateway - applications cannot interact with orchestrators directly. The gateway handles discovery, capability matching, and payment; the orchestrator runs your container.
+BYOC requires a Gateway - applications cannot interact with Orchestrators directly. The Gateway handles discovery, capability matching, and payment; the Orchestrator runs your container.
 </Note>
 
 BYOC follows the same payment model as AI inference.
@@ -209,10 +209,10 @@ Not all pipeline types are available on every node type. Use this table to confi
   </tbody>
 </StyledTable>
 
-[//]: # (REVIEW: Confirm whether dual gateways use on-chain payment for real-time AI workloads.)
+[//]: # (REVIEW: Confirm whether dual Gateways use on-chain payment for real-time AI workloads.)
 
 <Tip>
-  Running both video and AI workloads from a single node is possible with a <Badge color="green">Dual</Badge> gateway. The gateway itself does not need a GPU - orchestrators provide the compute. However, dual nodes manage two independent session managers simultaneously, which increases operational complexity.
+  Running both video and AI workloads from a single node is possible with a <Badge color="green">Dual</Badge> Gateway. The Gateway itself does not need a GPU - Orchestrators provide the compute. However, dual nodes manage two independent session managers simultaneously, which increases operational complexity.
 </Tip>
 
 <CustomDivider style={{margin: "0 0 -2rem 0"}} />
@@ -223,33 +223,33 @@ Not all pipeline types are available on every node type. Use this table to confi
 
 ## Orchestrator Discovery
 
-How your gateway finds orchestrators depends on your operational mode and business model. There is no single discovery pattern - most production gateways use direct relationships instead of automatic pooled discovery.
+How your Gateway finds Orchestrators depends on your operational mode and business model. There is no single discovery pattern - most production Gateways use direct relationships instead of automatic pooled discovery.
 
 <AccordionGroup>
   <Accordion title="On-chain discovery (automatic)" icon="link">
-    On-chain gateways query the Livepeer subgraph on Arbitrum for registered, active orchestrators. The gateway refreshes this list periodically and selects orchestrators based on capability, price, latency, and stake weight.
+    On-chain Gateways query the Livepeer subgraph on Arbitrum for registered, active Orchestrators. The Gateway refreshes this list periodically and selects Orchestrators based on capability, price, latency, and stake weight.
 
-    This is the default for on-chain gateways and requires no manual orchestrator configuration. Best suited for public gateways routing to the open network pool.
+    This is the default for on-chain Gateways and requires no manual Orchestrator configuration. Best suited for public Gateways routing to the open network pool.
   </Accordion>
   <Accordion title="Direct configuration (-orchAddr)" icon="server">
-    Off-chain gateways (and some on-chain gateways) specify orchestrator addresses directly using the `-orchAddr` flag. This bypasses on-chain discovery entirely.
+    Off-chain Gateways (and some on-chain Gateways) specify Orchestrator addresses directly using the `-orchAddr` flag. This bypasses on-chain discovery entirely.
 
-    Most production gateways use this pattern. Operators build relationships with specific orchestrators who run the models and capabilities their applications need. This gives predictable performance, pricing, and availability.
+    Most production Gateways use this pattern. Operators build relationships with specific Orchestrators who run the models and capabilities their applications need. This gives predictable performance, pricing, and availability.
   </Accordion>
   <Accordion title="Webhook discovery" icon="webhook">
-    Gateways can call an external service via `-orchWebhookUrl` to receive a dynamic orchestrator list. This enables custom filtering, whitelisting, or load balancing without modifying the gateway itself.
+    Gateways can call an external service via `-orchWebhookUrl` to receive a dynamic Orchestrator list. This enables custom filtering, whitelisting, or load balancing without modifying the Gateway itself.
 
-    Used by platform builders (NaaP) and operators with orchestrator tiering or geographic routing requirements.
+    Used by platform builders (NaaP) and operators with Orchestrator tiering or geographic routing requirements.
   </Accordion>
   <Accordion title="Own orchestrators" icon="microchip">
-    Some operators run their own orchestrators alongside their gateway. The gateway points to these dedicated orchestrators via `-orchAddr`. This provides full control over compute, models, and pricing.
+    Some operators run their own Orchestrators alongside their Gateway. The Gateway points to these dedicated Orchestrators via `-orchAddr`. This provides full control over compute, models, and pricing.
 
     Common for enterprise integrators, content providers with SLA requirements, and operators running custom BYOC or real-time AI workloads.
   </Accordion>
 </AccordionGroup>
 
 <Note>
-  Automatic on-chain discovery selects from the public orchestrator pool based on capability, price, latency, and performance history. For AI workloads - especially real-time AI and BYOC - direct orchestrator relationships are more common because applications need specific models, GPU configurations, or custom containers that not all orchestrators provide.
+  Automatic on-chain discovery selects from the public Orchestrator pool based on capability, price, latency, and performance history. For AI workloads - especially real-time AI and BYOC - direct Orchestrator relationships are more common because applications need specific models, GPU configurations, or custom containers that not all Orchestrators provide.
 </Note>
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
@@ -261,10 +261,10 @@ How your gateway finds orchestrators depends on your operational mode and busine
 
 <CardGroup cols={2}>
   <Card title="Video Transcoding Pipeline" icon="film" href="/v2/gateways/guides/node-pipelines/video-pipelines">
-    How video jobs flow through your gateway - ingest, segmentation, orchestrator selection, and payment.
+    How video jobs flow through your Gateway - ingest, segmentation, Orchestrator selection, and payment.
   </Card>
   <Card title="AI Inference Pipeline" icon="brain" href="/v2/gateways/guides/node-pipelines/ai-pipelines">
-    How AI inference requests are routed - orchestrator discovery, model matching, pipeline types, and platform limits.
+    How AI inference requests are routed - Orchestrator discovery, model matching, pipeline types, and platform limits.
   </Card>
   <Card title="BYOC Pipelines" icon="box" href="/v2/gateways/guides/node-pipelines/byoc-pipelines">
     Routing custom container workloads by capability - operator responsibilities, model fit, and health tracking.

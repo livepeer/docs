@@ -59,13 +59,13 @@ The network consists of four primary node types:
   itemsList={[
     {
       "Node Type": <strong>Gateway (Broadcaster)</strong>,
-      "Role": "Ingests media streams and AI requests, discovers orchestrators",
+      "Role": "Ingests media streams and AI requests, discovers Orchestrators",
       "Key Components": <><code>LivepeerServer</code>, <code>BroadcastSessionsManager</code>, <code>AISessionManager</code></>,
     },
     {
       "Node Type": <strong>Orchestrator</strong>,
       "Role": "Coordinates work distribution, manages payments, handles worker pools",
-      "Key Components": <><code>orchestrator struct</code>, <code>RemoteTranscoderManager</code>, <code>RemoteAIWorkerManager</code></>,
+      "Key Components": <><code>Orchestrator struct</code>, <code>RemoteTranscoderManager</code>, <code>RemoteAIWorkerManager</code></>,
     },
     {
       "Node Type": <strong>Transcoder</strong>,
@@ -86,7 +86,7 @@ The network consists of four primary node types:
 - **Ingest**: RTMP/HTTP streams via `LivepeerServer.HandlePush()`
 - **Segmentation**: RTMPSegmenter converts to HLS segments
 - **Processing**: `processSegment()` handles transcoding
-- **Distribution**: `BroadcastSessionsManager` selects orchestrators and submits segments
+- **Distribution**: `BroadcastSessionsManager` selects Orchestrators and submits segments
 
 ### AI Processing Pipeline
 - **Request**: HTTP endpoints for different AI tasks (text-to-image, image-to-video, etc.)
@@ -96,7 +96,7 @@ The network consists of four primary node types:
 
 ## Key Capabilities
 
-1. **Video Transcoding**: Multi-format transcoding with hardware acceleration (Nvidia, Netint)
+1. **Video Transcoding**: Multi-format transcoding with hardware acceleration (NVIDIA, Netint)
 2. **AI Inference**: Multiple pipelines including:
    - Text-to-image (Stable Diffusion variants)
    - Image-to-image and image-to-video
@@ -119,14 +119,14 @@ The network consists of four primary node types:
 
 Jobs are routed through a multi-stage discovery and selection process:
 
-1. **Discovery**: `DBOrchestratorPoolCache` syncs orchestrator info from blockchain and polls `/getOrchInfo` endpoints
+1. **Discovery**: `DBOrchestratorPoolCache` syncs Orchestrator info from blockchain and polls `/getOrchInfo` endpoints
 2. **Selection**: Algorithms consider price, stake, performance, and random factors
 3. **Session Management**: `SessionPool` maintains active connections with performance tracking
-4. **Load Balancing**: `MinLSSelector` uses latency heap for optimal orchestrator selection
+4. **Load Balancing**: `MinLSSelector` uses latency heap for optimal Orchestrator selection
 
 ## Economic Model
 
-The network uses probabilistic micropayments with a ticket-based system:
+The network uses Probabilistic Micropayments with a ticket-based system:
 
 - **Tickets**: Probabilistic payment tickets included with each segment/request
 - **Validation**: Immediate validation with expected value credited to sender balance

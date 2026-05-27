@@ -52,7 +52,7 @@ There is no single "Livepeer developer" role. Different parts of the system have
   ]}
 />
 
-A contribution to a contract requires a LIP. A contribution to the node binary requires a code review. A new BYOC pipeline does not require either - it ships when an orchestrator decides to run it.
+A contribution to a contract requires a LIP. A contribution to the node binary requires a code review. A new BYOC pipeline does not require either - it ships when an Orchestrator decides to run it.
 
 <CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
@@ -64,13 +64,13 @@ Four repositories cover almost everything a contributor needs to read or touch.
   headerList={["Repository", "Purpose"]}
   itemsList={[
     { "Repository": <LinkArrow label="livepeer/protocol" href="https://github.com/livepeer/protocol" newline={false} />, "Purpose": "Solidity contracts deployed on Arbitrum One. BondingManager, TicketBroker, RoundsManager, Minter, Governor, Treasury, LivepeerToken." },
-    { "Repository": <LinkArrow label="livepeer/go-livepeer" href="https://github.com/livepeer/go-livepeer" newline={false} />, "Purpose": "Go implementation of the orchestrator, gateway, transcoder, and AI worker node software. The reference network client." },
+    { "Repository": <LinkArrow label="livepeer/go-livepeer" href="https://github.com/livepeer/go-livepeer" newline={false} />, "Purpose": "Go implementation of the Orchestrator, Gateway, transcoder, and AI worker node software. The reference network client." },
     { "Repository": <LinkArrow label="livepeer/LIPs" href="https://github.com/livepeer/LIPs" newline={false} />, "Purpose": "Every Livepeer Improvement Proposal - draft, accepted, or final. The formal record of every protocol change." },
     { "Repository": <LinkArrow label="livepeer/research" href="https://github.com/livepeer/research" newline={false} />, "Purpose": "Mechanism design notes, simulations, public-facing analysis. Pre-LIP exploration." },
   ]}
 />
 
-Two more repositories are useful but secondary: livepeer/wiki for community documentation, and livepeer/explorer-2 for the on-chain explorer UI.
+Two more repositories are useful but secondary: Livepeer/wiki for community documentation, and Livepeer/explorer-2 for the on-chain explorer UI.
 
 <CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
@@ -101,15 +101,15 @@ The flow depends on which repository the change touches.
 
 ### Node software (go-livepeer)
 
-A node-software change is reviewed through GitHub. The path is short: open an issue or post on the forum if the change is non-trivial, submit a pull request, address review feedback, and wait for merge. Significant changes are tagged into a release that orchestrators and gateways then upgrade to. There is no on-chain step, because the node software is run by individual operators - upgrades are voluntary unless the change is required by a protocol upgrade.
+A node-software change is reviewed through GitHub. The path is short: open an issue or post on the forum if the change is non-trivial, submit a pull request, address review feedback, and wait for merge. Significant changes are tagged into a release that Orchestrators and Gateways then upgrade to. There is no on-chain step, because the node software is run by individual operators - upgrades are voluntary unless the change is required by a protocol upgrade.
 
-### Protocol contracts (livepeer/protocol)
+### Protocol contracts (Livepeer/protocol)
 
 A contract change requires a Livepeer Improvement Proposal. The reason is structural: the contracts are upgraded by the Governor contract on a successful on-chain vote, so any change must travel through the LIP process. The path is longer: discuss on the forum, draft a LIP with a full specification, submit through the LIPs repository for editorial review, complete the 10-day Last Call period, submit on-chain to the Governor with the 100 LPT submission stake, win the 30-round vote at 33% quorum and majority approval, and then execute. The implementation PR can be reviewed in parallel; what cannot be skipped is the governance signal.
 
 ### Pipelines and BYOC
 
-A new pipeline or BYOC container ships independently. The orchestrator runs it; the gateway selects it; the protocol settles payment as it would for any built-in pipeline. There is no LIP required, no node-software upgrade required, and no governance vote required. New workload classes can be added without touching the protocol.
+A new pipeline or BYOC container ships independently. The Orchestrator runs it; the Gateway selects it; the protocol settles payment as it would for any built-in pipeline. There is no LIP required, no node-software upgrade required, and no governance vote required. New workload classes can be added without touching the protocol.
 
 <CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
@@ -136,7 +136,7 @@ Code is one contribution. Several others matter as much.
 
 - **Forum participation.** Almost every LIP starts as a forum thread. Engaged commenters shape proposals before they ever reach the chain.
 - **Vote.** Bonded LPT carries a vote. Voting on proposals is a form of contribution.
-- **Run an orchestrator or gateway.** The network needs operators who care about quality. Operating a node is the most direct way to learn the system.
+- **Run an Orchestrator or Gateway.** The network needs operators who care about quality. Operating a node is the most direct way to learn the system.
 - **Author a LIP.** Even without writing code, drafting a LIP that the community adopts is a high-leverage contribution.
 - **Publish research.** Mechanism design, performance benchmarks, public analysis - all directly useful to the protocol's evolution.
 

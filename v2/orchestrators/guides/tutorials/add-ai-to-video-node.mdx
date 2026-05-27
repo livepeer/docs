@@ -34,14 +34,14 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Tip>
-  Adding AI inference to a running video orchestrator is an additive change. On-chain registration, staking, reward calling, and all transcoding flags stay exactly as they are. Three new flags and one new file are all that change.
+  Adding AI inference to a running video Orchestrator is an additive change. On-chain registration, staking, reward calling, and all transcoding flags stay exactly as they are. Three new flags and one new file are all that change.
 </Tip>
 
 ---
 
-This tutorial adds AI inference capability to an existing go-livepeer video orchestrator. Estimated time: **1 hour** plus model download time (6 to 10 GB depending on the model chosen).
+This tutorial adds AI inference capability to an existing go-livepeer video Orchestrator. Estimated time: **1 hour** plus model download time (6 to 10 GB depending on the model chosen).
 
-**Prerequisites:** A working video orchestrator already running on Arbitrum One mainnet. Fresh nodes should start with <LinkArrow href="/v2/orchestrators/guides/tutorials/zero-to-first-reward" label="Zero to First Reward" newline={false} />.
+**Prerequisites:** A working video Orchestrator already running on Arbitrum One mainnet. Fresh nodes should start with <LinkArrow href="/v2/orchestrators/guides/tutorials/zero-to-first-reward" label="Zero to First Reward" newline={false} />.
 
 <CustomDivider />
 
@@ -66,7 +66,7 @@ Video transcoding uses NVENC and NVDEC, the fixed-function hardware blocks built
       <TableCell>**Unchanged** - existing stake carries over</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>Reward cut and fee cut</TableCell>
+      <TableCell>Reward Cut and Fee Cut</TableCell>
       <TableCell>**Unchanged** - commission settings stay the same</TableCell>
     </TableRow>
     <TableRow>
@@ -99,7 +99,7 @@ Video transcoding uses NVENC and NVDEC, the fixed-function hardware blocks built
     </TableRow>
     <TableRow>
       <TableCell>Docker socket mount</TableCell>
-      <TableCell>**NEW on many video-only nodes** - required for AI runner containers</TableCell>
+      <TableCell>**NEW on many video-only nodes** - required for AI Runner containers</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -159,7 +159,7 @@ Choose a model that fits within the free VRAM, with at least 2 GB headroom:
 
 ## Step 1: Download model weights
 
-Download the model before restarting the node. AI runner containers mount the model directory at startup - weights must already be present.
+Download the model before restarting the node. AI Runner containers mount the model directory at startup - weights must already be present.
 
 ```bash icon="terminal" filename="download-model"
 docker run --rm \
@@ -169,7 +169,7 @@ docker run --rm \
   bash -c "PIPELINE=text-to-image MODEL_ID=ByteDance/SDXL-Lightning bash /app/dl_checkpoints.sh"
 ```
 
-Replace `text-to-image` and `ByteDance/SDXL-Lightning` with your chosen pipeline and model. See the VRAM table above and check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) for current demand before choosing.
+Replace `text-to-image` and `ByteDance/SDXL-Lightning` with your chosen pipeline and model. See the VRAM table above and check [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) for current demand before choosing.
 
 {/* FACT CHECK: Confirm the `dl_checkpoints.sh` invocation pattern is current. Rick and the ai-runner team to verify. */}
 
@@ -196,7 +196,7 @@ cat > ~/.lpData/aiModels.json << 'EOF'
 EOF
 ```
 
-Set `price_per_unit` from current market rates at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Keep it at or below current gateway caps so the node remains routable.
+Set `price_per_unit` from current market rates at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Keep it at or below current Gateway caps so the node remains routable.
 
 <CustomDivider />
 
@@ -232,10 +232,10 @@ docker run -d \
   -aiModelsDir /root/.lpData/models
 ```
 
-The restart command includes the `-v /var/run/docker.sock:/var/run/docker.sock` mount required for Docker-out-of-Docker. Go-livepeer uses the Docker daemon to start AI runner containers through this socket.
+The restart command includes the `-v /var/run/docker.sock:/var/run/docker.sock` mount required for Docker-out-of-Docker. Go-livepeer uses the Docker daemon to start AI Runner containers through this socket.
 
 <Warning>
-  Use the host path for `-aiModelsDir` (`~/.lpData/models`). Docker mounts that directory into each AI runner container it creates.
+  Use the host path for `-aiModelsDir` (`~/.lpData/models`). Docker mounts that directory into each AI Runner container it creates.
 </Warning>
 
 <CustomDivider />
@@ -262,7 +262,7 @@ The restart command includes the `-v /var/run/docker.sock:/var/run/docker.sock` 
 
   <StyledStep title="Verify video transcoding still works">
 
-    Check the node is still registered as a video orchestrator:
+    Check the node is still registered as a video Orchestrator:
 
     ```bash icon="terminal" filename="check-video"
     curl -k https://YOUR_PUBLIC_IP:8935/status
@@ -286,9 +286,9 @@ The restart command includes the `-v /var/run/docker.sock:/var/run/docker.sock` 
 
   <StyledStep title="Verify AI capabilities registered on the network">
 
-    Open [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and search for the node's Ethereum address. The `text-to-image` pipeline should appear with status **Warm** within 2 to 5 minutes.
+    Open [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and search for the node's Ethereum address. The `text-to-image` pipeline should appear with status **Warm** within 2 to 5 minutes.
 
-    If the pipeline does not appear, inspect AI runner containers:
+    If the pipeline does not appear, inspect AI Runner containers:
 
     ```bash icon="terminal" filename="check-containers"
     docker ps --filter name=livepeer

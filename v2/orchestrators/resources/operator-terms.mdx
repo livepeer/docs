@@ -48,7 +48,7 @@ import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx
 
 ## Deployment
 
-A **deployment** is the complete configuration of a Livepeer orchestrator, defined by three independent choices: node mode, deployment type, and scale. These axes are orthogonal - each can be selected independently of the others.
+A **deployment** is the complete configuration of a Livepeer Orchestrator, defined by three independent choices: node mode, deployment type, and scale. These axes are orthogonal - each can be selected independently of the others.
 
 <StyledTable variant="bordered">
   <thead>
@@ -62,7 +62,7 @@ A **deployment** is the complete configuration of a Livepeer orchestrator, defin
     <TableRow>
       <TableCell>**Node mode**</TableCell>
       <TableCell>Video / AI / Dual</TableCell>
-      <TableCell>What workloads the orchestrator processes</TableCell>
+      <TableCell>What workloads the Orchestrator processes</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Deployment type**</TableCell>
@@ -81,7 +81,7 @@ A **deployment** is the complete configuration of a Livepeer orchestrator, defin
 
 ## Node Mode
 
-The node mode determines what workloads the orchestrator accepts and processes. This is a configuration choice, not a protocol distinction - the same go-livepeer binary supports all three modes.
+The node mode determines what workloads the Orchestrator accepts and processes. This is a configuration choice, not a protocol distinction - the same go-livepeer binary supports all three modes.
 
 <StyledTable variant="bordered">
   <thead>
@@ -101,13 +101,13 @@ The node mode determines what workloads the orchestrator accepts and processes. 
     </TableRow>
     <TableRow>
       <TableCell><Badge color="purple">AI</Badge></TableCell>
-      <TableCell>AI inference only - processes inference jobs (text-to-image, LLM, audio, etc.) via AI runner containers</TableCell>
+      <TableCell>AI inference only - processes inference jobs (text-to-image, LLM, audio, etc.) via AI Runner containers</TableCell>
       <TableCell>`-orchestrator`, `-transcoder`, `-aiWorker`, `-aiModels`</TableCell>
       <TableCell>NVIDIA GPU with sufficient VRAM for target models (8-80 GB depending on pipeline)</TableCell>
     </TableRow>
     <TableRow>
       <TableCell><Badge color="green">Dual</Badge></TableCell>
-      <TableCell>Both video transcoding and AI inference from a single orchestrator process</TableCell>
+      <TableCell>Both video transcoding and AI inference from a single Orchestrator process</TableCell>
       <TableCell>`-orchestrator`, `-transcoder`, `-aiWorker`, `-aiModels`, plus video flags</TableCell>
       <TableCell>NVIDIA GPU with NVENC + sufficient VRAM for AI models</TableCell>
     </TableRow>
@@ -116,15 +116,15 @@ The node mode determines what workloads the orchestrator accepts and processes. 
 
 ### Dual Mode
 
-<Badge color="green">Dual</Badge> mode is a dual-workload configuration where a single orchestrator process handles both video transcoding and AI inference. This is the most common production configuration for operators with capable hardware (24 GB+ VRAM GPUs).
+<Badge color="green">Dual</Badge> mode is a dual-workload configuration where a single Orchestrator process handles both video transcoding and AI inference. This is the most common production configuration for operators with capable hardware (24 GB+ VRAM GPUs).
 
-Dual mode is not a separate protocol mode - it is the same orchestrator process with both video and AI capabilities enabled. The orchestrator advertises both capability types and accepts jobs of either kind.
+Dual mode is not a separate protocol mode - it is the same Orchestrator process with both video and AI capabilities enabled. The Orchestrator advertises both capability types and accepts jobs of either kind.
 
 <Note>
 **Previous terminology**: Dual mode has been referred to by several names in earlier documentation and community discussion:
-- **"Combined mode"** - used in v1 docs and setup-options.mdx to describe running orchestrator + transcoder in a single process. This term conflates two different concepts: (1) combined O+T process (vs O-T split) and (2) combined video+AI workloads. Dual mode refers specifically to the workload combination, not the process architecture.
-- **"Hybrid"** - used in community discussions and the L0 product exercise. Accurate but informal. Dual mode is the canonical term matching the gateway glossary's <Badge color="green">Dual</Badge> node type.
-- **"O-T model"** - sometimes confused with dual mode, but O-T split refers to the **deployment type** (separating orchestrator and transcoder processes), not the **node mode** (which workloads are processed). An O-T split can run in any node mode, including dual.
+- **"Combined mode"** - used in v1 docs and setup-options.mdx to describe running Orchestrator + transcoder in a single process. This term conflates two different concepts: (1) combined O+T process (vs O-T split) and (2) combined video+AI workloads. Dual mode refers specifically to the workload combination, not the process architecture.
+- **"Hybrid"** - used in community discussions and the L0 product exercise. Accurate but informal. Dual mode is the canonical term matching the Gateway glossary's <Badge color="green">Dual</Badge> node type.
+- **"O-T model"** - sometimes confused with dual mode, but O-T split refers to the **deployment type** (separating Orchestrator and transcoder processes), not the **node mode** (which workloads are processed). An O-T split can run in any node mode, including dual.
 
 The canonical terminology is **dual mode** in headings and labels, and **dual-workload configuration** in explanatory prose where the fuller description aids clarity.
 </Note>
@@ -135,7 +135,7 @@ The canonical terminology is **dual mode** in headings and labels, and **dual-wo
 
 ## Deployment Type
 
-The deployment type determines how the orchestrator infrastructure is organised.
+The deployment type determines how the Orchestrator infrastructure is organised.
 
 <StyledTable variant="bordered">
   <thead>
@@ -148,28 +148,28 @@ The deployment type determines how the orchestrator infrastructure is organised.
   <tbody>
     <TableRow>
       <TableCell>**Solo operator**</TableCell>
-      <TableCell>Single operator running a complete orchestrator node. Full control, full responsibility, full earnings. The standard deployment for most operators.</TableCell>
-      <TableCell>Active set threshold for video jobs. Minimal for AI-only.</TableCell>
+      <TableCell>Single operator running a complete Orchestrator node. Full control, full responsibility, full earnings. The standard deployment for most operators.</TableCell>
+      <TableCell>Active Set threshold for video jobs. Minimal for AI-only.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Pool node**</TableCell>
-      <TableCell>A go-livepeer node running in transcoder mode, connected to an existing pool operator's orchestrator. The pool operator handles on-chain operations (staking, reward calling, ticket redemption). The pool node provides GPU compute and receives off-chain payouts.</TableCell>
+      <TableCell>A go-livepeer node running in transcoder mode, connected to an existing pool operator's Orchestrator. The pool operator handles on-chain operations (staking, reward calling, ticket redemption). The pool node provides GPU compute and receives off-chain payouts.</TableCell>
       <TableCell>None - the pool operator stakes.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Pool operator**</TableCell>
-      <TableCell>An orchestrator that accepts external transcoder workers. Manages on-chain operations and distributes earnings to workers. Requires infrastructure reliability and community trust.</TableCell>
-      <TableCell>Active set threshold + buffer for reliability.</TableCell>
+      <TableCell>An Orchestrator that accepts external transcoder workers. Manages on-chain operations and distributes earnings to workers. Requires infrastructure reliability and community trust.</TableCell>
+      <TableCell>Active Set threshold + buffer for reliability.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**O-T split**</TableCell>
-      <TableCell>Separate orchestrator and transcoder processes, typically on different machines. The orchestrator handles protocol interaction and job routing; the transcoder handles GPU compute. Enables security isolation and multi-GPU scaling.</TableCell>
-      <TableCell>Active set threshold (on orchestrator node).</TableCell>
+      <TableCell>Separate Orchestrator and transcoder processes, typically on different machines. The Orchestrator handles protocol interaction and job routing; the transcoder handles GPU compute. Enables security isolation and multi-GPU scaling.</TableCell>
+      <TableCell>Active Set threshold (on Orchestrator node).</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Siphon**</TableCell>
-      <TableCell>A lightweight transcoder that connects to a remote orchestrator, "siphoning" work to a local GPU. Useful for operators with GPUs in locations that cannot run a full orchestrator (residential connections, shared hosting).</TableCell>
-      <TableCell>None - the remote orchestrator stakes.</TableCell>
+      <TableCell>A lightweight transcoder that connects to a remote Orchestrator, "siphoning" work to a local GPU. Useful for operators with GPUs in locations that cannot run a full Orchestrator (residential connections, shared hosting).</TableCell>
+      <TableCell>None - the remote Orchestrator stakes.</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -184,39 +184,39 @@ Deployment type is independent of node mode. A solo operator can run in <Badge c
 
 <AccordionGroup>
   <Accordion title="Active set" icon="users">
-    The group of orchestrators eligible to receive video transcoding work in the current round. Membership is determined by total bonded stake (self-stake + delegated stake), ranked by position. The active set size is a protocol parameter.
+    The group of Orchestrators eligible to receive video transcoding work in the current round. Membership is determined by total bonded stake (self-stake + delegated stake), ranked by position. The Active Set size is a protocol parameter.
 
     {/* REVIEW: Confirm current active set size. Historically top-100. */}
 
-    AI inference routing does not require active set membership - it prioritises capability and price over stake position.
+    AI inference routing does not require Active Set membership - it prioritises capability and price over stake position.
   </Accordion>
   <Accordion title="Round" icon="clock">
-    A protocol time period of approximately 22 hours (5760 Ethereum L1 blocks). Each round, active orchestrators can call `Reward()` to claim their share of newly minted LPT. Rounds are sequential and continuous.
+    A protocol time period of approximately 22 hours (5760 Ethereum L1 blocks). Each round, active Orchestrators can call `Reward()` to claim their share of newly minted LPT. Rounds are sequential and continuous.
   </Accordion>
   <Accordion title="Reward call" icon="gift">
-    The on-chain transaction (`Reward()`) that an orchestrator calls once per round to claim minted LPT. Missing a reward call forfeits that round's rewards permanently. Gas cost on Arbitrum is approximately $0.01-0.12 per call.
+    The on-chain transaction (`Reward()`) that an Orchestrator calls once per round to claim minted LPT. Missing a reward call forfeits that round's rewards permanently. Gas cost on Arbitrum is approximately $0.01-0.12 per call.
 
     {/* REVIEW: Confirm current gas cost range for reward calls on Arbitrum. */}
   </Accordion>
   <Accordion title="Reward cut" icon="scissors">
-    The percentage of inflation rewards that the orchestrator keeps before distributing the remainder to delegators. Set by the orchestrator. A lower reward cut means more goes to delegators, which can attract more delegation.
+    The percentage of inflation rewards that the Orchestrator keeps before distributing the remainder to Delegators. Set by the Orchestrator. A lower Reward Cut means more goes to Delegators, which can attract more delegation.
   </Accordion>
   <Accordion title="Fee cut" icon="percent">
-    The percentage of ETH service fees that the orchestrator keeps before distributing the remainder to delegators. Separate from reward cut. Both are set independently by the orchestrator.
+    The percentage of ETH service fees that the Orchestrator keeps before distributing the remainder to Delegators. Separate from Reward Cut. Both are set independently by the Orchestrator.
 
     {/* REVIEW: Confirm whether fee cut is still called "fee cut" in the current Explorer UI or if it has been renamed. */}
   </Accordion>
   <Accordion title="Stake (self-stake)" icon="coins">
-    LPT bonded directly by the orchestrator to its own address. Self-stake demonstrates commitment and is a prerequisite for activation. Self-stake weight is identical to delegated stake weight for active set ranking.
+    LPT bonded directly by the Orchestrator to its own address. Self-stake demonstrates commitment and is a prerequisite for activation. Self-stake weight is identical to delegated stake weight for Active Set ranking.
   </Accordion>
   <Accordion title="Delegated stake" icon="hand-holding-dollar">
-    LPT bonded to an orchestrator by delegators. Combined with self-stake, delegated stake determines the orchestrator's total bonded stake, which affects active set position and governance vote weight.
+    LPT bonded to an Orchestrator by Delegators. Combined with self-stake, delegated stake determines the Orchestrator's total bonded stake, which affects Active Set position and governance vote weight.
   </Accordion>
   <Accordion title="Activation / deactivation" icon="power-off">
-    The on-chain transaction that registers (activates) or unregisters (deactivates) an orchestrator on the Livepeer protocol. An active orchestrator appears in the orchestrator pool and is eligible for the active set. Deactivation removes the orchestrator from eligibility.
+    The on-chain transaction that registers (activates) or unregisters (deactivates) an Orchestrator on the Livepeer Protocol. An active Orchestrator appears in the Orchestrator pool and is eligible for the Active Set. Deactivation removes the Orchestrator from eligibility.
   </Accordion>
   <Accordion title="Service URI" icon="globe">
-    The public URL that an orchestrator advertises on-chain so gateways can connect to it. Must be reachable from the internet. Format: `https://your-domain:8935` or similar.
+    The public URL that an Orchestrator advertises on-chain so Gateways can connect to it. Must be reachable from the internet. Format: `https://your-domain:8935` or similar.
   </Accordion>
 </AccordionGroup>
 
@@ -226,25 +226,25 @@ Deployment type is independent of node mode. A solo operator can run in <Badge c
 
 <AccordionGroup>
   <Accordion title="Orchestrator (process)" icon="microchip">
-    The go-livepeer process running with the `-orchestrator` flag. Handles protocol interaction, job routing, payment negotiation, and capability advertisement. In a combined deployment, also runs the transcoder. In an O-T split, the orchestrator process runs separately from the transcoder.
+    The go-livepeer process running with the `-orchestrator` flag. Handles protocol interaction, job routing, payment negotiation, and capability advertisement. In a combined deployment, also runs the transcoder. In an O-T split, the Orchestrator process runs separately from the transcoder.
   </Accordion>
   <Accordion title="Transcoder (process)" icon="film">
-    The go-livepeer process running with the `-transcoder` flag. Performs the actual GPU compute work (video re-encoding, AI inference). In a combined deployment, runs within the same process as the orchestrator. In an O-T split, runs on a separate machine.
+    The go-livepeer process running with the `-transcoder` flag. Performs the actual GPU compute work (video re-encoding, AI inference). In a combined deployment, runs within the same process as the Orchestrator. In an O-T split, runs on a separate machine.
   </Accordion>
   <Accordion title="AI worker / AI runner" icon="robot">
-    The container that executes AI inference jobs. Go-livepeer communicates with the AI runner via HTTP. The AI runner loads models into GPU memory and processes inference requests. Configured via `aiModels.json` and the `-aiWorker` / `-aiModels` flags.
+    The container that executes AI inference jobs. Go-livepeer communicates with the AI Runner via HTTP. The AI Runner loads models into GPU memory and processes inference requests. Configured via `aiModels.json` and the `-aiWorker` / `-aiModels` flags.
   </Accordion>
   <Accordion title="Session" icon="link">
-    A logical connection between a gateway and an orchestrator for a specific job. Video sessions are stream-based (one per active stream). AI sessions are job-based (one per inference request or batch). The `-maxSessions` flag limits concurrent sessions.
+    A logical connection between a Gateway and an Orchestrator for a specific job. Video sessions are stream-based (one per active stream). AI sessions are job-based (one per inference request or batch). The `-maxSessions` flag limits concurrent sessions.
   </Accordion>
   <Accordion title="Segment" icon="puzzle-piece">
-    A short chunk of video (typically ~2 seconds) that represents the unit of work for video transcoding. Gateways split incoming streams into segments and distribute them to orchestrators. Orchestrators transcode each segment independently.
+    A short chunk of video (typically ~2 seconds) that represents the unit of work for video transcoding. Gateways split incoming streams into segments and distribute them to Orchestrators. Orchestrators transcode each segment independently.
   </Accordion>
   <Accordion title="Capability" icon="list-check">
-    A specific workload type that an orchestrator can process. Video capabilities are implicit (all orchestrators with NVENC support video). AI capabilities are explicit - each pipeline and model is registered individually via `aiModels.json` and optionally advertised on-chain via `-aiServiceRegistry`.
+    A specific workload type that an Orchestrator can process. Video capabilities are implicit (all Orchestrators with NVENC support video). AI capabilities are explicit - each pipeline and model is registered individually via `aiModels.json` and optionally advertised on-chain via `-aiServiceRegistry`.
   </Accordion>
   <Accordion title="Warm model / cold model" icon="temperature-half">
-    A warm model is loaded into GPU memory and ready for immediate inference. A cold model must be loaded from disk before processing, adding seconds to minutes of latency. During the current beta, orchestrators typically support one warm model per GPU.
+    A warm model is loaded into GPU memory and ready for immediate inference. A cold model must be loaded from disk before processing, adding seconds to minutes of latency. During the current beta, Orchestrators typically support one warm model per GPU.
 
     {/* REVIEW: Confirm warm-per-GPU limit is still accurate. */}
   </Accordion>
@@ -252,10 +252,10 @@ Deployment type is independent of node mode. A solo operator can run in <Badge c
     A specific AI workload type: text-to-image, image-to-image, image-to-video, audio-to-text, LLM, live-video-to-video, etc. Each pipeline has its own API endpoint, model requirements, and pricing.
   </Accordion>
   <Accordion title="BYOC (Bring Your Own Container)" icon="box">
-    Custom AI inference containers that orchestrators can run alongside standard Livepeer pipelines. BYOC containers must conform to the Livepeer AI worker API specification.
+    Custom AI inference containers that Orchestrators can run alongside standard Livepeer pipelines. BYOC containers must conform to the Livepeer AI worker API specification.
   </Accordion>
   <Accordion title="Pool" icon="users">
-    A shared infrastructure arrangement where a pool operator runs the orchestrator node and multiple pool workers connect as remote transcoders. The pool operator handles on-chain operations; workers provide GPU compute. Earnings are distributed by the pool operator.
+    A shared infrastructure arrangement where a pool operator runs the Orchestrator node and multiple pool workers connect as remote transcoders. The pool operator handles on-chain operations; workers provide GPU compute. Earnings are distributed by the pool operator.
   </Accordion>
 </AccordionGroup>
 
@@ -265,28 +265,28 @@ Deployment type is independent of node mode. A solo operator can run in <Badge c
 
 <AccordionGroup>
   <Accordion title="PM ticket (probabilistic micropayment)" icon="ticket">
-    The payment unit in the Livepeer protocol. Gateways send lottery tickets to orchestrators for each job. Most tickets are non-winning; winning tickets can be redeemed on-chain for ETH. Over time, the expected value of winning tickets equals the fair payment for work performed.
+    The payment unit in the Livepeer Protocol. Gateways send lottery tickets to Orchestrators for each job. Most tickets are non-winning; winning tickets can be redeemed on-chain for ETH. Over time, the expected value of winning tickets equals the fair payment for work performed.
   </Accordion>
   <Accordion title="Ticket redemption" icon="receipt">
-    The on-chain transaction where an orchestrator redeems a winning PM ticket on the Arbitrum TicketBroker contract to receive ETH. Redemption costs gas. Orchestrators typically batch redemptions to optimise gas costs.
+    The on-chain transaction where an Orchestrator redeems a winning PM ticket on the Arbitrum TicketBroker contract to receive ETH. Redemption costs gas. Orchestrators typically batch redemptions to optimise gas costs.
   </Accordion>
   <Accordion title="pricePerUnit" icon="tag">
-    The flag (`-pricePerUnit`) that sets the orchestrator's video transcoding price in wei per pixel. Gateways with `-maxPricePerUnit` below this value will not route work to the orchestrator.
+    The flag (`-pricePerUnit`) that sets the Orchestrator's video transcoding price in wei per pixel. Gateways with `-maxPricePerUnit` below this value will not route work to the Orchestrator.
   </Accordion>
   <Accordion title="pricePerGateway" icon="tags">
-    The flag that allows setting different prices for different gateway addresses. Useful for commercial relationships where specific gateways receive preferential pricing.
+    The flag that allows setting different prices for different Gateway addresses. Useful for commercial relationships where specific Gateways receive preferential pricing.
   </Accordion>
   <Accordion title="autoAdjustPrice" icon="chart-line">
-    A flag that enables dynamic price adjustment based on current demand. When enabled, the orchestrator automatically adjusts its price based on session utilisation.
+    A flag that enables dynamic price adjustment based on current demand. When enabled, the Orchestrator automatically adjusts its price based on session utilisation.
   </Accordion>
   <Accordion title="Inflation rewards" icon="coins">
-    Newly minted LPT distributed to active orchestrators each round. The inflation rate is a protocol parameter. Rewards are proportional to total bonded stake. Orchestrators must call `Reward()` each round to claim.
+    Newly minted LPT distributed to active Orchestrators each round. The inflation rate is a protocol parameter. Rewards are proportional to total bonded stake. Orchestrators must call `Reward()` each round to claim.
   </Accordion>
   <Accordion title="Service fees" icon="money-bill">
-    ETH earned from processing actual jobs (video transcoding segments, AI inference requests). Paid by gateways via PM tickets. Revenue depends on workload volume, pricing, and gateway selection.
+    ETH earned from processing actual jobs (video transcoding segments, AI inference requests). Paid by Gateways via PM tickets. Revenue depends on workload volume, pricing, and Gateway selection.
   </Accordion>
   <Accordion title="Earnings" icon="wallet">
-    The combined total of inflation rewards (LPT) and service fees (ETH) earned by an orchestrator. Operators split earnings with delegators according to their reward cut and fee cut settings.
+    The combined total of inflation rewards (LPT) and service fees (ETH) earned by an Orchestrator. Operators split earnings with Delegators according to their Reward Cut and Fee Cut settings.
   </Accordion>
 </AccordionGroup>
 
@@ -296,13 +296,13 @@ Deployment type is independent of node mode. A solo operator can run in <Badge c
 
 <AccordionGroup>
   <Accordion title="Broadcaster (deprecated)" icon="circle-exclamation">
-    The pre-2023 name for a gateway. The `-broadcaster` flag has been replaced by `-gateway`. The go-livepeer codebase internally still uses "BroadcasterNode" as the enum name. The CLI tool `livepeer_cli` displays "BROADCASTER STATS" - this refers to gateway metrics using the legacy term.
+    The pre-2023 name for a Gateway. The `-broadcaster` flag has been replaced by `-gateway`. The go-livepeer codebase internally still uses "BroadcasterNode" as the enum name. The CLI tool `livepeer_cli` displays "BROADCASTER STATS" - this refers to Gateway metrics using the legacy term.
   </Accordion>
   <Accordion title="Combined mode (ambiguous - avoid)" icon="triangle-exclamation">
-    Used in v1 documentation to mean two different things: (1) running orchestrator + transcoder in a single process (vs O-T split), and (2) running both video + AI workloads. To avoid confusion, use **"single-process deployment"** for the architecture meaning and **"dual mode"** for the workload meaning.
+    Used in v1 documentation to mean two different things: (1) running Orchestrator + transcoder in a single process (vs O-T split), and (2) running both video + AI workloads. To avoid confusion, use **"single-process deployment"** for the architecture meaning and **"dual mode"** for the workload meaning.
   </Accordion>
   <Accordion title="Hybrid (informal - use Dual Mode)" icon="triangle-exclamation">
-    Community shorthand for running both video and AI workloads. The canonical term is **dual mode** (matching the gateway glossary's <Badge color="green">Dual</Badge> badge). "Hybrid" may appear in community discussions, Discord, and planning documents.
+    Community shorthand for running both video and AI workloads. The canonical term is **dual mode** (matching the Gateway glossary's <Badge color="green">Dual</Badge> badge). "Hybrid" may appear in community discussions, Discord, and planning documents.
   </Accordion>
   <Accordion title="Pool worker (renamed - use Pool Node)" icon="triangle-exclamation">
     Earlier v2 documentation used "pool worker" for a node running in transcoder mode within a pool. The canonical term is now **pool node**. Community terms include "worker", "miner" (Titan Node), "GPU contributor", and "transcoder". The go-livepeer flag is `-transcoder` in all cases.
@@ -313,7 +313,7 @@ Deployment type is independent of node mode. A solo operator can run in <Badge c
 
 ## Operational Mode Asymmetry: Gateways vs Orchestrators
 
-Gateways and orchestrators both use go-livepeer but have a fundamental asymmetry in how operational modes work:
+Gateways and Orchestrators both use go-livepeer but have a fundamental asymmetry in how operational modes work:
 
 <StyledTable variant="bordered">
   <thead>
@@ -326,23 +326,23 @@ Gateways and orchestrators both use go-livepeer but have a fundamental asymmetry
   <tbody>
     <TableRow>
       <TableCell>**Off-chain viable for production?**</TableCell>
-      <TableCell>**Yes.** Off-chain gateways use a remote signer for payment operations. No ETH wallet, no staking, no blockchain interaction at the gateway. This is a genuine, sustainable production configuration.</TableCell>
-      <TableCell>**No.** Off-chain orchestrators (`-network offchain`) have no protocol discoverability, no inflation rewards, no active set membership. Only gateways explicitly pointing via `-orchAddr` can send work. Useful for testing and development only.</TableCell>
+      <TableCell>**Yes.** Off-chain Gateways use a remote signer for payment operations. No ETH wallet, no staking, no blockchain interaction at the Gateway. This is a genuine, sustainable production configuration.</TableCell>
+      <TableCell>**No.** Off-chain Orchestrators (`-network offchain`) have no protocol discoverability, no inflation rewards, no Active Set membership. Only Gateways explicitly pointing via `-orchAddr` can send work. Useful for testing and development only.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**On-chain requirements**</TableCell>
-      <TableCell>ETH deposit + reserve on Arbitrum. No LPT staking. No active set. No reward calling.</TableCell>
-      <TableCell>LPT stake (active set threshold for video). ArbETH for gas. On-chain activation. Reward calling each round. Service URI registration.</TableCell>
+      <TableCell>ETH deposit + reserve on Arbitrum. No LPT staking. No Active Set. No reward calling.</TableCell>
+      <TableCell>LPT stake (Active Set threshold for video). ArbETH for gas. On-chain activation. Reward calling each round. Service URI registration.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Operational mode fork**</TableCell>
       <TableCell>**Yes** - on-chain vs off-chain is a genuine production choice that affects the entire operational model, setup flow, and payment architecture.</TableCell>
-      <TableCell>**No** - orchestrators are effectively always on-chain for production. Off-chain is a testing configuration, not an operational mode choice.</TableCell>
+      <TableCell>**No** - Orchestrators are effectively always on-chain for production. Off-chain is a testing configuration, not an operational mode choice.</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
-This asymmetry means the gateway documentation needs a genuine on-chain/off-chain fork throughout (setup, payments, monitoring). The orchestrator documentation does not - it can treat on-chain as the default with off-chain mentioned only in the quickstart (for local testing) and in pool worker documentation (where the pool operator handles on-chain).
+This asymmetry means the Gateway documentation needs a genuine on-chain/off-chain fork throughout (setup, payments, monitoring). The Orchestrator documentation does not - it can treat on-chain as the default with off-chain mentioned only in the quickstart (for local testing) and in pool worker documentation (where the pool operator handles on-chain).
 
 {/*
   PURPOSE:

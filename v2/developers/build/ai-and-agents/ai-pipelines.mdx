@@ -38,7 +38,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 ---
 
-The Livepeer AI gateway exposes nine batch pipelines and one LLM pipeline through HTTP POST endpoints. Each pipeline accepts a JSON request body keyed by `model_id` and pipeline-specific fields, and returns a JSON response with the result. Real-time video AI (`live-video-to-video`) runs through the trickle protocol and is covered separately in the [real-time AI overview](/v2/developers/build/ai-and-agents/realtime-ai/overview).
+The Livepeer AI Gateway exposes nine batch pipelines and one LLM pipeline through HTTP POST endpoints. Each pipeline accepts a JSON request body keyed by `model_id` and pipeline-specific fields, and returns a JSON response with the result. Real-time video AI (`live-video-to-video`) runs through the trickle protocol and is covered separately in the [real-time AI overview](/v2/developers/build/ai-and-agents/realtime-ai/overview).
 
 For warm models, VRAM requirements, and architecture support per pipeline, see [model support](/v2/developers/build/ai-and-agents/model-support). For SDK wrappers, see [AI SDKs](/v2/developers/build/ai-and-agents/ai-sdks-overview).
 
@@ -46,9 +46,9 @@ For warm models, VRAM requirements, and architecture support per pipeline, see [
 
 ## Shared conventions
 
-**Base URL:** Any Livepeer gateway endpoint. The community gateway at `https://dream-gateway.livepeer.cloud` accepts unauthenticated requests for development.
+**Base URL:** Any Livepeer Gateway endpoint. The community Gateway at `https://dream-gateway.livepeer.cloud` accepts unauthenticated requests for development.
 
-**Authentication:** Bearer token when the gateway requires it. The community gateway does not require a token.
+**Authentication:** Bearer token when the Gateway requires it. The community Gateway does not require a token.
 
 **Request format:** `POST /<pipeline-endpoint>` with `Content-Type: application/json`.
 
@@ -56,7 +56,7 @@ For warm models, VRAM requirements, and architecture support per pipeline, see [
 
 **Error responses:** `400` for malformed requests, `422` for validation errors (invalid model_id, missing required fields), `500` for inference failures. Error bodies include a `detail` field with the failure reason.
 
-**Cold model latency:** If no orchestrator has the requested model warm in GPU memory, the first request triggers a model load (30 seconds to 5 minutes depending on model size). Subsequent requests to the same model on the same orchestrator are immediate.
+**Cold model latency:** If no Orchestrator has the requested model warm in GPU memory, the first request triggers a model load (30 seconds to 5 minutes depending on model size). Subsequent requests to the same model on the same Orchestrator are immediate.
 
 <CustomDivider />
 
@@ -215,7 +215,7 @@ For warm models, VRAM requirements, and architecture support per pipeline, see [
 
     **Response:** JSON with `audio` object containing a URL to the generated audio file.
 
-    <Note>Requires a pipeline-specific AI Runner container. Not all orchestrators have this pipeline active.</Note>
+    <Note>Requires a pipeline-specific AI Runner container. Not all Orchestrators have this pipeline active.</Note>
 
   </Accordion>
 
@@ -302,8 +302,8 @@ For warm models, VRAM requirements, and architecture support per pipeline, see [
 
 **Multipart vs JSON.** Pipelines that accept file uploads (image-to-image, image-to-video, image-to-text, audio-to-text, upscale, segment-anything-2) use `multipart/form-data`. Pipelines that accept only text input (text-to-image, text-to-speech, LLM) use `application/json`.
 
-**Gateway selection.** The community gateway routes to whichever orchestrator in the active set has the requested model warm. For production, operate a self-hosted gateway with `-maxPricePerUnit` to control costs, or use a gateway provider with an API key.
+**Gateway selection.** The community Gateway routes to whichever Orchestrator in the Active Set has the requested model warm. For production, operate a self-hosted Gateway with `-maxPricePerUnit` to control costs, or use a Gateway provider with an API key.
 
-**`safety_check` filter.** Enabled by default on image-generating pipelines. Set to `false` to disable. The filter runs on the orchestrator side; disabling it does not affect content moderation policies that the gateway operator may enforce.
+**`safety_check` filter.** Enabled by default on image-generating pipelines. Set to `false` to disable. The filter runs on the Orchestrator side; disabling it does not affect content moderation policies that the Gateway operator may enforce.
 
 The [AI quickstart](/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart) walks through the first inference call end-to-end with error handling.

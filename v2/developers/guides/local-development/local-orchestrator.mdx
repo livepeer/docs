@@ -29,18 +29,18 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>A local orchestrator in standalone transcoder mode does not require an Ethereum account or network registration. Use this mode for testing BYOC containers and AI pipelines without going on-chain.</Tip>
+  <Tip>A local Orchestrator in standalone transcoder mode does not require an Ethereum account or network registration. Use this mode for testing BYOC containers and AI pipelines without going on-chain.</Tip>
 </CenteredContainer>
 
 ---
 
-A local go-livepeer orchestrator provides a real protocol-level test target for BYOC containers, AI pipelines, and payment flows. Running locally means faster iteration, no ETH cost, and full control over the orchestrator's capability configuration.
+A local go-livepeer Orchestrator provides a real protocol-level test target for BYOC containers, AI pipelines, and payment flows. Running locally means faster iteration, no ETH cost, and full control over the Orchestrator's capability configuration.
 
 <CustomDivider />
 
 ## Standalone Mode (No Ethereum)
 
-For testing BYOC containers or AI pipelines without any Ethereum setup, start the orchestrator in standalone transcoder mode:
+For testing BYOC containers or AI pipelines without any Ethereum setup, start the Orchestrator in standalone transcoder mode:
 
 ```bash
 livepeer \
@@ -51,13 +51,13 @@ livepeer \
   -cliAddr 127.0.0.1:7936
 ```
 
-Standalone transcoder mode processes jobs from a connected broadcaster without on-chain registration or payment validation. A local broadcaster configured with `-orchAddr 127.0.0.1:8936` routes jobs directly to this orchestrator.
+Standalone transcoder mode processes jobs from a connected broadcaster without on-chain registration or payment validation. A local broadcaster configured with `-orchAddr 127.0.0.1:8936` routes jobs directly to this Orchestrator.
 
 <CustomDivider />
 
 ## Full Orchestrator Mode
 
-For testing the complete payment flow, run the orchestrator with an Ethereum account:
+For testing the complete payment flow, run the Orchestrator with an Ethereum account:
 
 <StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
   <StyledStep title="Start the orchestrator" icon="server">
@@ -75,7 +75,7 @@ For testing the complete payment flow, run the orchestrator with an Ethereum acc
       -metrics
     ```
 
-    `-pricePerUnit 0` makes the orchestrator accept any ticket face value, useful for local testing.
+    `-pricePerUnit 0` makes the Orchestrator accept any ticket face value, useful for local testing.
   </StyledStep>
 
   <StyledStep title="Configure BYOC in aiModels.json" icon="file">
@@ -93,11 +93,11 @@ For testing the complete payment flow, run the orchestrator with an Ethereum acc
     ]
     ```
 
-    The orchestrator reads this file on startup. Restart the orchestrator after changes.
+    The Orchestrator reads this file on startup. Restart the Orchestrator after changes.
   </StyledStep>
 
   <StyledStep title="Point a local gateway at this orchestrator" icon="link">
-    Start a local broadcaster with `-orchAddr` pointing at the local orchestrator:
+    Start a local broadcaster with `-orchAddr` pointing at the local Orchestrator:
 
     ```bash
     livepeer \
@@ -111,13 +111,13 @@ For testing the complete payment flow, run the orchestrator with an Ethereum acc
       -httpAddr 127.0.0.1:8935
     ```
 
-    This bypasses the network discovery mechanism and routes all jobs to the local orchestrator.
+    This bypasses the network discovery mechanism and routes all jobs to the local Orchestrator.
   </StyledStep>
 
   <StyledStep title="Test BYOC container" icon="check">
     Start your BYOC container (PyTrickle service, ComfyStream, or custom HTTP endpoint), then push a stream to the local broadcaster's RTMP endpoint. Verify the container processes frames and the broadcaster receives transformed output.
 
-    Check the orchestrator logs for job routing events and the BYOC container logs for inference activity.
+    Check the Orchestrator logs for job routing events and the BYOC container logs for inference activity.
   </StyledStep>
 </StyledSteps>
 
@@ -139,7 +139,7 @@ This replaces the previous pattern of running a separate AI subnet binary.
 
 <CustomDivider />
 
-A local orchestrator in standalone transcoder mode is the fastest way to test BYOC containers and AI pipelines without any Ethereum setup.
+A local Orchestrator in standalone transcoder mode is the fastest way to test BYOC containers and AI pipelines without any Ethereum setup.
 
 ## Related Pages
 
@@ -148,10 +148,10 @@ A local orchestrator in standalone transcoder mode is the fastest way to test BY
     BYOC container HTTP contract and aiModels.json registration fields.
   </Card>
   <Card title="PyTrickle Quickstart" icon="code" href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/pytrickle-quickstart" arrow horizontal>
-    Building a BYOC container with PyTrickle to test against a local orchestrator.
+    Building a BYOC container with PyTrickle to test against a local Orchestrator.
   </Card>
   <Card title="Local Gateway" icon="server" href="/v2/developers/guides/local-development/local-gateway" arrow horizontal>
-    Running a local broadcaster to route jobs to the local orchestrator.
+    Running a local broadcaster to route jobs to the local Orchestrator.
   </Card>
   <Card title="Local Development Overview" icon="grid" href="/v2/developers/guides/local-development/overview" arrow horizontal>
     Choosing the right local setup for your development scenario.

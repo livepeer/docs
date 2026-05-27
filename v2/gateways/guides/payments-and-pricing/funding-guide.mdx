@@ -50,10 +50,10 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-After choosing the on-chain operational mode, the gateway needs a funded ETH account on Arbitrum One before routing any jobs. This covers acquiring ETH, bridging it to Arbitrum, and depositing it into the `TicketBroker` contract that backs the gateway's payment tickets.
+After choosing the on-chain operational mode, the Gateway needs a funded ETH account on Arbitrum One before routing any jobs. This covers acquiring ETH, bridging it to Arbitrum, and depositing it into the `TicketBroker` contract that backs the Gateway's payment tickets.
 
 <Warning>
-  **This page applies to gateways running in on-chain operational mode** (Video, AI, or Dual). Off-chain gateways and clearinghouse-backed gateways do not need ETH in the gateway process and skip this step entirely. Not sure which applies? See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/payment-guide" label="Payments Guide" newline={false} />.
+  **This page applies to Gateways running in on-chain operational mode** (Video, AI, or Dual). Off-chain Gateways and clearinghouse-backed Gateways do not need ETH in the Gateway process and skip this step entirely. Not sure which applies? See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/payment-guide" label="Payments Guide" newline={false} />.
 </Warning>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -65,7 +65,7 @@ Confirm the following before starting:
 <StyledTable>
   <TableRow>
     <TableCell>**ETH on Arbitrum One**</TableCell>
-    <TableCell>Not Ethereum mainnet. The Livepeer protocol operates on Arbitrum One.</TableCell>
+    <TableCell>Not Ethereum mainnet. The Livepeer Protocol operates on Arbitrum One.</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**Gateway ETH address**</TableCell>
@@ -76,7 +76,7 @@ Confirm the following before starting:
     <TableCell>Public endpoints exist; a dedicated endpoint is more reliable for production.</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**Running gateway with `livepeer_cli`**</TableCell>
+    <TableCell>**Running Gateway with `livepeer_cli`**</TableCell>
     <TableCell>Default CLI port is `5935`.</TableCell>
   </TableRow>
 </StyledTable>
@@ -88,17 +88,17 @@ The `TicketBroker` contract lives on Arbitrum One (not Ethereum mainnet). ETH mu
 
 <Tabs>
   <Tab title="ETH on Arbitrum" icon="check">
-    Transfer the required amount to the gateway's ETH address directly. No bridging needed.
+    Transfer the required amount to the Gateway's ETH address directly. No bridging needed.
 
-    The gateway address is the public key of the keystore created on first `go-livepeer` run. Check `~/.lpData/keystore` or review the startup logs for the address.
+    The Gateway address is the public key of the keystore created on first `go-livepeer` run. Check `~/.lpData/keystore` or review the startup logs for the address.
   </Tab>
 
   <Tab title="ETH on mainnet" icon="bridge">
     Bridge ETH from Ethereum mainnet to Arbitrum One via the official Arbitrum bridge:
 
-    **Bridge:** [bridge.arbitrum.io](https://bridge.arbitrum.io/)
+    **Bridge:** [bridge.Arbitrum.io](https://bridge.arbitrum.io/)
 
-    The bridging process involves two transactions: an approval and a deposit. Allow 10 to 20 minutes for the deposit to finalise on Arbitrum. If the bridge fails due to gas price volatility, Arbitrum provides a retry panel at [retryable-tx-panel.arbitrum.io](https://retryable-tx-panel.arbitrum.io/).
+    The bridging process involves two transactions: an approval and a deposit. Allow 10 to 20 minutes for the deposit to finalise on Arbitrum. If the bridge fails due to gas price volatility, Arbitrum provides a retry panel at [retryable-tx-panel.Arbitrum.io](https://retryable-tx-panel.arbitrum.io/).
 
     <Note>
       Native ETH bridges straightforwardly. Only ERC-20 tokens like LPT require the token address import step.
@@ -108,7 +108,7 @@ The `TicketBroker` contract lives on Arbitrum One (not Ethereum mainnet). ETH mu
   <Tab title="No ETH yet" icon="cart-shopping">
     Some centralised exchanges support direct withdrawals to Arbitrum One, avoiding the bridging step entirely.
 
-    For a current list of exchanges supporting Arbitrum One, see the [Arbitrum Exchange Reference](/v2/gateways/resources/compendium/arbitrum-exchanges) in the Resources section. This list is dynamically sourced from CoinGecko.
+    For a current list of exchanges supporting Arbitrum One, see the [Arbitrum Exchange Reference](/v2/Gateways/resources/compendium/Arbitrum-exchanges) in the Resources section. This list is dynamically sourced from CoinGecko.
 
     <Note>
       Livepeer does not recommend any specific exchange. Verify network support before initiating a withdrawal.
@@ -120,25 +120,25 @@ The `TicketBroker` contract lives on Arbitrum One (not Ethereum mainnet). ETH mu
 
 ## Step 2 - Transfer
 
-Send ETH on Arbitrum One to the gateway's Ethereum address. This is the keystore account created during gateway installation.
+Send ETH on Arbitrum One to the Gateway's Ethereum address. This is the keystore account created during Gateway installation.
 
-To find the gateway address, run `livepeer_cli` and select **Option 1: Get node status**. The address appears under **BROADCASTER STATS** (the CLI uses the legacy term "Broadcaster" for Gateway).
+To find the Gateway address, run `livepeer_cli` and select **Option 1: Get node status**. The address appears under **BROADCASTER STATS** (the CLI uses the legacy term "Broadcaster" for Gateway).
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
 ## Step 3 - Deposit
 
-The Livepeer payment system splits gateway funds into two components.
+The Livepeer payment system splits Gateway funds into two components.
 
 <AccordionGroup>
   <Accordion title="Deposit" icon="coins">
-    The **deposit** is the primary balance from which Orchestrators are paid when they redeem winning PM tickets. As the gateway sends tickets across jobs, winning tickets are redeemed against this deposit. When the deposit runs too low, Orchestrators begin rejecting tickets and jobs fail.
+    The **deposit** is the primary balance from which Orchestrators are paid when they redeem winning PM tickets. As the Gateway sends tickets across jobs, winning tickets are redeemed against this deposit. When the deposit runs too low, Orchestrators begin rejecting tickets and jobs fail.
 
     The deposit functions as a running payment balance: it is depleted by usage and needs to be topped up periodically.
   </Accordion>
 
   <Accordion title="Reserve" icon="vault">
-    The **reserve** is a collateral backstop that protects Orchestrators against gateway non-payment. It is not consumed directly by ticket redemption under normal operation; rather, it is available as a protection mechanism for Orchestrators with a stake-based relationship to the gateway.
+    The **reserve** is a collateral backstop that protects Orchestrators against Gateway non-payment. It is not consumed directly by ticket redemption under normal operation; rather, it is available as a protection mechanism for Orchestrators with a stake-based relationship to the Gateway.
 
     The reserve also determines the face value of PM tickets. Tickets are sized as a fraction of the reserve, so a larger reserve allows for higher-value tickets per redemption event.
 <Warning>
@@ -149,7 +149,7 @@ The Livepeer payment system splits gateway funds into two components.
 
 <Steps>
   <Step title="Open livepeer_cli">
-    On the host running the gateway:
+    On the host running the Gateway:
 
     ```bash icon="terminal"
     livepeer_cli -host 127.0.0.1 -http 5935
@@ -196,7 +196,7 @@ The ticket face value is calculated as a fraction of the reserve. In the testing
   <Step title="Verify the balance">
     Select **Option 1: Get node status** in `livepeer_cli`. Scroll to the **BROADCASTER STATS** section (the CLI uses the legacy term "Broadcaster" for Gateway). The deposit and reserve amounts should be reflected there.
 
-    The balance can also be verified on-chain via [Livepeer Explorer](https://explorer.livepeer.org) by searching for the gateway address.
+    The balance can also be verified on-chain via [Livepeer Explorer](https://explorer.livepeer.org) by searching for the Gateway address.
   </Step>
 </Steps>
 
@@ -219,16 +219,16 @@ livepeer_cli -host 127.0.0.1 -http 5935
 
 **Top up the deposit:** Invoke Option 11 again at any time and add further ETH.
 
-**Automate monitoring:** For production deployments, monitor the gateway's ETH balance via the Arbitrum RPC endpoint. Alert when the deposit falls below the minimum operating threshold.
+**Automate monitoring:** For production deployments, monitor the Gateway's ETH balance via the Arbitrum RPC endpoint. Alert when the deposit falls below the minimum operating threshold.
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
 ## Withdrawals
 
 To withdraw funds from the `TicketBroker` deposit, there is an unlock period. This prevents instantaneous withdrawal attacks.
-Use `livepeer_cli` to initiate an unlock request. After the unlock period expires, withdraw the funds to the gateway's Ethereum address.
+Use `livepeer_cli` to initiate an unlock request. After the unlock period expires, withdraw the funds to the Gateway's Ethereum address.
 
 <Tip>
-  When winding down a gateway, initiate the unlock well in advance. The unlock period protects Orchestrators who may have pending tickets against the deposit.
+  When winding down a Gateway, initiate the unlock well in advance. The unlock period protects Orchestrators who may have pending tickets against the deposit.
 </Tip>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -237,10 +237,10 @@ Use `livepeer_cli` to initiate an unlock request. After the unlock period expire
 
 <CardGroup cols={2}>
   <Card title="Pricing Strategy" icon="chart-line" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
-    Set maximum prices the gateway pays Orchestrators. Configure after funding.
+    Set maximum prices the Gateway pays Orchestrators. Configure after funding.
   </Card>
   <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/guides/payments-and-pricing/remote-signers">
-    Isolate the signing key from the gateway process for better security.
+    Isolate the signing key from the Gateway process for better security.
   </Card>
   <Card title="Payments Guide" icon="code-branch" href="/v2/gateways/guides/payments-and-pricing/payment-guide">
     Revisit the payment architecture decision guide.

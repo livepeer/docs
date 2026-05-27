@@ -67,7 +67,7 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/co
             </TableRow>
             <TableRow>
                 <TableCell>`-maxPricePerUnit`</TableCell>
-                <TableCell>Per-pixel price cap for orchestrator selection</TableCell>
+                <TableCell>Per-pixel price cap for Orchestrator selection</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell>`-maxSessions`</TableCell>
@@ -83,7 +83,7 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/co
             </TableRow>
             <TableRow>
                 <TableCell>`-aiProcessingRetryTimeout`</TableCell>
-                <TableCell>Failover speed when an orchestrator is slow or unresponsive</TableCell>
+                <TableCell>Failover speed when an Orchestrator is slow or unresponsive</TableCell>
             </TableRow>
             <TableRow>
                 <TableCell>`-maxPricePerCapability`</TableCell>
@@ -103,7 +103,7 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/co
         <Tab title="Video" icon="video">
             ## Video Transcoding Tuning
 
-            Pass a profile to the gateway via the `-transcodingOptions` flag, either as a comma-separated list of built-in presets or as a path to a JSON file.
+            Pass a profile to the Gateway via the `-transcodingOptions` flag, either as a comma-separated list of built-in presets or as a path to a JSON file.
 
             ### Built-in Presets
 
@@ -222,7 +222,7 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/co
                         -orchAddr https://orch1.example.com:8935
                     ```
 
-                    Alternatively, write directly to the gateway's data volume:
+                    Alternatively, write directly to the Gateway's data volume:
 
                     ```bash icon="terminal"
                     nano /var/lib/docker/volumes/gateway-lpData/_data/transcodingOptions.json
@@ -324,12 +324,12 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/co
             AI tuning focuses on retry behaviour, model selection, and inference parameters.
 
             <Note>
- For AI routing architecture and orchestrator discovery, see <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines" label="AI Pipelines" newline={false} />. The tuning parameters you adjust after your AI gateway is running.
+ For AI routing architecture and Orchestrator discovery, see <LinkArrow href="/v2/gateways/guides/node-pipelines/ai-pipelines" label="AI Pipelines" newline={false} />. The tuning parameters you adjust after your AI Gateway is running.
             </Note>
 
             ### Retry Timeouts
 
-            The `-aiProcessingRetryTimeout` flag controls how long the gateway waits before retrying a failed AI request with another orchestrator. The value accepts Go duration format (`30s`, `1m`, `2m30s`).
+            The `-aiProcessingRetryTimeout` flag controls how long the Gateway waits before retrying a failed AI request with another Orchestrator. The value accepts Go duration format (`30s`, `1m`, `2m30s`).
 
             ```bash icon="terminal"
             -aiProcessingRetryTimeout 30s
@@ -360,7 +360,7 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/co
                 </TableRow>
             </StyledTable>
 
-            Setting this too low causes the gateway to retry before the orchestrator has loaded the model, producing multiple failed attempts. Setting it too high delays failover when an orchestrator is genuinely unresponsive.
+            Setting this too low causes the Gateway to retry before the Orchestrator has loaded the model, producing multiple failed attempts. Setting it too high delays failover when an Orchestrator is genuinely unresponsive.
 
             ### Model Selection
 
@@ -368,8 +368,8 @@ import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/co
 
             **Warm vs cold models:**
 
-            Orchestrators load models into GPU memory. A warm model responds in milliseconds. A cold model must load from disk first, adding seconds to minutes of latency. During the current beta, orchestrators support one warm model per GPU.
-Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before selecting a model. For latency-sensitive applications, confirm your chosen model is warm on at least one connected orchestrator.
+            Orchestrators load models into GPU memory. A warm model responds in milliseconds. A cold model must load from disk first, adding seconds to minutes of latency. During the current beta, Orchestrators support one warm model per GPU.
+Check [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before selecting a model. For latency-sensitive applications, confirm your chosen model is warm on at least one connected Orchestrator.
 
             **Inference parameters by model family:**
 
@@ -409,7 +409,7 @@ Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.clou
 
 ## Key Differences
 
-AI gateways do not use RTMP, do not need `-transcodingOptions`, and require `-httpIngest` to enable AI endpoints on the HTTP port. The `-httpIngest` flag is a boolean toggle with no value - it activates AI pipeline endpoints (`/text-to-image`, `/llm`, etc.) on whatever port `-httpAddr` is set to.
+AI Gateways do not use RTMP, do not need `-transcodingOptions`, and require `-httpIngest` to enable AI endpoints on the HTTP port. The `-httpIngest` flag is a boolean toggle with no value - it activates AI pipeline endpoints (`/text-to-image`, `/llm`, etc.) on whatever port `-httpAddr` is set to.
 
 <StyledTable headers={["Aspect", "Video Gateway", "AI Gateway"]}>
   <TableRow>
@@ -491,7 +491,7 @@ For the full side-by-side comparison, see <LinkArrow href="/v2/gateways/guides/n
 
         A JSON response with an `images` array confirms routing is working.
 
-        **Check connected orchestrators and their capabilities:**
+        **Check connected Orchestrators and their capabilities:**
 
         ```bash icon="terminal"
         curl http://localhost:5935/getOrchestrators
@@ -504,9 +504,9 @@ For the full side-by-side comparison, see <LinkArrow href="/v2/gateways/guides/n
         livepeer_cli -host 127.0.0.1 -http 5935
         ```
 
-        Option 1 ("Get node status") shows your current deposit, reserve, connected orchestrators, and active sessions.
+        Option 1 ("Get node status") shows your current deposit, reserve, connected Orchestrators, and active sessions.
 
-        **Check gateway status:**
+        **Check Gateway status:**
 
         ```bash icon="terminal"
         curl http://localhost:5935/status
@@ -521,21 +521,21 @@ For the full side-by-side comparison, see <LinkArrow href="/v2/gateways/guides/n
 
 <CardGroup cols={2}>
   <Card title="AI Pipelines" icon="brain" href="/v2/gateways/guides/node-pipelines/ai-pipelines">
-    AI routing architecture, orchestrator discovery, and capability matching.
+    AI routing architecture, Orchestrator discovery, and capability matching.
   </Card>
   <Card title="Video Pipelines" icon="video" href="/v2/gateways/guides/node-pipelines/video-pipelines">
-    Video transcoding pipeline flow, RTMP/HTTP ingest, and orchestrator selection.
+    Video transcoding pipeline flow, RTMP/HTTP ingest, and Orchestrator selection.
   </Card>
   <Card title="Pricing Strategy" icon="tag" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
     Price caps for video and AI, competitive positioning, and ETH volatility handling.
   </Card>
   <Card title="Dual Configuration" icon="clone" href="/v2/gateways/setup/configure">
-    Architecture, port setup, and session management for dual gateways.
+    Architecture, port setup, and session management for dual Gateways.
   </Card>
   <Card title="Scaling" icon="arrow-up-right-dots" href="/v2/gateways/guides/advanced-operations/scaling">
     Resource contention signals, GPU memory pressure, and when to split workloads.
   </Card>
   <Card title="Configuration Flags" icon="list" href="/v2/gateways/resources/reference/technical/configuration-flags">
-    Complete flag reference for all go-livepeer gateway flags.
+    Complete flag reference for all go-livepeer Gateway flags.
   </Card>
 </CardGroup>

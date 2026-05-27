@@ -37,14 +37,14 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Scroll
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Quote>
-The Network is an **open marketplace for real-time compute**. Operators publish what they can do; gateways route demand to them; payment settles continuously off-chain. The Protocol stays out of price discovery and only enters when a winning ticket is redeemed.
+The Network is an **open marketplace for real-time compute**. Operators publish what they can do; Gateways route demand to them; payment settles continuously off-chain. The Protocol stays out of price discovery and only enters when a winning ticket is redeemed.
 </Quote>
 
 <CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
 
 ## Market Shape
 
-The Livepeer Network is a posted-price market for GPU compute. Operators on the supply side publish their capabilities and prices. Gateways on the demand side discover, score, and route work to them. Payment runs continuously through probabilistic micropayments, with on-chain settlement only when a ticket wins.
+The Livepeer Network is a posted-price market for GPU compute. Operators on the supply side publish their capabilities and prices. Gateways on the demand side discover, score, and route work to them. Payment runs continuously through Probabilistic Micropayments, with on-chain settlement only when a ticket wins.
 
 The shape is deliberate. An auction would force every job through a bidding round, adding latency the workloads cannot absorb. On-chain settlement per job would cost more than the work itself. The marketplace runs continuously off-chain so per-pixel video and per-token AI remain economical at production volume.
 
@@ -53,13 +53,13 @@ The shape is deliberate. An auction would force every job through a bidding roun
   itemsList={[
     {
       'Market property': <Subtitle variant="changelog">**Pricing**</Subtitle>,
-      'Livepeer Network': 'Posted prices, set by orchestrators',
-      'Why it is shaped this way': 'Continuous market; price competition is visible; gateways route without per-job coordination',
+      'Livepeer Network': 'Posted prices, set by Orchestrators',
+      'Why it is shaped this way': 'Continuous market; price competition is visible; Gateways route without per-job coordination',
     },
     {
       'Market property': <Subtitle variant="changelog">**Discovery**</Subtitle>,
       'Livepeer Network': 'Public, multi-surface (on-chain registry, direct configuration, webhooks, network capabilities API)',
-      'Why it is shaped this way': 'No gatekeeper; gateways select operators on capability and policy',
+      'Why it is shaped this way': 'No gatekeeper; Gateways select operators on capability and policy',
     },
     {
       'Market property': <Subtitle variant="changelog">**Matching**</Subtitle>,
@@ -68,12 +68,12 @@ The shape is deliberate. An auction would force every job through a bidding roun
     },
     {
       'Market property': <Subtitle variant="changelog">**Settlement**</Subtitle>,
-      'Livepeer Network': 'Off-chain probabilistic micropayments with periodic on-chain redemption',
+      'Livepeer Network': 'Off-chain Probabilistic Micropayments with periodic on-chain redemption',
       'Why it is shaped this way': 'Settlement cost stays below the value of the work',
     },
     {
       'Market property': <Subtitle variant="changelog">**Trust anchor**</Subtitle>,
-      'Livepeer Network': 'Bonded LPT staked by orchestrators',
+      'Livepeer Network': 'Bonded LPT staked by Orchestrators',
       'Why it is shaped this way': 'Economic exposure makes misbehaviour costly; no central operator required',
     },
   ]}
@@ -83,7 +83,7 @@ The shape is deliberate. An auction would force every job through a bidding roun
 
 ## Work and Value Flow
 
-Two flows run continuously across the marketplace. Work flows from clients through gateways to orchestrators. Value flows in the opposite direction, mostly off-chain, with periodic on-chain settlement.
+Two flows run continuously across the marketplace. Work flows from clients through Gateways to Orchestrators. Value flows in the opposite direction, mostly off-chain, with periodic on-chain settlement.
 
 <ScrollableDiagram title="Work and Value Flow Across the Marketplace" maxHeight="600px">
 
@@ -119,7 +119,7 @@ The diagram is the marketplace. Solid arrows are continuous off-chain traffic; d
 
 ## Settlement Boundary
 
-The boundary between what the Protocol records and what stays off-chain is sharp. The Protocol sees deposits, winning tickets, active-set membership, and inflation distribution. Everything else is direct gateway-to-orchestrator traffic.
+The boundary between what the Protocol records and what stays off-chain is sharp. The Protocol sees deposits, winning tickets, active-set membership, and inflation distribution. Everything else is direct Gateway-to-Orchestrator traffic.
 
 <BorderedBox variant="accent">
   <Subtitle style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>**Visible on-chain**</Subtitle>
@@ -143,7 +143,7 @@ This split is what lets per-pixel and per-token pricing remain economical at pro
 
 ## Probabilistic Micropayments
 
-The mechanism that makes the off-chain settlement work is the probabilistic micropayment ticket. Every job segment carries a ticket. Most tickets do not win and never touch the chain. Only winning tickets are redeemed on-chain, where the gateway's deposit pays the orchestrator the ticket's full face value.
+The mechanism that makes the off-chain settlement work is the probabilistic micropayment ticket. Every job segment carries a ticket. Most tickets do not win and never touch the chain. Only winning tickets are redeemed on-chain, where the Gateway's deposit pays the Orchestrator the ticket's full face value.
 
 <ScrollableDiagram title="Probabilistic Micropayment Ticket Exchange" maxHeight="600px">
 
@@ -179,10 +179,10 @@ sequenceDiagram
 
 </ScrollableDiagram>
 
-The expected value of any single ticket is `faceValue × winProb`. A gateway sets the win probability so that the per-segment expected payment matches the work being purchased. An orchestrator validates each ticket against the parameters it advertised in `OrchestratorInfo`; tickets signed against stale parameters are rejected. Redemption itself is asynchronous: an orchestrator can batch winning tickets and redeem them at convenient times relative to gas prices.
+The expected value of any single ticket is `faceValue × winProb`. A Gateway sets the win probability so that the per-segment expected payment matches the work being purchased. An Orchestrator validates each ticket against the parameters it advertised in `OrchestratorInfo`; tickets signed against stale parameters are rejected. Redemption itself is asynchronous: an Orchestrator can batch winning tickets and redeem them at convenient times relative to gas prices.
 
 <Tip>
-The design relies on a collaborative randomness scheme: the gateway's signature and the orchestrator's `recipientRand` together determine whether a ticket wins. Neither party can predict winners alone.
+The design relies on a collaborative randomness scheme: the Gateway's signature and the Orchestrator's `recipientRand` together determine whether a ticket wins. Neither party can predict winners alone.
 </Tip>
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
@@ -193,10 +193,10 @@ The Network produces verifiable work without a central operator. Three mechanism
 
 <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
   <StyledStep title="Stake exposure" icon="shield-halved">
-    Orchestrators bond LPT to be eligible for video work. The bonded stake is what makes them discoverable, what gives delegators a reason to back them, and what they lose value on if they misbehave or go offline. The marketplace is not anonymous; every orchestrator has economic exposure tied to performance.
+    Orchestrators bond LPT to be eligible for video work. The bonded stake is what makes them discoverable, what gives Delegators a reason to back them, and what they lose value on if they misbehave or go offline. The marketplace is not anonymous; every Orchestrator has economic exposure tied to performance.
   </StyledStep>
   <StyledStep title="Fast verification" icon="circle-check">
-    Gateways can re-encode a returned segment and compare a perceptual hash (MPEG-7 video signature) against the orchestrator's output to detect tampering. Verification is optional per-session and per-segment, applied at a sample rate the gateway chooses. A verification mismatch triggers an immediate orchestrator swap and feeds operator-side reputation signals.
+    Gateways can re-encode a returned segment and compare a perceptual hash (MPEG-7 video signature) against the Orchestrator's output to detect tampering. Verification is optional per-session and per-segment, applied at a sample rate the Gateway chooses. A verification mismatch triggers an immediate Orchestrator swap and feeds operator-side reputation signals.
   </StyledStep>
   <StyledStep title="Marketplace selection" icon="filter">
     Gateways score candidates on capability match, latency, stake-weighted reliability, and operator history. Orchestrators that fail jobs, return wrong outputs, or run high latency drop out of selection. The marketplace prunes itself; operators that perform well receive more work.
@@ -204,7 +204,7 @@ The Network produces verifiable work without a central operator. Three mechanism
 </StyledSteps>
 
 <Tip>
-On-chain slashing exists in the Protocol but is dormant: the Verifier role is set to `0x0`. Today, honest work is enforced by stake exposure (delegator withdrawal), fast verification, and selection feedback. Slashing reactivation is a governance question, not a network change.
+On-chain slashing exists in the Protocol but is dormant: the Verifier role is set to `0x0`. Today, honest work is enforced by stake exposure (Delegator withdrawal), fast verification, and selection feedback. Slashing reactivation is a governance question, not a network change.
 </Tip>
 
 The three mechanisms compose. Stake makes misbehaviour costly. Verification detects it when it happens. Selection routes around operators that produce it. None of the three depends on a central authority.
