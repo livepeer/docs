@@ -9,7 +9,7 @@
  * @mode        check
  * @pipeline    manual, ci
  * @scope       v2-content
- * @usage       node operations/scripts/validators/content/structure/check-anchor-usage.js [--json] [--scope <glob>]
+ * @usage       node operations/scripts/validators/content/structure/check-anchor-usage.js [--json] [--scope <glob>|--staged|--files a,b]
  */
 // Baseline 2026-03-09: 100 errors, 8106 warnings - wired as advisory until debt cleared
 // Promote to blocking once error count reaches 0
@@ -36,14 +36,16 @@ function toPosix(value) {
 
 function usage() {
   console.log(
-    'Usage: node operations/scripts/validators/content/check-anchor-usage.js [--json] [--scope <glob>]'
+    'Usage: node operations/scripts/validators/content/check-anchor-usage.js [--json] [--scope <glob>|--staged|--files a,b]'
   );
 }
 
 function parseArgs(argv) {
   const args = {
     json: false,
-    scope: ''
+    scope: '',
+    staged: false,
+    files: []
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -65,6 +67,26 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (token === '--staged') {
+      args.staged = true;
+      continue;
+    }
+
+    if (token === '--files') {
+      const value = String(argv[index + 1] || '').trim();
+      if (!value) throw new Error('Missing value for --files');
+      parseCsvFiles(value).forEach((filePath) => args.files.push(filePath));
+      index += 1;
+      continue;
+    }
+
+    if (token.startsWith('--files=')) {
+      const value = token.slice('--files='.length).trim();
+      if (!value) throw new Error('Missing value for --files');
+      parseCsvFiles(value).forEach((filePath) => args.files.push(filePath));
+      continue;
+    }
+
     if (token === '--help' || token === '-h') {
       args.help = true;
       continue;
@@ -77,7 +99,29 @@ function parseArgs(argv) {
     throw new Error('Missing value for --scope');
   }
 
+  const scopeCount = [Boolean(args.scope), args.staged, args.files.length > 0].filter(Boolean).length;
+  if (scopeCount > 1) {
+    throw new Error('Use only one of --scope, --staged, or --files');
+  }
+
+  args.files = dedupe(args.files.map(resolveInputPath));
   return args;
+}
+
+function parseCsvFiles(value) {
+  return String(value || '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
+function resolveInputPath(filePath) {
+  if (!filePath) return '';
+  return path.isAbsolute(filePath) ? path.normalize(filePath) : path.resolve(REPO_ROOT, filePath);
+}
+
+function dedupe(values) {
+  return [...new Set(values.filter(Boolean))];
 }
 
 function shouldExclude(repoPath) {
@@ -154,6 +198,40 @@ function loadTargetFiles(scopeGlob) {
   const matcher = scopeGlob ? globToRegExp(scopeGlob) : null;
   return walkFiles(V2_ROOT)
     .filter((entry) => (!matcher ? true : matcher.test(entry.relPath)))
+    .sort((left, right) => left.relPath.localeCompare(right.relPath));
+}
+
+function stagedFiles() {
+  const result = spawnSync(
+    'git',
+    ['diff', '--name-only', '--cached', '--diff-filter=ACMR'],
+    { cwd: REPO_ROOT, encoding: 'utf8' }
+  );
+
+  if (result.status !== 0) {
+    throw new Error(String(result.stderr || 'Unable to read staged files').trim());
+  }
+
+  return String(result.stdout || '')
+    .split(/\r?\n/)
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((relPath) => path.resolve(REPO_ROOT, relPath));
+}
+
+function scopedFiles(args) {
+  if (!args.staged && args.files.length === 0) {
+    return loadTargetFiles(args.scope);
+  }
+
+  const candidates = args.staged ? stagedFiles() : args.files;
+  return dedupe(candidates)
+    .map((absPath) => ({
+      absPath,
+      relPath: toPosix(path.relative(REPO_ROOT, absPath))
+    }))
+    .filter((file) => fs.existsSync(file.absPath))
+    .filter((file) => !shouldExclude(file.relPath))
     .sort((left, right) => left.relPath.localeCompare(right.relPath));
 }
 
@@ -433,7 +511,7 @@ function main() {
       process.exit(0);
     }
 
-    const results = loadTargetFiles(args.scope).map((file) => analyzeFile(file));
+    const results = scopedFiles(args).map((file) => analyzeFile(file));
     const summary = summarize(results);
     const findings = results.flatMap((result) => result.findings);
     const payload = {
