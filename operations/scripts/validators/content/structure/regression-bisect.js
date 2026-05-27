@@ -16,7 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { execSync, spawnSync } = require('child_process');
-const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 let puppeteer;
 try {
@@ -94,7 +94,9 @@ async function ensureServer() {
 }
 
 async function checkRouteForError(route, errorPattern, baseUrl) {
-  const browser = await puppeteer.launch({
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });

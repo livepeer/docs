@@ -21,7 +21,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
-const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -224,8 +224,10 @@ async function main() {
   console.log(`⏱️  Timeout per page: ${TIMEOUT}ms\n`);
   
   // Check if server is running
+  let testPage;
+  registerCleanup(async () => { if (testPage) await testPage.close().catch(() => {}); });
   try {
-    const testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+    testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
     const testBrowserPage = await testPage.newPage();
     await testBrowserPage.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 5000 });
     await testBrowserPage.close();
@@ -239,8 +241,10 @@ async function main() {
   }
   
   console.log('🚀 Starting browser tests...\n');
-  
-  const browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
   
   const results = [];
   let passed = 0;

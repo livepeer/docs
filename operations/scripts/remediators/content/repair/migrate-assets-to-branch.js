@@ -20,7 +20,7 @@ const https = require('https');
 const { spawnSync } = require('child_process');
 
 const auditMediaAssets = require('../../../audits/content/quality/audit-media-assets');
-const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_TARGETS = ['migrate_r2', 'migrate_cloudinary'];
@@ -786,7 +786,9 @@ async function verifyRewrittenAssets(statusEntries, sourceContents, options, log
       }
 
       if (puppeteer) {
-        const browser = await puppeteer.launch({ headless: true });
+        let browser;
+        registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+        browser = await puppeteer.launch({ headless: true });
         try {
           for (const route of routes) {
             const url = `${options.devServer}${route}`;

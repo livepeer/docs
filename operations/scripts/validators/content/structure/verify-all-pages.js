@@ -11,6 +11,7 @@
  * @usage       node operations/scripts/validators/content/structure/verify-all-pages.js
  */
 const puppeteer = require('puppeteer');
+const { registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 const { getEnglishComponentLibraryRoutes } = require('../../../../../tools/lib/governance/component-governance-utils');
 
 const BASE_URL = 'http://localhost:3333';
@@ -32,7 +33,9 @@ const PAGES = getEnglishComponentLibraryRoutes().map((routePath) => {
 });
 
 async function verifyPage(paths, name) {
-  const browser = await puppeteer.launch({
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });

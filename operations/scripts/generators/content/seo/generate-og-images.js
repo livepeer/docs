@@ -16,7 +16,7 @@
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
-const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   OG_IMAGE_DIR,
   OG_IMAGE_HEIGHT,
@@ -307,7 +307,9 @@ async function main() {
 
   const logoPath = path.join(repoRoot, "snippets/assets/logos/light.svg");
   const logoDataUrl = svgToDataUrl(logoPath);
-  const browser = await puppeteer.launch({ headless: true });
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
 
   try {
