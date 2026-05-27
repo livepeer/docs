@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 let puppeteer;
 try {
@@ -446,7 +447,7 @@ async function main(argv = process.argv.slice(2)) {
       },
       ...mergedResults
     };
-    fs.writeFileSync(BASELINE_PATH, JSON.stringify(baseline, null, 2) + '\n');
+    atomicWrite(BASELINE_PATH, JSON.stringify(baseline, null, 2) + '\n');
     console.log(`\nBaseline written to ${BASELINE_PATH} (${mergedClean + mergedDirty} routes: ${mergedClean} clean, ${mergedDirty} dirty)`);
   }
 

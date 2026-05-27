@@ -15,6 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 const { stdin } = process;
 
 let puppeteer;
@@ -78,7 +79,7 @@ function getServerStatePath() {
 }
 
 function writeState(state) {
-  fs.writeFileSync(getStatePath(), JSON.stringify(state, null, 2) + '\n');
+  atomicWrite(getStatePath(), JSON.stringify(state, null, 2) + '\n');
 }
 
 function isNoise(text) {

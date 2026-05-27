@@ -18,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 const { CANONICAL_PAGE_TYPES, normalizePageType } = require('../../../../../tools/lib/docs/frontmatter-taxonomy');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
@@ -250,7 +251,7 @@ function validateUpdatedFrontmatter(content, relPath) {
 
 function writeOperations(operations) {
   operations.forEach((operation) => {
-    fs.writeFileSync(operation.absPath, operation.content, 'utf8');
+    atomicWrite(operation.absPath, operation.content, 'utf8');
   });
 }
 

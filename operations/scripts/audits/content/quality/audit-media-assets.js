@@ -15,6 +15,7 @@
 const fs = require('fs')
 const path = require('path')
 const { execSync, spawnSync } = require('child_process')
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd()
 const DEFAULT_MANIFEST_PATH = 'workspace/reports/media-audit/media-audit-manifest.json'
@@ -707,12 +708,12 @@ function validateManifest(manifest) {
 
 function writeJson(repoPath, value) {
   ensureDirForFile(repoPath)
-  fs.writeFileSync(absoluteFromRepoPath(repoPath), `${JSON.stringify(value, null, 2)}\n`)
+  atomicWrite(absoluteFromRepoPath(repoPath), `${JSON.stringify(value, null, 2)}\n`)
 }
 
 function writeText(repoPath, value) {
   ensureDirForFile(repoPath)
-  fs.writeFileSync(absoluteFromRepoPath(repoPath), value)
+  atomicWrite(absoluteFromRepoPath(repoPath), value)
 }
 
 function buildSummaryMarkdown(context) {

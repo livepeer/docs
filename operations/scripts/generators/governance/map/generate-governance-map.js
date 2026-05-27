@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 const REPORT_PATH = path.join(REPO_ROOT, 'workspace/reports/repo-ops/GOVERNANCE_MAP_LATEST.json');
@@ -247,7 +248,7 @@ function main() {
   if (args.mode === 'write') {
     const dir = path.dirname(REPORT_PATH);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2) + '\n');
+    atomicWrite(REPORT_PATH, JSON.stringify(report, null, 2) + '\n');
     console.log(`Governance map written to ${path.relative(REPO_ROOT, REPORT_PATH)}`);
     console.log(`  Markers: ${report.summary.totalMarkers}`);
     console.log(`  Broken links: ${report.summary.brokenLinks}`);

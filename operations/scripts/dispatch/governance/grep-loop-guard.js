@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 const { stdin } = process;
 
 let input = '';
@@ -42,7 +43,7 @@ stdin.on('end', () => {
         count = parseInt(fs.readFileSync(trackerPath, 'utf8').trim(), 10) || 0;
       } catch (_) { /* file doesn't exist yet */ }
       count += 1;
-      fs.writeFileSync(trackerPath, String(count));
+      atomicWrite(trackerPath, String(count));
 
       if (count >= 3) {
         console.log(JSON.stringify({

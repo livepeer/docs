@@ -18,6 +18,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 const { execSync } = require('child_process');
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const BASE_URL = 'https://docs.livepeer.org/';
 const DOCS_JSON = 'docs.json';
@@ -480,7 +481,7 @@ async function getPageData(route, cache, missingRoutes) {
 
 function writeFile(fileName, contents) {
   const targetPath = path.join(REPO_ROOT, fileName);
-  fs.writeFileSync(targetPath, contents);
+  atomicWrite(targetPath, contents);
 }
 
 function readFile(fileName) {

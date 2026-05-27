@@ -13,6 +13,7 @@
 const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
+const { atomicWrite } = require('../../../../../../tools/lib/bootstrap/safe-io');
 
 const {
   ANOMALY_JSON_PATH,
@@ -100,9 +101,9 @@ function writeIncidentArtifacts({
     [ANOMALY_JSON_PATH, ANOMALY_MD_PATH, ISSUE_PAYLOAD_PATH].forEach((filePath) => {
       fs.mkdirSync(path.dirname(filePath), { recursive: true });
     });
-    fs.writeFileSync(ANOMALY_JSON_PATH, JSON.stringify(report, null, 2));
-    fs.writeFileSync(ANOMALY_MD_PATH, `${markdown}\n`);
-    fs.writeFileSync(ISSUE_PAYLOAD_PATH, JSON.stringify(issuePayload, null, 2));
+    atomicWrite(ANOMALY_JSON_PATH, JSON.stringify(report, null, 2));
+    atomicWrite(ANOMALY_MD_PATH, `${markdown}\n`);
+    atomicWrite(ISSUE_PAYLOAD_PATH, JSON.stringify(issuePayload, null, 2));
   }
 
   return { report, markdown, issuePayload };

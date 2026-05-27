@@ -21,6 +21,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -304,7 +305,7 @@ async function main() {
   
   // Save detailed report
   const reportPath = path.join(REPO_ROOT, 'workspace/reports/page-audits/v2-page-test-report.json');
-  fs.writeFileSync(reportPath, JSON.stringify({
+  atomicWrite(reportPath, JSON.stringify({
     timestamp: new Date().toISOString(),
     baseUrl: BASE_URL,
     totalPages: pages.length,

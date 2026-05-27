@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_OUTPUT_PATH = '.codex/pr-body.generated.md';
@@ -521,7 +522,7 @@ function main() {
 
     const outputPathAbs = path.resolve(REPO_ROOT, args.outputPath);
     ensureDirForFile(outputPathAbs);
-    fs.writeFileSync(outputPathAbs, `${body}\n`, 'utf8');
+    atomicWrite(outputPathAbs, `${body}\n`, 'utf8');
 
     const title =
       String(args.title || '').trim() ||

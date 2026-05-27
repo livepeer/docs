@@ -16,6 +16,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const COIN_ID = process.env.COINGECKO_COIN_ID || 'livepeer';
 const API_BASE = 'https://api.coingecko.com/api/v3';
@@ -186,7 +187,7 @@ async function main() {
   } else {
     const dir = path.dirname(OUTPUT_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(OUTPUT_PATH, jsxContent);
+    atomicWrite(OUTPUT_PATH, jsxContent);
     console.log(`Wrote ${exchanges.length} exchanges to ${OUTPUT_PATH}`);
   }
 }

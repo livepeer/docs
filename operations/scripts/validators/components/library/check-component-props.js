@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // --- Config -------------------------------------------------------------------
 
@@ -492,12 +493,12 @@ function main() {
 
     if (args.json) {
       const jsonPath = path.join(outputDirAbs, `${STAGE_ID}.json`);
-      fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
+      atomicWrite(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
       console.log(`Wrote: ${toPosix(path.relative(REPO_ROOT, jsonPath))}`);
     }
     if (args.md) {
       const mdPath = path.join(outputDirAbs, `${STAGE_ID}.md`);
-      fs.writeFileSync(mdPath, buildMarkdown(report));
+      atomicWrite(mdPath, buildMarkdown(report));
       console.log(`Wrote: ${toPosix(path.relative(REPO_ROOT, mdPath))}`);
     }
   }

@@ -20,6 +20,7 @@ const { unified } = require('unified');
 const remarkParse = require('remark-parse').default;
 const remarkMdx = require('remark-mdx').default;
 const { getAuthoredMdxFiles } = require('../../../../../operations/tests/utils/file-walker');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const PROPER_NOUNS = {
   livepeer: 'Livepeer',
@@ -453,7 +454,7 @@ function run(argv = process.argv.slice(2)) {
       }
       const next = applyReplacements(analysis.raw, analysis.replacements);
       if (next !== analysis.raw) {
-        fs.writeFileSync(analysis.filePath, next, 'utf8');
+        atomicWrite(analysis.filePath, next, 'utf8');
         changedFiles += 1;
       }
     });

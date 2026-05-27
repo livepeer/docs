@@ -16,6 +16,7 @@
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // ── Parse args ─────────────────────────────────────────────────────────────
 
@@ -220,7 +221,7 @@ if (passed > 0 && !dryRun) {
   });
   const lastUpdatedPath = "snippets/data/social-feeds/lastUpdated.jsx";
   const lastUpdatedContent = `export const socialFeedsLastUpdated = "${formatted}";\n`;
-  fs.writeFileSync(lastUpdatedPath, lastUpdatedContent);
+  atomicWrite(lastUpdatedPath, lastUpdatedContent);
   console.log(`\nTimestamp written: ${formatted} → ${lastUpdatedPath}`);
 }
 

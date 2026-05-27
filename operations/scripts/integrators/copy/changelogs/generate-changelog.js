@@ -20,6 +20,7 @@ const path = require("path");
 // ── Shared utilities ───────────────────────────────────────────────────────
 const REPO_ROOT = process.cwd();
 const { sanitiseForMdx } = require(path.join(REPO_ROOT, "operations/scripts/config/mdx-sanitise"));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // ── Config ──────────────────────────────────────────────────────────────────
 const CONFIG_PATH =
@@ -1034,7 +1035,7 @@ async function processTarget(target) {
     if (markerIdx !== -1) {
       const truncated = existingContent.slice(0, markerIdx + marker.length) + "\n";
       if (!DRY_RUN) {
-        fs.writeFileSync(changelogPath, truncated);
+        atomicWrite(changelogPath, truncated);
         console.log(`  --regenerate: wiped existing entries, kept template header.`);
       } else {
         console.log(`  --regenerate (dry-run): would wipe existing entries.`);
@@ -1095,7 +1096,7 @@ async function processTarget(target) {
       return;
     }
 
-    fs.writeFileSync(changelogPath, updated);
+    atomicWrite(changelogPath, updated);
     console.log(`  Written ${newCommits.length} new commit(s) to ${changelogPath}`);
     return;
   }
@@ -1243,7 +1244,7 @@ async function processTarget(target) {
     return;
   }
 
-  fs.writeFileSync(changelogPath, updated);
+  atomicWrite(changelogPath, updated);
   console.log(
     `  Written ${newReleases.length} new release(s) to ${changelogPath}`
   );

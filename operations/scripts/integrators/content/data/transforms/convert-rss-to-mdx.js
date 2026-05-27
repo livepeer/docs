@@ -16,6 +16,7 @@
 const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs')
 const path = require('path')
+const { atomicWrite } = require('../../../../../../tools/lib/bootstrap/safe-io');
 
 function parseArgs(argv) {
   const args = {}
@@ -211,7 +212,7 @@ function main() {
   const mdx = buildMdx(feed)
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true })
-  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { fs.writeFileSync(outputPath, mdx, 'utf8'); }
+  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { atomicWrite(outputPath, mdx, 'utf8'); }
 
   console.log(`✓ Converted RSS to MDX`)
   console.log(`  Input:  ${inputPath}`)

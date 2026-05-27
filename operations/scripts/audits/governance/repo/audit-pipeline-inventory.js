@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DISPATCH_ROOT = path.join(REPO_ROOT, 'operations/scripts/dispatch');
@@ -339,8 +340,8 @@ function main() {
   const filtered = args.concern ? rows.filter((r) => r.concern === args.concern) : rows;
 
   fs.mkdirSync(path.dirname(REPORT_MD), { recursive: true });
-  fs.writeFileSync(REPORT_MD, renderMarkdown(filtered));
-  fs.writeFileSync(REPORT_JSON, JSON.stringify(filtered, null, 2));
+  atomicWrite(REPORT_MD, renderMarkdown(filtered));
+  atomicWrite(REPORT_JSON, JSON.stringify(filtered, null, 2));
 
   console.log('');
   console.log(`Wrote ${path.relative(REPO_ROOT, REPORT_MD)}`);

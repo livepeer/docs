@@ -1509,3 +1509,39 @@ Top 3 High fixes (recipes in report):
 Artifact: workspace/thread-outputs/audits/docs-as-infra-principal-engineer-audit-2026-05-26.md
 Files changed: 1 created (audit report), 1 updated (.claude/CLAUDE.md threads table)
 Session started: 2026-05-27 19:46:46
+
+--- 2026-05-27 — Sprint 1: Principal Engineer Audit fixes ---
+Thread: Docs-as-Infrastructure Audit — Sprint 1 implementation
+Outcome: MET. Top 3 audit fixes shipped, plus one revised mid-flight when verification showed the audit recipe was wrong.
+
+Phase A (no-risk one-shots):
+  - tools/lib/bootstrap/safe-io.js (atomicWrite + signal-handler bootstrap)
+  - generate-script-registry.js: concern/type validator (report-only default, --strict|REGISTRY_STRICT=1 to block). Surfaces 160 polluted active scripts (138 empty concerns).
+  - script-docs.test.js: catalog all-types drift assertion (silent when healthy, blocks under --strict-catalog|CATALOG_STRICT=1)
+  - .github/workflows/interface-governance-secret-scan.yml (gitleaks, SHA-pinned to v2.3.9)
+  - .githooks/pre-commit: HARD GATE 6 gitleaks short-circuit (silent no-op if gitleaks not installed)
+  - .github/.allowlist extended + .github/dependabot.yml (weekly GitHub Actions updates)
+
+Phase B (pilots before bulk):
+  - dispatch-health-check.js: filesystem-discovery pattern. Returns same 6 pipelines as old hardcoded array. Supports @pipeline draft opt-out.
+  - SHA-pinned peter-evans/create-pull-request@v7 → 271a8d03…  in dispatch-health.yml + dispatch-brand.yml (only two occurrences in repo; full coverage)
+  - remediate-us-spelling.js migrated to atomicWrite (2 writeFileSync sites)
+  - check-write-safety.js validator: scans 303 scripts, surfaces non-atomic writes + unguarded headless-browser launches
+
+Phase C (bulk):
+  - check-pipeline-orphans.js: substitute for naive bulk discovery (which would have lumped curated subsets together). Discovery-aware. Zero orphans repo-wide.
+  - Bulk fs.writeFileSync → atomicWrite migration: 135 files, programmatic via one-shot helper. write-safety violations: 135 → 0. Remaining 9 violations are unguarded headless-browser launches (separate category, deferred).
+
+Audit deltas surfaced during execution:
+  - Registry pollution worse than audit said (160 active scripts vs 137; extra 23 are off-taxonomy concerns like "testing")
+  - 9 unguarded headless-browser launches identified — exact zombie-process bug class
+  - Audit's "auto-discover all siblings" recipe doesn't fit 17 of 18 meta-dispatchers (they run curated subsets, not full folders). Replaced with orphans validator.
+
+Verification: catalog test passes, registry generator runs default-clean (warn-only), pipeline-orphans clean, write-safety strict exits 1 on the 9 remaining browser launches, safe-io smoke OK, 3 spot-checked migrated files parse.
+
+Files created (8): tools/lib/bootstrap/safe-io.js; .github/workflows/interface-governance-secret-scan.yml; .github/dependabot.yml; operations/scripts/validators/governance/repo/check-write-safety.js; operations/scripts/validators/governance/pipelines/check-pipeline-orphans.js
+Files modified (~140): .github/.allowlist; .githooks/pre-commit; .github/workflows/dispatch-{health,brand}.yml; operations/scripts/generators/governance/catalogs/generate-script-registry.js; operations/tests/unit/script-docs.test.js; operations/scripts/dispatch/content/health/dispatch-health-check.js; operations/scripts/remediators/content/style/remediate-us-spelling.js; 135 scripts auto-migrated to atomicWrite.
+--- CHECKPOINT 2026-05-27T10:40:08.382Z [unknown] ---
+(No transcript summary available)
+---
+Session started: 2026-05-27 20:41:05

@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_SCOPE = 'full';
 const DEFAULT_REPORT_RULE_IDS = new Set([
@@ -826,7 +827,7 @@ function run(args) {
     if (args.fix) {
       const updatedContent = applyFixes(originalContent, lineInfosForFix);
       if (updatedContent !== originalContent) {
-        fs.writeFileSync(target, updatedContent, 'utf8');
+        atomicWrite(target, updatedContent, 'utf8');
         modifiedFiles.push(displayPath);
         contentForReport = updatedContent;
       }

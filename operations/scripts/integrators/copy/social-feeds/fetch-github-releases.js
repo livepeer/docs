@@ -15,6 +15,7 @@ const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -128,7 +129,7 @@ async function main() {
         console.log(jsx);
       } else {
         fs.mkdirSync(outDir, { recursive: true });
-        fs.writeFileSync(outPath, jsx);
+        atomicWrite(outPath, jsx);
         console.log(`  Written to ${outPath}`);
       }
     } catch (err) {

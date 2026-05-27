@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // ---------------------------------------------------------------------------
 // Config
@@ -266,7 +267,7 @@ function main() {
       const value = classifyDiscoverability(content);
       if (writeMode) {
         content = insertAiDiscoverabilityTag(content, jsdoc, value);
-        fs.writeFileSync(file, content, 'utf8');
+        atomicWrite(file, content, 'utf8');
         console.log(`  FIXED  ${relPath} — added @aiDiscoverability ${value}`);
       } else {
         console.log(`  WOULD ADD  ${relPath} — @aiDiscoverability ${value}`);
@@ -286,7 +287,7 @@ function main() {
           if (!fs.existsSync(SNAPSHOTS_DIR)) {
             fs.mkdirSync(SNAPSHOTS_DIR, { recursive: true });
           }
-          fs.writeFileSync(snapshotPath, createPlaceholderJson(componentName, dataSource), 'utf8');
+          atomicWrite(snapshotPath, createPlaceholderJson(componentName, dataSource), 'utf8');
           console.log(`  CREATED  snippets/data/snapshots/${snapshotName}`);
         } else {
           console.log(`  WOULD CREATE  snippets/data/snapshots/${snapshotName}`);

@@ -20,6 +20,7 @@ const https = require('https');
 const { spawnSync } = require('child_process');
 
 const auditMediaAssets = require('../../../audits/content/quality/audit-media-assets');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_TARGETS = ['migrate_r2', 'migrate_cloudinary'];
@@ -183,12 +184,12 @@ function readJson(repoPath) {
 
 function writeJson(repoPath, value) {
   ensureDirForFile(repoPath);
-  fs.writeFileSync(absoluteRepoPath(repoPath), `${JSON.stringify(value, null, 2)}\n`);
+  atomicWrite(absoluteRepoPath(repoPath), `${JSON.stringify(value, null, 2)}\n`);
 }
 
 function writeText(repoPath, value) {
   ensureDirForFile(repoPath);
-  fs.writeFileSync(absoluteRepoPath(repoPath), value);
+  atomicWrite(absoluteRepoPath(repoPath), value);
 }
 
 function runCommand(command, args, options = {}) {

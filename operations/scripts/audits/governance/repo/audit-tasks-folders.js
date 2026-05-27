@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const TASKS_ROOT = path.join(REPO_ROOT, 'tasks');
@@ -1633,13 +1634,13 @@ function writeRecommendationConflictReport(conflicts, generatedAt) {
     )
   );
 
-  fs.writeFileSync(absPath, `${lines.join('\n')}\n`);
+  atomicWrite(absPath, `${lines.join('\n')}\n`);
 }
 
 function writeRecommendationSummary(summary) {
   const absPath = absPathFromRepo(RECOMMENDATION_SUMMARY_PATH);
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, `${JSON.stringify(summary, null, 2)}\n`);
+  atomicWrite(absPath, `${JSON.stringify(summary, null, 2)}\n`);
 }
 
 function applyRecommendations(options, auditOutputDirRepoPath) {
@@ -1869,7 +1870,7 @@ function writeAuditReport(reportAbsPath, title, scopeRepoPath, context, tableHea
     report.push(section.body);
   }
 
-  fs.writeFileSync(reportAbsPath, `${report.join('\n')}\n`);
+  atomicWrite(reportAbsPath, `${report.join('\n')}\n`);
 }
 
 function normalizeFolderToken(token) {

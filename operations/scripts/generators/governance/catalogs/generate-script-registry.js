@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const {
   GOVERNED_ROOTS,
@@ -229,7 +230,7 @@ function main() {
   }
 
   fs.mkdirSync(path.dirname(outputFull), { recursive: true });
-  fs.writeFileSync(outputFull, output, 'utf8');
+  atomicWrite(outputFull, output, 'utf8');
   console.log(`Wrote ${OUTPUT_PATH} — ${entries.length} entries (${skipped} skipped).`);
 }
 

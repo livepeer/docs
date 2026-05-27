@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildComponentUsageSummary,
   extractExports,
@@ -211,7 +212,7 @@ function run(argv = process.argv.slice(2)) {
   }
 
   fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-  fs.writeFileSync(OUTPUT_PATH, `${JSON.stringify(usageMap, null, 2)}\n`, 'utf8');
+  atomicWrite(OUTPUT_PATH, `${JSON.stringify(usageMap, null, 2)}\n`, 'utf8');
   console.log(`Wrote ${path.relative(REPO_ROOT, OUTPUT_PATH)}${args.since ? ` (incremental since ${args.since})` : ''}`);
 
   if (args.verify && drift.length > 0) {

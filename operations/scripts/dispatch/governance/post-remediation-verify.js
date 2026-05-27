@@ -17,6 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_REGISTRY = path.join(REPO_ROOT, 'operations', 'scripts', 'config', 'remediation-verify-registry.json');
@@ -75,7 +76,7 @@ function restoreFiles(repoRoot, snapshot, filesToRevert) {
     if (content === null) {
       if (fs.existsSync(absPath)) fs.unlinkSync(absPath);
     } else {
-      fs.writeFileSync(absPath, content);
+      atomicWrite(absPath, content);
     }
     reverted.push(filePath);
   }

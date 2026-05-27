@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const ROOT = path.resolve(__dirname, '../../../../..');
 const REGISTRY_PATH = path.join(ROOT, 'docs-guide', 'config', 'component-registry.json');
@@ -186,7 +187,7 @@ for (const sourceFile of Object.keys(byFile)) {
       if (content) {
         const dir = path.dirname(examplesPath);
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        fs.writeFileSync(examplesPath, content, 'utf8');
+        atomicWrite(examplesPath, content, 'utf8');
         console.log(`  ✅ Scaffolded: ${path.relative(ROOT, examplesPath)}`);
         scaffolded++;
       }
@@ -226,7 +227,7 @@ for (const sourceFile of Object.keys(byFile)) {
           const newImport = `import { ${freshNames.join(', ')} } from "${imp.from}"`;
           newContent = content.replace(imp.raw, newImport);
         }
-        fs.writeFileSync(examplesPath, newContent, 'utf8');
+        atomicWrite(examplesPath, newContent, 'utf8');
         console.log(`  🔧 Fixed imports in: ${path.relative(ROOT, examplesPath)} (removed: ${staleNames.join(', ')})`);
         fixedImports++;
       }

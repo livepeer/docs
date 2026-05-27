@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   DEFAULT_REMAP_THRESHOLD,
   canonicalRouteFromFile,
@@ -608,7 +609,7 @@ function analyzeFile({ repoRoot, filePath, docsJson, knownRoutes, mode, options 
   if (mode === 'write' && rewrites.length > 0) {
     nextContent = applyReplacements(content, rewrites);
     if (nextContent !== content) {
-      fs.writeFileSync(filePath, nextContent, 'utf8');
+      atomicWrite(filePath, nextContent, 'utf8');
       written = true;
     }
   }
@@ -796,8 +797,8 @@ function buildJsonReport(result) {
 function writeReports(paths, markdown, jsonReport) {
   if (!paths) return;
   ensureDir(paths.dir);
-  fs.writeFileSync(paths.markdown, markdown, 'utf8');
-  fs.writeFileSync(paths.json, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
+  atomicWrite(paths.markdown, markdown, 'utf8');
+  atomicWrite(paths.json, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
 }
 
 function run(options = {}) {

@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_NAV = 'tools/config/scoped-navigation/docs-gate-work.json';
 const DEFAULT_VERSION = 'v2';
@@ -84,12 +85,12 @@ function readJsonFile(repoOrAbsPath) {
 
 function writeJsonFile(repoOrAbsPath, value) {
   ensureDir(path.dirname(resolveRepoPath(repoOrAbsPath)));
-  fs.writeFileSync(resolveRepoPath(repoOrAbsPath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(resolveRepoPath(repoOrAbsPath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function writeTextFile(repoOrAbsPath, value) {
   ensureDir(path.dirname(resolveRepoPath(repoOrAbsPath)));
-  fs.writeFileSync(resolveRepoPath(repoOrAbsPath), value, 'utf8');
+  atomicWrite(resolveRepoPath(repoOrAbsPath), value, 'utf8');
 }
 
 function slugify(value) {

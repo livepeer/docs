@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { VALID_CATEGORIES } = require('../../../../../tools/lib/governance/component-governance-utils');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
@@ -307,7 +308,7 @@ function main() {
       console.log(`Would write: ${path.relative(REPO_ROOT, outputPath)} (${comps.length} components)`);
     } else {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-      fs.writeFileSync(outputPath, content, 'utf8');
+      atomicWrite(outputPath, content, 'utf8');
       writtenCount++;
       console.log(`Wrote: ${path.relative(REPO_ROOT, outputPath)} (${comps.length} components)`);
     }
@@ -327,7 +328,7 @@ function main() {
     } else if (args.mode === 'dry-run') {
       console.log(`Would write: ${path.relative(REPO_ROOT, rootPath)} (root library)`);
     } else {
-      fs.writeFileSync(rootPath, rootContent, 'utf8');
+      atomicWrite(rootPath, rootContent, 'utf8');
       writtenCount++;
       console.log(`Wrote: ${path.relative(REPO_ROOT, rootPath)} (root library)`);
     }

@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 const V2_DIR = path.join(REPO_ROOT, 'v2');
@@ -178,7 +179,7 @@ function main() {
     totalChanges += changes;
     filesChanged += 1;
     if (args.write) {
-      fs.writeFileSync(abs, content);
+      atomicWrite(abs, content);
       changedFiles.push(rel);
       console.log(`✓ ${rel}: ${changes} replacement(s)`);
     } else {

@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // --- Config ------------------------------------------------------------------
 
@@ -278,7 +279,7 @@ function main() {
       continue;
     }
 
-    fs.writeFileSync(companion, output, 'utf8');
+    atomicWrite(companion, output, 'utf8');
     console.log(`  [WROTE] ${terms.length} terms → ${companionRel}`);
     written++;
   }

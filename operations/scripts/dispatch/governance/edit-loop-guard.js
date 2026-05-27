@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 const { stdin } = process;
 
 // ---------------------------------------------------------------------------
@@ -63,7 +64,7 @@ function readState() {
 }
 
 function writeState(state) {
-  fs.writeFileSync(getStatePath(), JSON.stringify(state, null, 2) + '\n');
+  atomicWrite(getStatePath(), JSON.stringify(state, null, 2) + '\n');
 }
 
 function isExempt(filePath) {
@@ -144,7 +145,7 @@ stdin.on('end', () => {
     // Threshold: 5+ edits — write block flag
     if (count >= BLOCK_THRESHOLD) {
       // Write block flag for pre-tool-guard.js to enforce
-      fs.writeFileSync(getBlockPath(), JSON.stringify({
+      atomicWrite(getBlockPath(), JSON.stringify({
         file: fp,
         count,
         timestamp: now

@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_BASE = 'docs-v2-dev';
 const DEFAULT_CONTRACT = '.codex/task-contract.yaml';
@@ -225,13 +226,13 @@ function writeYamlContract(contractAbs, data) {
   ].join('\n');
 
   fs.mkdirSync(path.dirname(contractAbs), { recursive: true });
-  fs.writeFileSync(contractAbs, content, 'utf8');
+  atomicWrite(contractAbs, content, 'utf8');
 }
 
 function writeLock(lockDirAbs, lock) {
   fs.mkdirSync(lockDirAbs, { recursive: true });
   const lockPath = path.join(lockDirAbs, `${lock.lock_id}.json`);
-  fs.writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`, 'utf8');
+  atomicWrite(lockPath, `${JSON.stringify(lock, null, 2)}\n`, 'utf8');
   return lockPath;
 }
 
@@ -247,7 +248,7 @@ function releasePriorBranchLocks(lockDirAbs, branch, releasedAt) {
       if (String(parsed.status || '').trim() !== 'active') return;
       parsed.status = 'released';
       parsed.released_at = releasedAt;
-      fs.writeFileSync(abs, `${JSON.stringify(parsed, null, 2)}\n`, 'utf8');
+      atomicWrite(abs, `${JSON.stringify(parsed, null, 2)}\n`, 'utf8');
     } catch (_error) {
       // Leave malformed lock files untouched; validate-locks will surface them.
     }

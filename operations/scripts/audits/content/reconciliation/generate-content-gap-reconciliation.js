@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   extractFrontmatter,
   stripForWordCount,
@@ -389,7 +390,7 @@ function writeCsv(filePath, rows) {
     const values = CSV_COLUMNS.map((column) => csvEscape(row[column]));
     lines.push(values.join(','));
   });
-  fs.writeFileSync(filePath, `${lines.join('\n')}\n`, 'utf8');
+  atomicWrite(filePath, `${lines.join('\n')}\n`, 'utf8');
 }
 
 function countBy(rows, keySelector) {
@@ -491,7 +492,7 @@ function main() {
   const summaryRepoPath = toPosix(path.relative(REPO_ROOT, summaryPathAbs));
 
   writeCsv(csvPathAbs, rows);
-  fs.writeFileSync(summaryPathAbs, buildSummaryMarkdown(rows, csvRepoPath), 'utf8');
+  atomicWrite(summaryPathAbs, buildSummaryMarkdown(rows, csvRepoPath), 'utf8');
 
   console.log('✅ IA reconciliation artifacts generated:');
   console.log(`- ${csvRepoPath}`);

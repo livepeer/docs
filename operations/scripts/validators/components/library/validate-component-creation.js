@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   REPO_ROOT,
   VALID_CATEGORIES,
@@ -386,7 +387,7 @@ function runValidation(files, mode) {
 
       if (result.fixedContent !== null && mode === 'fix') {
         try {
-          fs.writeFileSync(absolutePath, result.fixedContent, 'utf8');
+          atomicWrite(absolutePath, result.fixedContent, 'utf8');
           filesRemediated++;
           modifiedFiles.push({ absolutePath, displayPath });
           console.log(`  ${GREEN}✓ File updated${RESET}`);
@@ -476,7 +477,7 @@ function main() {
         const original = originals.get(absolutePath);
         if (original !== undefined) {
           try {
-            fs.writeFileSync(absolutePath, original, 'utf8');
+            atomicWrite(absolutePath, original, 'utf8');
             revertCount++;
           } catch (err) {
             console.error(`${RED}Failed to revert ${absolutePath}: ${err.message}${RESET}`);

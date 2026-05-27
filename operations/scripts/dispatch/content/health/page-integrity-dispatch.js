@@ -20,6 +20,7 @@ const importsAudit = require('../../../audits/content/health/page-imports-audit'
 const repairPageLinks = require('../../../remediators/content/repair/repair-page-links');
 const repairPageImports = require('../../../remediators/content/repair/repair-page-imports');
 const rollingIssue = require('./page-integrity-rolling-issue');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../../');
 const DEFAULT_OUTPUT_DIR = path.join(REPO_ROOT, 'operations', 'reports', 'health', 'page-integrity');
@@ -276,9 +277,9 @@ async function run(options = {}) {
     };
     const markdownReport = buildMarkdownReport(emptySummary);
     ensureDir(path.dirname(args.report));
-    fs.writeFileSync(args.report, markdownReport, 'utf8');
+    atomicWrite(args.report, markdownReport, 'utf8');
     ensureDir(path.dirname(args.reportJson));
-    fs.writeFileSync(args.reportJson, `${JSON.stringify(emptySummary, null, 2)}\n`, 'utf8');
+    atomicWrite(args.reportJson, `${JSON.stringify(emptySummary, null, 2)}\n`, 'utf8');
     return {
       exitCode: 0,
       summary: emptySummary,
@@ -389,9 +390,9 @@ async function run(options = {}) {
 
   const markdownReport = buildMarkdownReport(summary);
   ensureDir(path.dirname(args.report));
-  fs.writeFileSync(args.report, markdownReport, 'utf8');
+  atomicWrite(args.report, markdownReport, 'utf8');
   ensureDir(path.dirname(args.reportJson));
-  fs.writeFileSync(args.reportJson, `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
+  atomicWrite(args.reportJson, `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
 
   const exitCode = args.strict && unresolvedFindings.length > 0 ? 1 : 0;
   return {

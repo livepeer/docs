@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { execSync, spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 let puppeteer;
 try {
@@ -230,7 +231,7 @@ async function test() {
 test().catch(() => process.exit(125));
 `;
 
-  fs.writeFileSync(testScript, testContent);
+  atomicWrite(testScript, testContent);
   fs.chmodSync(testScript, '755');
 
   console.log('\nStarting git bisect...');

@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   getComponentFiles,
   scanStylingViolations,
@@ -180,7 +181,7 @@ function run(options = {}) {
       const original = fs.readFileSync(file.absolutePath, 'utf8');
       const next = applyKnownFixes(original);
       if (next !== original) {
-        fs.writeFileSync(file.absolutePath, next, 'utf8');
+        atomicWrite(file.absolutePath, next, 'utf8');
         changedFiles.push(file.displayPath);
       }
     });

@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const STAGE_ID = 'script-footprint-and-usage-audit';
 const REPO_ROOT = process.cwd();
@@ -349,8 +350,8 @@ function main() {
   const jsonPath = path.join(outputDirAbs, `${STAGE_ID}.json`);
   const mdPath = path.join(outputDirAbs, `${STAGE_ID}.md`);
 
-  fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
-  fs.writeFileSync(mdPath, buildMarkdown(report));
+  atomicWrite(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
+  atomicWrite(mdPath, buildMarkdown(report));
 
   console.log(`✅ ${STAGE_ID} wrote:`);
   console.log(`- ${toPosix(path.relative(REPO_ROOT, jsonPath))}`);

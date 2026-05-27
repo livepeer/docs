@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../tools/lib/bootstrap/safe-io');
 
 const DOCS_JSON_REL = 'docs.json';
 const DOC_TEXT_SCOPES = ['v2', 'tests', 'tools', 'snippets', 'docs-guide'];
@@ -557,7 +558,7 @@ function readJson(repoRoot, repoPath) {
 }
 
 function writeJson(repoRoot, repoPath, value) {
-  fs.writeFileSync(path.join(repoRoot, normalizeRepoPath(repoPath)), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(path.join(repoRoot, normalizeRepoPath(repoPath)), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function collectScopedTextFiles(repoRoot) {
@@ -723,7 +724,7 @@ function runDocsPathSync(options = {}) {
     if (!filePlan) return;
     result.fileChanges.push(...filePlan.changes);
     if (options.mode === 'write') {
-      fs.writeFileSync(path.join(repoRoot, filePlan.file), filePlan.next, 'utf8');
+      atomicWrite(path.join(repoRoot, filePlan.file), filePlan.next, 'utf8');
       result.changedFiles.push(filePlan.file);
     }
   });

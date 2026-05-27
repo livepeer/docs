@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const INVENTORY_JSON = path.join(REPO_ROOT, 'workspace/reports/governance/pipeline-inventory.json');
@@ -255,8 +256,8 @@ function main() {
   console.log(`Result: ${tally.pass} pass, ${tally.drift} drift, ${tally['env-missing']} env-missing, ${tally.fail} fail, ${tally.timeout} timeout, ${tally['infra-skip']} infra-skip`);
 
   fs.mkdirSync(path.dirname(REPORT_MD), { recursive: true });
-  fs.writeFileSync(REPORT_MD, renderMarkdown(results, tally));
-  fs.writeFileSync(REPORT_JSON, JSON.stringify({ generatedAt: new Date().toISOString(), tally, results }, null, 2));
+  atomicWrite(REPORT_MD, renderMarkdown(results, tally));
+  atomicWrite(REPORT_JSON, JSON.stringify({ generatedAt: new Date().toISOString(), tally, results }, null, 2));
 
   console.log('');
   console.log(`Wrote ${path.relative(REPO_ROOT, REPORT_MD)}`);

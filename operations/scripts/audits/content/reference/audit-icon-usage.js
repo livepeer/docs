@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // --- Config ------------------------------------------------------------------
 
@@ -242,7 +243,7 @@ function main() {
   const outDir = path.dirname(OUTPUT_PATH);
   fs.mkdirSync(outDir, { recursive: true });
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(report, null, 2) + '\n', 'utf8');
+  atomicWrite(OUTPUT_PATH, JSON.stringify(report, null, 2) + '\n', 'utf8');
   console.log(`JSON report written: ${path.relative(REPO_ROOT, OUTPUT_PATH)}`);
 
   if (WRITE_MD) {
@@ -277,7 +278,7 @@ function main() {
       lines.push(`| \`${e.icon}\` | ${e.count} | ${e.sectionTitle || e.section} | ${e.label || ''} |`);
     }
 
-    fs.writeFileSync(mdPath, lines.join('\n') + '\n', 'utf8');
+    atomicWrite(mdPath, lines.join('\n') + '\n', 'utf8');
     console.log(`Markdown report written: ${path.relative(REPO_ROOT, mdPath)}`);
   }
 

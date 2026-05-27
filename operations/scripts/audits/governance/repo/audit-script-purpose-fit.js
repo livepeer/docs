@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const SCAN_ROOTS = [
@@ -375,15 +376,15 @@ function main() {
     const concernDir = path.join(REPORT_BASE, c);
     fs.mkdirSync(concernDir, { recursive: true });
     const packet = buildPacket(byConcern[c], c);
-    fs.writeFileSync(path.join(concernDir, 'review-packet.md'), packet);
-    fs.writeFileSync(path.join(concernDir, 'review-packet.json'), JSON.stringify(byConcern[c], null, 2));
+    atomicWrite(path.join(concernDir, 'review-packet.md'), packet);
+    atomicWrite(path.join(concernDir, 'review-packet.json'), JSON.stringify(byConcern[c], null, 2));
     console.log(`  ${c}: ${byConcern[c].length} scripts → ${path.relative(REPO_ROOT, concernDir)}/`);
   }
   for (const r of rows) {
     summary.byType[r.type] = (summary.byType[r.type] || 0) + 1;
     if (r.flags.length) summary.flagged += 1;
   }
-  fs.writeFileSync(path.join(REPORT_BASE, 'summary.json'), JSON.stringify(summary, null, 2));
+  atomicWrite(path.join(REPORT_BASE, 'summary.json'), JSON.stringify(summary, null, 2));
 
   console.log('');
   console.log(`Audit complete. ${summary.total} scripts, ${summary.flagged} flagged.`);

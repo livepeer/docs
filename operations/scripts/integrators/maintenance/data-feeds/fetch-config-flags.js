@@ -16,6 +16,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO = process.env.GO_LIVEPEER_REPO || 'livepeer/go-livepeer';
 const BRANCH = process.env.GO_LIVEPEER_BRANCH || 'master';
@@ -240,7 +241,7 @@ async function main() {
   } else {
     const dir = path.dirname(OUTPUT_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(OUTPUT_PATH, jsxContent);
+    atomicWrite(OUTPUT_PATH, jsxContent);
     console.log(`Wrote ${categorised.length} flags to ${OUTPUT_PATH}`);
   }
 }

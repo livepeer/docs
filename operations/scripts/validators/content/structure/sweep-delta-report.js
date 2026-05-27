@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 let puppeteer;
 try {
@@ -194,7 +195,7 @@ async function main(argv = process.argv.slice(2)) {
       },
       ...currentResults
     };
-    fs.writeFileSync(BASELINE_PATH, JSON.stringify(newBaseline, null, 2) + '\n');
+    atomicWrite(BASELINE_PATH, JSON.stringify(newBaseline, null, 2) + '\n');
     console.log(`\nBaseline updated at ${BASELINE_PATH}`);
   }
 

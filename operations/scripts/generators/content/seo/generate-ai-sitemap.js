@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   getRepoRoot,
   normalizeRel,
@@ -350,7 +351,7 @@ function main() {
   const outputPath = path.join(REPO_ROOT, OUTPUT_FILE);
 
   if (shouldWrite) {
-    fs.writeFileSync(outputPath, xml, 'utf8');
+    atomicWrite(outputPath, xml, 'utf8');
   }
 
   if (shouldCheck) {

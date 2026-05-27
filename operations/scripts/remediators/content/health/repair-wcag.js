@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const ENGINE = path.join(REPO_ROOT, 'operations', 'tests', 'integration', 'v2-wcag-audit.js');
@@ -99,7 +100,7 @@ function restoreFiles(snapshot, regressed) {
   for (const rel of regressed) {
     if (!snapshot.has(rel)) continue;
     const abs = path.join(REPO_ROOT, rel);
-    fs.writeFileSync(abs, snapshot.get(rel));
+    atomicWrite(abs, snapshot.get(rel));
     reverted += 1;
   }
   return reverted;
