@@ -48,13 +48,13 @@ The Network is a population of `go-livepeer` nodes coordinating off-chain, ancho
   itemsList={[
     {
       Layer: <Subtitle variant="changelog">**Node population**</Subtitle>,
-      'What it is': 'The running `go-livepeer` processes operated by gateways, orchestrators, and their attached workers',
+      'What it is': 'The running `go-livepeer` processes operated by Gateways, Orchestrators, and their attached workers',
       'What it answers': 'What nodes are running, what role each plays, how they connect to clients and to each other',
       'Rate of change': 'Continuous (release-cadence weekly)',
     },
     {
       Layer: <Subtitle variant="changelog">**Off-chain coordination**</Subtitle>,
-      'What it is': 'Direct gateway-to-orchestrator traffic: capability advertisement, job dispatch, ticket exchange, real-time frame transport',
+      'What it is': 'Direct Gateway-to-Orchestrator traffic: capability advertisement, job dispatch, ticket exchange, real-time frame transport',
       'What it answers': 'How nodes find each other, agree on price, exchange work, and pay for it without touching the chain',
       'Rate of change': 'Per-session and per-job',
     },
@@ -71,7 +71,7 @@ The Network is a population of `go-livepeer` nodes coordinating off-chain, ancho
 
 ## Network Topology
 
-The Network is operated by independent participants. Orchestrators run GPU nodes and any workers attached to them. Gateways run routing and payment infrastructure. Both run the same `go-livepeer` binary in different modes. A small operator runs one process; a large operator splits the modes across separate hosts on a private subnet, with the orchestrator on the network edge.
+The Network is operated by independent participants. Orchestrators run GPU nodes and any workers attached to them. Gateways run routing and payment infrastructure. Both run the same `go-livepeer` binary in different modes. A small operator runs one process; a large operator splits the modes across separate hosts on a private subnet, with the Orchestrator on the network edge.
 
 <ScrollableDiagram title="Network Topology and the Boundary it Anchors To" maxHeight="700px">
 
@@ -140,7 +140,7 @@ Inside the Network, four distinct kinds of traffic move on different transports 
     {
       Plane: <Subtitle variant="changelog">**Control**</Subtitle>,
       'What flows': 'Capability advertisement, discovery queries, session establishment',
-      Transport: 'gRPC and HTTP between gateway and orchestrator',
+      Transport: 'gRPC and HTTP between Gateway and Orchestrator',
       Cadence: 'Per-session (seconds to minutes)',
     },
     {
@@ -170,7 +170,7 @@ The control and data planes are sized for production volume. The payment plane u
 
 ## Round Lifecycle
 
-The on-chain layer advances in **rounds** of approximately 21 hours each (~5,760 Arbitrum L2 blocks). The active set, which orchestrators are eligible for video work, locks at the start of each round. Per-round inflation rewards distribute through `BondingManager`. The round is the cadence at which the protocol meets the Network.
+The on-chain layer advances in **rounds** of approximately 21 hours each (~5,760 Arbitrum L2 blocks). The Active Set, which Orchestrators are eligible for video work, locks at the start of each round. Per-round inflation rewards distribute through `BondingManager`. The round is the cadence at which the protocol meets the Network.
 
 <ScrollableDiagram title="Round Lifecycle" maxHeight="400px">
 
@@ -189,13 +189,13 @@ stateDiagram-v2
 
 </ScrollableDiagram>
 
-Mid-round, capability advertisement and pricing can change. Eligibility cannot. An orchestrator that wants to enter the active set bonds during a round; eligibility takes effect at the next round boundary.
+Mid-round, capability advertisement and pricing can change. Eligibility cannot. An Orchestrator that wants to enter the Active Set bonds during a round; eligibility takes effect at the next round boundary.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## Off-Chain Coordination
 
-The off-chain layer is what the Network is sized for. Discovery, capability advertisement, price agreement, job dispatch, and ticket exchange all happen here, between gateway and orchestrator, over standard transports. The chain stays out of the hot path.
+The off-chain layer is what the Network is sized for. Discovery, capability advertisement, price agreement, job dispatch, and ticket exchange all happen here, between Gateway and Orchestrator, over standard transports. The chain stays out of the hot path.
 
 Four communication patterns run continuously across the off-chain layer:
 
@@ -204,29 +204,29 @@ Four communication patterns run continuously across the off-chain layer:
   itemsList={[
     {
       Pattern: <Subtitle variant="changelog">**Capability advertisement**</Subtitle>,
-      'Who participates': 'Orchestrator publishes; gateways read',
+      'Who participates': 'Orchestrator publishes; Gateways read',
       'What flows': '`OrchestratorInfo` messages: capability set, price-per-unit, ticket parameters',
     },
     {
       Pattern: <Subtitle variant="changelog">**Discovery and selection**</Subtitle>,
-      'Who participates': 'Gateway queries; protocol contracts and orchestrators respond',
+      'Who participates': 'Gateway queries; protocol contracts and Orchestrators respond',
       'What flows': 'Candidate lists from `ServiceRegistry` (often via subgraph), then per-candidate `OrchestratorInfo`',
     },
     {
       Pattern: <Subtitle variant="changelog">**Job dispatch and result return**</Subtitle>,
-      'Who participates': 'Gateway and orchestrator',
+      'Who participates': 'Gateway and Orchestrator',
       'What flows': 'Segments and frames in; transcoded or generated output back; tickets attached to each segment',
     },
     {
       Pattern: <Subtitle variant="changelog">**Real-time frame transport**</Subtitle>,
-      'Who participates': 'Gateway and orchestrator AI worker',
+      'Who participates': 'Gateway and Orchestrator AI worker',
       'What flows': 'Live video frames over the trickle protocol for sub-second AI pipelines',
     },
   ]}
 />
 
 <Tip>
-The active set, which orchestrators are eligible for video work, locks at the start of each round. Capability advertisement and pricing can change mid-round; eligibility cannot.
+The Active Set, which Orchestrators are eligible for video work, locks at the start of each round. Capability advertisement and pricing can change mid-round; eligibility cannot.
 </Tip>
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
@@ -240,19 +240,19 @@ The Network reads from and writes to four contracts on Arbitrum One. These are t
   itemsList={[
     {
       Contract: <Subtitle variant="changelog">**`BondingManager`**</Subtitle>,
-      'What the Network uses it for': 'Source of truth for orchestrator stake, active-set membership, and reward-cut configuration. Read by gateways during selection; written by orchestrators when calling `reward` each round.',
+      'What the Network uses it for': 'Source of truth for Orchestrator stake, active-set membership, and reward-cut configuration. Read by Gateways during selection; written by Orchestrators when calling `reward` each round.',
     },
     {
       Contract: <Subtitle variant="changelog">**`TicketBroker`**</Subtitle>,
-      'What the Network uses it for': 'Holds gateway deposits and reserves. Receives winning ticket redemptions. Settles ETH from the gateway side to the orchestrator side.',
+      'What the Network uses it for': 'Holds Gateway deposits and reserves. Receives winning ticket redemptions. Settles ETH from the Gateway side to the Orchestrator side.',
     },
     {
       Contract: <Subtitle variant="changelog">**`ServiceRegistry`**</Subtitle>,
-      'What the Network uses it for': 'Holds the service URI each orchestrator publishes. Read by gateways during discovery to know where each orchestrator is reachable.',
+      'What the Network uses it for': 'Holds the service URI each Orchestrator publishes. Read by Gateways during discovery to know where each Orchestrator is reachable.',
     },
     {
       Contract: <Subtitle variant="changelog">**`Minter`**</Subtitle>,
-      'What the Network uses it for': 'Mints LPT inflation per round. Distributed to bonded stake when orchestrators call `reward`. The reward stream that runs in parallel to job-fee settlement.',
+      'What the Network uses it for': 'Mints LPT inflation per round. Distributed to bonded stake when Orchestrators call `reward`. The reward stream that runs in parallel to job-fee settlement.',
     },
   ]}
 />
@@ -270,8 +270,8 @@ The Network is observable from outside through three surfaces. Researchers, eval
   itemsList={[
     {
       Surface: <Subtitle variant="changelog">**Livepeer Explorer**</Subtitle>,
-      'What it exposes': 'Active orchestrators, bonded supply, active set, round state, treasury balance, governance proposals',
-      'Who uses it': 'Delegators choosing orchestrators; researchers citing network state; operators monitoring round status',
+      'What it exposes': 'Active Orchestrators, bonded supply, Active Set, round state, treasury balance, governance proposals',
+      'Who uses it': 'Delegators choosing Orchestrators; researchers citing network state; operators monitoring round status',
     },
     {
       Surface: <Subtitle variant="changelog">**Arbitrum subgraph**</Subtitle>,
@@ -280,7 +280,7 @@ The Network is observable from outside through three surfaces. Researchers, eval
     },
     {
       Surface: <Subtitle variant="changelog">**Network Capabilities API**</Subtitle>,
-      'What it exposes': 'Aggregated orchestrator capability data across the network: which AI pipelines, which transcoding profiles, which BYOC containers',
+      'What it exposes': 'Aggregated Orchestrator capability data across the network: which AI pipelines, which transcoding profiles, which BYOC containers',
       'Who uses it': 'Gateways needing capability filtering richer than `ServiceRegistry` alone; integrators evaluating coverage',
     },
   ]}

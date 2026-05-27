@@ -38,9 +38,9 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 <CenteredContainer maxWidth="1100px">
     <AccordionGroup>
         <Accordion title="From a Cloud Background?" icon="cloud">
-            A gateway fills the same role as a cloud API gateway or L7 load balancer.
+            A Gateway fills the same role as a cloud API gateway or L7 load balancer.
             It ingests traffic, routes workloads to backend GPU nodes, and manages
-            session flow while orchestrators perform the compute.
+            session flow while Orchestrators perform the compute.
 
             <ScrollableDiagram title="Gateway as Cloud Infrastructure">
 
@@ -79,9 +79,9 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
             </ScrollableDiagram>
         </Accordion>
         <Accordion title="From an Ethereum Background?" icon="coin">
-            A gateway plays the workload-routing role in the network.
+            A Gateway plays the workload-routing role in the network.
             The closest Ethereum analogue is an L2 sequencer: it ingests requests,
-            orders execution, selects orchestrators, and forwards jobs into the compute layer.
+            orders execution, selects Orchestrators, and forwards jobs into the compute layer.
 
             <ScrollableDiagram title="Gateways as L2 Sequencers">
 
@@ -120,8 +120,8 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
             </ScrollableDiagram>
         </Accordion>
         <Accordion title="Neither? You can still run a gateway!" icon="film">
-            A gateway operator plays the producer role for a compute job.
-            The gateway takes the request, selects the specialists, manages constraints,
+            A Gateway operator plays the producer role for a compute job.
+            The Gateway takes the request, selects the specialists, manages constraints,
             and delivers the result on time.
 
             <ScrollableDiagram title="Gateway as Film Producer">
@@ -175,13 +175,13 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 </CenteredContainer>
 
 <CenteredContainer maxWidth="960px">
-  <Tip>Gateways sit between applications and orchestrators. They are the demand side of the network, and application developers connect through the gateway layer for video, AI inference, and real-time AI workloads.</Tip>
+  <Tip>Gateways sit between applications and Orchestrators. They are the demand side of the network, and application developers connect through the Gateway layer for video, AI inference, and real-time AI workloads.</Tip>
 </CenteredContainer>
 
 <CustomDivider />
-In the early days of Livepeer, gateways (then called **broadcasters**) had a single job: send video streams to orchestrators for transcoding.
+In the early days of Livepeer, Gateways (then called **broadcasters**) had a single job: send video streams to Orchestrators for transcoding.
 
-Today, with the off-chain gateway operational mode shipped in Q4 2025, the role has expanded dramatically. Gateways now route AI inference, live video AI, LLM requests, and custom BYOC workloads - often with **zero ETH required**. The gateway is where business logic, customer relationships, and service margins live.
+Today, with the off-chain Gateway operational mode shipped in Q4 2025, the role has expanded dramatically. Gateways now route AI inference, live video AI, LLM requests, and custom BYOC workloads - often with **zero ETH required**. The Gateway is where business logic, customer relationships, and service margins live.
 
 <ScrollableDiagram title="Gateway Role Evolution" maxHeight="420px">
 {/* Note: Mermaid cannot use color variables. */}
@@ -207,11 +207,11 @@ timeline
 
 ## Technical Role
 
-A gateway is a **demand aggregation and routing layer**. It accepts workloads from applications, selects the best orchestrator for each job, handles payment, and returns results while orchestrators perform GPU compute.
+A Gateway is a **demand aggregation and routing layer**. It accepts workloads from applications, selects the best Orchestrator for each job, handles payment, and returns results while Orchestrators perform GPU compute.
 
 Core responsibilities:
 - **Job intake**  - receive video streams (RTMP) or AI inference requests (HTTP API)
-- **Orchestrator selection**  - match jobs to capable orchestrators by capability, price, and latency
+- **Orchestrator selection**  - match jobs to capable Orchestrators by capability, price, and latency
 - **Payment handling**  - generate probabilistic micropayment tickets (or delegate to a remote signer)
 - **Result delivery**  - return transcoded video (HLS) or inference results to the application
 
@@ -221,13 +221,13 @@ See <LinkArrow href="/v2/gateways/concepts/capabilities" label="Gateway Capabili
 
 ## Business Role
 
-Gateways earn at the **business layer**. The gateway operator sets customer pricing, the protocol constrains orchestrator payments, and the difference becomes the operator's margin.
+Gateways earn at the **business layer**. The Gateway operator sets customer pricing, the protocol constrains Orchestrator payments, and the difference becomes the operator's margin.
 
-This makes gateways uniquely positioned as the product layer of the Livepeer network:
+This makes Gateways uniquely positioned as the product layer of the Livepeer Network:
 
 - **Pricing control**  - set your own rates independently of network pricing
-- **Customer relationships**  - API keys, auth, SLAs, support  - all at the gateway layer
-- **Middleware and product logic**  - billing, rate limiting, orchestrator tiering, custom routing
+- **Customer relationships**  - API keys, auth, SLAs, support  - all at the Gateway layer
+- **Middleware and product logic**  - billing, rate limiting, Orchestrator tiering, custom routing
 - **Platform building**  - the NaaP (Network as a Platform) model wraps Livepeer as a managed service
 
 ```mermaid
@@ -246,29 +246,29 @@ See <LinkArrow href="/v2/gateways/concepts/business-model" label="Gateway Busine
 
 ## Network Role
 
-Gateways are the **demand side** of the Livepeer marketplace. Where orchestrators provide compute supply, gateways aggregate application demand and broker access to that supply.
+Gateways are the **demand side** of the Livepeer marketplace. Where Orchestrators provide compute supply, Gateways aggregate application demand and broker access to that supply.
 
-- **Capability discovery**  - query the network for orchestrators that support specific pipelines, models, or GPU types
-- **Marketplace participation**  - select orchestrators based on price, performance, and reliability
+- **Capability discovery**  - query the network for Orchestrators that support specific pipelines, models, or GPU types
+- **Marketplace participation**  - select Orchestrators based on price, performance, and reliability
 - **Application bridge**  - translate application-level requests into protocol-level operations
-- **Ecosystem growth**  - every new gateway adds demand capacity to the network
+- **Ecosystem growth**  - every new Gateway adds demand capacity to the network
 
 <Note>
 Gateways participate in the network as demand-side actors. Orchestrators handle staking, protocol rewards, and governance.
 </Note>
 
-See <LinkArrow href="/v2/gateways/concepts/architecture" label="Gateway Architecture" newline={false} /> for how gateways connect to the protocol and orchestrator network.
+See <LinkArrow href="/v2/gateways/concepts/architecture" label="Gateway Architecture" newline={false} /> for how Gateways connect to the protocol and Orchestrator network.
 
 <CustomDivider />
 
 
 ## Operational Mode
 
-On-chain and off-chain describe your gateway's **operational mode**: how it handles payment operations and orchestrator discovery. All workloads run on orchestrator GPU hardware. The distinction is between local ticket signing and delegated remote signing.
+On-chain and off-chain describe your Gateway's **operational mode**: how it handles payment operations and Orchestrator discovery. All workloads run on Orchestrator GPU hardware. The distinction is between local ticket signing and delegated remote signing.
 
 <Tabs>
   <Tab title="On-chain gateway" icon="link">
-    Your gateway holds ETH on Arbitrum and generates probabilistic micropayment tickets directly. This is the original operational mode. Required for video transcoding; also supports AI inference.
+    Your Gateway holds ETH on Arbitrum and generates probabilistic micropayment tickets directly. This is the original operational mode. Required for video transcoding; also supports AI inference.
 
     - **Payment:** Gateway signs tickets locally using its own ETH deposit + reserve
     - **ETH required:** Yes - deposit (~0.065 ETH) + reserve (~0.03 ETH) on Arbitrum
@@ -278,10 +278,10 @@ On-chain and off-chain describe your gateway's **operational mode**: how it hand
     - **Workloads:** Video transcoding, AI inference, or both
   </Tab>
   <Tab title="Off-chain gateway" icon="cloud">
-    Shipped Q4 2025 via remote signing (PRs #3791, #3822). Your gateway holds no ETH - a remote signer handles all payment operations on your behalf.
+    Shipped Q4 2025 via remote signing (PRs #3791, #3822). Your Gateway holds no ETH - a remote signer handles all payment operations on your behalf.
 
-    - **Payment:** Remote signer generates tickets; your gateway sends no on-chain transactions
-    - **ETH required:** No - zero at the gateway layer
+    - **Payment:** Remote signer generates tickets; your Gateway sends no on-chain transactions
+    - **ETH required:** No - zero at the Gateway layer
     - **Crypto knowledge:** None required
     - **OS support:** Linux only
     - **Setup time:** Minutes (Docker command, point at remote signer)
@@ -290,15 +290,15 @@ On-chain and off-chain describe your gateway's **operational mode**: how it hand
 </Tabs>
 
 <Note>
-An on-chain gateway can run video, AI, or both workloads. Dual-workload configuration runs both from a single on-chain gateway node; it is not a third operational mode. See <LinkArrow href="/v2/gateways/setup/configure" label="Dual gateway configuration" newline={false} /> for setup details.
+An on-chain Gateway can run video, AI, or both workloads. Dual-workload configuration runs both from a single on-chain Gateway node; it is not a third operational mode. See <LinkArrow href="/v2/gateways/setup/configure" label="Dual gateway configuration" newline={false} /> for setup details.
 </Note>
 
 <StyledTable variant="bordered">
   <thead>
     <TableRow header>
       <TableCell header>Factor</TableCell>
-      <TableCell header>On-chain gateway</TableCell>
-      <TableCell header>Off-chain gateway</TableCell>
+      <TableCell header>On-chain Gateway</TableCell>
+      <TableCell header>Off-chain Gateway</TableCell>
     </TableRow>
   </thead>
   <tbody>
@@ -339,10 +339,10 @@ An on-chain gateway can run video, AI, or both workloads. Dual-workload configur
 
 <CardGroup cols={2}>
   <Card title="Gateway Capabilities" icon="gears" href="/v2/gateways/concepts/capabilities" arrow horizontal>
-    Workload types, supported pipelines, and what gateways can route.
+    Workload types, supported pipelines, and what Gateways can route.
   </Card>
   <Card title="Gateway Architecture" icon="diagram-project" href="/v2/gateways/concepts/architecture" arrow horizontal>
-    How gateways connect to orchestrators and the protocol layer.
+    How Gateways connect to Orchestrators and the protocol layer.
   </Card>
   <Card title="Gateway Business Model" icon="chart-line" href="/v2/gateways/concepts/business-model" arrow horizontal>
     Revenue models, cost structures, and the four operator models.

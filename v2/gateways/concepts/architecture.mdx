@@ -36,15 +36,15 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 
-Gateways sit at the application layer of Livepeer. They accept requests from apps, route them to orchestrators, and coordinate payment and failover across the compute and protocol layers.
+Gateways sit at the application layer of Livepeer. They accept requests from apps, route them to Orchestrators, and coordinate payment and failover across the compute and protocol layers.
 
-For what gateways *do*, see [Capabilities](/v2/gateways/concepts/capabilities). For why you would run one, see [Business Model](/v2/gateways/concepts/business-model).
+For what Gateways *do*, see [Capabilities](/v2/Gateways/concepts/capabilities). For why you would run one, see [Business Model](/v2/Gateways/concepts/business-model).
 
 <CustomDivider />
 
 ## Gateway Layer Context
 
-The Livepeer network has three functional layers. Gateways operate at the **application layer**, bridging end-user applications and the compute layer where orchestrators run GPU workloads.
+The Livepeer Network has three functional layers. Gateways operate at the **application layer**, bridging end-user applications and the compute layer where Orchestrators run GPU workloads.
 
 <ScrollableDiagram title="Layered Architecture" maxHeight="600px">
 
@@ -82,7 +82,7 @@ graph LR
   </TableRow>
   <TableRow>
     <TableCell>**Application**</TableCell>
-    <TableCell>Developers, end users, gateways</TableCell>
+    <TableCell>Developers, end users, Gateways</TableCell>
     <TableCell>Ingest requests, route jobs, deliver results, manage pricing</TableCell>
   </TableRow>
   <TableRow>
@@ -93,51 +93,51 @@ graph LR
   <TableRow>
     <TableCell>**Protocol**</TableCell>
     <TableCell>Arbitrum smart contracts</TableCell>
-    <TableCell>Staking, payments, governance, orchestrator registry</TableCell>
+    <TableCell>Staking, payments, governance, Orchestrator registry</TableCell>
   </TableRow>
 </StyledTable>
 
-Gateways are the only demand-side participants that interact with both the compute layer (sending jobs to orchestrators) and the protocol layer (payment tickets, orchestrator discovery via the on-chain registry).
+Gateways are the only demand-side participants that interact with both the compute layer (sending jobs to Orchestrators) and the protocol layer (payment tickets, Orchestrator discovery via the on-chain registry).
 
 <CustomDivider />
 
 ## Gateway Interactions
 
-A gateway interacts with four categories of actors:
+A Gateway interacts with four categories of actors:
 
 ### Applications
 
-Applications are the gateway's customers. They send workloads and receive results.
+Applications are the Gateway's customers. They send workloads and receive results.
 
 - Video applications send RTMP streams (port 1935) and receive HLS/DASH output
 - AI applications send HTTP requests (port 8935, enabled via `-httpIngest`) and receive JSON/binary inference results
 - BYOC applications send custom payloads via HTTP and receive container output
 
-The gateway abstracts orchestration and protocol details for applications. Applications send workloads and receive results through gateway interfaces.
+The Gateway abstracts orchestration and protocol details for applications. Applications send workloads and receive results through Gateway interfaces.
 
 ### Orchestrators
 
-Orchestrators are the supply side. The gateway selects, negotiates with, and dispatches work to them.
+Orchestrators are the supply side. The Gateway selects, negotiates with, and dispatches work to them.
 
-- **Discovery** - on-chain gateways query the ServiceRegistry contract on Arbitrum; off-chain gateways receive orchestrator lists from the remote signer
-- **Negotiation** - the gateway requests an orchestrator's capabilities and price, then establishes a session with an acceptable orchestrator
-- **Dispatch** - video segments or AI requests are sent to the orchestrator with an attached payment ticket
-- **Failover** - on failure, the gateway retries with the next-best option from its ranked list
+- **Discovery** - on-chain Gateways query the ServiceRegistry contract on Arbitrum; off-chain Gateways receive Orchestrator lists from the remote signer
+- **Negotiation** - the Gateway requests an Orchestrator's capabilities and price, then establishes a session with an acceptable Orchestrator
+- **Dispatch** - video segments or AI requests are sent to the Orchestrator with an attached payment ticket
+- **Failover** - on failure, the Gateway retries with the next-best option from its ranked list
 
 ### Remote Signer
 
-In the **off-chain operational mode**, the gateway delegates all payment operations to a **remote signer** service. The remote signer:
+In the **off-chain operational mode**, the Gateway delegates all payment operations to a **remote signer** service. The remote signer:
 
 - Holds the ETH deposit and reserve
-- Generates probabilistic micropayment tickets on the gateway's behalf
-- Provides orchestrator discovery (list of known orchestrators)
-- Handles all on-chain interactions (ticket redemption is on the orchestrator side)
+- Generates probabilistic micropayment tickets on the Gateway's behalf
+- Provides Orchestrator discovery (list of known Orchestrators)
+- Handles all on-chain interactions (ticket redemption is on the Orchestrator side)
 
-This architecture allows gateways to operate with zero crypto knowledge and zero ETH. See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} /> for the full protocol.
+This architecture allows Gateways to operate with zero crypto knowledge and zero ETH. See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} /> for the full protocol.
 
 ### Arbitrum Protocol
 
-In the **on-chain operational mode**, the gateway interacts directly with Arbitrum smart contracts:
+In the **on-chain operational mode**, the Gateway interacts directly with Arbitrum smart contracts:
 
 <StyledTable variant="bordered">
   <TableRow header>
@@ -146,11 +146,11 @@ In the **on-chain operational mode**, the gateway interacts directly with Arbitr
   </TableRow>
   <TableRow>
     <TableCell>**TicketBroker**</TableCell>
-    <TableCell>Fund deposit and reserve; generate payment tickets for orchestrators</TableCell>
+    <TableCell>Fund deposit and reserve; generate payment tickets for Orchestrators</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**ServiceRegistry**</TableCell>
-    <TableCell>Query registered orchestrators and their service URIs</TableCell>
+    <TableCell>Query registered Orchestrators and their service URIs</TableCell>
   </TableRow>
 </StyledTable>
 
@@ -162,7 +162,7 @@ Gateways interact with TicketBroker and ServiceRegistry. Orchestrators handle Bo
 
 ## Dual Pipeline Architecture
 
-The gateway node (`LivepeerNode` in go-livepeer) runs two independent session managers - one for video, one for AI. This allows a single gateway to handle both workload types simultaneously without interference.
+The Gateway node (`LivepeerNode` in go-livepeer) runs two independent session managers - one for video, one for AI. This allows a single Gateway to handle both workload types simultaneously without interference.
 
 <ScrollableDiagram title="Dual Gateway Architecture: Video & AI Pipelines" maxHeight="800px">
 
@@ -267,13 +267,13 @@ flowchart TB
   </TableRow>
 </StyledTable>
 
-Both pipelines share the same orchestrator selection logic, payment system, and failover behaviour. The separation is at the session management layer.
+Both pipelines share the same Orchestrator selection logic, payment system, and failover behaviour. The separation is at the session management layer.
 
 <CustomDivider />
 
 ## Job Lifecycle
 
-This is what happens when an application sends a request to a gateway, from intake through result delivery and payment.
+This is what happens when an application sends a request to a Gateway, from intake through result delivery and payment.
 
 <ScrollableDiagram title="Gateway Request Flow" maxHeight="600px">
 
@@ -291,14 +291,14 @@ graph TD
 
 ### Lifecycle Steps
 
-1. **Job arrives** - An application sends a video segment (RTMP) or AI request (HTTP) to the gateway.
-2. **Pipeline routing** - The gateway routes the request to the appropriate session manager (`BroadcastSessionsManager` for video, `AISessionManager` for AI).
-3. **Orchestrator selection** - The session manager selects the best orchestrator from its pool based on capability, price, latency, and performance history.
-4. **Payment ticket generation** - The gateway (or remote signer in off-chain mode) generates a probabilistic micropayment ticket and attaches it to the job.
-5. **Work dispatch** - The job + ticket are sent to the orchestrator over HTTP.
-6. **Execution** - The orchestrator routes the work to its GPU worker (transcoder for video, AI Runner for inference) and returns the result.
-7. **Result delivery** - The gateway sends the processed output back to the application.
-8. **Payment settlement** - The orchestrator accumulates payment tickets and periodically redeems winning tickets on Arbitrum for ETH.
+1. **Job arrives** - An application sends a video segment (RTMP) or AI request (HTTP) to the Gateway.
+2. **Pipeline routing** - The Gateway routes the request to the appropriate session manager (`BroadcastSessionsManager` for video, `AISessionManager` for AI).
+3. **Orchestrator selection** - The session manager selects the best Orchestrator from its pool based on capability, price, latency, and performance history.
+4. **Payment ticket generation** - The Gateway (or remote signer in off-chain mode) generates a probabilistic micropayment ticket and attaches it to the job.
+5. **Work dispatch** - The job + ticket are sent to the Orchestrator over HTTP.
+6. **Execution** - The Orchestrator routes the work to its GPU worker (transcoder for video, AI Runner for inference) and returns the result.
+7. **Result delivery** - The Gateway sends the processed output back to the application.
+8. **Payment settlement** - The Orchestrator accumulates payment tickets and periodically redeems winning tickets on Arbitrum for ETH.
 
 <CustomDivider />
 
@@ -306,7 +306,7 @@ graph TD
 
 ### go-livepeer
 
-The core node software. When started in gateway mode (`-gateway`), it runs as the gateway controller. Handles:
+The core node software. When started in Gateway mode (`-gateway`), it runs as the Gateway controller. Handles:
 
 - Job intake (RTMP server + HTTP API server)
 - Orchestrator discovery and session management
@@ -316,7 +316,7 @@ The core node software. When started in gateway mode (`-gateway`), it runs as th
 Source: [github.com/livepeer/go-livepeer](https://github.com/livepeer/go-livepeer) - specifically [core/livepeernode.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/livepeernode.go)
 
 <Note>
-The gateway was previously called the **broadcaster**. Legacy CLI flags still use `-broadcaster` in some contexts. The `-gateway` flag is the current standard.
+The Gateway was previously called the **broadcaster**. Legacy CLI flags still use `-broadcaster` in some contexts. The `-gateway` flag is the current standard.
 </Note>
 
 ### livepeer_cli
@@ -325,11 +325,11 @@ A command-line tool that connects to a running go-livepeer node. Used for:
 
 - Setting broadcast configuration (max price, transcoding profiles)
 - Funding the on-chain deposit and reserve
-- Viewing node status and connected orchestrators
+- Viewing node status and connected Orchestrators
 
 ### Remote Signer (off-chain)
 
-A separate service that handles ETH custody and payment ticket signing for off-chain gateways. It runs as a sidecar or external service alongside go-livepeer.
+A separate service that handles ETH custody and payment ticket signing for off-chain Gateways. It runs as a sidecar or external service alongside go-livepeer.
 
 See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} /> for architecture and configuration.
 
@@ -346,7 +346,7 @@ See <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" la
   </TableRow>
   <TableRow>
     <TableCell>**ServiceRegistry**</TableCell>
-    <TableCell>Discover registered orchestrators</TableCell>
+    <TableCell>Discover registered Orchestrators</TableCell>
   </TableRow>
 </StyledTable>
 
@@ -358,15 +358,15 @@ See <LinkArrow href="/v2/gateways/resources/reference/technical/contract-address
 
 <CardGroup cols={2}>
   <Card title="Gateway Role" icon="user-gear" href="/v2/gateways/concepts/role" arrow horizontal>
-    What gateways are and how the role has evolved.
+    What Gateways are and how the role has evolved.
   </Card>
   <Card title="Gateway Capabilities" icon="gears" href="/v2/gateways/concepts/capabilities" arrow horizontal>
-    Workload types, orchestrator selection, and session management.
+    Workload types, Orchestrator selection, and session management.
   </Card>
   <Card title="Gateway Business Model" icon="chart-line" href="/v2/gateways/concepts/business-model" arrow horizontal>
     Revenue models, cost structures, and pricing.
   </Card>
   <Card title="Payment System" icon="credit-card" href="/v2/gateways/guides/payments-and-pricing/payment-guide" arrow horizontal>
-    How probabilistic micropayments work.
+    How Probabilistic Micropayments work.
   </Card>
 </CardGroup>

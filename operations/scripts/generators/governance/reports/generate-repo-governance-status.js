@@ -201,9 +201,12 @@ function buildRepoGovernanceMapContent(manifest = readManifest()) {
     title: 'Repo Governance Map',
     sidebarTitle: 'Repo Governance Map',
     description: 'Generated control-plane map for governed repo surfaces, path classes, and agent output defaults.',
+    pageType: 'reference',
+    audience: 'developer',
+    purpose: 'reference',
     consumer: ['human', 'agent'],
     maintenance: 'generated',
-    status: 'active',
+    status: 'current',
     generator: SCRIPT_PATH,
     keywords: ['livepeer', 'repo governance', 'ownerless governance', 'operations governance', 'agent write policy'],
     keywordsStyle: 'multiline'

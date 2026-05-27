@@ -177,9 +177,12 @@ function buildRootGovernanceMapContent(manifest = readManifest()) {
     title: MAP_TITLE,
     sidebarTitle: 'Root Governance Map',
     description: 'Generated live inventory and taxonomy map for the governed repo root.',
+    pageType: 'reference',
+    audience: 'developer',
+    purpose: 'reference',
     consumer: ['human', 'agent'],
     maintenance: 'generated',
-    status: 'active',
+    status: 'current',
     generator: SCRIPT_PATH,
     keywords: ['livepeer', 'root governance', 'allowlist', 'repo root', 'taxonomy', 'governance map'],
     keywordsStyle: 'multiline'

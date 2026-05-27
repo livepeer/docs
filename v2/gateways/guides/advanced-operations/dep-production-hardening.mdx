@@ -40,11 +40,11 @@ Verify:
 - REVIEW flags are in JSX flags for a human.
 */}
 
-The gateway's default orchestrator selection works out of the box: it discovers available orchestrators, filters by price, and routes jobs. For operators running production workloads, that is often not enough. How to take manual control of selection, tier orchestrators by quality, and configure failover behaviour.
+The Gateway's default Orchestrator selection works out of the box: it discovers available Orchestrators, filters by price, and routes jobs. For operators running production workloads, that is often not enough. How to take manual control of selection, tier Orchestrators by quality, and configure failover behaviour.
 
-## How the gateway selects orchestrators
+## How the Gateway selects Orchestrators
 
-Before tuning selection, it helps to understand what the gateway does by default.
+Before tuning selection, it helps to understand what the Gateway does by default.
 
 <Mermaid
   chart={`%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
@@ -68,12 +68,12 @@ The scoring algorithm is a weighted combination of four factors, each adjustable
 
 | Factor | Flag | Default behaviour |
 |--------|------|------------------|
-| Randomness | `-selectRandFreq` | Prevents all traffic concentrating on one orchestrator |
-| LPT stake | `-selectStakeWeight` | Favours orchestrators with more stake |
-| Price | `-selectPriceWeight` | Favours lower-priced orchestrators |
+| Randomness | `-selectRandFreq` | Prevents all traffic concentrating on one Orchestrator |
+| LPT stake | `-selectStakeWeight` | Favours Orchestrators with more stake |
+| Price | `-selectPriceWeight` | Favours lower-priced Orchestrators |
 | Price sensitivity | `-selectPriceExpFactor` | Controls how much small price differences matter |
 
-For AI gateways using an explicit orchestrator list (`-orchAddr`), the selection algorithm is simpler: the gateway round-robins across the listed orchestrators while respecting capability and price filters.
+For AI Gateways using an explicit Orchestrator list (`-orchAddr`), the selection algorithm is simpler: the Gateway round-robins across the listed Orchestrators while respecting capability and price filters.
 
 ---
 
@@ -81,7 +81,7 @@ For AI gateways using an explicit orchestrator list (`-orchAddr`), the selection
 
 Different workloads have different priorities. Use this as a starting point for deciding which flags to tune.
 
-| Criterion | Video gateway | AI gateway | Dual gateway |
+| Criterion | Video Gateway | AI Gateway | Dual Gateway |
 |-----------|--------------|------------|-------------|
 | Latency | Critical for real-time | Important for UX | Both |
 | Price | Important | Important | Both |
@@ -93,65 +93,65 @@ Different workloads have different priorities. Use this as a starting point for 
 
 ---
 
-## Pinning orchestrators (AI gateways)
+## Pinning Orchestrators (AI Gateways)
 
-For off-chain AI gateways, the most reliable approach is to maintain an explicit list of known-good orchestrators. The gateway round-robins across this list and does not discover others.
+For off-chain AI Gateways, the most reliable approach is to maintain an explicit list of known-good Orchestrators. The Gateway round-robins across this list and does not discover others.
 
 ```bash
 -orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935,https://orch3.example.com:8935
 ```
 
-This trades the flexibility of network-wide discovery for predictability: you know exactly which orchestrators your jobs go to, and you can vet each one before adding it. It is the recommended approach for production AI workloads.
+This trades the flexibility of network-wide discovery for predictability: you know exactly which Orchestrators your jobs go to, and you can vet each one before adding it. It is the recommended approach for production AI workloads.
 
-To find AI-capable orchestrators to add to your list, use:
+To find AI-capable Orchestrators to add to your list, use:
 - The [Livepeer Explorer](https://explorer.livepeer.org) AI leaderboard {/* REVIEW: Confirm AI leaderboard is live on Explorer and what metrics it shows - Rick to verify */}
-- [tools.livepeer.cloud](https://tools.livepeer.cloud) - community tool suite with orchestrator performance data
-- The `/getNetworkCapabilities` endpoint on your own gateway, filtered by the pipeline and model you need
+- [tools.Livepeer.cloud](https://tools.livepeer.cloud) - community tool suite with Orchestrator performance data
+- The `/getNetworkCapabilities` endpoint on your own Gateway, filtered by the pipeline and model you need
 
 ---
 
-## Dynamic orchestrator discovery
+## Dynamic Orchestrator discovery
 
-For video gateways and on-chain AI gateways that want to draw from the full network, use webhook-based discovery instead of a static list.
+For video Gateways and on-chain AI Gateways that want to draw from the full network, use webhook-based discovery instead of a static list.
 
 ```bash
 -orchWebhookUrl https://your-discovery-service.example.com/orchestrators
 ```
 
-The webhook endpoint should return a JSON array of orchestrator URIs. The gateway calls this URL at session start to get a fresh candidate list, then applies its scoring algorithm. This lets you maintain your own curated orchestrator pool externally, with the gateway fetching updates dynamically.
+The webhook endpoint should return a JSON array of Orchestrator URIs. The Gateway calls this URL at session start to get a fresh candidate list, then applies its scoring algorithm. This lets you maintain your own curated Orchestrator pool externally, with the Gateway fetching updates dynamically.
 
 <Tip>
-A simple webhook can be a static JSON file served by your web server. Update it when you add or remove orchestrators from your preferred pool.
+A simple webhook can be a static JSON file served by your web server. Update it when you add or remove Orchestrators from your preferred pool.
 </Tip>
 
 ---
 
 ## Performance scoring
 
-Beyond the built-in selection weights, the gateway can use an external performance scoring service to influence orchestrator selection.
+Beyond the built-in selection weights, the Gateway can use an external performance scoring service to influence Orchestrator selection.
 
 ```bash
 -orchPerfStatsUrl https://leaderboard.livepeer.org/api/aggregated_stats
 -minPerfScore 0.8
 ```
 
-`-orchPerfStatsUrl` points to a service that returns per-orchestrator performance statistics. The Livepeer community leaderboard provides this data. `-minPerfScore` sets a minimum acceptable score; orchestrators below this threshold are excluded from selection regardless of price.
+`-orchPerfStatsUrl` points to a service that returns per-Orchestrator performance statistics. The Livepeer community leaderboard provides this data. `-minPerfScore` sets a minimum acceptable score; Orchestrators below this threshold are excluded from selection regardless of price.
 
 {/* REVIEW: Confirm the leaderboard API endpoint URL and response format - Rick to verify current URL is `https://leaderboard.livepeer.org/api/aggregated_stats` */}
 
-Performance scores are calculated from real transcoding tests run by the leaderboard against each registered orchestrator. Scores range from 0 to 1, where 1 represents consistently correct transcoding output within latency targets. For production video transcoding, a minimum score of 0.8 or higher is recommended.
+Performance scores are calculated from real transcoding tests run by the leaderboard against each registered Orchestrator. Scores range from 0 to 1, where 1 represents consistently correct transcoding output within latency targets. For production video transcoding, a minimum score of 0.8 or higher is recommended.
 
 ---
 
-## Blocklisting orchestrators
+## Blocklisting Orchestrators
 
-If you identify an orchestrator that is producing incorrect results, charging unexpected prices, or behaving maliciously, exclude it immediately:
+If you identify an Orchestrator that is producing incorrect results, charging unexpected prices, or behaving maliciously, exclude it immediately:
 
 ```bash
 -orchBlocklist 0xAbCd1234...,0xEfGh5678...
 ```
 
-Blocklisted orchestrators are excluded from all selection, regardless of price or capability. Pass Ethereum addresses as a comma-separated list. This flag takes effect at process start; to update it, restart the gateway.
+Blocklisted Orchestrators are excluded from all selection, regardless of price or capability. Pass Ethereum addresses as a comma-separated list. This flag takes effect at process start; to update it, restart the Gateway.
 
 <Note>
 The blocklist is a last resort, not a tier management tool. For tiering, use the performance score threshold and price caps instead.
@@ -161,7 +161,7 @@ The blocklist is a last resort, not a tier management tool. For tiering, use the
 
 ## Tiering strategy
 
-Operators running a gateway-as-service with SLA commitments need to route different customer tiers to different orchestrator quality levels. Since go-livepeer does not natively support named tiers, the pattern is to run separate gateway instances per tier, each with a different configuration.
+Operators running a Gateway-as-service with SLA commitments need to route different customer tiers to different Orchestrator quality levels. Since go-livepeer does not natively support named tiers, the pattern is to run separate Gateway instances per tier, each with a different configuration.
 
 ```
 Tier 1 (premium) → gateway instance A
@@ -179,7 +179,7 @@ Tier 3 (budget) → gateway instance C
     # No minPerfScore - accepts wider range
 ```
 
-Your middleware layer (see [Gateway Middleware](/v2/gateways/guides/advanced-operations/gateway-middleware)) routes incoming requests to the correct gateway instance based on the customer's tier.
+Your middleware layer (see [Gateway Middleware](/v2/Gateways/guides/advanced-operations/Gateway-middleware)) routes incoming requests to the correct Gateway instance based on the customer's tier.
 
 ---
 
@@ -187,31 +187,31 @@ Your middleware layer (see [Gateway Middleware](/v2/gateways/guides/advanced-ope
 
 <AccordionGroup>
   <Accordion title="Automatic orchestrator swaps">
-    When an orchestrator fails mid-job, the gateway automatically swaps to the next candidate in its selection pool. For video transcoding, this means the stream continues on a new orchestrator; segments are re-attempted. For AI inference, the request is retried on a different orchestrator.
+    When an Orchestrator fails mid-job, the Gateway automatically swaps to the next candidate in its selection pool. For video transcoding, this means the stream continues on a new Orchestrator; segments are re-attempted. For AI inference, the request is retried on a different Orchestrator.
 
     The number of retry attempts before the job fails is controlled by `-maxAttempts` (video transcoding). For AI jobs, the retry behaviour depends on the pipeline.
 
     {/* REVIEW: Confirm `-maxAttempts` applies to gateway retry on orchestrator failure, not just transcoding attempts - Rick to verify. Also confirm AI inference retry count/flag */}
   </Accordion>
   <Accordion title="Reducing swap frequency">
-    High orchestrator swap rates indicate instability in your orchestrator pool, such as under-resourced machines or network issues. To reduce swaps:
+    High Orchestrator swap rates indicate instability in your Orchestrator pool, such as under-resourced machines or network issues. To reduce swaps:
 
-    - Increase `-minPerfScore` to exclude poorly-performing orchestrators proactively
+    - Increase `-minPerfScore` to exclude poorly-performing Orchestrators proactively
     - Add `-orchMinLivepeerVersion` to exclude outdated nodes
-    - Review your `-maxPricePerUnit` or `-maxPricePerCapability` ceiling: if it is too low, the gateway may be cycling through marginal orchestrators
+    - Review your `-maxPricePerUnit` or `-maxPricePerCapability` ceiling: if it is too low, the Gateway may be cycling through marginal Orchestrators
 
     Monitor the `livepeer_orchestrator_swaps` Prometheus counter to track swap frequency over time.
 
     {/* REVIEW: Confirm Prometheus metric name is `livepeer_orchestrator_swaps` - Rick to verify */}
   </Accordion>
   <Accordion title="Discovery timeout">
-    If the gateway cannot find a suitable orchestrator within the discovery window, the job fails. The timeout is configurable:
+    If the Gateway cannot find a suitable Orchestrator within the discovery window, the job fails. The timeout is configurable:
 
     ```bash
     -discoveryTimeout 10s
     ```
 
-    Increase this if you see jobs failing because no orchestrator was found, particularly at startup or after a blocklist change. Decrease it if you need faster failure detection for latency-sensitive applications.
+    Increase this if you see jobs failing because no Orchestrator was found, particularly at startup or after a blocklist change. Decrease it if you need faster failure detection for latency-sensitive applications.
   </Accordion>
 </AccordionGroup>
 
@@ -219,9 +219,9 @@ Your middleware layer (see [Gateway Middleware](/v2/gateways/guides/advanced-ope
 
 ## AI-specific: capability and model matching
 
-For AI gateways, orchestrator selection is driven by capability matching before any price or performance scoring applies. The gateway only considers orchestrators that declare support for the requested pipeline and model.
+For AI Gateways, Orchestrator selection is driven by capability matching before any price or performance scoring applies. The Gateway only considers Orchestrators that declare support for the requested pipeline and model.
 
-Capability information is returned by `/getNetworkCapabilities`. To inspect which orchestrators in your pool support a specific model:
+Capability information is returned by `/getNetworkCapabilities`. To inspect which Orchestrators in your pool support a specific model:
 
 ```bash
 curl http://localhost:8935/getNetworkCapabilities | \
@@ -234,7 +234,7 @@ Set per-capability price caps to control costs per pipeline:
 -maxPricePerCapability '[{"pipeline":"text-to-image","model_id":"black-forest-labs/FLUX.1-dev","price_per_unit":100,"pixels_per_unit":1000000}]'
 ```
 
-If no orchestrator in the pool meets both the capability requirement and the price cap, the job fails. If you want the gateway to relax the price cap rather than fail the job, use:
+If no Orchestrator in the pool meets both the capability requirement and the price cap, the job fails. If you want the Gateway to relax the price cap rather than fail the job, use:
 
 ```bash
 -ignoreMaxPriceIfNeeded
@@ -242,7 +242,7 @@ If no orchestrator in the pool meets both the capability requirement and the pri
 
 ---
 
-## Monitoring orchestrator performance
+## Monitoring Orchestrator performance
 
 Track selection health in production using these metrics and endpoints.
 
@@ -250,7 +250,7 @@ Track selection health in production using these metrics and endpoints.
 |--------|--------|--------------|
 | Swap rate | Prometheus `livepeer_orchestrator_swaps` | Rising trend = instability |
 | Success rate | Prometheus `livepeer_success_rate` | Below 0.95 = investigate |
-| Connected orchestrators | `/getNetworkCapabilities` | Fewer than expected = discovery issue |
+| Connected Orchestrators | `/getNetworkCapabilities` | Fewer than expected = discovery issue |
 | Orchestrator status | `livepeer_cli` status command | Active connection and pricing |
 | Performance scores | leaderboard.livepeer.org | Comparison vs network |
 
@@ -260,7 +260,7 @@ Track selection health in production using these metrics and endpoints.
 
 <CardGroup cols={2}>
   <Card title="Gateway Middleware" icon="arrow-left" href="/v2/gateways/guides/advanced-operations/gateway-middleware">
-    Add request filtering, auth, and gateway-specific routing logic.
+    Add request filtering, auth, and Gateway-specific routing logic.
   </Card>
   <Card title="Scaling & Resource Management" icon="arrow-right" href="/v2/gateways/guides/advanced-operations/scaling">
     Session limits and when to scale horizontally.

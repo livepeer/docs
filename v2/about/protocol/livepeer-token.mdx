@@ -43,7 +43,7 @@ The **Livepeer Token (LPT)** is the protocol's _staking and coordination_ token.
 
 ## Two tokens, two jobs
 
-The Livepeer protocol uses two distinct assets, each with a job that the other cannot do. ETH pays for work performed off-chain. LPT secures the right to perform that work and to share in protocol rewards.
+The Livepeer Protocol uses two distinct assets, each with a job that the other cannot do. ETH pays for work performed off-chain. LPT secures the right to perform that work and to share in protocol rewards.
 
 <DynamicTableV2
   headerList={["Asset", "Role", "Used by", "Earned by"]}
@@ -97,16 +97,16 @@ LPT performs four functions in the Livepeer Protocol. Each function is enforced 
 
 <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
   <StyledStep title="Stakes operators into the network" icon="lock">
-    Orchestrators bond LPT to themselves to be eligible to perform transcoding and AI inference work. The active set of orchestrators that receive video work is determined by total bonded stake - own stake plus delegated stake - sorted from highest to lowest.
+    Orchestrators bond LPT to themselves to be eligible to perform transcoding and AI inference work. The Active Set of Orchestrators that receive video work is determined by total bonded stake - own stake plus delegated stake - sorted from highest to lowest.
   </StyledStep>
   <StyledStep title="Secures the network through skin in the game" icon="shield-halved">
-    Bonded LPT is the protocol's economic security primitive. Slashing rules can burn an orchestrator's stake (and the stake of those who delegated to it) for protocol violations, giving every participant a financial reason to behave honestly.
+    Bonded LPT is the protocol's economic security primitive. Slashing rules can burn an Orchestrator's stake (and the stake of those who delegated to it) for protocol violations, giving every participant a financial reason to behave honestly.
   </StyledStep>
   <StyledStep title="Routes work in proportion to stake" icon="arrows-split-up-and-left">
-    Stake weight is the coordination signal that tells gateways which orchestrators to prefer. Higher-staked orchestrators sit higher in the active set and are more likely to receive video transcoding jobs from the network.
+    Stake weight is the coordination signal that tells Gateways which Orchestrators to prefer. Higher-staked Orchestrators sit higher in the Active Set and are more likely to receive video transcoding jobs from the network.
   </StyledStep>
   <StyledStep title="Grants governance rights" icon="building-columns">
-    Bonded LPT confers voting power, proportional to stake, over Livepeer Improvement Proposals (LIPs) and treasury allocations. Delegators vote through their orchestrator by default, and can override that vote on any specific proposal.
+    Bonded LPT confers voting power, proportional to stake, over Livepeer Improvement Proposals (LIPs) and treasury allocations. Delegators vote through their Orchestrator by default, and can override that vote on any specific proposal.
   </StyledStep>
 </StyledSteps>
 
@@ -156,12 +156,12 @@ flowchart LR
 
 </ScrollableDiagram>
 
-The ETH flow pays for actual compute. Gateways pre-fund a deposit and a reserve in the [TicketBroker contract](/v2/about/protocol/blockchain-contracts#ticketbroker) and issue off-chain probabilistic micropayment tickets to orchestrators with each transcoding or inference job. Orchestrators redeem winning tickets on-chain to receive ETH. This amortises payment costs across many jobs without losing the strong settlement guarantees of on-chain payments.
+The ETH flow pays for actual compute. Gateways pre-fund a deposit and a reserve in the [TicketBroker contract](/v2/about/protocol/blockchain-contracts#TicketBroker) and issue off-chain probabilistic micropayment tickets to Orchestrators with each transcoding or inference job. Orchestrators redeem winning tickets on-chain to receive ETH. This amortises payment costs across many jobs without losing the strong settlement guarantees of on-chain payments.
 
-The LPT flow rewards stake. Each round, the [Minter contract](/v2/about/protocol/blockchain-contracts#minter) calculates the round's mintable LPT supply based on the current inflation rate, and the [BondingManager](/v2/about/protocol/blockchain-contracts#bondingmanager) distributes those new tokens. Orchestrators that called `reward()` during their active round receive a share proportional to their bonded stake. Delegators receive the remainder of the orchestrator's reward, after the orchestrator's commission (`rewardCut`) is taken. A configurable fraction of each round's rewards is also routed to the protocol treasury.
+The LPT flow rewards stake. Each round, the [Minter contract](/v2/about/protocol/blockchain-contracts#minter) calculates the round's mintable LPT supply based on the current inflation rate, and the [BondingManager](/v2/about/protocol/blockchain-contracts#BondingManager) distributes those new tokens. Orchestrators that called `reward()` during their active round receive a share proportional to their bonded stake. Delegators receive the remainder of the Orchestrator's reward, after the Orchestrator's commission (`rewardCut`) is taken. A configurable fraction of each round's rewards is also routed to the protocol treasury.
 
 <Tip>
-The two flows meet at the orchestrator. A working orchestrator earns ETH from the work it performs and LPT inflation from the stake it bonds. Delegators earn a share of both. The orchestrator's `feeShare` parameter sets the percentage of ETH fees passed to delegators. The orchestrator's `rewardCut` parameter sets the percentage of LPT rewards the orchestrator keeps as commission, with the remainder distributed to delegators in proportion to their bonded stake.
+The two flows meet at the Orchestrator. A working Orchestrator earns ETH from the work it performs and LPT inflation from the stake it bonds. Delegators earn a share of both. The Orchestrator's `feeShare` parameter sets the percentage of ETH fees passed to Delegators. The Orchestrator's `rewardCut` parameter sets the percentage of LPT rewards the Orchestrator keeps as commission, with the remainder distributed to Delegators in proportion to their bonded stake.
 </Tip>
 
 <CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
@@ -182,7 +182,7 @@ Livepeer ties LPT issuance to network participation. Each round, the protocol ch
   </StyledStep>
 </StyledSteps>
 
-This creates a clear opportunity cost for holding LPT idle. The dilution is not theoretical: every round of inflation that an unbonded holder sits through reduces their share of the total supply. The mechanism design intends for stakeholders to either bond directly, delegate to an orchestrator they trust, or accept the dilution as the cost of liquidity.
+This creates a clear opportunity cost for holding LPT idle. The dilution is not theoretical: every round of inflation that an unbonded holder sits through reduces their share of the total supply. The mechanism design intends for stakeholders to either bond directly, delegate to an Orchestrator they trust, or accept the dilution as the cost of liquidity.
 
 <Note>
 Inflation parameters - the target bonding rate, the per-round inflation step, the minimum and maximum bounds - are set in the Minter contract and adjustable through governance. The exact current values can be read directly from the contract on Arbitrum One. See <LinkArrow href="/v2/about/protocol/blockchain-contracts#minter" label="Minter contract reference" newline={false} /> for the precise function signatures.
@@ -200,7 +200,7 @@ LPT participation in the protocol is gated by an unbonding period. This delay is
     {
       "Action": <Subtitle variant="changelog">**Bond**</Subtitle>,
       "Function": "`bond(amount, orchestrator)`",
-      "Effect": "LPT moves from holder to BondingManager. Stake counts toward orchestrator's active set position from the next round.",
+      "Effect": "LPT moves from holder to BondingManager. Stake counts toward Orchestrator's Active Set position from the next round.",
     },
     {
       "Action": <Subtitle variant="changelog">**Unbond**</Subtitle>,
@@ -225,7 +225,7 @@ LPT participation in the protocol is gated by an unbonding period. This delay is
   ]}
 />
 
-Rounds are the protocol's time unit. On Arbitrum One, a round is configured to approximately 24 hours. State changes triggered by `bond`, `unbond`, or orchestrator parameter updates take effect at the start of the next round, ensuring all participants compete on a stable view of the active set within any given round.
+Rounds are the protocol's time unit. On Arbitrum One, a round is configured to approximately 24 hours. State changes triggered by `bond`, `unbond`, or Orchestrator parameter updates take effect at the start of the next round, ensuring all participants compete on a stable view of the Active Set within any given round.
 
 <CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
 
@@ -242,12 +242,12 @@ Rounds are the protocol's time unit. On Arbitrum One, a round is configured to a
     On-chain voting, proposal lifecycle, and how LPT inflation funds ecosystem work.
   </Card>
   <Card title={<CustomCardTitle icon="diagram-project" title="Protocol Design" />} href="/v2/about/protocol/design" horizontal arrow>
-    Design decisions behind delegated proof-of-stake, probabilistic micropayments, and the role of LPT.
+    Design decisions behind delegated proof-of-stake, Probabilistic Micropayments, and the role of LPT.
   </Card>
   <Card title={<CustomCardTitle icon="hand-holding-dollar" title="Obtain LPT" />} href="https://www.livepeer.org/lpt" horizontal arrow>
-    Where to acquire LPT to delegate, bond, or run an orchestrator.
+    Where to acquire LPT to delegate, bond, or run an Orchestrator.
   </Card>
   <Card title={<CustomCardTitle icon="chart-line" title="Livepeer Explorer" />} href="https://explorer.livepeer.org/" horizontal arrow>
-    Live network data: inflation rate, bonded supply, orchestrators, and rewards.
+    Live network data: inflation rate, bonded supply, Orchestrators, and rewards.
   </Card>
 </Columns>

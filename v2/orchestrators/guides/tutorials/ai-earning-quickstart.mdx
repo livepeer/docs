@@ -36,7 +36,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
 ---
 
-This tutorial gets an orchestrator earning from AI inference in under two hours. One GPU, one warm diffusion model, no active set membership needed. Estimated time: **1.5 to 2.5 hours** (most of this is model download time - approximately 6 GB).
+This tutorial gets an Orchestrator earning from AI inference in under two hours. One GPU, one warm diffusion model, no Active Set membership needed. Estimated time: **1.5 to 2.5 hours** (most of this is model download time - approximately 6 GB).
 
 **You will verify:**
 - go-livepeer starts with the AI worker enabled
@@ -85,7 +85,7 @@ This tutorial gets an orchestrator earning from AI inference in under two hours.
     <TableRow>
       <TableCell>ETH on Arbitrum One</TableCell>
       <TableCell>~0.005 ETH for AI registration gas</TableCell>
-      <TableCell>Check your wallet on [arbiscan.io](https://arbiscan.io)</TableCell>
+      <TableCell>Check your wallet on [Arbiscan.io](https://arbiscan.io)</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>Disk space</TableCell>
@@ -97,7 +97,7 @@ This tutorial gets an orchestrator earning from AI inference in under two hours.
 
 <CustomDivider />
 
-## Step 1: Install go-livepeer and pull the AI runner
+## Step 1: Install go-livepeer and pull the AI Runner
 
 <StyledSteps>
 
@@ -117,7 +117,7 @@ This tutorial gets an orchestrator earning from AI inference in under two hours.
 
   <StyledStep title="Verify GPU access for the AI runner">
 
-    go-livepeer uses Docker-out-of-Docker to manage AI runner containers. Verify the container runtime can see the GPU:
+    go-livepeer uses Docker-out-of-Docker to manage AI Runner containers. Verify the container runtime can see the GPU:
 
     ```bash icon="terminal" filename="verify-gpu"
     docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
@@ -150,7 +150,7 @@ This tutorial gets an orchestrator earning from AI inference in under two hours.
 
     For a 24 GB GPU, `ByteDance/SDXL-Lightning` is the recommended starting model for `text-to-image`. It is fast (4 inference steps), in high demand, and approximately 6 GB on disk.
 
-    Check current network demand at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before deciding. The models with the most gateway registrations receive the most routing traffic.
+    Check current network demand at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before deciding. The models with the most Gateway registrations receive the most routing traffic.
 
   </StyledStep>
 
@@ -175,7 +175,7 @@ This tutorial gets an orchestrator earning from AI inference in under two hours.
     - `price_per_unit` - price in wei per output pixel (`4768371` ≈ $0.0005 per megapixel at late-2025 ETH rates)
     - `warm: true` - load the model into VRAM at startup for instant first-response
 
-    Check current competitive pricing at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before finalising `price_per_unit`. Gateways skip orchestrators priced above their cap.
+    Check current competitive pricing at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before finalising `price_per_unit`. Gateways skip Orchestrators priced above their cap.
 
   </StyledStep>
 
@@ -238,7 +238,7 @@ A non-empty directory confirms the download completed.
     Replace `YOUR_API_KEY` and `YOUR_PUBLIC_IP`. The three AI-specific flags:
     - `-aiWorker` - enables the AI inference worker
     - `-aiModels` - path to `aiModels.json` inside the container
-    - `-aiModelsDir` - path to model weights on the **host machine** (Docker mounts this into AI runner containers)
+    - `-aiModelsDir` - path to model weights on the **host machine** (Docker mounts this into AI Runner containers)
 
     <Warning>
       `-aiModelsDir` must be a host path, not a path inside the container. Docker uses this path to mount model files into AI Runner containers via Docker-out-of-Docker. A container-local path will not resolve correctly.
@@ -278,13 +278,13 @@ A non-empty directory confirms the download completed.
 
   <StyledStep title="Activate on-chain for a new node">
 
-    Existing video orchestrators can keep their current on-chain registration. New AI-only nodes should run `livepeer_cli` to register:
+    Existing video Orchestrators can keep their current on-chain registration. New AI-only nodes should run `livepeer_cli` to register:
 
     ```bash icon="terminal" filename="activate"
     docker exec -it livepeer-ai-orchestrator livepeer_cli
     ```
 
-    Select **"Invoke multi-step become an orchestrator"**. Minimal LPT self-delegation is sufficient for AI-only operation - the active set threshold applies to video transcoding routing, not AI routing.
+    Select **"Invoke multi-step become an Orchestrator"**. Minimal LPT self-delegation is sufficient for AI-only operation - the Active Set threshold applies to video transcoding routing, not AI routing.
 
     {/* FACT CHECK: Confirm the exact `livepeer_cli` activation option name in the current release. Rick to verify. */}
 
@@ -302,7 +302,7 @@ A non-empty directory confirms the download completed.
 
   <StyledStep title="Verify external network registration">
 
-    Open [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+    Open [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
 
     Search by your Ethereum address or service URI. Your node should appear under `text-to-image` with status **Warm** within 2 to 5 minutes of the AI worker reporting the model loaded.
 
@@ -312,7 +312,7 @@ A non-empty directory confirms the download completed.
     docker ps --filter name=livepeer
     ```
 
-    All containers (`livepeer-ai-orchestrator` and the AI runner container) should show `Up`. A restarting AI runner container indicates a model load failure.
+    All containers (`livepeer-ai-orchestrator` and the AI Runner container) should show `Up`. A restarting AI Runner container indicates a model load failure.
 
   </StyledStep>
 
@@ -322,7 +322,7 @@ A non-empty directory confirms the download completed.
 
 ## Step 6: Test a local inference
 
-Send a test inference request directly to the orchestrator to confirm the pipeline is serving:
+Send a test inference request directly to the Orchestrator to confirm the pipeline is serving:
 
 ```bash icon="terminal" filename="test-inference"
 curl -X POST http://localhost:8935/text-to-image \
@@ -360,8 +360,8 @@ The node completed the AI inference path:
 
 1. **go-livepeer started with `-aiWorker`** - it read `aiModels.json`, pulled the `livepeer/ai-runner` container, mounted the model weights from the host, and loaded `ByteDance/SDXL-Lightning` into GPU VRAM as a warm model.
 2. **Capability advertisement** - go-livepeer registered the `text-to-image` pipeline and warm model status on-chain (via the AI Service Registry) and announced it to the network. Gateways that query for `text-to-image` capability now see this node in their routing pool.
-3. **The test inference** travelled from the local HTTP call to the AI worker, to the AI runner container, through SDXL-Lightning's inference pipeline, and back as a PNG. In production, this same path is triggered by a gateway routing an inference request.
-4. **Earning begins** when a gateway routes a job to this node. Each completed job sends a PM ticket worth approximately `price_per_unit × pixels_in_output` wei. See <LinkArrow href="/v2/orchestrators/guides/payments-and-pricing/payment-receipts" label="Payment Receipts" newline={false} /> for how winning tickets translate to ETH.
+3. **The test inference** travelled from the local HTTP call to the AI worker, to the AI Runner container, through SDXL-Lightning's inference pipeline, and back as a PNG. In production, this same path is triggered by a Gateway routing an inference request.
+4. **Earning begins** when a Gateway routes a job to this node. Each completed job sends a PM ticket worth approximately `price_per_unit × pixels_in_output` wei. See <LinkArrow href="/v2/orchestrators/guides/payments-and-pricing/payment-receipts" label="Payment Receipts" newline={false} /> for how winning tickets translate to ETH.
 
 **AI routing ignores active-set rank.** It checks capability advertisement and price instead. A new node with a warm model and a competitive price starts receiving AI jobs on the same day it registers.
 
@@ -371,10 +371,10 @@ The node completed the AI inference path:
 
 <CardGroup cols={2}>
   <Card title="Add AI to a Video Node" icon="layer-group" href="/v2/orchestrators/guides/tutorials/add-ai-to-video-node" arrow horizontal>
-    Add AI to an existing video orchestrator without touching the video configuration.
+    Add AI to an existing video Orchestrator without touching the video configuration.
   </Card>
   <Card title="Model Demand Reference" icon="chart-bar" href="/v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference" arrow horizontal>
-    Which models are receiving the most gateway requests and at what price tiers.
+    Which models are receiving the most Gateway requests and at what price tiers.
   </Card>
   <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy" arrow horizontal>
     Set AI pricing in aiModels.json: wei vs USD notation and competitive positioning.

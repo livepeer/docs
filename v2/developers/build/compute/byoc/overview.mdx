@@ -30,14 +30,14 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>BYOC lets you run any Python or Go inference service as a Livepeer pipeline. Your container exposes an HTTP endpoint; the orchestrator handles capability advertisement, job routing, and payment settlement.</Tip>
+  <Tip>BYOC lets you run any Python or Go inference service as a Livepeer pipeline. Your container exposes an HTTP endpoint; the Orchestrator handles capability advertisement, job routing, and payment settlement.</Tip>
 </CenteredContainer>
 
 ---
 
-BYOC (Bring Your Own Compute) is the mechanism for registering custom inference containers with a Livepeer orchestrator. The orchestrator discovers and routes jobs to BYOC containers through the same path as native `ai-runner` pipelines. Gateways select BYOC containers by their registered pipeline type and model ID via the AI Service Registry on-chain.
+BYOC (Bring Your Own Compute) is the mechanism for registering custom inference containers with a Livepeer Orchestrator. The Orchestrator discovers and routes jobs to BYOC containers through the same path as native `ai-runner` pipelines. Gateways select BYOC containers by their registered pipeline type and model ID via the AI Service Registry on-chain.
 
-BYOC containers implement a small HTTP contract: a `/health` endpoint for liveness checks, and a pipeline-specific inference endpoint (e.g. `/live/video-to-video` or `/text-to-image`). The orchestrator manages the trickle protocol transport, payment tickets, and capability advertisement.
+BYOC containers implement a small HTTP contract: a `/health` endpoint for liveness checks, and a pipeline-specific inference endpoint (e.g. `/live/video-to-video` or `/text-to-image`). The Orchestrator manages the trickle protocol transport, payment tickets, and capability advertisement.
 
 <CustomDivider />
 
@@ -62,7 +62,7 @@ Every BYOC container must expose:
     <TableRow>
       <TableCell>`/<pipeline>`</TableCell>
       <TableCell>POST</TableCell>
-      <TableCell>Inference endpoint. For batch pipelines: accepts the request body, returns the result. For real-time pipelines: handled via trickle protocol by the orchestrator.</TableCell>
+      <TableCell>Inference endpoint. For batch pipelines: accepts the request body, returns the result. For real-time pipelines: handled via trickle protocol by the Orchestrator.</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -82,7 +82,7 @@ PyTrickle's `StreamServer` implements all four real-time endpoints automatically
 
 ## Registering with an Orchestrator
 
-BYOC containers are registered in the orchestrator's `aiModels.json` file. Each entry maps a pipeline type and model ID to a container URL:
+BYOC containers are registered in the Orchestrator's `aiModels.json` file. Each entry maps a pipeline type and model ID to a container URL:
 
 ```json
 [
@@ -108,30 +108,30 @@ Fields:
 | Field | Type | Description |
 |---|---|---|
 | `pipeline` | string | Pipeline type identifier matching the AI worker pipeline names |
-| `model_id` | string | Model identifier advertised to gateways via the AI Service Registry |
+| `model_id` | string | Model identifier advertised to Gateways via the AI Service Registry |
 | `url` | string | HTTP address of the BYOC container |
 | `price_per_unit` | integer | Price in wei per unit of compute. 0 disables charging. |
 | `warm` | boolean | Whether to advertise this as a warm capability on startup |
 
-After updating `aiModels.json`, restart the orchestrator to pick up the new registration.
+After updating `aiModels.json`, restart the Orchestrator to pick up the new registration.
 
 <CustomDivider />
 
 ## Network Discovery
 
-Once registered, the orchestrator advertises the BYOC capability to gateways via the AI Service Registry smart contract on Arbitrum One. Gateways query the registry when routing `live-video-to-video` or batch pipeline jobs.
+Once registered, the Orchestrator advertises the BYOC capability to Gateways via the AI Service Registry smart contract on Arbitrum One. Gateways query the registry when routing `live-video-to-video` or batch pipeline jobs.
 
-The capability is advertised as `pipeline/model_id`, e.g. `live-video-to-video/comfystream`. Gateways that specify a `model_id` in their request body will only route to orchestrators advertising that model.
+The capability is advertised as `pipeline/model_id`, e.g. `live-video-to-video/comfystream`. Gateways that specify a `model_id` in their request body will only route to Orchestrators advertising that model.
 
-The network capability dashboard at `tools.livepeer.cloud/ai/network-capabilities` shows which BYOC capabilities are warm across the active set.
+The network capability dashboard at `tools.livepeer.cloud/ai/network-capabilities` shows which BYOC capabilities are warm across the Active Set.
 
 <CustomDivider />
 
 ## Payment Flow
 
-BYOC containers receive the same probabilistic micropayment flow as native ai-runner pipelines. The orchestrator validates payment tickets from the gateway before forwarding jobs to the BYOC container. The BYOC container does not participate in payment logic directly; it receives jobs and returns results.
+BYOC containers receive the same probabilistic micropayment flow as native ai-runner pipelines. The Orchestrator validates payment tickets from the Gateway before forwarding jobs to the BYOC container. The BYOC container does not participate in payment logic directly; it receives jobs and returns results.
 
-`price_per_unit` in `aiModels.json` sets the price the orchestrator charges the gateway per compute unit. For `live-video-to-video`, the unit is typically per-frame or per-second depending on orchestrator configuration. For batch pipelines, pricing follows the same per-output-unit model as native pipelines.
+`price_per_unit` in `aiModels.json` sets the price the Orchestrator charges the Gateway per compute unit. For `live-video-to-video`, the unit is typically per-frame or per-second depending on Orchestrator configuration. For batch pipelines, pricing follows the same per-output-unit model as native pipelines.
 
 <CustomDivider />
 

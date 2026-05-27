@@ -84,7 +84,8 @@ jobs:
           node operations/scripts/dispatch/content/brand/dispatch-brand-repair.js $FLAGS
       - name: Open PR with fixes
         if: ${{ inputs.dry_run == false }}
-        uses: peter-evans/create-pull-request@v7
+        # peter-evans/create-pull-request v7.0.8 — SHA-pinned (D-GOV-08, supply-chain hardening 2026-05-27)
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
         with:
           title: "chore(brand): manual repair sweep"
           commit-message: "chore(brand): apply brand fixes [skip ci]"

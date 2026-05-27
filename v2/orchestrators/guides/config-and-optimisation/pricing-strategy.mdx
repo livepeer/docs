@@ -34,14 +34,14 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Tip>
-  Gateways filter orchestrators by price before routing jobs. An orchestrator priced above a gateway's cap receives no work from that gateway. An orchestrator priced below the network floor earns less than its operating costs. Both extremes produce zero net income.
+  Gateways filter Orchestrators by price before routing jobs. An Orchestrator priced above a Gateway's cap receives no work from that Gateway. An Orchestrator priced below the network floor earns less than its operating costs. Both extremes produce zero net income.
 </Tip>
 
 ---
 
-Livepeer pricing operates in two domains: **video transcoding** (a single global price per pixel) and **AI inference** (per-pipeline, per-model pricing in `aiModels.json`). Commercial relationships add a third layer: per-gateway custom pricing via `-pricePerGateway`.
+Livepeer pricing operates in two domains: **video transcoding** (a single global price per pixel) and **AI inference** (per-pipeline, per-model pricing in `aiModels.json`). Commercial relationships add a third layer: per-Gateway custom pricing via `-pricePerGateway`.
 
-The correct price for each domain is derived from the same principle: find the range where active gateways are accepting work, then position within that range based on hardware cost.
+The correct price for each domain is derived from the same principle: find the range where active Gateways are accepting work, then position within that range based on hardware cost.
 
 <CustomDivider />
 
@@ -49,7 +49,7 @@ The correct price for each domain is derived from the same principle: find the r
 
 Video transcoding is priced in **wei per pixel**. One ETH equals 1,000,000,000,000,000,000 wei (1e18). The pixel count for a job is `width × height × output_renditions`.
 
-The active network range changes as ETH price, gateway caps, and redemption overhead move. Use the current Livepeer Explorer and your own routed volume as the reference point. Historical ranges are only context.
+The active network range changes as ETH price, Gateway caps, and redemption overhead move. Use the current Livepeer Explorer and your own routed volume as the reference point. Historical ranges are only context.
 
 {/* FACT CHECK: Verify current active network price range with Rick / tools.livepeer.cloud. The 500-2,000 wei figure is from config-draft research (March 2026) and may have shifted. */}
 
@@ -81,13 +81,13 @@ This example sets a price of $0.41 per trillion pixels. Adjust `pixelsPerUnit` t
 
 ### Surveying the market
 
-Check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) for the current price distribution across the active set. Active orchestrators are listed with their advertised price. A practical starting point is the lower half of currently active prices, then adjust upward only after you confirm that job volume still holds.
+Check [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) for the current price distribution across the Active Set. Active Orchestrators are listed with their advertised price. A practical starting point is the lower half of currently active prices, then adjust upward only after you confirm that job volume still holds.
 
-Use `livepeer_cli` to inspect connected orchestrators and their current prices from your node's perspective.
+Use `livepeer_cli` to inspect connected Orchestrators and their current prices from your node's perspective.
 
 ### autoAdjustPrice
 
-By default, go-livepeer automatically adjusts the price it advertises to gateways based on the estimated cost of ticket redemption. When gas prices rise, the overhead for redeeming a winning ticket increases as a percentage of the ticket face value. The adjustment compensates for this:
+By default, go-livepeer automatically adjusts the price it advertises to Gateways based on the estimated cost of ticket redemption. When gas prices rise, the overhead for redeeming a winning ticket increases as a percentage of the ticket face value. The adjustment compensates for this:
 
 | Overhead | Base price 1,000 wei | Advertised price |
 |----------|---------------------|-----------------|
@@ -101,7 +101,7 @@ The adjustment is automatic and continuous. To disable it and advertise a fixed 
 -autoAdjustPrice=false
 ```
 
-Disabling autoAdjustPrice is appropriate when you want a predictable advertised rate for commercial relationships, or when you are setting per-gateway prices manually. For general network participation, keep the default on.
+Disabling autoAdjustPrice is appropriate when you want a predictable advertised rate for commercial relationships, or when you are setting per-Gateway prices manually. For general network participation, keep the default on.
 
 {/* FACT CHECK: Confirm -autoAdjustPrice is production-stable and not gated behind any feature flag. Rick to verify current go-livepeer source. */}
 
@@ -224,13 +224,13 @@ For image pipelines, USD notation eliminates the need to convert from wei manual
 
 ### Checking competitive AI rates
 
-Visit [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and filter by pipeline to see which price tiers are currently earning jobs. Orchestrators priced above gateway caps receive no work for that pipeline. Start at or below the median for the pipeline you are entering, then adjust based on job volume.
+Visit [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and filter by pipeline to see which price tiers are currently earning jobs. Orchestrators priced above Gateway caps receive no work for that pipeline. Start at or below the median for the pipeline you are entering, then adjust based on job volume.
 
 <CustomDivider />
 
-## Per-gateway pricing
+## Per-Gateway pricing
 
-The `-pricePerGateway` flag sets a custom price for a specific gateway address, overriding your global `-pricePerUnit` for jobs from that gateway. This is the mechanism for commercial relationships where you negotiate a custom rate with a gateway operator.
+The `-pricePerGateway` flag sets a custom price for a specific Gateway address, overriding your global `-pricePerUnit` for jobs from that Gateway. This is the mechanism for commercial relationships where you negotiate a custom rate with a Gateway operator.
 
 The current CLI reference documents the value as either a JSON payload or a path to a JSON file:
 
@@ -252,8 +252,8 @@ The current CLI reference documents the value as either a JSON payload or a path
 ```
 
 Use `-pricePerGateway` when:
-- A gateway operator negotiates a dedicated rate in exchange for consistent job volume
-- You are running a combined orchestrator and gateway on the same operator stack
+- A Gateway operator negotiates a dedicated rate in exchange for consistent job volume
+- You are running a combined Orchestrator and Gateway on the same operator stack
 - You want to offer a preferential rate to a specific partner while keeping a higher public rate
 
 <CustomDivider />
@@ -292,7 +292,7 @@ Use `-pricePerGateway` when:
       <TableCell>`-pricePerGateway`</TableCell>
       <TableCell>Video</TableCell>
       <TableCell>None</TableCell>
-      <TableCell>Custom price for a specific gateway address</TableCell>
+      <TableCell>Custom price for a specific Gateway address</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>`-priceFeedAddr`</TableCell>
@@ -327,10 +327,10 @@ Use `-pricePerGateway` when:
 
 <CardGroup cols={2}>
   <Card title="Gateway Pricing Strategy" icon="sliders" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy" arrow horizontal>
-    The buy-side mirror: how gateways set price caps and filter orchestrators.
+    The buy-side mirror: how Gateways set price caps and filter Orchestrators.
   </Card>
   <Card title="Gateway Relationships" icon="handshake" href="/v2/orchestrators/guides/advanced-operations/gateway-relationships" arrow horizontal>
-    How gateways evaluate and select orchestrators, including price as a filter criterion.
+    How Gateways evaluate and select Orchestrators, including price as a filter criterion.
   </Card>
   <Card title="Earning Model" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model" arrow horizontal>
     How pricing decisions translate into fee earnings alongside LPT inflation rewards.

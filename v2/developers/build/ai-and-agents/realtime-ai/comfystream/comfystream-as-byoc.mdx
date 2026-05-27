@@ -30,12 +30,12 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>ComfyStream exposes a trickle-compatible HTTP endpoint. Pointing an orchestrator's BYOC configuration at that endpoint registers it as a live-video-to-video capability on the Livepeer network.</Tip>
+  <Tip>ComfyStream exposes a trickle-compatible HTTP endpoint. Pointing an Orchestrator's BYOC configuration at that endpoint registers it as a live-video-to-video capability on the Livepeer Network.</Tip>
 </CenteredContainer>
 
 ---
 
-A ComfyStream instance running locally or on a remote server can receive jobs from the Livepeer network by registering with an orchestrator as a BYOC (Bring Your Own Compute) container. Once registered, the orchestrator advertises the `live-video-to-video` capability to gateways, and incoming real-time AI jobs are forwarded to the ComfyStream service over the trickle protocol.
+A ComfyStream instance running locally or on a remote server can receive jobs from the Livepeer Network by registering with an Orchestrator as a BYOC (Bring Your Own Compute) container. Once registered, the Orchestrator advertises the `live-video-to-video` capability to Gateways, and incoming real-time AI jobs are forwarded to the ComfyStream service over the trickle protocol.
 
 This page assumes a ComfyStream instance is already running and accessible. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/workflow-authoring" label="Workflow Authoring" newline={false} /> for installation and startup.
 
@@ -43,11 +43,11 @@ This page assumes a ComfyStream instance is already running and accessible. See 
 
 ## Requirements
 
-- A running go-livepeer orchestrator node
-- A ComfyStream instance accessible from the orchestrator over HTTP
-- The orchestrator's `aiModels.json` configuration file
+- A running go-livepeer Orchestrator node
+- A ComfyStream instance accessible from the Orchestrator over HTTP
+- The Orchestrator's `aiModels.json` configuration file
 
-The orchestrator and ComfyStream can run on the same machine or on separate hosts provided the orchestrator can reach the ComfyStream HTTP port.
+The Orchestrator and ComfyStream can run on the same machine or on separate hosts provided the Orchestrator can reach the ComfyStream HTTP port.
 
 <CustomDivider />
 
@@ -55,7 +55,7 @@ The orchestrator and ComfyStream can run on the same machine or on separate host
 
 <StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
   <StyledStep title="Start ComfyStream with an accessible address" icon="server">
-    Start ComfyStream with a host address the orchestrator can reach. For a local setup, the default port 8188 works. For remote deployments, ensure the port is reachable and specify the bind address:
+    Start ComfyStream with a host address the Orchestrator can reach. For a local setup, the default port 8188 works. For remote deployments, ensure the port is reachable and specify the bind address:
 
     ```bash
     python server/app.py \
@@ -66,7 +66,7 @@ The orchestrator and ComfyStream can run on the same machine or on separate host
     ```
   </StyledStep>
   <StyledStep title="Add the BYOC entry to aiModels.json" icon="file-edit">
-    Open the orchestrator's `aiModels.json` and add an entry for the `live-video-to-video` pipeline pointing at the ComfyStream service address:
+    Open the Orchestrator's `aiModels.json` and add an entry for the `live-video-to-video` pipeline pointing at the ComfyStream service address:
 
     ```json
     [
@@ -80,21 +80,21 @@ The orchestrator and ComfyStream can run on the same machine or on separate host
     ]
     ```
 
-    Replace `"http://127.0.0.1:8188"` with the address of your ComfyStream instance. The `model_id` field identifies this capability to gateways and can be any string; `"comfystream"` is the conventional value.
+    Replace `"http://127.0.0.1:8188"` with the address of your ComfyStream instance. The `model_id` field identifies this capability to Gateways and can be any string; `"comfystream"` is the conventional value.
   </StyledStep>
   <StyledStep title="Restart the orchestrator" icon="refresh">
-    The orchestrator reads `aiModels.json` on startup. Restart it to pick up the new entry:
+    The Orchestrator reads `aiModels.json` on startup. Restart it to pick up the new entry:
 
     ```bash
     livepeer -orchestrator -aiModels /path/to/aiModels.json [other flags]
     ```
 
-    After restart, the orchestrator advertises `live-video-to-video/comfystream` capability via the AI Service Registry on-chain.
+    After restart, the Orchestrator advertises `live-video-to-video/comfystream` capability via the AI Service Registry on-chain.
   </StyledStep>
   <StyledStep title="Verify registration" icon="check">
-    Check the network capability dashboard at `tools.livepeer.cloud/ai/network-capabilities`. Your orchestrator should appear under the `live-video-to-video` pipeline with `comfystream` listed as a warm model.
+    Check the network capability dashboard at `tools.livepeer.cloud/ai/network-capabilities`. Your Orchestrator should appear under the `live-video-to-video` pipeline with `comfystream` listed as a warm model.
 
-    To verify locally, send a test request to the gateway endpoint and confirm frames flow through to the ComfyStream output.
+    To verify locally, send a test request to the Gateway endpoint and confirm frames flow through to the ComfyStream output.
   </StyledStep>
 </StyledSteps>
 
@@ -102,7 +102,7 @@ The orchestrator and ComfyStream can run on the same machine or on separate host
 
 ## Dynamic Parameters
 
-The trickle protocol supports sending parameter updates to a running pipeline without restarting the stream. The orchestrator proxies `POST /live/video-to-video/update` calls from the gateway to the ComfyStream service.
+The trickle protocol supports sending parameter updates to a running pipeline without restarting the stream. The Orchestrator proxies `POST /live/video-to-video/update` calls from the Gateway to the ComfyStream service.
 
 ComfyStream passes these updates to the running workflow as ComfyUI node parameter overrides. This allows clients to change prompt text, ControlNet strength, sampler settings, or any other node value while the stream is active.
 
@@ -112,13 +112,13 @@ The update request body is a JSON object mapping node IDs to parameter values. T
 
 ## Remote Deployments
 
-For ComfyStream running on a separate GPU server, the orchestrator must be able to reach the ComfyStream HTTP port. Common setups include:
+For ComfyStream running on a separate GPU server, the Orchestrator must be able to reach the ComfyStream HTTP port. Common setups include:
 
 - Same host: `http://127.0.0.1:8188`
 - LAN: `http://<local-ip>:8188`
 - Cloud with Cloudflare Tunnel: use the Cloudflare Tunnel URL as the `url` value in `aiModels.json`
 
-The trickle protocol transmits video segments over HTTP. No UDP ports are required for the orchestrator-to-ComfyStream path; UDP is only needed for the WebRTC path between the end client and the gateway.
+The trickle protocol transmits video segments over HTTP. No UDP ports are required for the Orchestrator-to-ComfyStream path; UDP is only needed for the WebRTC path between the end client and the Gateway.
 
 <CustomDivider />
 
@@ -152,7 +152,7 @@ Your ComfyStream instance is now a registered BYOC capability on the network. Ga
     arrow
     horizontal
   >
-    Cascade architecture and the full request flow through gateway and orchestrator.
+    Cascade architecture and the full request flow through Gateway and Orchestrator.
   </Card>
   <Card
     title="PyTrickle Overview"

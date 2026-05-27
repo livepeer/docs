@@ -20,7 +20,7 @@ lifecycleStage: operate
 ### What you'll build
 - A BYOC (Bring Your Own Container) pipeline using PyTrickle
 - A trivial CPU-only processor (green tint / grayscale / passthrough)
-- Route jobs: gateway → orchestrator → your container → result
+- Route jobs: Gateway → Orchestrator → your container → result
 - Optional: swap in whisper-tiny for real AI inference on CPU
 
 ### Prerequisites
@@ -35,7 +35,7 @@ lifecycleStage: operate
 - Explain the FrameProcessor contract: input frame → output frame(s)
 
 ### Step 2 - Package as Docker container
-- Dockerfile based on `python:3.11-slim` (NOT nvidia/cuda)
+- Dockerfile based on `python:3.11-slim` (NOT NVIDIA/CUDA)
 - Install pytrickle, copy processor script
 - Expose trickle HTTP endpoints
 - Build and tag locally
@@ -46,10 +46,10 @@ lifecycleStage: operate
 - Verify transformed output
 - This validates the container before involving the network
 
-### Step 4 - Wire into gateway → orchestrator
-- Start orchestrator with BYOC pipeline registered
-- Start gateway pointing at orchestrator
-- Send a job through the gateway that routes to your container
+### Step 4 - Wire into Gateway → Orchestrator
+- Start Orchestrator with BYOC pipeline registered
+- Start Gateway pointing at Orchestrator
+- Send a job through the Gateway that routes to your container
 - Verify end-to-end: request in → custom processing → result out
 
 ### Step 5 (Optional) - Swap in whisper-tiny
@@ -59,7 +59,7 @@ lifecycleStage: operate
 - Note: ~10x realtime on CPU - functional proof, not production speed
 
 ### What just happened
-- Diagram: client → gateway → orchestrator → BYOC container (CPU) → result
+- Diagram: client → Gateway → Orchestrator → BYOC container (CPU) → result
 - You built a custom AI pipeline without a GPU
 - The same pattern works with GPU models - just change the base image and model
 

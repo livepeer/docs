@@ -115,7 +115,7 @@ WebRTC provides sub-second glass-to-glass latency for live streams. The `@livepe
 
 WHIP was standardised by the IETF as RFC 9725 in March 2025. It provides a single HTTP POST for WebRTC session establishment, replacing the proprietary signalling protocols previously required for WebRTC ingest.
 
-WebRTC requires ICE server infrastructure (STUN/TURN) for NAT traversal. Livepeer's managed gateway infrastructure handles this; self-hosted gateways require ICE server configuration.
+WebRTC requires ICE server infrastructure (STUN/TURN) for NAT traversal. Livepeer's managed Gateway infrastructure handles this; self-hosted Gateways require ICE server configuration.
 
 See <LinkArrow href="/v2/developers/guides/transport/trickle-protocol" label="WebRTC" newline={false} /> for WHIP/WHEP endpoint details and ICE configuration.
 
@@ -123,7 +123,7 @@ See <LinkArrow href="/v2/developers/guides/transport/trickle-protocol" label="We
 
 ## Trickle (Real-Time AI)
 
-The trickle protocol (`j0sh/http-trickle`) is an HTTP/1.1-based streaming transport for real-time AI frame pipelines. It splits a media stream into sequential short segments delivered as soon as they are produced. The gateway opens a persistent HTTP connection to the orchestrator; the orchestrator forwards frames to the ai-runner over a second trickle connection.
+The trickle protocol (`j0sh/http-trickle`) is an HTTP/1.1-based streaming transport for real-time AI frame pipelines. It splits a media stream into sequential short segments delivered as soon as they are produced. The Gateway opens a persistent HTTP connection to the Orchestrator; the Orchestrator forwards frames to the ai-runner over a second trickle connection.
 
 Trickle is an internal protocol between Livepeer components. Developers interact with it indirectly via the `live-video-to-video` pipeline endpoint and the PyTrickle `StreamServer` interface.
 

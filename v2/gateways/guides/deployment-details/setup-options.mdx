@@ -77,13 +77,13 @@ _**Setup type:**_ The software you run.
 - **Livepeer Protocol `go-livepeer`** (Docker or source deployment) which is the core implementation for Gateway nodes
 - **SDK/Custom** (Python, browser, mobile) which provide custom language abstractions for the Livepeer Protcol
 - **DevOps Managed Platforms** (eg. GWID) which abstract the Deployment Operations and provide a 'one-click deploy' experience.
-- **Hosted** (Livepeer Studio, Cloud SPE) which provide Gateway application layer services (not a gateway deployment)
+- **Hosted** (Livepeer Studio, Cloud SPE) which provide Gateway application layer services (not a Gateway deployment)
 
-_**Operational mode:**_ How your gateway integrates with the Livepeer protocol.
-- <Icon icon="cloud" size={16} /> **Off-chain** uses a remote signer for payments and manual orchestrator discovery.
-- <Icon icon="link" size={16} /> **On-chain** connects directly to the Livepeer Network on Arbitrum for payments and automatic pooled orchestrator discovery.
+_**Operational mode:**_ How your Gateway integrates with the Livepeer Protocol.
+- <Icon icon="cloud" size={16} /> **Off-chain** uses a remote signer for payments and manual Orchestrator discovery.
+- <Icon icon="link" size={16} /> **On-chain** connects directly to the Livepeer Network on Arbitrum for payments and automatic pooled Orchestrator discovery.
 
-_**Node type:**_ What workloads your gateway routes.
+_**Node type:**_ What workloads your Gateway routes.
 - <Badge color="blue">Video</Badge> (RTMP transcoding)
 - <Badge color="purple">AI</Badge> (Inference & real-time AI routing)
 - <Badge color="green">Dual</Badge> (both pieplines on a single node)
@@ -94,7 +94,7 @@ _**Node type:**_ What workloads your gateway routes.
 
 <Tabs>
   <Tab title="go-livepeer" icon="server">
-    The standard gateway binary. Covers all node types - <Badge color="blue">Video</Badge> transcoding, <Badge color="purple">AI</Badge> inference, and <Badge color="green">Dual</Badge> (both) - and supports both operational modes.
+    The standard Gateway binary. Covers all node types - <Badge color="blue">Video</Badge> transcoding, <Badge color="purple">AI</Badge> inference, and <Badge color="green">Dual</Badge> (both) - and supports both operational modes.
 
     **Install options:** Docker (recommended) or build from source.
 
@@ -112,7 +112,7 @@ _**Node type:**_ What workloads your gateway routes.
         <TableRow>
           <TableCell>**Blockchain**</TableCell>
           <TableCell>None - remote signer handles payments</TableCell>
-          <TableCell>Connects to Livepeer protocol on Arbitrum</TableCell>
+          <TableCell>Connects to Livepeer Protocol on Arbitrum</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>**ETH required**</TableCell>
@@ -138,12 +138,12 @@ _**Node type:**_ What workloads your gateway routes.
     - <Badge color="green">Dual</Badge> - both video and AI on a single node. Linux only for the AI component.
 
     <Warning>
-      **Correcting a common misconception:** Older docs and community guides state that running an off-chain gateway requires your own orchestrator node (and therefore a GPU). This is incorrect. Gateways route to orchestrators on the network. You do not need a GPU.
+      **Correcting a common misconception:** Older docs and community guides state that running an off-chain Gateway requires your own Orchestrator node (and therefore a GPU). This is incorrect. Gateways route to Orchestrators on the network. You do not need a GPU.
     </Warning>
 
     <CardGroup cols={2}>
       <Card title="Quickstart" icon="bolt" href="/v2/gateways/quickstart/gateway-setup" arrow>
-        From zero to a running gateway with a test request.
+        From zero to a running Gateway with a test request.
       </Card>
       <Card title="Requirements" icon="clipboard-check" href="/v2/gateways/guides/deployment-details/setup-requirements" arrow>
         Hardware, OS, network, and operational mode requirements.
@@ -152,9 +152,9 @@ _**Node type:**_ What workloads your gateway routes.
   </Tab>
 
   <Tab title="SDK / Custom" icon="code">
-    Build a Livepeer gateway client in Python, browser, mobile, or embedded systems - without shipping the Go binary. The remote signer architecture handles all Ethereum payment operations; your implementation handles media routing.
+    Build a Livepeer Gateway client in Python, browser, mobile, or embedded systems - without shipping the Go binary. The remote signer architecture handles all Ethereum payment operations; your implementation handles media routing.
 
-    **Reference implementation:** `livepeer-python-gateway` by j0sh - [github.com/j0sh/livepeer-python-gateway](https://github.com/j0sh/livepeer-python-gateway)
+    **Reference implementation:** `livepeer-python-gateway` by j0sh - [github.com/j0sh/livepeer-python-Gateway](https://github.com/j0sh/livepeer-python-gateway)
 
     **Workload support:**
     - Live AI (live-video-to-video) - fully supported; remote signer designed for this first
@@ -214,21 +214,21 @@ _**Node type:**_ What workloads your gateway routes.
   </Tab>
 
   <Tab title="Hosted Gateway" icon="cloud">
-    Use an existing gateway operator instead of running your own. You pay their service rate; they handle all infrastructure, payments, and orchestrator management.
+    Use an existing Gateway operator instead of running your own. You pay their service rate; they handle all infrastructure, payments, and Orchestrator management.
 
-    This is the right choice if you are building an application and do not need control over compute routing, orchestrator selection, or pricing.
+    This is the right choice if you are building an application and do not need control over compute routing, Orchestrator selection, or pricing.
 
-    **Hosted gateway providers:**
-    - **Livepeer Studio** - video API for developers; per-minute pricing. [livepeer.studio](https://livepeer.studio)
-    - **Livepeer Cloud** - free public AI and video gateways (SPE-funded). [livepeer.cloud](https://livepeer.cloud)
-    - **Daydream** - commercial AI video product with embedded gateway
+    **Hosted Gateway providers:**
+    - **Livepeer Studio** - video API for developers; per-minute pricing. [Livepeer.studio](https://livepeer.studio)
+    - **Livepeer Cloud** - free public AI and video Gateways (SPE-funded). [Livepeer.cloud](https://livepeer.cloud)
+    - **Daydream** - commercial AI video product with embedded Gateway
 
     <BorderedBox variant="accent" padding="16px">
-      **Tradeoffs:** No infrastructure to manage. No ETH or crypto knowledge required. You pay the operator's service margin on every request. No control over orchestrator selection or routing.
+      **Tradeoffs:** No infrastructure to manage. No ETH or crypto knowledge required. You pay the operator's service margin on every request. No control over Orchestrator selection or routing.
     </BorderedBox>
 
     <Card title="Gateway Providers" icon="merge" href="/v2/gateways/guides/operator-considerations/production-gateways" arrow horizontal>
-      Compare hosted gateway providers and their capabilities.
+      Compare hosted Gateway providers and their capabilities.
     </Card>
   </Tab>
 </Tabs>
@@ -238,9 +238,9 @@ _**Node type:**_ What workloads your gateway routes.
 {/* <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> */}
 {/* ## Video Resources */}
 
-[//]: # (REVIEW: Find a current Titan Node YouTube tutorial for gateway setup and embed it here.)
+[//]: # (REVIEW: Find a current Titan Node YouTube tutorial for Gateway setup and embed it here.)
 
-[//]: # (REVIEW: Check the Livepeer Foundation YouTube channel for a current gateway overview or setup walkthrough to embed here.)
+[//]: # (REVIEW: Check the Livepeer Foundation YouTube channel for a current Gateway overview or setup walkthrough to embed here.)
 
 {/* <Note>
   Video tutorials for gateway setup are available from community contributors. Check the `#local-gateways` Discord channel for the most current links, as URLs change when new versions are released.
@@ -252,12 +252,12 @@ _**Node type:**_ What workloads your gateway routes.
 
 <CardGroup cols={3}>
   <Card title="Requirements" icon="clipboard-check" href="/v2/gateways/guides/deployment-details/setup-requirements" arrow>
-    Hardware, OS, network, and operational mode requirements for all gateway types.
+    Hardware, OS, network, and operational mode requirements for all Gateway types.
   </Card>
   <Card title="Install" icon="download" href="/v2/gateways/setup/install" arrow>
     Docker, Linux binary, and community install methods.
   </Card>
   <Card title="Quickstart" icon="bolt" href="/v2/gateways/quickstart/gateway-setup" arrow>
-    From zero to a running gateway with a test request.
+    From zero to a running Gateway with a test request.
   </Card>
 </CardGroup>

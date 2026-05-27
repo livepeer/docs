@@ -40,7 +40,23 @@ sourceDocs:
 
 The implementation backlog for moving the repo closer to the ownerless governance standard. Every surface should be **discoverable, validated, repairable, bounded, and purgeable.**
 
-**Audit dates:** prior baseline 2026-05-14; this refresh 2026-05-23 after 10 file-level slice audits across docs-guide, ai-tools, operations/governance, .github, agent adapters, snippets, v2/internal + per-tab workspaces, per-tab checks.mdx cross-tab comparison, the 14 workspace plans (ORCHS, TERMINOLOGY, CONTRACTS, TOOLING, etc.), workspace history + BACKLOG, and root files.
+**Audit dates:** prior baseline 2026-05-14; refresh 2026-05-23 after 10 file-level slice audits; **consolidation pass 2026-05-25** shipped the items below.
+
+## Resolved 2026-05-25 (consolidation pass)
+
+This session closed the following items off the backlog:
+
+- **P0 cron-is-dry-run bug** – fixed in commit `e42946cdf` on `docs-v2-dev-draft` (inverted FLAGS default in all 6 `dispatch-{concern}.yml` scheduled jobs; manual-repair jobs unchanged). Pending merge to `docs-v2`. Unblocks 6+ stale data pipelines (contracts addresses, llms.txt, sitemap-ai.xml, OG/SEO generators).
+- **P1 false-flag: decisions-log lags implementation** – verified all 18 decisions present, split across 2 files: `decisions-log.mdx` holds D-ACT-01..10 + D-GOV-07..08; `design/governance/design-overview.md` holds D-GOV-01..06 (locked 2026-04-04). Was a paginated-read artefact, not a real gap.
+- **P1 false-flag: `.github/scripts/` empty** – reframed: the folder is **intentionally empty** per locked decision D-ACT-06 (every script migrated to `operations/scripts/` for governance reach). Downgraded to P2 path-drift cleanup for stale references in older docs.
+- **P1 ownerless framing refresh post-D-ACT-10** – corrected "8 of 28 surfaces" claim across 6 canonical pages to live state: **4 of 5 unified surfaces ownerless-ready** in `repo-governance-surfaces.json` (canonical post-D-ACT-10; legacy 8-entry `ownerless-governance-surfaces.json` superseded but kept on disk for reference).
+- **P3 frameworks/github-actions.mdx v2.1 → v2.2** – synced to the 2026-05-22 4-tier composable refactor + D-ACT-09/10 + D-GOV-07/08; bumped lastVerified to 2026-05-25; refreshed Tier-table counts (6+5=11 workflows, 230 atomics); added paragraph reconciling the "6 actions" framework framing with `automations.mdx`'s "11 active" framing.
+- **P4 documentation gap: new dispatcher tranches** – documented the three new veracity dispatchers (`docs-research-packet.js`, `orchestrator-guides-research-review.js`, `docs-page-research-pr-report.js`) under a new "Recently shipped (May 2026)" section in `automations.mdx`; also documented the local-only social-feed dispatcher (`run-solutions-social-fetch.js`) in `contributor-tools.mdx`.
+- **Frontmatter compliance sweep on 33 canonical pages** – brought all 16 frameworks + all 17 policies to canonical frontmatter (pageType / audience / purpose / status / lastVerified). All 33 now lint-clean (0 blocking, 0 warnings). Migrated 8 `pageType: overview` instances to canonical enum values across features pages + catalog.
+
+The items below remain open. The cron P0 fix above means the next cron after merge to `docs-v2` should also resolve the **Stale generated governance map** P0 and most data-staleness P0/P1 entries – verify after merge.
+
+**Audit dates:** prior baseline 2026-05-14; refresh 2026-05-23 after 10 file-level slice audits across docs-guide, ai-tools, operations/governance, .github, agent adapters, snippets, v2/internal + per-tab workspaces, per-tab checks.mdx cross-tab comparison, the 14 workspace plans (ORCHS, TERMINOLOGY, CONTRACTS, TOOLING, etc.), workspace history + BACKLOG, and root files.
 
 **Evidence sources (live commands, 2026-05-23):**
 

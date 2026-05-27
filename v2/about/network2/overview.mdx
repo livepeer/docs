@@ -35,12 +35,12 @@ The protocol implementation defines multiple node roles (not all are formal netw
 
 - **Broadcaster Node**: Centers on LivepeerServer managing rtmpConnections and BroadcastSessionsManager
 - **Gateway Node**: Adds AISessionManager and AI HTTP handlers on top of broadcaster functionality
-- **Orchestrator Node**: Uses the orchestrator struct with SegmentChans for job distribution and Recipient for payments
+- **Orchestrator Node**: Uses the Orchestrator struct with SegmentChans for job distribution and Recipient for payments
 - **Transcoder Node**: RemoteTranscoderManager coordinates local or remote transcoding via LocalTranscoder
 - **AI Worker Node**: RemoteAIWorkerManager manages Docker containers running AI models
 
 ### Core Components
-- LivepeerNode: An interface node implemented by all other node types in the network (gateway/broadcaster, orchestrator, transcoder)
+- LivepeerNode: An interface node implemented by all other node types in the network (Gateway/broadcaster, Orchestrator, transcoder)
 - Media Server (`LivpeerServer`): The LivepeerServer manages media processing and serves HTTP/RTMP endpoints, providing
     - RTMP ingestion for live streams
     - HTTP push for video segments

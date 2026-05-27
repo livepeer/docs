@@ -43,12 +43,12 @@ The Network is the **off-chain execution layer** responsible for _running the wo
 
 ## Network Purpose
 
-The Network was designed to deliver real-time video and AI compute at production volume on a permissionless, open marketplace. Where the Protocol provides the rules, the Network provides the running system: GPU operators accepting jobs, gateways routing demand, payments settling continuously off-chain.
+The Network was designed to deliver real-time video and AI compute at production volume on a permissionless, open marketplace. Where the Protocol provides the rules, the Network provides the running system: GPU operators accepting jobs, Gateways routing demand, payments settling continuously off-chain.
 
 The **Livepeer Network** is the running fleet of `go-livepeer` nodes that accept jobs, perform transcoding and AI inference, exchange off-chain payments, and settle on-chain only when a probabilistic ticket wins. Most of what a user experiences as "Livepeer" happens in the Network.
 
 <FrameQuote author="Livepeer Whitepaper (2017)" href="/v2/about/resources/knowledge-hub/livepeer-whitepaper">
-The Livepeer protocol describes an **open, decentralised network** for live video transmission, where **transcoding capacity is provided by node operators in exchange for fees**, and where the system can scale to meet demand without requiring permission from any central authority.
+The Livepeer Protocol describes an **open, decentralised network** for live video transmission, where **transcoding capacity is provided by node operators in exchange for fees**, and where the system can scale to meet demand without requiring permission from any central authority.
 </FrameQuote>
 
 See the [Livepeer Stack](/v2/about/concepts/livepeer-stack) for how the Network sits inside the broader four-layer architecture.
@@ -108,7 +108,7 @@ The Network's design preserves seven properties. Together they explain why Livep
     The chain enforces; the Network executes. The Protocol records stake, settles winning tickets, and distributes inflation. The Network handles every job that does not touch the chain. This split is what lets the system change quickly at the execution layer while the rules stay slow.
   </StyledStep>
   <StyledStep title="Permissionless Participation" icon="door-open">
-    Anyone with compatible hardware can register an orchestrator and start receiving jobs. Anyone can run a gateway and route demand. There is no application process, no vendor relationship, no gatekeeper. Capacity grows whenever a new operator joins.
+    Anyone with compatible hardware can register an Orchestrator and start receiving jobs. Anyone can run a Gateway and route demand. There is no application process, no vendor relationship, no gatekeeper. Capacity grows whenever a new operator joins.
   </StyledStep>
   <StyledStep title="Off-Chain Settlement" icon="bolt">
     Jobs are paid through probabilistic micropayment tickets exchanged off-chain. Only winning tickets touch the chain. This is what makes per-pixel and per-token pricing economical at production volume; on-chain settlement per job would cost more than the work itself.
@@ -117,7 +117,7 @@ The Network's design preserves seven properties. Together they explain why Livep
     The same `go-livepeer` binary runs video transcoding, batch AI inference, and real-time live video-to-video. New capabilities ship as new pipelines, not as forks or hard upgrades. The Network expands by capability, not by replacement.
   </StyledStep>
   <StyledStep title="Open Coordination" icon="signal-stream">
-    Discovery, capability advertisement, and price are all public. Gateways query orchestrators directly; orchestrators publish what they can do and what they charge. Price competition is visible. The marketplace is a marketplace, not a queue.
+    Discovery, capability advertisement, and price are all public. Gateways query Orchestrators directly; Orchestrators publish what they can do and what they charge. Price competition is visible. The marketplace is a marketplace, not a queue.
   </StyledStep>
   <StyledStep title="Stake-Anchored Trust" icon="shield-halved">
     Orchestrators bond LPT to participate. Their stake is the economic skin in the game; misbehaviour or downtime costs them. The Network is trustworthy without a central operator because stake makes it costly to behave otherwise.
@@ -135,11 +135,11 @@ The Network's design preserves seven properties. Together they explain why Livep
 
 The Network's design reflects deliberate choices made to preserve the seven properties at scale.
 
-- **Single binary, multiple modes**: `go-livepeer` runs as gateway, orchestrator, or worker. One codebase, one upgrade path. A new operator does not pick between products; they pick a mode.
-- **Probabilistic micropayments off-chain**: Tickets accumulate off-chain; only winning tickets are submitted to the on-chain `TicketBroker`. Per-pixel video and per-token AI become economical because on-chain settlement per job would exceed the price of the work.
-- **Posted prices, not auctions**: Orchestrators publish a price-per-unit; gateways accept or reject. No bidding round. The market runs continuously; price competition is visible; gateways route work without per-job coordination.
-- **Stake gates the active set**: Bonded LPT determines which orchestrators are eligible for video work each round. The reliability of the Network is anchored in the economic exposure of its operators.
-- **Pipelines, not protocol upgrades**: New AI capabilities ship as new pipelines an orchestrator chooses to run. Adding capacity for a new workload does not require a hard fork or a governance vote.
+- **Single binary, multiple modes**: `go-livepeer` runs as Gateway, Orchestrator, or worker. One codebase, one upgrade path. A new operator does not pick between products; they pick a mode.
+- **Probabilistic Micropayments off-chain**: Tickets accumulate off-chain; only winning tickets are submitted to the on-chain `TicketBroker`. Per-pixel video and per-token AI become economical because on-chain settlement per job would exceed the price of the work.
+- **Posted prices, not auctions**: Orchestrators publish a price-per-unit; Gateways accept or reject. No bidding round. The market runs continuously; price competition is visible; Gateways route work without per-job coordination.
+- **Stake gates the Active Set**: Bonded LPT determines which Orchestrators are eligible for video work each round. The reliability of the Network is anchored in the economic exposure of its operators.
+- **Pipelines, not protocol upgrades**: New AI capabilities ship as new pipelines an Orchestrator chooses to run. Adding capacity for a new workload does not require a hard fork or a governance vote.
 
 <Tip>
 Slashing exists in the Protocol but is currently dormant: the on-chain Verifier role is set to `0x0`. Honest work is enforced today through stake exposure, fast verification, and marketplace selection, not active on-chain slashing.
@@ -160,7 +160,7 @@ Every property the Network preserves traces back to a specific protocol decision
       'Implemented in': '`pm/` package in `go-livepeer`; `TicketBroker` contract on Arbitrum One',
     },
     {
-      'Network property': <Subtitle variant="changelog">**Active set election**</Subtitle>,
+      'Network property': <Subtitle variant="changelog">**Active Set election**</Subtitle>,
       'Ratified by': 'Streamflow spec; LIP-83 round-length adjustment',
       'Implemented in': '`BondingManager`, `RoundsManager` contracts',
     },
@@ -254,26 +254,26 @@ The Network is operated by four kinds of participant. Each runs different softwa
   itemsList={[
     {
       Actor: <Subtitle variant="changelog">**Orchestrator**</Subtitle>,
-      'What they run': '`go-livepeer` in orchestrator mode plus attached transcoders and AI workers',
+      'What they run': '`go-livepeer` in Orchestrator mode plus attached transcoders and AI workers',
       'What they take on': 'GPU hardware, bonded LPT, operational uptime',
       'What they earn': 'ETH fees from jobs, LPT inflation rewards each round',
     },
     {
       Actor: <Subtitle variant="changelog">**Gateway**</Subtitle>,
-      'What they run': '`go-livepeer` in gateway mode, optionally with redeemer and remote signer',
+      'What they run': '`go-livepeer` in Gateway mode, optionally with redeemer and remote signer',
       'What they take on': 'ETH deposit and reserve, routing infrastructure, client-facing service',
-      'What they earn': 'Margin between price paid to orchestrators and price charged to clients',
+      'What they earn': 'Margin between price paid to Orchestrators and price charged to clients',
     },
     {
       Actor: <Subtitle variant="changelog">**Delegator**</Subtitle>,
-      'What they run': 'No node. Bonds LPT to one orchestrator through the Explorer',
-      'What they take on': "Capital exposure to LPT and to the chosen orchestrator's performance",
-      'What they earn': "Share of the orchestrator's ETH fees and LPT inflation, by stake share",
+      'What they run': 'No node. Bonds LPT to one Orchestrator through the Explorer',
+      'What they take on': "Capital exposure to LPT and to the chosen Orchestrator's performance",
+      'What they earn': "Share of the Orchestrator's ETH fees and LPT inflation, by stake share",
     },
     {
       Actor: <Subtitle variant="changelog">**Client**</Subtitle>,
-      'What they run': 'An application that calls a gateway API or SDK',
-      'What they take on': 'No network role. Pays for jobs through a gateway.',
+      'What they run': 'An application that calls a Gateway API or SDK',
+      'What they take on': 'No network role. Pays for jobs through a Gateway.',
       'What they earn': 'The transcoded video or AI output the job produced',
     },
   ]}

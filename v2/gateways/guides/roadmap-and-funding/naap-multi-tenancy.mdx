@@ -84,14 +84,14 @@ The Network as a Platform (NaaP) model is the most advanced Gateway operator pat
 
 ## What NaaP solves
 
-The go-livepeer gateway binary routes jobs and handles payments. It does not handle:
+The go-livepeer Gateway binary routes jobs and handles payments. It does not handle:
 
 - User authentication or API keys
 - Per-customer rate limiting or quotas
 - Usage tracking or billing
 - Multi-tenant isolation
 
-NaaP is the product layer that sits on top of the gateway and handles all of these. It turns a single-operator gateway into a platform that can serve many customers independently.
+NaaP is the product layer that sits on top of the Gateway and handles all of these. It turns a single-operator Gateway into a platform that can serve many customers independently.
 
 ``` icon="terminal"
 Your customers
@@ -136,8 +136,8 @@ The core architectural insight behind NaaP: your customer-facing payments and th
     </TableRow>
     <TableRow>
       <TableCell>**You → Network**</TableCell>
-      <TableCell>Your gateway (via remote signer)</TableCell>
-      <TableCell>ETH on Arbitrum (probabilistic micropayments)</TableCell>
+      <TableCell>Your Gateway (via remote signer)</TableCell>
+      <TableCell>ETH on Arbitrum (Probabilistic Micropayments)</TableCell>
       <TableCell>Remote signer + clearinghouse handles this automatically</TableCell>
     </TableRow>
   </tbody>
@@ -149,7 +149,7 @@ Your margin is the difference between what customers pay you and what the networ
 
 ## Reference implementation: the NaaP dashboard
 
-The NaaP dashboard ([github.com/livepeer/naap](https://github.com/livepeer/naap)) is the reference implementation for multi-tenant gateway access. It provides:
+The NaaP dashboard ([github.com/Livepeer/naap](https://github.com/livepeer/naap)) is the reference implementation for multi-tenant Gateway access. It provides:
 
 - **JWT-based authentication** via SIWE (Sign-In with Ethereum)  - developers sign in, receive a JWT, and use it for all API calls
 - **Developer API Keys**  - per-customer keys with configurable rate limits
@@ -200,13 +200,13 @@ Each customer (tenant) operates within boundaries set by their API key:
 
 ### Orchestrator affinity
 
-For premium tenants, you can configure orchestrator routing preferences:
+For premium tenants, you can configure Orchestrator routing preferences:
 
-- Route premium customers to high-tier orchestrators (lower latency, higher reliability)
-- Route budget customers to standard orchestrators
-- Route specific workload types to capability-matched orchestrators
+- Route premium customers to high-tier Orchestrators (lower latency, higher reliability)
+- Route budget customers to standard Orchestrators
+- Route specific workload types to capability-matched Orchestrators
 
-This is configured at the middleware layer using `-orchAddr` or `-maxPricePerCapability` per request path. The NaaP layer passes routing hints to the gateway based on the customer's tier.
+This is configured at the middleware layer using `-orchAddr` or `-maxPricePerCapability` per request path. The NaaP layer passes routing hints to the Gateway based on the customer's tier.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -214,7 +214,7 @@ This is configured at the middleware layer using `-orchAddr` or `-maxPricePerCap
 
 ### Option 1: Use the NaaP reference implementation
 
-The fastest path. Clone the NaaP dashboard, configure it for your gateway, and customise the billing and branding.
+The fastest path. Clone the NaaP dashboard, configure it for your Gateway, and customise the billing and branding.
 
 What you get out of the box:
 - JWT auth via SIWE
@@ -258,7 +258,7 @@ Standard tools for each layer:
 - **Usage tracking:** PostgreSQL or TimescaleDB for per-key metrics
 - **Routing:** Custom proxy logic or Kong/Traefik API gateway
 
-See [Gateway Middleware](/v2/gateways/guides/advanced-operations/gateway-middleware) for detailed middleware architecture patterns.
+See [Gateway Middleware](/v2/Gateways/guides/advanced-operations/Gateway-middleware) for detailed middleware architecture patterns.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -280,12 +280,12 @@ See [Gateway Middleware](/v2/gateways/guides/advanced-operations/gateway-middlew
 |-------|-------------|---------|
 | **Per-request** | Charge per API call or per inference job | API providers, Daydream |
 | **Per-minute** | Charge per minute of video transcoded or live AI processed | Livepeer Studio |
-| **Subscription** | Monthly access fee regardless of usage | SaaS gateway products |
+| **Subscription** | Monthly access fee regardless of usage | SaaS Gateway products |
 | **Usage-based** | Charge per unit (per pixel, per generation, per token) | Direct API products |
 | **Free + SPE-funded** | No charge to users; costs covered by treasury grant | Livepeer Cloud SPE |
 | **Credits** | Pre-purchased credits debited per job | Hybrid platforms |
 
-Your margin is the difference between what you charge customers and what you pay orchestrators. Use `-maxPricePerUnit` and `-maxPricePerCapability` to control your network costs; set your customer prices independently.
+Your margin is the difference between what you charge customers and what you pay Orchestrators. Use `-maxPricePerUnit` and `-maxPricePerCapability` to control your network costs; set your customer prices independently.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -295,12 +295,12 @@ The clearinghouse is the component that bridges your customer-facing payment lay
 
 1. **Receives customer payments** in your chosen currency (fiat, USDC, credits)
 2. **Maintains an ETH hot wallet** funded from customer revenue
-3. **Acts as the remote signer** for your gateway  - generating payment tickets backed by the ETH balance
-4. **Settles with orchestrators** via probabilistic micropayments
+3. **Acts as the remote signer** for your Gateway  - generating payment tickets backed by the ETH balance
+4. **Settles with Orchestrators** via Probabilistic Micropayments
 
-The clearinghouse means your gateway node holds no ETH and has no direct Ethereum dependency. The clearinghouse operator (you, or a hosted service) manages the on-chain side.
+The clearinghouse means your Gateway node holds no ETH and has no direct Ethereum dependency. The clearinghouse operator (you, or a hosted service) manages the on-chain side.
 
-For the full clearinghouse design and implementation, see [Clearinghouse Guide](/v2/gateways/guides/payments-and-pricing/clearinghouse-guide) (Payments & Pricing section).
+For the full clearinghouse design and implementation, see [Clearinghouse Guide](/v2/Gateways/guides/payments-and-pricing/clearinghouse-guide) (Payments & Pricing section).
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -342,9 +342,9 @@ For the full clearinghouse design and implementation, see [Clearinghouse Guide](
     Middleware architecture patterns for auth, rate limiting, and request transformation.
   </Card>
   <Card title="Opportunities Overview" icon="chart-line" href="/v2/gateways/guides/roadmap-and-funding/operator-support">
-    All four operator models and the business case for running a gateway.
+    All four operator models and the business case for running a Gateway.
   </Card>
   <Card title="SPE Grant Model" icon="coins" href="/v2/gateways/guides/roadmap-and-funding/spe-grant-model">
-    How to get treasury funding for a gateway platform that serves the ecosystem.
+    How to get treasury funding for a Gateway platform that serves the ecosystem.
   </Card>
 </CardGroup>

@@ -55,7 +55,7 @@ also contain instructions for using flags to enable certain functionality in
 - httpAddr: Address to bind for HTTP commands. No default
 
 - serviceAddr: Orchestrator only. Overrides the on-chain serviceURI that
- gateways can use to contact this node; may be an IP or hostname. No default
+ Gateways can use to contact this node; may be an IP or hostname. No default
 
 - orchAddr: Orchestrator to connect to as a standalone transcoder. No default.
 
@@ -73,14 +73,14 @@ also contain instructions for using flags to enable certain functionality in
 
 ### Transcoding
 
-- orchestrator: Set to true to be an orchestrator. Default `false`
+- Orchestrator: Set to true to be an Orchestrator. Default `false`
 
 - transcoder: Set to true to be an transcoder. Default `false`
 
-- gateway: Set to true to be an gateway (formerly known as _Broadcaster_).
+- Gateway: Set to true to be an Gateway (formerly known as _Broadcaster_).
  Default `false`
 
-- orchSecret: Shared secret with the orchestrator as a standalone transcoder or
+- orchSecret: Shared secret with the Orchestrator as a standalone transcoder or
  path to file
 
 - transcodingOptions: Transcoding options for broadcast job, or path to json
@@ -88,7 +88,7 @@ also contain instructions for using flags to enable certain functionality in
 
 - maxAttempts: Maximum transcode attempts. Default `3`
 
-- selectRandFreq: Frequency to randomly select unknown orchestrators (on-chain
+- selectRandFreq: Frequency to randomly select unknown Orchestrators (on-chain
  mode only). Default `0.3`
 
 - maxSessions: Maximum number of concurrent transcoding sessions for
@@ -98,24 +98,24 @@ also contain instructions for using flags to enable certain functionality in
 - currentManifest: Expose the currently active ManifestID as
  \"/stream/current.m3u8\". Default `false`
 
-- nvidia: Comma-separated list of Nvidia GPU device IDs (or \"all\" for all
+- NVIDIA: Comma-separated list of NVIDIA GPU device IDs (or \"all\" for all
  available devices). No default
 
-- testTranscoder: Test Nvidia GPU transcoding at startup. Default `true`
+- testTranscoder: Test NVIDIA GPU transcoding at startup. Default `true`
 
 - sceneClassificationModelPath: Path to scene classification model. No default
 
 ### Onchain
 
-- ethAcctAddr: Existing Eth account address. For use when multiple ETH accounts
+- ethAcctAddr: Existing ETH account address. For use when multiple ETH accounts
  exist in the keystore directory
 
-- ethPassword: Password for existing Eth account address or path to file
+- ethPassword: Password for existing ETH account address or path to file
 
 - ethKeystorePath: Path to ETH keystore directory or keyfile. If keyfile,
  overrides -ethAcctAddr and uses parent directory
 
-- ethOrchAddr: address of an on-chain registered orchestrator. No default
+- ethOrchAddr: address of an on-chain registered Orchestrator. No default
 
 - ethUrl: EVM-compatible chain node JSON-RPC URL. No default
 
@@ -151,13 +151,13 @@ also contain instructions for using flags to enable certain functionality in
  than 0. Error if not set.
 
 - maxPricePerUnit: The maximum transcoding price (in wei) per 'pixelsPerUnit' a
- gateway is willing to accept. If not set explicitly, gateway is willing to
+ Gateway is willing to accept. If not set explicitly, Gateway is willing to
  accept ANY price. Default `0`
 
 - pixelsPerUnit: Amount of pixels per unit. Set to '> 1' to have smaller price
  granularity than 1 wei / pixel. Default `1`
 
-- pricePerGateway: json list of price per gateway or path to json config file.
+- pricePerGateway: json list of price per Gateway or path to json config file.
  Example:
   `{"gateways":[{"ethaddress":"address1","priceperunit":1000,"pixelsperunit":1},{"ethaddress":"address2","priceperunit":1200,"pixelsperunit":1}]}`
 

@@ -42,15 +42,15 @@ A **pipeline** is a unit of work the Network knows how to run. Pipelines come in
 
 <CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
 
-The Network's capability set is defined by the pipelines its orchestrators run. A pipeline is a workload the orchestrator can accept, with a defined input format, output format, and pricing unit. Pipelines are the unit of capability growth: when a new model or workload becomes available, it ships as a new pipeline that operators choose to load.
+The Network's capability set is defined by the pipelines its Orchestrators run. A pipeline is a workload the Orchestrator can accept, with a defined input format, output format, and pricing unit. Pipelines are the unit of capability growth: when a new model or workload becomes available, it ships as a new pipeline that operators choose to load.
 
-The key consequence is that the Network's capability set is open and grows by participation. New AI models, new transcoding profiles, and new custom workloads all enter the Network the same way: an orchestrator declares the pipeline in its configuration, loads the model, and starts advertising the capability. No protocol upgrade required.
+The key consequence is that the Network's capability set is open and grows by participation. New AI models, new transcoding profiles, and new custom workloads all enter the Network the same way: an Orchestrator declares the pipeline in its configuration, loads the model, and starts advertising the capability. No protocol upgrade required.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## Workload Classes
 
-Every pipeline falls into one of three classes by how the work is shaped. The class determines what an orchestrator must run, how the gateway dispatches work, and what latency the workload tolerates.
+Every pipeline falls into one of three classes by how the work is shaped. The class determines what an Orchestrator must run, how the Gateway dispatches work, and what latency the workload tolerates.
 
 <DynamicTableV2
   headerList={['Class', 'Examples', 'How it runs', 'Latency budget']}
@@ -70,13 +70,13 @@ Every pipeline falls into one of three classes by how the work is shaped. The cl
     {
       Class: <Subtitle variant="changelog">**Real-time AI**</Subtitle>,
       Examples: 'Live video-to-video, real-time effects, ComfyStream pipelines',
-      'How it runs': 'Frames carried over the trickle protocol between gateway and orchestrator AI worker; per-frame inference inside `ai-runner`',
+      'How it runs': 'Frames carried over the trickle protocol between Gateway and Orchestrator AI worker; per-frame inference inside `ai-runner`',
       'Latency budget': 'Sub-second per frame for interactive use',
     },
   ]}
 />
 
-The state machine each pipeline follows is the same in shape: ingest, dispatch, compute, return, settle. The differences are in cadence, transport, and compute path. Operator-side detail on how the state machine is implemented lives in the orchestrator and gateway tabs.
+The state machine each pipeline follows is the same in shape: ingest, dispatch, compute, return, settle. The differences are in cadence, transport, and compute path. Operator-side detail on how the state machine is implemented lives in the Orchestrator and Gateway tabs.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
@@ -86,19 +86,19 @@ Every pipeline has the same lifecycle from job intake to settlement, regardless 
 
 <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
   <StyledStep title="Intake" icon="arrow-right-to-bracket">
-    The gateway accepts the work from a client: an RTMP or WHIP stream, an HTTP file upload, or an AI inference request. It produces segments or frames suitable for downstream dispatch.
+    The Gateway accepts the work from a client: an RTMP or WHIP stream, an HTTP file upload, or an AI inference request. It produces segments or frames suitable for downstream dispatch.
   </StyledStep>
   <StyledStep title="Discovery and selection" icon="magnifying-glass">
-    The gateway selects an orchestrator that advertises the pipeline at a price the gateway accepts. Pipeline-specific capability is part of the selection criteria.
+    The Gateway selects an Orchestrator that advertises the pipeline at a price the Gateway accepts. Pipeline-specific capability is part of the selection criteria.
   </StyledStep>
   <StyledStep title="Dispatch and compute" icon="bolt">
-    The gateway dispatches segments or frames with attached probabilistic micropayment tickets. The orchestrator runs the pipeline against the work, locally or on attached workers.
+    The Gateway dispatches segments or frames with attached probabilistic micropayment tickets. The Orchestrator runs the pipeline against the work, locally or on attached workers.
   </StyledStep>
   <StyledStep title="Result return" icon="circle-check">
-    The orchestrator returns transcoded segments, generated frames, or inference output. The gateway delivers the result to the client.
+    The Orchestrator returns transcoded segments, generated frames, or inference output. The Gateway delivers the result to the client.
   </StyledStep>
   <StyledStep title="Settlement" icon="ticket">
-    Tickets accumulate off-chain. Winning tickets are redeemed on-chain by the orchestrator. Per-round inflation rewards run in parallel through `BondingManager`.
+    Tickets accumulate off-chain. Winning tickets are redeemed on-chain by the Orchestrator. Per-round inflation rewards run in parallel through `BondingManager`.
   </StyledStep>
 </StyledSteps>
 
@@ -143,7 +143,7 @@ stateDiagram-v2
 
 ## Built-In Pipelines
 
-The Network ships a set of built-in pipelines maintained in the `ai-runner` repository. Each runs as a Python container an orchestrator can load and serve. The set covers the most common AI workloads.
+The Network ships a set of built-in pipelines maintained in the `ai-runner` repository. Each runs as a Python container an Orchestrator can load and serve. The set covers the most common AI workloads.
 
 <DynamicTableV2
   headerList={['Pipeline', 'Class', 'What it produces']}
@@ -163,13 +163,13 @@ The Network ships a set of built-in pipelines maintained in the `ai-runner` repo
   ]}
 />
 
-The set evolves continuously. New pipelines ship through the `ai-runner` release cadence; orchestrators choose which to load based on hardware, demand, and operator strategy.
+The set evolves continuously. New pipelines ship through the `ai-runner` release cadence; Orchestrators choose which to load based on hardware, demand, and operator strategy.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## Real-Time AI
 
-Real-time AI pipelines (live video-to-video, ComfyStream) move frames continuously between gateway and orchestrator over the trickle protocol, with audio and control on parallel channels. The end-to-end path differs from batch pipelines in cadence and transport, not in marketplace mechanics.
+Real-time AI pipelines (live video-to-video, ComfyStream) move frames continuously between Gateway and Orchestrator over the trickle protocol, with audio and control on parallel channels. The end-to-end path differs from batch pipelines in cadence and transport, not in marketplace mechanics.
 
 <ScrollableDiagram title="Real-Time AI via Trickle" maxHeight="600px">
 
@@ -203,17 +203,17 @@ sequenceDiagram
 
 </ScrollableDiagram>
 
-The trickle server is logical, not a separate service: it is implemented inside `go-livepeer` on both gateway and orchestrator sides. Channels are named streams; a real-time AI session typically opens three (video in, video out, control) plus an audio pair. Subscribers can preconnect to the next sequence number to remove latency between segment boundaries, which is what makes the protocol viable for sub-second pipelines.
+The trickle server is logical, not a separate service: it is implemented inside `go-livepeer` on both Gateway and Orchestrator sides. Channels are named streams; a real-time AI session typically opens three (video in, video out, control) plus an audio pair. Subscribers can preconnect to the next sequence number to remove latency between segment boundaries, which is what makes the protocol viable for sub-second pipelines.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
 ## BYOC Pipelines
 
-Pipelines outside the built-in set arrive through Bring-Your-Own-Container. A developer or operator packages a custom pipeline as a container, declares its interface, and either runs it themselves as an orchestrator or partners with operators to run it for them.
+Pipelines outside the built-in set arrive through Bring-Your-Own-Container. A developer or operator packages a custom pipeline as a container, declares its interface, and either runs it themselves as an Orchestrator or partners with operators to run it for them.
 
 BYOC pipelines use the same payment flow, the same dispatch shape, and the same settlement boundary as built-in pipelines. The difference is that the pipeline definition lives outside the `ai-runner` repository, controlled by the BYOC author. This is how new workload types reach the Network without coordination through Livepeer Inc.
 
-The BYOC capability is registered with an orchestrator at runtime via `/capability/register`. Once registered, gateways discover the new capability through the orchestrator's `OrchestratorInfo` advertisement on the next handshake. The marketplace treats BYOC pipelines the same way it treats built-in pipelines for the purposes of selection, pricing, and settlement.
+The BYOC capability is registered with an Orchestrator at runtime via `/capability/register`. Once registered, Gateways discover the new capability through the Orchestrator's `OrchestratorInfo` advertisement on the next handshake. The marketplace treats BYOC pipelines the same way it treats built-in pipelines for the purposes of selection, pricing, and settlement.
 
 <Card title={<CustomCardTitle icon="code-branch" title="Build a BYOC Pipeline" />} href="/v2/developers/build/byoc" horizontal arrow > How developers package and ship custom pipelines on the Network. </Card>
 

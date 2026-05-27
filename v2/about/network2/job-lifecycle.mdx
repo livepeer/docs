@@ -48,22 +48,22 @@ A minimal, source-grounded job lifecycle is:
 Ingest and segmentation: A Gateway receives an RTMP stream (docs provide explicit RTMP ingest examples) and produces segments to be processed.
 </Step>
 <Step title="Discovery and selection">
-Discovery and selection: The Gateway selects an Orchestrator set according to the node software’s discovery logic; operational failures here appear as discovery errors and orchestrator swaps.
+Discovery and selection: The Gateway selects an Orchestrator set according to the node software’s discovery logic; operational failures here appear as discovery errors and Orchestrator swaps.
 </Step>
 <Step title="Price and session parameters">
-Price and session parameters: Orchestrators advertise a price per pixel (Wei denominated) to gateways off-chain; orchestrators may auto-adjust price to compensate for ticket redemption overhead when gas is high.
+Price and session parameters: Orchestrators advertise a price per pixel (Wei denominated) to Gateways off-chain; Orchestrators may auto-adjust price to compensate for ticket redemption overhead when gas is high.
 </Step>
 <Step title="Segment dispatch and compute">
 Segment dispatch and compute: The Gateway uploads segments; the Orchestrator executes transcoding/AI compute locally or delegates to attached transcoder processes.
 </Step>
 <Step title="Result return and verification">
-Result return and verification: Results are returned to the Gateway; verification may be performed (fast verification metrics exist and are explicitly named). Failures can trigger orchestrator swaps and retries.
+Result return and verification: Results are returned to the Gateway; verification may be performed (fast verification metrics exist and are explicitly named). Failures can trigger Orchestrator swaps and retries.
 </Step>
 <Step title="Continuous settlement">
 Continuous settlement: The Gateway sends probabilistic payment tickets; the Orchestrator redeems winning tickets and the system tracks redemption errors and redeemed value.
 </Step>
 <Step title="Periodic reward accounting">
-Periodic reward accounting: Each round, orchestrators may call reward() as an Arbitrum transaction distributing minted rewards to itself and its delegators.
+Periodic reward accounting: Each round, Orchestrators may call reward() as an Arbitrum transaction distributing minted rewards to itself and its Delegators.
 </Step>
 </Steps>
 
@@ -142,7 +142,7 @@ flowchart LR
 Example: A Gateway has a 30-second live video. It deposits ETH in TicketBroker, then streams segments to Orchestrator A with tickets. Orchestrator A’s Transcoder outputs multiple bitrates. Orchestrator A later sends any winning tickets to the TicketBroker contract on Arbitrum to claim payment. Fees (in ETH) are automatically split according to the Orchestrator’s fee-share settings, crediting Delegators’ balances
 .
 Probabilistic Payments: Instead of paying per-segment, Gateways use a lottery-ticket scheme. Each ticket has a chance to “win” a fixed ETH prize. Over many segments, the expected payout equals the true cost of work
-. This shields Orchestrators from tiny on-chain transactions and gas-variability. (Broadcasters pre-fund enough ETH so that expected payouts cover all tickets.) AI Inference Workflow: AI jobs (e.g. Real-time style transfer, video generation) use the same stake/fee model but may involve pipelines of multiple models (e.g. Stage-1 text encoder → Stage-2 image decoder). Livepeer’s Cascade framework coordinates multi-step AI workflows: a Gateway sends initial data and a prompt, and orchestrators sequentially apply models until a final video is produced
+. This shields Orchestrators from tiny on-chain transactions and gas-variability. (Broadcasters pre-fund enough ETH so that expected payouts cover all tickets.) AI Inference Workflow: AI jobs (e.g. Real-time style transfer, video generation) use the same stake/fee model but may involve pipelines of multiple models (e.g. Stage-1 text encoder → Stage-2 image decoder). Livepeer’s Cascade framework coordinates multi-step AI workflows: a Gateway sends initial data and a prompt, and Orchestrators sequentially apply models until a final video is produced
 . For example, Daydream (an AI app) captures webcam video, sends it through a StableDiffusion pipeline on the network, and returns the stylized video output.
 Example (AI): A user feeds a webcam stream into Daydream (powered by Livepeer AI). The Gateway sends frames plus a “style” prompt to Orchestrator B. B runs a sequence of GPUs (e.g. Enhance → stylize) and returns an AI-edited video with low latency. Livepeer’s GPUs and networking are optimised for this low-latency pipeline
 .

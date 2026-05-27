@@ -38,7 +38,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 ---
 
-By the end of this tutorial you'll have a Next.js 15 app where two end users each authenticate via OIDC, run AI inference calls against the Livepeer network, and accumulate usage on per-user ledgers visible in a dashboard. The infrastructure layer is <LinkArrow href="https://pymthouse.com" label="pymthouse" newline={false} />, a community-built backend that combines OpenID Connect identity, multi-tenant billing plans, and remote payment-ticket signing. You write the app; pymthouse handles the three things that turn a single-user demo into a multi-tenant product.
+By the end of this tutorial you'll have a Next.js 15 app where two end users each authenticate via OIDC, run AI inference calls against the Livepeer Network, and accumulate usage on per-user ledgers visible in a dashboard. The infrastructure layer is <LinkArrow href="https://pymthouse.com" label="pymthouse" newline={false} />, a community-built backend that combines OpenID Connect identity, multi-tenant billing plans, and remote payment-ticket signing. You write the app; pymthouse handles the three things that turn a single-user demo into a multi-tenant product.
 
 This is the Persona 2 activation moment for SaaS. The VOD and live-streaming tutorials proved your app can call Livepeer; this one proves your customers can call Livepeer through your app and you can bill them for it.
 
@@ -52,7 +52,7 @@ This is the Persona 2 activation moment for SaaS. The VOD and live-streaming tut
 
 - Node.js 20 or later
 - A pymthouse account at <LinkArrow href="https://pymthouse.com" label="pymthouse.com" newline={false} /> (hosted, free during beta) or a self-hosted instance
-- A Livepeer gateway accessible through pymthouse's signer
+- A Livepeer Gateway accessible through pymthouse's signer
 - A code editor
 
 Self-hosting pymthouse adds a Postgres database, the Next.js app, and a `go-livepeer` signer sidecar. Full deployment instructions live in the pymthouse repository at <LinkArrow href="https://github.com/eliteprox/pymthouse" label="github.com/eliteprox/pymthouse" newline={false} />. The tutorial below uses the hosted path for the shortest time-to-running.
@@ -298,7 +298,7 @@ export async function POST(req: Request) {
 }
 ```
 
-Two things differ from a direct Livepeer call. First, the request goes to pymthouse's inference endpoint, not directly to the Livepeer gateway; pymthouse forwards after signing. Second, the bearer token is the user-scoped pymthouse token, not a static gateway API key. The token tells pymthouse who to bill.
+Two things differ from a direct Livepeer call. First, the request goes to pymthouse's inference endpoint, not directly to the Livepeer Gateway; pymthouse forwards after signing. Second, the bearer token is the user-scoped pymthouse token, not a static Gateway API key. The token tells pymthouse who to bill.
 
 <CustomDivider />
 
@@ -464,7 +464,7 @@ Build the "Multi-Tenant Billing with pymthouse" tutorial as a Next.js app backed
     Source, self-hosting deployment files, contribution guide.
   </Card>
   <Card title="AI Jobs Quickstart" icon="rocket" href="/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart">
-    The direct-to-gateway path, for comparison.
+    The direct-to-Gateway path, for comparison.
   </Card>
   <Card title="Production Hardening" icon="shield" href="/v2/developers/guides/production-hardening-checklist">
     Auth, observability, rate limits, secret management.

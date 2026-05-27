@@ -31,24 +31,24 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>Orchestrator selection is gateway-side. The gateway queries active orchestrators, filters by price and capability, then applies stake-weighted selection. Orchestrators with higher stake and lower latency win more work.</Tip>
+  <Tip>Orchestrator selection is Gateway-side. The Gateway queries active Orchestrators, filters by price and capability, then applies stake-weighted selection. Orchestrators with higher stake and lower latency win more work.</Tip>
 </CenteredContainer>
 
 ---
 
-When a gateway receives a job (a transcoding segment or an AI inference request), it selects an orchestrator from the active set to process the work. Selection combines three criteria: capability matching (does the orchestrator support the requested pipeline and model?), price filtering (is the orchestrator's price within the gateway's maximum?), and stake-weighted random selection among qualifying candidates.
+When a Gateway receives a job (a transcoding segment or an AI inference request), it selects an Orchestrator from the Active Set to process the work. Selection combines three criteria: capability matching (does the Orchestrator support the requested pipeline and model?), price filtering (is the Orchestrator's price within the Gateway's maximum?), and stake-weighted random selection among qualifying candidates.
 
 <CustomDivider />
 
 ## Capability Matching
 
-For AI inference jobs, the gateway matches against orchestrators registered in the AI Service Registry on Arbitrum One. The registry records which pipelines and model IDs each orchestrator advertises as warm. A gateway requesting `text-to-image` with model `ByteDance/SDXL-Lightning` only considers orchestrators advertising that combination.
+For AI inference jobs, the Gateway matches against Orchestrators registered in the AI Service Registry on Arbitrum One. The registry records which pipelines and model IDs each Orchestrator advertises as warm. A Gateway requesting `text-to-image` with model `ByteDance/SDXL-Lightning` only considers Orchestrators advertising that combination.
 
-Capability data is read at session start; the gateway caches the active set and refreshes periodically. Cold capabilities (advertised but not currently loaded) are visible in the registry but may result in longer job latency as the orchestrator loads the model.
+Capability data is read at session start; the Gateway caches the Active Set and refreshes periodically. Cold capabilities (advertised but not currently loaded) are visible in the registry but may result in longer job latency as the Orchestrator loads the model.
 
 ## Price Filtering
 
-Orchestrators advertise a price per unit. The gateway filters out any orchestrator whose price exceeds `-maxPricePerUnit`:
+Orchestrators advertise a price per unit. The Gateway filters out any Orchestrator whose price exceeds `-maxPricePerUnit`:
 
 ```bash
 livepeer -broadcaster \
@@ -56,23 +56,23 @@ livepeer -broadcaster \
   ...
 ```
 
-For transcoding, the unit is wei per pixel. For AI batch pipelines, the unit is pipeline-specific (per output, per second, or per request depending on orchestrator configuration). Orchestrators advertising a price of 0 accept any work regardless of the gateway's maximum.
+For transcoding, the unit is wei per pixel. For AI batch pipelines, the unit is pipeline-specific (per output, per second, or per request depending on Orchestrator configuration). Orchestrators advertising a price of 0 accept any work regardless of the Gateway's maximum.
 
-Setting `-maxPricePerUnit 0` disables price filtering: the gateway accepts orchestrators at any price.
+Setting `-maxPricePerUnit 0` disables price filtering: the Gateway accepts Orchestrators at any price.
 
 ## Stake-Weighted Selection
 
-Among orchestrators that pass capability and price filters, the gateway applies stake-weighted random selection. An orchestrator with twice the staked LPT of another has approximately twice the probability of being selected for a given job, holding other factors equal.
+Among Orchestrators that pass capability and price filters, the Gateway applies stake-weighted random selection. An Orchestrator with twice the staked LPT of another has approximately twice the probability of being selected for a given job, holding other factors equal.
 
-The discovery ping time also influences selection: orchestrators that consistently fail to respond or return errors are removed from the active selection pool until they recover.
+The discovery ping time also influences selection: Orchestrators that consistently fail to respond or return errors are removed from the active selection pool until they recover.
 
-This mechanism is stable for the duration of a stream: once a session is assigned to an orchestrator, the gateway continues routing that session's segments to the same orchestrator unless it fails.
+This mechanism is stable for the duration of a stream: once a session is assigned to an Orchestrator, the Gateway continues routing that session's segments to the same Orchestrator unless it fails.
 
 <CustomDivider />
 
 ## Restricting to Specific Orchestrators
 
-From go-livepeer PR #3634, gateway clients can include or exclude specific orchestrators by `serviceAddr` in their requests:
+From go-livepeer PR #3634, Gateway clients can include or exclude specific Orchestrators by `serviceAddr` in their requests:
 
 ```bash
 # Include only specific orchestrators
@@ -81,11 +81,11 @@ livepeer -broadcaster \
   ...
 ```
 
-This is useful for operators running their own orchestrators, for testing, or for agreements between gateway and orchestrator operators outside the open market.
+This is useful for operators running their own Orchestrators, for testing, or for agreements between Gateway and Orchestrator operators outside the open market.
 
 ## Viewing Active Orchestrators
 
-The Livepeer Explorer at `explorer.livepeer.org` shows the active orchestrator set with stake, price per pixel, and performance scores. The AI capability dashboard at `tools.livepeer.cloud/ai/network-capabilities` shows AI-specific warm capabilities.
+The Livepeer Explorer at `explorer.livepeer.org` shows the active Orchestrator set with stake, price per pixel, and performance scores. The AI capability dashboard at `tools.livepeer.cloud/ai/network-capabilities` shows AI-specific warm capabilities.
 
 <CustomDivider />
 
@@ -112,15 +112,15 @@ For AI batch pipelines, pricing is set in `aiModels.json` per pipeline entry:
 
 For `live-video-to-video`, `price_per_unit` is in wei per second.
 
-Competitive pricing relative to the gateway's `-maxPricePerUnit` determines whether an orchestrator enters the selection pool at all. Orchestrators priced above the gateway's maximum receive no work from that gateway regardless of stake.
+Competitive pricing relative to the Gateway's `-maxPricePerUnit` determines whether an Orchestrator enters the selection pool at all. Orchestrators priced above the Gateway's maximum receive no work from that Gateway regardless of stake.
 
 <CustomDivider />
 
 ## Market Dynamics
 
-The active set posts prices on-chain via the AI Service Registry and via the off-chain `GetOrchestratorInfo` RPC. Gateways negotiate directly during session establishment.
+The Active Set posts prices on-chain via the AI Service Registry and via the off-chain `GetOrchestratorInfo` RPC. Gateways negotiate directly during session establishment.
 
-The Livepeer Explorer shows historical price data per orchestrator. The `tools.livepeer.cloud/ai/network-capabilities` dashboard shows current warm AI capabilities but does not expose per-orchestrator pricing.
+The Livepeer Explorer shows historical price data per Orchestrator. The `tools.livepeer.cloud/ai/network-capabilities` dashboard shows current warm AI capabilities but does not expose per-Orchestrator pricing.
 
 <CustomDivider />
 
@@ -131,12 +131,12 @@ The Livepeer Explorer shows historical price data per orchestrator. The `tools.l
     How tickets are priced and the per-unit model used in selection.
   </Card>
   <Card title="ETH Escrow and Deposits" icon="lock" href="/v2/developers/guides/payments/eth-escrow-and-deposits" arrow horizontal>
-    Funding the gateway deposit that backs PM tickets sent to orchestrators.
+    Funding the Gateway deposit that backs PM tickets sent to Orchestrators.
   </Card>
   <Card title="BYOC Overview" icon="box" href="/v2/developers/build/compute/byoc/overview" arrow horizontal>
-    Registering custom capabilities that influence orchestrator selection.
+    Registering custom capabilities that influence Orchestrator selection.
   </Card>
   <Card title="Alt-Gateway Overview" icon="server" href="/v2/developers/build/alt-gateways/overview" arrow horizontal>
-    Off-chain gateway clients and their orchestrator discovery patterns.
+    Off-chain Gateway clients and their Orchestrator discovery patterns.
   </Card>
 </CardGroup>

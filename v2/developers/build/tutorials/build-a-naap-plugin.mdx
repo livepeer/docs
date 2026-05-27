@@ -306,7 +306,7 @@ export async function listOrchestrators(
 }
 ```
 
-The `@naap/database` module exposes the shared Postgres connection. Plugin schemas are isolated by Postgres schema name; the orchestrator-health plugin owns the `orchestrator_health` schema and cannot read or write to other plugins' schemas.
+The `@naap/database` module exposes the shared Postgres connection. Plugin schemas are isolated by Postgres schema name; the Orchestrator-health plugin owns the `orchestrator_health` schema and cannot read or write to other plugins' schemas.
 
 Wire the route handler in `src/api/index.ts`:
 
@@ -366,7 +366,7 @@ Schema isolation is enforced at the Postgres level. Other plugins' role grants d
 
 ## Inter-Plugin Communication
 
-Plugins communicate through the shell's event bus. Use it to publish notable state changes (a new orchestrator detected, an alert threshold crossed) without coupling plugins to each other.
+Plugins communicate through the shell's event bus. Use it to publish notable state changes (a new Orchestrator detected, an alert threshold crossed) without coupling plugins to each other.
 
 ```tsx
 import { useEventBus } from '@naap/plugin-sdk';
@@ -429,7 +429,7 @@ NaaP ships a Plugin Publisher plugin (one of the 12 default plugins) that handle
 
 Six things change between the local development flow and a published plugin.
 
-**Permission scoping.** Declare only the permissions your plugin actually uses. Marketplace review rejects overscoped manifests. If the plugin reads orchestrator data, request `orchestrator:read`, not `network:write`.
+**Permission scoping.** Declare only the permissions your plugin actually uses. Marketplace review rejects overscoped manifests. If the plugin reads Orchestrator data, request `orchestrator:read`, not `network:write`.
 
 **Schema migrations are forward-only.** Once a migration runs in production, you cannot undo it. Test migrations against a fresh database before publishing; never edit a published migration file.
 

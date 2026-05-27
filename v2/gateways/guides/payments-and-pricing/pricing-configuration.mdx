@@ -37,7 +37,7 @@ Verify:
 import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
 
 Gateways in Livepeer configure pricing to control costs and margins.
-As consumers of video transcoding and AI services, gateways set maximum prices
+As consumers of video transcoding and AI services, Gateways set maximum prices
 they're willing to pay Orchestrators for processing work.
 
 ## Pricing Concepts
@@ -108,7 +108,7 @@ All payments are made in <Badge color="green">ETH(wei)</Badge> - **not** Livepee
 
   </ResponseField>
   <ResponseField name="-livePaymentInterval" type="duration" default="5s">
- Payment processing frequency (e.g. 5s, 10s, 300ms)for Live AI Video workflows, where the gateway needs to send periodic payments to the orchestrator.
+ Payment processing frequency (e.g. 5s, 10s, 300ms)for Live AI Video workflows, where the Gateway needs to send periodic payments to the Orchestrator.
 
  {/*
  Live AI Video Processing: The interval is used when processing live video streams with AI models, where the gateway needs to send periodic payments to the orchestrator ai_live_video.go:95 ai_http.go:212
@@ -151,9 +151,9 @@ _AI Processing_
 
 _Payment Processing Flow_
 
-1. Gateway sends payment with segment/request to orchestrator [<Icon icon="github" /> live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
+1. Gateway sends payment with segment/request to Orchestrator [<Icon icon="github" /> live_payment.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go)
 2. Orchestrator validates payment and updates balance [<Icon icon="github" /> segment_rpc.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/segment_rpc.go)
-3. Fees are debited from gateway's balance account [<Icon icon="github" /> ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
+3. Fees are debited from Gateway's balance account [<Icon icon="github" /> ai_http.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_http.go)
 
 ## Configuration Methods
 
@@ -182,7 +182,7 @@ A reference for Gateway Operators on how Orchestrators configure pricing and fee
 
 #### Per-Gateway Pricing (can be set by Orchestrators)
 
-Orchestrators can set specific prices for individual gateways using
+Orchestrators can set specific prices for individual Gateways using
 `-pricePerGateway` [<Icon icon="github" /> starter.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/cmd/livepeer/starter.go)
 
 ```json icon="terminal"
@@ -200,16 +200,16 @@ Orchestrators can set specific prices for individual gateways using
 
 #### Price Calculation
 
-The actual price calculation happens in the orchestrator's `priceInfo` function [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+The actual price calculation happens in the Orchestrator's `priceInfo` function [<Icon icon="github" /> Orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
 
 1. Checks for fixed prices per manifest ID
-2. Gets base price from orchestrator configuration
+2. Gets base price from Orchestrator configuration
 3. For AI workloads, sums prices of individual capability/model pairs
 4. Applies auto-adjustment based on transaction costs if enabled
 
 #### Dynamic Price Adjustment
 
-Orchestrators can enable automatic price adjustments based on transaction costs - which is why it's important to set maxPricing flags -> [<Icon icon="github" /> orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
+Orchestrators can enable automatic price adjustments based on transaction costs - which is why it's important to set maxPricing flags -> [<Icon icon="github" /> Orchestrator.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/core/orchestrator.go)
 
 ```go icon="terminal"
 if !orch.node.AutoAdjustPrice {
@@ -372,7 +372,7 @@ if basePrice.Num().Cmp(big.NewInt(0)) > 0 {
       icon="hand-holding-dollar"
       arrow
       >
- How gateways earn fees for services
+ How Gateways earn fees for services
   </Card>
 
   <Card
@@ -381,6 +381,6 @@ if basePrice.Num().Cmp(big.NewInt(0)) > 0 {
         icon="coins"
         arrow
         >
- How to fund your gateway.
+ How to fund your Gateway.
   </Card>
 </Columns>

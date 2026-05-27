@@ -30,14 +30,14 @@ lastVerified: 2026-04-06T00:00:00.000Z
 
 import { MathInline, MathBlock } from '/snippets/components/elements/math/Math.jsx'
 
-Delegating LPT can earn you two things: a share of newly minted LPT and a share of ETH fees earned by your orchestrator. The first is protocol-driven. The second depends on real network demand. Both are filtered through the orchestrator you choose.
+Delegating LPT can earn you two things: a share of newly minted LPT and a share of ETH fees earned by your Orchestrator. The first is protocol-driven. The second depends on real network demand. Both are filtered through the Orchestrator you choose.
 
-## Where delegator rewards come from
+## Where Delegator rewards come from
 
 Each protocol round, the BondingManager mints new LPT for bonded stake. The amount depends on the current inflation state, which adjusts around Livepeer's target bonding rate.
 
 <Note>
-  As of 6 April 2026, the on-chain treasury reward cut remains `10%` under LIP-92. Delegators and orchestrators share the remaining `90%` of round issuance.
+  As of 6 April 2026, the on-chain treasury Reward Cut remains `10%` under LIP-92. Delegators and Orchestrators share the remaining `90%` of round issuance.
 </Note>
 
 ## Inflation reward maths
@@ -48,29 +48,29 @@ Your LPT reward per round can be expressed as:
 
 Where:
 
-- <MathInline latex={String.raw`I_{round}`} /> is the issuance available to delegators and orchestrators after any treasury allocation
-- <MathInline latex={String.raw`B_O`} /> is the total stake bonded to your orchestrator
+- <MathInline latex={String.raw`I_{round}`} /> is the issuance available to Delegators and Orchestrators after any treasury allocation
+- <MathInline latex={String.raw`B_O`} /> is the total stake bonded to your Orchestrator
 - <MathInline latex={String.raw`B_T`} /> is total bonded stake across the network
-- <MathInline latex={String.raw`c_O`} /> is the orchestrator's `rewardCut`
+- <MathInline latex={String.raw`c_O`} /> is the Orchestrator's `rewardCut`
 - <MathInline latex={String.raw`b_D`} /> is your bonded stake
 
 ### Worked example
 
 Suppose:
 
-- `900 LPT` of round issuance is available to delegators and orchestrators after treasury allocation
-- your orchestrator controls `5%` of total bonded stake, so its pool gets `45 LPT`
-- the orchestrator's `rewardCut` is `10%`, so delegators share `40.5 LPT`
+- `900 LPT` of round issuance is available to Delegators and Orchestrators after treasury allocation
+- your Orchestrator controls `5%` of total bonded stake, so its pool gets `45 LPT`
+- the Orchestrator's `rewardCut` is `10%`, so Delegators share `40.5 LPT`
 - you hold `10%` of that pool's total bonded stake
 
 Your round reward would be `4.05 LPT`.
 
 ## ETH fee revenue
 
-Gateways pay orchestrators in ETH for completed work. Delegators only receive a share if:
+Gateways pay Orchestrators in ETH for completed work. Delegators only receive a share if:
 
-- the orchestrator actually earns fees
-- the orchestrator's `feeShare` passes some of those fees through
+- the Orchestrator actually earns fees
+- the Orchestrator's `feeShare` passes some of those fees through
 
 The fee-side formula is:
 
@@ -78,17 +78,17 @@ The fee-side formula is:
 
 Where:
 
-- <MathInline latex={String.raw`F_O`} /> is total ETH fee revenue earned by the orchestrator
-- <MathInline latex={String.raw`f_O`} /> is the orchestrator's `feeShare`
+- <MathInline latex={String.raw`F_O`} /> is total ETH fee revenue earned by the Orchestrator
+- <MathInline latex={String.raw`f_O`} /> is the Orchestrator's `feeShare`
 - <MathInline latex={String.raw`b_D`} /> is your bonded stake
-- <MathInline latex={String.raw`B_O`} /> is total stake bonded to that orchestrator
+- <MathInline latex={String.raw`B_O`} /> is total stake bonded to that Orchestrator
 
 ## `rewardCut` and `feeShare` in plain English
 
-| Parameter | What it controls | Better for delegators |
+| Parameter | What it controls | Better for Delegators |
 |---|---|---|
-| `rewardCut` | share of inflationary LPT kept by the orchestrator | lower |
-| `feeShare` | share of ETH fees passed to delegators | higher |
+| `rewardCut` | share of inflationary LPT kept by the Orchestrator | lower |
+| `feeShare` | share of ETH fees passed to Delegators | higher |
 
 <Warning>
   As of 6 April 2026, current Explorer product surfaces use **Fee Share**, not **Fee Cut**. For `feeShare`, higher is better. For `rewardCut`, lower is better.
@@ -96,7 +96,7 @@ Where:
 
 ## Why reward reliability matters more than a tiny commission difference
 
-Each round, the orchestrator still has to call `reward()`. If they miss it, the pool misses that round's inflation.
+Each round, the Orchestrator still has to call `reward()`. If they miss it, the pool misses that round's inflation.
 
 That means a "slightly worse commission but near-perfect reward reliability" can outperform a "great commission headline with weak reliability".
 
@@ -109,7 +109,7 @@ To realise them, you call `claimEarnings()`. After that, you can:
 - leave the resulting bonded balance in place to compound
 - unbond if your goal is to exit and withdraw
 
-See [Manage Your Delegation](./manage-your-delegation) before you claim, because the timing of a claim relative to the orchestrator's `reward()` call matters.
+See [Manage Your Delegation](./manage-your-delegation) before you claim, because the timing of a claim relative to the Orchestrator's `reward()` call matters.
 
 ## What changes your real return in practice
 
@@ -118,13 +118,13 @@ See [Manage Your Delegation](./manage-your-delegation) before you claim, because
     The current mint rate is not static. Check live state rather than relying on an old annualised screenshot or article.
   </Accordion>
   <Accordion title="ETH fees are demand-driven">
-    Strong fee share only matters if the orchestrator actually earns fee revenue.
+    Strong fee share only matters if the Orchestrator actually earns fee revenue.
   </Accordion>
   <Accordion title="Orchestrators can change their terms">
     Commission settings are not permanent promises. Re-check them periodically.
   </Accordion>
   <Accordion title="Stake growth changes your pool share">
-    If many more delegators join the same orchestrator after you, your percentage of that pool gets smaller.
+    If many more Delegators join the same Orchestrator after you, your percentage of that pool gets smaller.
   </Accordion>
 </AccordionGroup>
 

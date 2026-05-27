@@ -49,7 +49,7 @@ This is the Persona 1 and Persona 4 join: the agent builder who needs a face for
 - A working ComfyStream instance from the <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart" label="ComfyStream Quickstart" newline={false} />: RunPod, Docker, or local
 - NVIDIA GPU with 16 GB+ VRAM. RTX 3090 minimum; RTX 4090 recommended for 25 FPS
 - ComfyUI with the workflow editor accessible (port 8188 on a running ComfyStream container)
-- A webcam, or an RTMP source publishing to the gateway
+- A webcam, or an RTMP source publishing to the Gateway
 
 VRAM source: the <LinkArrow href="/v2/orchestrators/resources/reference/gpu-support" label="GPU Support Matrix" newline={false} />. Avatar workflows compound a base diffusion model (8-12 GB) plus pose ControlNet (2-4 GB) plus VAE and TensorRT engines (2 GB), so headroom matters more than for plain StreamDiffusion.
 
@@ -187,7 +187,7 @@ The avatar so far mirrors your pose. To drive the avatar from an AI agent (text 
 
 **Text-to-speech for character voice.** Route the LLM output through the `text-to-speech` batch pipeline (`parler-tts/parler-tts-large-v1`). The TTS warm model accepts a `description` parameter for voice characteristics.
 
-**Lip-sync conditioning.** For lip-synced output, add an audio-driven pose node that maps the TTS audio to lip and jaw keypoints. The Agent SPE production pipeline uses this approach; the exact node varies by model. As of Phase 4 the Daydream stack uses a custom audio-to-pose adapter not yet released as an open custom node.
+**LIP-sync conditioning.** For LIP-synced output, add an audio-driven pose node that maps the TTS audio to LIP and jaw keypoints. The Agent SPE production pipeline uses this approach; the exact node varies by model. As of Phase 4 the Daydream stack uses a custom audio-to-pose adapter not yet released as an open custom node.
 
 For an end-to-end agent + avatar setup, see the <LinkArrow href="/v2/developers/build/tutorials/eliza-livepeer-plugin" label="Eliza plugin tutorial" newline={false} />; Eliza handles character files, RAG, and multi-agent orchestration.
 
@@ -197,9 +197,9 @@ For an end-to-end agent + avatar setup, see the <LinkArrow href="/v2/developers/
 
 Local execution proves the pipeline. Production shipping needs three more layers.
 
-**Dedicated GPU per stream.** Real-time AI assigns a GPU to a stream for its full duration. A four-viewer concurrent test needs four GPUs in your orchestrator pool, or four orchestrators with one GPU each. Test under expected concurrency; orchestrator availability for `live-video-to-video` is lower than for batch pipelines at peak network load.
+**Dedicated GPU per stream.** Real-time AI assigns a GPU to a stream for its full duration. A four-viewer concurrent test needs four GPUs in your Orchestrator pool, or four Orchestrators with one GPU each. Test under expected concurrency; Orchestrator availability for `live-video-to-video` is lower than for batch pipelines at peak network load.
 
-**Gateway routing.** Self-hosted gateways pick the orchestrator running your ComfyStream image. Production deployments either run a gateway pool or use a paid gateway provider with BYOC routing enabled.
+**Gateway routing.** Self-hosted Gateways pick the Orchestrator running your ComfyStream image. Production deployments either run a Gateway pool or use a paid Gateway provider with BYOC routing enabled.
 
 **Stream out to viewers.** ComfyStream emits WebRTC. For broadcast to Twitch, YouTube Live, or a player, restream through OBS, a media server (e.g. MediaMTX), or a dedicated forwarder. Direct WebRTC-to-RTMP bridges are available; ComfyStream itself does not re-encode for those targets.
 

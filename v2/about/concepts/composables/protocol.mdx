@@ -37,7 +37,7 @@ The protocol additionally defines the economic mechanisms and governance rules t
     - staking
     - delegation
     - inflation & rewards
-    - orchestrator selection
+    - Orchestrator selection
     - slashing
     - probabilistic payments
     - verification rules
@@ -60,7 +60,7 @@ The protocol involves four main actors:
 - **Ingest**: RTMP/HTTP streams via `LivepeerServer.HandlePush()`
 - **Segmentation**: RTMPSegmenter converts to HLS segments
 - **Processing**: `processSegment()` handles transcoding
-- **Distribution**: `BroadcastSessionsManager` selects orchestrators and submits segments
+- **Distribution**: `BroadcastSessionsManager` selects Orchestrators and submits segments
 
 ### AI Processing Pipeline
 - **Request**: HTTP endpoints for different AI tasks (text-to-image, image-to-video, LLM, audio-to-text, etc.)
@@ -75,7 +75,7 @@ The protocol provides:
 - **Decentralised transcoding** - Video processing distributed across network participants
 - **AI Inference** - Multiple pipelines including text-to-image, image-to-video, live video-to-video, LLM, audio-to-text, and image segmentation
 - **Economic incentives** - LPT inflation rewards and ETH fee distribution
-- **Probabilistic micropayments** - Ticket-based payment system for both transcoding and AI services
+- **Probabilistic Micropayments** - Ticket-based payment system for both transcoding and AI services
 - **Round-based governance** - Time progression through discrete rounds
 - **Staking and delegation** - Token bonding to secure the network
 - **Bring Your Own Container (BYOC)** - Generic processing pipeline for custom workloads
@@ -85,7 +85,7 @@ The protocol provides:
 - **Cost efficiency** - Decentralised infrastructure reduces transcoding and AI processing costs
 - **Reliability** - Economic incentives ensure network participation and uptime
 - **Scalability** - Distributed processing can scale with demand for both video and AI workloads
-- **Permissionless** - Anyone can participate as delegator, transcoder, or AI worker
+- **Permissionless** - Anyone can participate as Delegator, transcoder, or AI worker
 - **Versatility** - Single network supporting both video transcoding and AI inference
 
 ## Job Routing
@@ -93,13 +93,13 @@ The protocol provides:
 Jobs are routed through different mechanisms based on type:
 
 ### Video Transcoding Jobs
-1. Transcoders register and set commission rates (reward cut and fee share)
-2. The top transcoders by stake are selected for the active set each round
+1. Transcoders register and set commission rates (Reward Cut and fee share)
+2. The top transcoders by stake are selected for the Active Set each round
 3. Broadcasters send work to active transcoders
 4. The `SortedDoublyLL` data structure maintains the ordered transcoder pool
 
 ### AI Jobs
-1. AI workers register with orchestrators via gRPC stream, advertising capabilities and capacity
+1. AI workers register with Orchestrators via gRPC stream, advertising capabilities and capacity
 2. Orchestrators maintain `RemoteAIWorkerManager` to track connected workers
 3. Jobs are routed to compatible workers based on pipeline, model ID, and available capacity
 4. Capacity is reserved during processing and released upon completion
@@ -113,8 +113,8 @@ The protocol uses a dual-token economic system:
 
 **Reward Distribution**:
 - New LPT minted each round based on inflation rate and active stake
-- Rewards split between transcoders (reward cut) and delegators
-- ETH fees from broadcasters split between transcoders (fee share) and delegators
+- Rewards split between transcoders (Reward Cut) and Delegators
+- ETH fees from broadcasters split between transcoders (fee share) and Delegators
 
 **AI-Specific Economics**:
 - Per-unit pricing for different AI models and pipelines
@@ -150,19 +150,19 @@ Wiki pages you might want to explore:
 
 ## Protocol Overview
 
-The Livepeer protocol is the software layer that coordinates decentralised video and AI processing.
+The Livepeer Protocol is the software layer that coordinates decentralised video and AI processing.
 
 Its core is implemented as Ethereum smart contracts (now on Arbitrum L2 after the Confluence upgrade) complemented by off-chain nodes and services.
 
 The protocol enforces staking, bonding, slashing, and reward rules on-chain, while specialised nodes handle the actual video jobs.
 
 #### Protocol Actors
-- **Gateways** (Broadcasters): These demand-side nodes submit video/AI jobs to Livepeer. A gateway takes a video stream (or AI task), creates on-chain payment tickets, and routes the work to an Orchestrator. It then collects the transcoded or AI-processed result. Gateways are typically stateless routers that pay for compute.
-- **Orchestrators**: These supply-side nodes bond LPT and accept jobs from gateways. An orchestrator advertises which video/audio renditions it can provide, and claims work up to its bonded stake. When it receives a job, it divides the work among its workers (transcoders or AI workers). The orchestrator must also periodically call the on-chain reward function to distribute newly minted LPT to itself and its delegators.
-- **Delegators**: LPT holders who do not run nodes. Delegators stake their tokens on existing Orchestrators to secure the network. Their stake increases an orchestrator’s bonded weight, which can route more work to it. In return, delegators passively earn a share of the orchestrator’s rewards (both LPT emissions and ETH fees) proportional to their stake.
+- **Gateways** (Broadcasters): These demand-side nodes submit video/AI jobs to Livepeer. A Gateway takes a video stream (or AI task), creates on-chain payment tickets, and routes the work to an Orchestrator. It then collects the transcoded or AI-processed result. Gateways are typically stateless routers that pay for compute.
+- **Orchestrators**: These supply-side nodes bond LPT and accept jobs from Gateways. An Orchestrator advertises which video/audio renditions it can provide, and claims work up to its bonded stake. When it receives a job, it divides the work among its workers (transcoders or AI workers). The Orchestrator must also periodically call the on-chain reward function to distribute newly minted LPT to itself and its Delegators.
+- **Delegators**: LPT holders who do not run nodes. Delegators stake their tokens on existing Orchestrators to secure the network. Their stake increases an Orchestrator’s bonded weight, which can route more work to it. In return, Delegators passively earn a share of the Orchestrator’s rewards (both LPT emissions and ETH fees) proportional to their stake.
 
 ## Protocol Implementation
-- **Workers** (Transcoders): These are the actual compute units (often GPUs) that perform video encoding or AI inference. In legacy terms, they were called Transcoders. Today they execute the heavy lifting, and they are typically managed by an Orchestrator node. Once a worker finishes processing a segment, the orchestrator returns the result to the Gateway.
+- **Workers** (Transcoders): These are the actual compute units (often GPUs) that perform video encoding or AI inference. In legacy terms, they were called Transcoders. Today they execute the heavy lifting, and they are typically managed by an Orchestrator node. Once a worker finishes processing a segment, the Orchestrator returns the result to the Gateway.
 
 Job routing flow can be summarised as:
 Here's the flow:
@@ -187,7 +187,7 @@ flowchart LR
     D -.->|Stake LPT| O
 ```
 
-Delegators sit behind the Orchestrator (dashed line). They don't touch the job path, but their staked LPT backs the Orchestrator's slot in the active set and they share in the fees and rewards earned from this work.
+Delegators sit behind the Orchestrator (dashed line). They don't touch the job path, but their staked LPT backs the Orchestrator's slot in the Active Set and they share in the fees and rewards earned from this work.
 
 {/* A Gateway creates a job request
 → an Orchestrator accepts the job
@@ -195,7 +195,7 @@ Delegators sit behind the Orchestrator (dashed line). They don't touch the job p
 → the Worker processes the segment
 → the result is returned to the Gateway. Delegators sit “behind” the orchestrator by staking LPT (shown below). */}
 
-The orchestrator earns ETH fees from the Gateway, and can share a portion of those fees with delegators based on its fee-sharing policy. Smart contracts on Arbitrum enforce each step, ensuring trustless cooperation.
+The Orchestrator earns ETH fees from the Gateway, and can share a portion of those fees with Delegators based on its fee-sharing policy. Smart contracts on Arbitrum enforce each step, ensuring trustless cooperation.
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%

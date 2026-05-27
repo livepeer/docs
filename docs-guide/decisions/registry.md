@@ -2,7 +2,7 @@
 
 > Single lookup point for all decision registries across the repo.
 > Each registry stays in its own location. This file cross-references them all.
-> Last verified: 2026-05-22
+> Last verified: 2026-05-25 (all 33 decisions cross-checked live: D-ACT-01..10 + D-GOV-01..08 + D-DG-01..13 + D-NAV-01 + D-GLOS-01)
 
 <CustomDivider />
 

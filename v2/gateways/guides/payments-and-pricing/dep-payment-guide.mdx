@@ -42,7 +42,7 @@ Verify:
 
 <Note>
 {/* NOT TRUE FIX THIS: - CAN USE USD...  */}
-  Livepeer payments use **ETH on Arbitrum One**, not LPT. All fees between gateways and orchestrators are denominated in ETH via the probabilistic micropayment (PM) system. LPT is the staking and governance token; it plays no role in day-to-day payment flows.
+  Livepeer payments use **ETH on Arbitrum One**, not LPT. All fees between Gateways and Orchestrators are denominated in ETH via the probabilistic micropayment (PM) system. LPT is the staking and governance token; it plays no role in day-to-day payment flows.
 </Note>
 
 import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
@@ -51,19 +51,19 @@ import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx
 
 ## Payment Mechanics
 
-Livepeer uses a **probabilistic micropayment (PM)** system to settle fees between gateways and orchestrators. Rather than paying for every job individually on-chain, gateways send orchestrators signed **tickets** that function like lottery entries. Each ticket has a small probability of being a winning ticket worth a larger face value. Orchestrators accumulate tickets and redeem winning ones on Arbitrum via the `TicketBroker` smart contract.
+Livepeer uses a **probabilistic micropayment (PM)** system to settle fees between Gateways and Orchestrators. Rather than paying for every job individually on-chain, Gateways send Orchestrators signed **tickets** that function like lottery entries. Each ticket has a small probability of being a winning ticket worth a larger face value. Orchestrators accumulate tickets and redeem winning ones on Arbitrum via the `TicketBroker` smart contract.
 
-The result: thousands of jobs generate only a handful of on-chain transactions, keeping gas costs negligible while orchestrators receive statistically fair compensation over time.
+The result: thousands of jobs generate only a handful of on-chain transactions, keeping gas costs negligible while Orchestrators receive statistically fair compensation over time.
 
 <Tip>
-  For the current operator path map, see [Payment Paths](/v2/gateways/guides/payments-and-pricing/payment-guide).
+  For the current operator path map, see [Payment Paths](/v2/Gateways/guides/payments-and-pricing/payment-guide).
 </Tip>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
 ## Payment Models
 
-Your gateway type determines your payment obligations before you write a single line of configuration.
+Your Gateway type determines your payment obligations before you write a single line of configuration.
 
 | Gateway type | ETH required | Private key required | Payment managed by |
 |---|---|---|---|
@@ -72,12 +72,12 @@ Your gateway type determines your payment obligations before you write a single 
 | **AI Gateway** (off-chain) | No | No | Not required |
 | **AI Gateway** with remote signer | No (held by signer) | No | Remote signer service |
 | **Gateway-as-a-Service** | No (held by clearinghouse) | No | Clearinghouse |
-| **SDK / alternative gateway** | No | No | Remote signer via SDK |
+| **SDK / alternative Gateway** | No | No | Remote signer via SDK |
 
 {/* REVIEW: Confirm that the AI off-chain gateway truly has zero payment obligation in current go-livepeer builds - j0sh to verify. The design doc implies gateways operating entirely off-chain still use PM tickets via remote signer. Clarify whether "off-chain" here means "no Ethereum integration in the gateway process" or "no payments at all". */}
 
 <Note>
-  **AI gateways and off-chain operation:** When running an AI gateway in off-chain mode, the gateway process itself holds no Ethereum key. Payments are either handled by a connected remote signer (which holds the key and funds separately) or managed entirely by a clearinghouse. Either way, the gateway binary has no direct Arbitrum dependency.
+  **AI Gateways and off-chain operation:** When running an AI Gateway in off-chain mode, the Gateway process itself holds no Ethereum key. Payments are either handled by a connected remote signer (which holds the key and funds separately) or managed entirely by a clearinghouse. Either way, the Gateway binary has no direct Arbitrum dependency.
 </Note>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -88,39 +88,39 @@ Your gateway type determines your payment obligations before you write a single 
   <Tab title="Self-managed (on-chain)">
     **You hold the ETH. You manage the key. You sign the tickets.**
 
-    This is the traditional gateway setup. Your `go-livepeer` node holds an Ethereum keystore with a funded account. When jobs are processed, the gateway signs PM tickets from that account. Winning tickets are redeemed by orchestrators on Arbitrum.
+    This is the traditional Gateway setup. Your `go-livepeer` node holds an Ethereum keystore with a funded account. When jobs are processed, the Gateway signs PM tickets from that account. Winning tickets are redeemed by Orchestrators on Arbitrum.
 
     You are responsible for:
     - Acquiring ETH on Arbitrum One
     - Maintaining a funded deposit and reserve in the `TicketBroker` contract
-    - Securing the Ethereum private key on your gateway host
+    - Securing the Ethereum private key on your Gateway host
     - Monitoring balances and topping up before they deplete
 
     This path is appropriate for **Video Gateways** and **Dual Gateways** that need full control and do not want to depend on third-party services.
 
-    Next step: [Fund Your Gateway](/v2/gateways/guides/payments-and-pricing/funding-guide)
+    Next step: [Fund Your Gateway](/v2/Gateways/guides/payments-and-pricing/funding-guide)
   </Tab>
 
   <Tab title="Remote signer">
-    **A separate service holds the key and signs tickets. Your gateway is keyless.**
+    **A separate service holds the key and signs tickets. Your Gateway is keyless.**
 
-    The remote signer is a standalone `go-livepeer` mode that handles all Ethereum signing. Your gateway communicates with it over the network and never touches a private key. The signer holds the funded ETH account; the gateway only requests signatures.
+    The remote signer is a standalone `go-livepeer` mode that handles all Ethereum signing. Your Gateway communicates with it over the network and never touches a private key. The signer holds the funded ETH account; the Gateway only requests signatures.
 
     Benefits:
     - Gateway compromise cannot drain ETH funds
-    - Non-Go gateways (Python, mobile, browser) can use Livepeer without implementing PM themselves
-    - Multiple gateway instances can share a single signer without shared state
+    - Non-Go Gateways (Python, mobile, browser) can use Livepeer without implementing PM themselves
+    - Multiple Gateway instances can share a single signer without shared state
     - Stateless design makes redundant signer instances straightforward
 
-    This path is appropriate for **Live AI workloads**, SDK-based gateways, and any deployment where key isolation is a requirement. Note that remote signing is currently **not supported for video transcoding**.
+    This path is appropriate for **Live AI workloads**, SDK-based Gateways, and any deployment where key isolation is a requirement. Note that remote signing is currently **not supported for video transcoding**.
 
-    Next step: [Remote Signers](/v2/gateways/guides/payments-and-pricing/remote-signers)
+    Next step: [Remote Signers](/v2/Gateways/guides/payments-and-pricing/remote-signers)
   </Tab>
 
   <Tab title="Clearinghouse">
     **A third party manages everything. You get an API key.**
 
-    A clearinghouse is a commercial service that sits between your application and the Livepeer network. It runs remote signer instances, holds ETH, manages orchestrator discovery, and handles all PM mechanics. You pay the clearinghouse in fiat, stablecoins, or credits. Orchestrators receive standard PM tickets and remain unaware of the arrangement.
+    A clearinghouse is a commercial service that sits between your application and the Livepeer Network. It runs remote signer instances, holds ETH, manages Orchestrator discovery, and handles all PM mechanics. You pay the clearinghouse in fiat, stablecoins, or credits. Orchestrators receive standard PM tickets and remain unaware of the arrangement.
 
     Benefits:
     - No ETH to acquire or manage
@@ -130,7 +130,7 @@ Your gateway type determines your payment obligations before you write a single 
 
     The protocol support for clearinghouses is in place. No public clearinghouse is at general availability as of early 2026; the community remote signer hosted by Elite Encoder (`signer.eliteencoder.net`) serves as a testing surface in the meantime.
 
-    Next step: [Payment Clearinghouses](/v2/gateways/guides/payments-and-pricing/clearinghouse-guide)
+    Next step: [Payment Clearinghouses](/v2/Gateways/guides/payments-and-pricing/clearinghouse-guide)
   </Tab>
 </Tabs>
 
@@ -144,23 +144,23 @@ Your gateway type determines your payment obligations before you write a single 
   </Accordion>
 
   <Accordion title="I am running video transcoding">
-    You need the **self-managed on-chain path**. Video transcoding uses a different payment flow from AI inference and does not support remote signers. You will need ETH on Arbitrum, a funded deposit, and a reserve in the `TicketBroker` contract. Start with [Fund Your Gateway](/v2/gateways/guides/payments-and-pricing/funding-guide).
+    You need the **self-managed on-chain path**. Video transcoding uses a different payment flow from AI inference and does not support remote signers. You will need ETH on Arbitrum, a funded deposit, and a reserve in the `TicketBroker` contract. Start with [Fund Your Gateway](/v2/Gateways/guides/payments-and-pricing/funding-guide).
   </Accordion>
 
   <Accordion title="I am running a Live AI pipeline and want key isolation">
-    Use a **remote signer**. You (or a trusted operator) run the signer service with the ETH account; your gateway talks to it over the network and holds no key. Multiple gateway instances can point at the same signer. See [Remote Signers](/v2/gateways/guides/payments-and-pricing/remote-signers) for setup.
+    Use a **remote signer**. You (or a trusted operator) run the signer service with the ETH account; your Gateway talks to it over the network and holds no key. Multiple Gateway instances can point at the same signer. See [Remote Signers](/v2/Gateways/guides/payments-and-pricing/remote-signers) for setup.
   </Accordion>
 
   <Accordion title="I am building a gateway-as-a-service product for many users">
-    You want to **build or integrate with a clearinghouse**. You will run remote signer instances, add user management, accounting, and billing on top. See [Payment Clearinghouses](/v2/gateways/guides/payments-and-pricing/clearinghouse-guide) for the architecture, and the Opportunities section for guidance on building Network-as-a-Platform (NaaP) infrastructure.
+    You want to **build or integrate with a clearinghouse**. You will run remote signer instances, add user management, accounting, and billing on top. See [Payment Clearinghouses](/v2/Gateways/guides/payments-and-pricing/clearinghouse-guide) for the architecture, and the Opportunities section for guidance on building Network-as-a-Platform (NaaP) infrastructure.
   </Accordion>
 
   <Accordion title="I am building a Python, mobile, or browser-based gateway">
-    Use the **remote signer path** via the Livepeer SDK. The SDK handles the PM signing interaction with the remote signer; your application only needs an orchestrator endpoint and a remote signer URL. The gateway holds no Ethereum dependency. See the SDK documentation and [Remote Signers](/v2/gateways/guides/payments-and-pricing/remote-signers).
+    Use the **remote signer path** via the Livepeer SDK. The SDK handles the PM signing interaction with the remote signer; your application only needs an Orchestrator endpoint and a remote signer URL. The Gateway holds no Ethereum dependency. See the SDK documentation and [Remote Signers](/v2/Gateways/guides/payments-and-pricing/remote-signers).
   </Accordion>
 
   <Accordion title="I need ETH for video but want key isolation for security">
-    Run a **self-managed gateway with a remote signer** for the signing component. The gateway still needs a funded account, but the private key lives in the signer process rather than the media-handling process. Note: remote signing for transcoding is not currently supported. This is a Live AI-only feature at present.
+    Run a **self-managed Gateway with a remote signer** for the signing component. The Gateway still needs a funded account, but the private key lives in the signer process rather than the media-handling process. Note: remote signing for transcoding is not currently supported. This is a Live AI-only feature at present.
 
     {/* REVIEW: Confirm whether remote signer can be used alongside on-chain video transcoding, or whether the two payment paths are completely separate. Rick / j0sh to clarify. */}
   </Accordion>
@@ -172,7 +172,7 @@ Your gateway type determines your payment obligations before you write a single 
 
 Regardless of payment architecture, Gateways still control the **maximum price** they pay Orchestrators. This is set via CLI flags or a JSON configuration file and applies per-pipeline for AI workloads and per-pixel for video.
 
-Setting prices correctly determines which orchestrators the Gateway can access and associated compute costs: See [Pricing Strategy](/v2/gateways/guides/payments-and-pricing/pricing-strategy).
+Setting prices correctly determines which Orchestrators the Gateway can access and associated compute costs: See [Pricing Strategy](/v2/Gateways/guides/payments-and-pricing/pricing-strategy).
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -180,13 +180,13 @@ Setting prices correctly determines which orchestrators the Gateway can access a
 
 <CardGroup cols={2}>
   <Card title="Fund Your Gateway" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
-    Deposit ETH into the TicketBroker contract and set your reserve. Required for on-chain video and dual gateways.
+    Deposit ETH into the TicketBroker contract and set your reserve. Required for on-chain video and dual Gateways.
   </Card>
   <Card title="Pricing Strategy" icon="chart-line" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
-    Set maximum prices per pipeline and model. Controls which orchestrators your gateway can access.
+    Set maximum prices per pipeline and model. Controls which Orchestrators your Gateway can access.
   </Card>
   <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/guides/payments-and-pricing/remote-signers">
-    Isolate your Ethereum key into a separate signing service. Required for keyless Live AI gateways.
+    Isolate your Ethereum key into a separate signing service. Required for keyless Live AI Gateways.
   </Card>
   <Card title="Payment Clearinghouses" icon="building-columns" href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide">
     Delegate all ETH management to a third-party clearinghouse. The no-crypto path.

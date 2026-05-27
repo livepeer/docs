@@ -54,7 +54,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
 import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-<CenteredContainer width="90%">
+<CenteredContainer style={{ width: '90%' }}>
   <Tip>Orchestrators earn from two independent sources: ETH service fees for processing jobs, and LPT inflation rewards for protocol participation. Both require Active Set membership. Earnings from fees depend on workload volume; earnings from rewards depend on total stake and the Reward Cut configuration.</Tip>
 </CenteredContainer>
 
@@ -163,7 +163,7 @@ market price - use `livepeer_cli` to survey current rates before setting your ow
 The Orchestrator's **Fee Cut** determines what share of collected fees goes to the Orchestrator versus
 the shared fee pool distributed to Delegators.
 
-``` icon="terminal"
+```
 Total fee ticket value = Orchestrator fee cut + Delegator fee pool
 ```
 
@@ -193,7 +193,7 @@ this automatically. See <LinkArrow href="/v2/orchestrators/guides/staking-and-re
 The Orchestrator's **Reward Cut** determines what share of the round's LPT goes to the Orchestrator
 versus Delegators:
 
-``` icon="terminal"
+```
 Total round reward = Orchestrator reward cut + Delegator reward pool
 ```
 
@@ -361,7 +361,7 @@ Orchestrators set three categories of pricing parameter at startup or via `livep
 
 ### Base price
 
-```bash icon="terminal"
+```bash
 # Price per pixel per second for video transcoding
 -pricePerUnit=1000
 
@@ -371,14 +371,14 @@ Orchestrators set three categories of pricing parameter at startup or via `livep
 
 ### AI capability pricing
 
-```bash icon="terminal"
+```bash
 # Per-pipeline, per-model AI pricing (JSON file path)
 -pricePerCapability=/path/to/ai-prices.json
 ```
 
 Example `ai-prices.json`:
 
-```json icon="terminal"
+```json
 {
   "capabilities_prices": [
     {
@@ -399,7 +399,7 @@ Example `ai-prices.json`:
 
 ### Per-Gateway pricing
 
-```bash icon="terminal"
+```bash
 # Set a different price for a specific Gateway address
 -pricePerGateway='{"0xGatewayAddress": 800}'
 ```

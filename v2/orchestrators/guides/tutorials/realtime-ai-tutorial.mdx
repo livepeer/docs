@@ -33,12 +33,12 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <Tip>
-  Realtime AI is Livepeer's highest-value compute offering. A continuous stream of video frames enters the orchestrator, AI transforms each frame, and a processed stream exits. This is fundamentally different from batch inference - there is no request-response cycle.
+  Realtime AI is Livepeer's highest-value compute offering. A continuous stream of video frames enters the Orchestrator, AI transforms each frame, and a processed stream exits. This is fundamentally different from batch inference - there is no request-response cycle.
 </Tip>
 
 ---
 
-This tutorial sets up a working `live-video-to-video` pipeline using the Cascade architecture and ComfyStream. By the end, a live video stream enters the orchestrator, StreamDiffusion transforms each frame in a continuous low-latency pipeline, and the output stream is viewable. Estimated time: **3 hours** (most of this is model download time).
+This tutorial sets up a working `live-video-to-video` pipeline using the Cascade architecture and ComfyStream. By the end, a live video stream enters the Orchestrator, StreamDiffusion transforms each frame in a continuous low-latency pipeline, and the output stream is viewable. Estimated time: **3 hours** (most of this is model download time).
 
 **What you will verify:**
 - The `livepeer/ai-runner:live-base` container starts cleanly with GPU access
@@ -121,7 +121,7 @@ At 30 fps, the frame budget is 33 ms. The pipeline must receive, process, and em
       <TableCell>StreamDiffusion model weights + ComfyStream dependencies</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell>ffmpeg</TableCell>
+      <TableCell>FFmpeg</TableCell>
       <TableCell>For sending a test RTMP stream. Install: `apt-get install ffmpeg`</TableCell>
     </TableRow>
     <TableRow>
@@ -155,7 +155,7 @@ The GPU table should appear inside the container output. Re-install the NVIDIA C
 
 <CustomDivider />
 
-## Step 2: Pull the live-base AI runner image
+## Step 2: Pull the live-base AI Runner image
 
 The `live-base` image is separate from the standard `livepeer/ai-runner` used for batch pipelines. It includes ComfyStream, ComfyUI, and StreamDiffusion dependencies:
 
@@ -200,7 +200,7 @@ python scripts/download_models.py
 
 {/* FACT CHECK: Confirm the ComfyStream download script name and path in the livepeer/comfystream repository. Rick to verify the download command. */}
 
-This downloads approximately 15 to 20 GB. Wait for completion. Models are downloaded to the directory that will be mounted into the AI runner container via `-aiModelsDir`.
+This downloads approximately 15 to 20 GB. Wait for completion. Models are downloaded to the directory that will be mounted into the AI Runner container via `-aiModelsDir`.
 
 Verify the download:
 
@@ -229,7 +229,7 @@ EOF
 
 {/* FACT CHECK: Confirm `model_id: "streamdiffusion"` is the correct value for the live-video-to-video pipeline in the current go-livepeer release. Rick and j0sh to verify the exact format. */}
 
-`price_per_unit` for the live pipeline is charged per frame, unlike batch pipelines that charge per pixel or per millisecond. Set a value at or below the current gateway caps in `-maxPricePerCapability` for `live-video-to-video`. Check current rates at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+`price_per_unit` for the live pipeline is charged per frame, unlike batch pipelines that charge per pixel or per millisecond. Set a value at or below the current Gateway caps in `-maxPricePerCapability` for `live-video-to-video`. Check current rates at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
 
 <CustomDivider />
 
@@ -278,13 +278,13 @@ Check the live runner container is running:
 docker ps | grep livepeer
 ```
 
-Two containers should be running: `livepeer-orchestrator` and the AI runner container for the live pipeline.
+Two containers should be running: `livepeer-orchestrator` and the AI Runner container for the live pipeline.
 
 <CustomDivider />
 
-## Step 6: Set up the gateway for live routing
+## Step 6: Set up the Gateway for live routing
 
-Start an off-chain gateway that routes `live-video-to-video` jobs to the orchestrator for this local test:
+Start an off-chain Gateway that routes `live-video-to-video` jobs to the Orchestrator for this local test:
 
 ```bash icon="terminal" filename="start-gateway"
 docker run -d \
@@ -302,7 +302,7 @@ docker run -d \
   -network offchain
 ```
 
-Verify the gateway started:
+Verify the Gateway started:
 
 ```bash icon="terminal" filename="check-gateway"
 docker logs livepeer-gateway-live 2>&1 | grep -i "started\|gateway\|rtmp\|http" | head -10
@@ -315,14 +315,14 @@ RTMP server listening on :1935
 ```
 
 <Note>
-  For a production gateway routing live AI jobs on-chain, configure `-maxPricePerCapability` with a cap for `live-video-to-video`. The gateway routes only to orchestrators priced at or below this cap, regardless of hardware capability.
+  For a production Gateway routing live AI jobs on-chain, configure `-maxPricePerCapability` with a cap for `live-video-to-video`. The Gateway routes only to Orchestrators priced at or below this cap, regardless of hardware capability.
 </Note>
 
 <CustomDivider />
 
 ## Step 7: Send a test stream
 
-Send a test RTMP stream through the gateway using ffmpeg. This simulates a camera or OBS stream:
+Send a test RTMP stream through the Gateway using FFmpeg. This simulates a camera or OBS stream:
 
 ```bash icon="terminal" filename="send-test-stream"
 # Generate a synthetic test pattern and stream it via RTMP
@@ -341,7 +341,7 @@ ffmpeg \
 
 This streams a synthetic test pattern at 30 fps. The stream should be processed by the `live-video-to-video` pipeline. Keep this running while checking the output.
 
-In a second terminal, watch the orchestrator process frames:
+In a second terminal, watch the Orchestrator process frames:
 
 ```bash icon="terminal" filename="watch-orchestrator"
 docker logs -f livepeer-orchestrator 2>&1 | grep -i "frame\|stream\|cascade\|inference" | head -20
@@ -360,7 +360,7 @@ Processing frame 1
 
 ## Step 8: Verify the transformed output
 
-Retrieve the processed output stream from the gateway:
+Retrieve the processed output stream from the Gateway:
 
 ```bash icon="terminal" filename="get-output"
 # Pull the transformed output HLS stream
@@ -379,11 +379,11 @@ ffplay http://localhost:8936/hls/test-stream-key/index.m3u8
 
 Check the network registration:
 
-Open [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and search for the orchestrator address. The `live-video-to-video` pipeline should appear with **Warm** status.
+Open [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) and search for the Orchestrator address. The `live-video-to-video` pipeline should appear with **Warm** status.
 
 **Latency check:**
 
-Monitor frame processing times in the orchestrator logs. At 30 fps, each frame should be processed in under 33 ms. Repeated frame times above 33 ms show the pipeline is falling behind the incoming stream:
+Monitor frame processing times in the Orchestrator logs. At 30 fps, each frame should be processed in under 33 ms. Repeated frame times above 33 ms show the pipeline is falling behind the incoming stream:
 
 ```bash icon="terminal" filename="check-latency"
 docker logs livepeer-orchestrator 2>&1 | grep -i "frame.*ms\|latency\|processing time" | tail -20
@@ -399,7 +399,7 @@ docker logs livepeer-orchestrator 2>&1 | grep -i "frame.*ms\|latency\|processing
 - CPU bottleneck: WebRTC frame encode/decode is CPU-bound. Monitor CPU with `htop`.
 
 **Pipeline job registration check:**
-- Confirm `live-video-to-video` appears at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+- Confirm `live-video-to-video` appears at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
 - Verify the live runner container is running: `docker ps --filter name=livepeer`.
 - Check the container started cleanly: `docker logs <live-runner-container-name>`.
 
@@ -418,14 +418,14 @@ This command should return `True`. Any other result means CUDA is unavailable in
 
 The Cascade architecture processed a live stream end-to-end:
 
-1. **ffmpeg** sent an RTMP stream to the gateway at `:1935`.
-2. **The gateway** routed the stream to the orchestrator at `:8935` with a `live-video-to-video` capability match.
-3. **The orchestrator** dispatched the stream to the `livepeer/ai-runner:live-base` container.
+1. **FFmpeg** sent an RTMP stream to the Gateway at `:1935`.
+2. **The Gateway** routed the stream to the Orchestrator at `:8935` with a `live-video-to-video` capability match.
+3. **The Orchestrator** dispatched the stream to the `livepeer/ai-runner:live-base` container.
 4. **ComfyStream** received each frame via WebRTC, ran it through the StreamDiffusion workflow, and emitted the processed frame.
-5. **The orchestrator** collected processed frames and returned the output stream through the gateway.
-6. **The HLS output** was available at the gateway's `/hls/` endpoint.
+5. **The Orchestrator** collected processed frames and returned the output stream through the Gateway.
+6. **The HLS output** was available at the Gateway's `/hls/` endpoint.
 
-Payment for live streams uses an interval-based model instead of per-frame settlement: the gateway sends periodic PM tickets at a configurable interval (`-livePaymentInterval`, default 5 seconds) instead of one ticket per frame. This reduces payment overhead for continuous streams.
+Payment for live streams uses an interval-based model instead of per-frame settlement: the Gateway sends periodic PM tickets at a configurable interval (`-livePaymentInterval`, default 5 seconds) instead of one ticket per frame. This reduces payment overhead for continuous streams.
 
 <CustomDivider />
 

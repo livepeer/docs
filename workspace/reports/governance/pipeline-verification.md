@@ -1,6 +1,6 @@
 # Pipeline end-to-end verification
 
-Generated 2026-05-25T11:41:46.543Z by `operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js`.
+Generated 2026-05-25T13:27:09.194Z by `operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js`.
 
 Per-dispatcher end-to-end run: each invoked with `--mode pr --dry-run`, exit code + output captured, result classified.
 
@@ -8,99 +8,13 @@ Per-dispatcher end-to-end run: each invoked with `--mode pr --dry-run`, exit cod
 
 | Status | Count |
 |---|---|
-| ✓ pass | 33 |
-| ⚠ drift (pipeline working, stale state) | 13 |
-| ◎ env-missing (requires secret) | 1 |
-| ✗ fail | 6 |
-| ⏱ timeout | 6 |
+| ✓ pass | 34 |
+| ⚠ drift (pipeline working, stale state) | 18 |
+| ◎ env-missing (requires secret) | 0 |
+| ✗ fail | 0 |
+| ⏱ timeout | 7 |
 | ⏭ infra-skip (excluded from verification) | 6 |
 | **Total** | 65 |
-
-## ✗ Failures — pipelines with real bugs
-
-### `operations/scripts/dispatch/content/copy/dispatch-copy-update.js`
-
-- **Concern:** copy · **Tier:** meta · **Exit:** 1
-
-Last 400 chars of output:
-```
-    at Module._load (node:internal/modules/cjs/loader:1192:37)
-    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
-    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
-    at node:internal/main/run_main_module:36:49 {
-  code: 'MODULE_NOT_FOUND',
-  requireStack: []
-}
-
-Node.js v22.22.2
-
-```
-
-### `operations/scripts/dispatch/content/health/dispatch-health-repair.js`
-
-- **Concern:** health · **Tier:** meta · **Exit:** 1
-
-Last 400 chars of output:
-```
- matching v2 docs.json navigation files to audit.
-ℹ️  Staged mode with no matching files; leaving existing reports unchanged.
-repair-wcag (dry-run): would apply 0 fix(es). Blocking remaining: 0. Report: workspace/reports/health/wcag/wcag-repair.md
-
-=== dispatch-content-quality.js (--mode manual) ===
-repair-content-quality: no target files.
-❌ Unknown argument: --staged
-❌ Unknown argument: --staged
-
-```
-
-### `operations/scripts/dispatch/content/health/dispatch-page-structure.js`
-
-- **Concern:** health · **Tier:** pipeline · **Exit:** 1
-
-Last 400 chars of output:
-```
-(s); found 0 finding(s); fixed 0; remaining 0.
-
-✅ MDX-safe markdown validation passed (0 files checked)
-⏭️ Generated file banner enforcement skipped in staged mode (no relevant staged files).
-lint-structure: no files to check.
-check-anchor-usage failed: Unknown argument: --staged
-Description quality validator failed: Unknown argument: --staged
-check-page-endings failed: Unknown argument: --staged
-
-```
-
-### `operations/scripts/dispatch/content/maintenance/dispatch-release-version.js`
-
-- **Concern:** maintenance · **Tier:** pipeline · **Exit:** 1
-
-Last 400 chars of output:
-```
-Unsupported argument: --check
-
-```
-
-### `operations/scripts/dispatch/governance/dispatch-pipelines.js`
-
-- **Concern:** governance · **Tier:** pipeline · **Exit:** 1
-
-Last 400 chars of output:
-```
-Usage: node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js [--dry-run] [--auto-commit] [--report-only] [--strict] [--staged|--files <path[,path...]>|--full]
-Script-governance fix mode requires explicit scope. Use --staged or --files for bounded repair.
-
-```
-
-### `operations/scripts/dispatch/governance/dispatch-workspace-retention.js`
-
-- **Concern:** governance · **Tier:** pipeline · **Exit:** 1
-
-Last 400 chars of output:
-```
-audit-tasks-folders failed: --audit-output-dir must resolve under workspace/: workspace/reports/repo-ops
-
-```
 
 ## ⏱ Timeouts — likely full-repo scans (verify manually)
 
@@ -109,6 +23,7 @@ audit-tasks-folders failed: --audit-output-dir must resolve under workspace/: wo
 - `operations/scripts/dispatch/content/brand/dispatch-grammar-en-gb.js` (brand)
 - `operations/scripts/dispatch/governance/dispatch-governance-check.js` (governance)
 - `operations/scripts/dispatch/governance/dispatch-governance-scan.js` (governance)
+- `operations/scripts/dispatch/governance/dispatch-pipelines.js` (governance)
 - `operations/scripts/dispatch/governance/dispatch-script-inventory.js` (governance)
 
 ## ⚠ Drift detected — pipelines working, repo has stale state
@@ -119,17 +34,18 @@ audit-tasks-folders failed: --audit-output-dir must resolve under workspace/: wo
 - `operations/scripts/dispatch/content/brand/dispatch-voice-register.js` (brand) — exit 1
 - `operations/scripts/dispatch/content/copy/dispatch-canonical-sync.js` (copy) — exit 1
 - `operations/scripts/dispatch/content/copy/dispatch-copy-check.js` (copy) — exit 1
+- `operations/scripts/dispatch/content/health/dispatch-health-check.js` (health) — exit 1
+- `operations/scripts/dispatch/content/health/dispatch-health-repair.js` (health) — exit 1
+- `operations/scripts/dispatch/content/health/dispatch-page-structure.js` (health) — exit 1
+- `operations/scripts/dispatch/content/maintenance/dispatch-catalogs.js` (maintenance) — exit 1
 - `operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js` (maintenance) — exit 1
 - `operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js` (maintenance) — exit 1
 - `operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js` (maintenance) — exit 1
+- `operations/scripts/dispatch/governance/dispatch-folder-allowlist.js` (governance) — exit 1
 - `operations/scripts/dispatch/governance/dispatch-governance-map.js` (governance) — exit 1
 - `operations/scripts/dispatch/governance/dispatch-governance-sync.js` (governance) — exit 1
 - `operations/scripts/dispatch/governance/dispatch-root-governance.js` (governance) — exit 1
 - `operations/scripts/dispatch/governance/dispatch-workflow-governance.js` (governance) — exit 1
-
-## ◎ Env-missing — requires CI secret or local .env
-
-- `operations/scripts/dispatch/content/health/dispatch-health-check.js` (health)
 
 ## All dispatchers by concern
 
@@ -156,7 +72,7 @@ audit-tasks-folders failed: --audit-output-dir must resolve under workspace/: wo
 | `dispatch-changelogs.js` | pipeline | ✓ pass |
 | `dispatch-copy-check.js` | meta | ⚠ drift (pipeline working) |
 | `dispatch-copy-repair.js` | meta | ✓ pass |
-| `dispatch-copy-update.js` | meta | ✗ fail (exit 1) |
+| `dispatch-copy-update.js` | meta | ✓ pass |
 | `dispatch-ownerless-language.js` | pipeline | ✓ pass |
 | `dispatch-showcase.js` | pipeline | ✓ pass |
 | `dispatch-social-feeds.js` | pipeline | ✓ pass |
@@ -180,7 +96,7 @@ audit-tasks-folders failed: --audit-output-dir must resolve under workspace/: wo
 |---|---|---|
 | `dispatch-action-docs.js` | pipeline | ✓ pass |
 | `dispatch-codex-compliance.js` | pipeline | ✓ pass |
-| `dispatch-folder-allowlist.js` | pipeline | ✓ pass |
+| `dispatch-folder-allowlist.js` | pipeline | ⚠ drift (pipeline working) |
 | `dispatch-governance-check.js` | meta | ⏱  timeout |
 | `dispatch-governance-generate.js` | meta | ✓ pass |
 | `dispatch-governance-map.js` | pipeline | ⚠ drift (pipeline working) |
@@ -188,33 +104,33 @@ audit-tasks-folders failed: --audit-output-dir must resolve under workspace/: wo
 | `dispatch-governance-sync.js` | meta | ⚠ drift (pipeline working) |
 | `dispatch-jsdoc-headers.js` | pipeline | ✓ pass |
 | `dispatch-new-file-governance.js` | pipeline | ✓ pass |
-| `dispatch-pipelines.js` | pipeline | ✗ fail (exit 1) |
+| `dispatch-pipelines.js` | pipeline | ⏱  timeout |
 | `dispatch-root-governance.js` | pipeline | ⚠ drift (pipeline working) |
 | `dispatch-script-inventory.js` | pipeline | ⏱  timeout |
 | `dispatch-script-locations.js` | pipeline | ✓ pass |
 | `dispatch-script-registry.js` | pipeline | ✓ pass |
 | `dispatch-workflow-governance.js` | pipeline | ⚠ drift (pipeline working) |
-| `dispatch-workspace-retention.js` | pipeline | ✗ fail (exit 1) |
+| `dispatch-workspace-retention.js` | pipeline | ✓ pass |
 
 ### health — 9 dispatchers
 
 | Dispatcher | Tier | Status |
 |---|---|---|
 | `dispatch-content-quality.js` | pipeline | ✓ pass |
-| `dispatch-health-check.js` | meta | ◎ env-missing (requires secret) |
-| `dispatch-health-repair.js` | meta | ✗ fail (exit 1) |
+| `dispatch-health-check.js` | meta | ⚠ drift (pipeline working) |
+| `dispatch-health-repair.js` | meta | ⚠ drift (pipeline working) |
 | `dispatch-health-scan.js` | meta | ⏭ infra-skip |
 | `dispatch-openapi-reference.js` | pipeline | ✓ pass |
 | `dispatch-page-integrity.js` | pipeline | ✓ pass |
 | `dispatch-page-rendering.js` | pipeline | ⏭ infra-skip |
-| `dispatch-page-structure.js` | pipeline | ✗ fail (exit 1) |
+| `dispatch-page-structure.js` | pipeline | ⚠ drift (pipeline working) |
 | `dispatch-wcag.js` | pipeline | ✓ pass |
 
 ### maintenance — 13 dispatchers
 
 | Dispatcher | Tier | Status |
 |---|---|---|
-| `dispatch-catalogs.js` | pipeline | ✓ pass |
+| `dispatch-catalogs.js` | pipeline | ⚠ drift (pipeline working) |
 | `dispatch-component-registry.js` | pipeline | ⚠ drift (pipeline working) |
 | `dispatch-config-flags.js` | pipeline | ✓ pass |
 | `dispatch-contract-addresses.js` | pipeline | ⏭ infra-skip |
@@ -225,5 +141,5 @@ audit-tasks-folders failed: --audit-output-dir must resolve under workspace/: wo
 | `dispatch-maintenance-check.js` | meta | ⚠ drift (pipeline working) |
 | `dispatch-maintenance-generate.js` | meta | ⚠ drift (pipeline working) |
 | `dispatch-maintenance-update.js` | meta | ⏭ infra-skip |
-| `dispatch-release-version.js` | pipeline | ✗ fail (exit 1) |
+| `dispatch-release-version.js` | pipeline | ✓ pass |
 | `dispatch-sdk-clients.js` | pipeline | ✓ pass |

@@ -15,18 +15,34 @@
 
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
 const REPO_ROOT = process.cwd();
 const { parsePipelineArgs, runAtomic, passThroughFlags } = require(path.join(REPO_ROOT, 'tools/lib/governance/pipeline-mode'));
 
-const PIPELINES = [
-  'dispatch-page-structure.js',
-  'dispatch-page-rendering.js',
-  'dispatch-page-integrity.js',
-  'dispatch-wcag.js',
-  'dispatch-content-quality.js',
-  'dispatch-openapi-reference.js',
-].map((f) => path.join(REPO_ROOT, 'operations/scripts/dispatch/content/health', f));
+// Filesystem-discovered pipeline children. Adding a new dispatch-*.js to this
+// folder auto-enrols it on the next run, so the three health metas (check,
+// repair, scan) never drift apart. Opt-out: tag a draft pipeline with
+// `@pipeline draft` in its JSDoc header and it is excluded until promoted.
+const HEALTH_DIR = path.join(REPO_ROOT, 'operations/scripts/dispatch/content/health');
+const META_PREFIX = 'dispatch-health-'; // metas — never recurse into themselves
+
+function discoverPipelines() {
+  return fs.readdirSync(HEALTH_DIR)
+    .filter((f) => f.startsWith('dispatch-') && f.endsWith('.js') && !f.startsWith(META_PREFIX))
+    .filter((f) => {
+      try {
+        const head = fs.readFileSync(path.join(HEALTH_DIR, f), 'utf8').slice(0, 2000);
+        return !/@pipeline\s+draft\b/i.test(head);
+      } catch (_) {
+        return true;
+      }
+    })
+    .sort()
+    .map((f) => path.join(HEALTH_DIR, f));
+}
+
+const PIPELINES = discoverPipelines();
 
 function main() {
   let args; try { args = parsePipelineArgs(process.argv.slice(2)); } catch (e) { console.error(e.message); process.exit(2); }

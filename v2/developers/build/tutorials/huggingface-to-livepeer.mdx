@@ -30,21 +30,21 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 
 <Tip>
   Your Hugging Face model already fits one of the ten built-in Livepeer pipelines. You declare it, pre-download
-  the weights, restart the orchestrator with the AI flags, and verify through your own self-hosted gateway. No
+  the weights, restart the Orchestrator with the AI flags, and verify through your own self-hosted Gateway. No
   Studio. No Daydream. No code written.
 </Tip>
 
 ---
 
-By the end of this tutorial, a Hugging Face model is running on your Livepeer orchestrator, advertised to the
-network, and callable through a gateway you operate. The example model is
+By the end of this tutorial, a Hugging Face model is running on your Livepeer Orchestrator, advertised to the
+network, and callable through a Gateway you operate. The example model is
 `SG161222/RealVisXL_V4.0_Lightning`, served through the `text-to-image` pipeline.
 
 **What you will verify:**
-- `aiModels.json` parses cleanly at orchestrator startup
+- `aiModels.json` parses cleanly at Orchestrator startup
 - The runner container loads the model into VRAM
 - The model is advertised on `tools.livepeer.cloud/ai/network-capabilities`
-- A request through your self-hosted gateway returns a successful inference result
+- A request through your self-hosted Gateway returns a successful inference result
 
 <CustomDivider />
 
@@ -164,8 +164,8 @@ Each requirement is a hard prerequisite, not a soft one. Stop here if any is not
   </thead>
   <tbody>
     <TableRow>
-      <TableCell>Active orchestrator on Arbitrum One</TableCell>
-      <TableCell>Registered on-chain with a reachable `serviceAddr`, in the active set. Verify on `explorer.livepeer.org`.</TableCell>
+      <TableCell>Active Orchestrator on Arbitrum One</TableCell>
+      <TableCell>Registered on-chain with a reachable `serviceAddr`, in the Active Set. Verify on `explorer.livepeer.org`.</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>NVIDIA GPU with 24 GB VRAM minimum</TableCell>
@@ -204,7 +204,7 @@ the container, which maps to this directory on the host.
 
 ## Step 2: Declare the model in aiModels.json
 
-Create an `aiModels.json` file. The orchestrator parses this file at startup and advertises every pipeline it
+Create an `aiModels.json` file. The Orchestrator parses this file at startup and advertises every pipeline it
 lists.
 
 ```json icon="code" title="aiModels.json"
@@ -299,9 +299,9 @@ Expect SDXL's standard layout: `model_index.json`, `unet/`, `vae/`, `text_encode
 
 <CustomDivider />
 
-## Step 4: Start the orchestrator with the new model
+## Step 4: Start the Orchestrator with the new model
 
-Stop your existing `go-livepeer` orchestrator and restart with the AI flags:
+Stop your existing `go-livepeer` Orchestrator and restart with the AI flags:
 
 ```bash icon="terminal" title="start-orchestrator.sh"
 go-livepeer \
@@ -364,15 +364,15 @@ Watch the logs. A successful warm load looks like a runner-container start, a mo
 ## Step 5: Verify on the network capabilities tool
 
 Open [`tools.livepeer.cloud/ai/network-capabilities`](https://tools.livepeer.cloud/ai/network-capabilities) in
-a browser. This dashboard reads live capability advertisements from active orchestrators on the network.
+a browser. This dashboard reads live capability advertisements from active Orchestrators on the network.
 
-Find your orchestrator address. You should see:
+Find your Orchestrator address. You should see:
 
-- the `text-to-image` pipeline listed under your orchestrator
+- the `text-to-image` pipeline listed under your Orchestrator
 - `SG161222/RealVisXL_V4.0_Lightning` listed under that pipeline
 - a warm indicator, if the dashboard surfaces it
 
-If your orchestrator is not in the list, the model is not visible to the network. The three usual causes:
+If your Orchestrator is not in the list, the model is not visible to the network. The three usual causes:
 
 <AccordionGroup>
   <Accordion title="Orchestrator not in the active set" icon="circle-exclamation">
@@ -384,7 +384,7 @@ If your orchestrator is not in the list, the model is not visible to the network
     The most common is CUDA out-of-memory at warm load.
   </Accordion>
   <Accordion title="aiModels.json did not parse" icon="code">
-    `go-livepeer` was started without `-aiWorker`, or `aiModels.json` did not parse. Check the orchestrator
+    `go-livepeer` was started without `-aiWorker`, or `aiModels.json` did not parse. Check the Orchestrator
     startup logs for parse errors.
   </Accordion>
 </AccordionGroup>
@@ -396,13 +396,13 @@ Resolve any of these before continuing.
 ## Step 6: Send a test inference request
 
 Two paths verify the model end-to-end without touching Studio or Daydream. Use both in order: localhost first,
-gateway second.
+Gateway second.
 
 ### Step 6a: Hit the runner directly on localhost
 
 The runner is a FastAPI service. Source:
 [`livepeer/ai-worker/runner/src/runner/main.py`](https://github.com/livepeer/ai-worker/blob/main/runner/src/runner/main.py).
-The orchestrator runs it on a port internal to the host (printed in startup logs as the AI worker port).
+The Orchestrator runs it on a port internal to the host (printed in startup logs as the AI worker port).
 
 ```bash icon="terminal" title="runner-direct.sh"
 curl -X POST http://localhost:<runner-port>/text-to-image \
@@ -429,11 +429,11 @@ jq -r '.images[0].url // .images[0]' result.json | head -c 200
 ```
 
 This step confirms the model is loaded and inference works. It does not confirm that the model is reachable
-through the Livepeer network. That is Step 6b.
+through the Livepeer Network. That is Step 6b.
 
-### Step 6b: Self-hosted gateway test
+### Step 6b: Self-hosted Gateway test
 
-`go-livepeer` runs as a gateway when started with `-gateway`. On a separate process or machine:
+`go-livepeer` runs as a Gateway when started with `-gateway`. On a separate process or machine:
 
 ```bash icon="terminal" title="start-gateway.sh"
 go-livepeer \
@@ -443,10 +443,10 @@ go-livepeer \
   -ethUrl <your-arbitrum-rpc>
 ```
 
-The `-orchAddr` flag pins discovery to your own orchestrator, removing the variability of network-wide
-selection. This is what makes the test deterministic: the gateway can only route to your node.
+The `-orchAddr` flag pins discovery to your own Orchestrator, removing the variability of network-wide
+selection. This is what makes the test deterministic: the Gateway can only route to your node.
 
-Then send the inference request to the gateway:
+Then send the inference request to the Gateway:
 
 ```bash icon="terminal" title="gateway-request.sh"
 curl -X POST http://localhost:8935/text-to-image \
@@ -462,14 +462,14 @@ curl -X POST http://localhost:8935/text-to-image \
   --output gateway-result.json
 ```
 
-The gateway handles discovery, capability matching, ticket-based payment, and routing to the orchestrator.
+The Gateway handles discovery, capability matching, ticket-based payment, and routing to the Orchestrator.
 The response includes the inference output and a settlement record for the probabilistic micropayment ticket.
 A successful response means your model is reachable across the protocol layer through your own infrastructure.
 
 <Note>
-  The Livepeer Cloud Community Gateway is a free public gateway maintained by the Cloud SPE (Titan Node).
+  The Livepeer Cloud Community Gateway is a free public Gateway maintained by the Cloud SPE (Titan Node).
   Sending a request to it tests routing from outside your own infrastructure. The downside is non-determinism:
-  it selects an orchestrator from the active set and may not select yours. Use it only as a cross-check after
+  it selects an Orchestrator from the Active Set and may not select yours. Use it only as a cross-check after
   Step 6b succeeds, never as the primary verification.
 </Note>
 
@@ -479,10 +479,10 @@ A successful response means your model is reachable across the protocol layer th
 
 The tutorial is complete when all four are observable:
 
-1. `aiModels.json` declares the model and `go-livepeer` parsed it cleanly at startup (orchestrator logs)
+1. `aiModels.json` declares the model and `go-livepeer` parsed it cleanly at startup (Orchestrator logs)
 2. The runner container is running and the model is loaded into VRAM (`docker ps`, `nvidia-smi`)
-3. The orchestrator advertises the model on `tools.livepeer.cloud/ai/network-capabilities`
-4. A request through your self-hosted gateway returns a successful inference result
+3. The Orchestrator advertises the model on `tools.livepeer.cloud/ai/network-capabilities`
+4. A request through your self-hosted Gateway returns a successful inference result
 
 If any one of these is missing, the model is not yet on the network. Resolve before relying on the path for
 paid traffic.
@@ -493,7 +493,7 @@ paid traffic.
 
 <AccordionGroup>
   <Accordion title="Pricing" icon="coins">
-    Setting price-per-pixel above the network median means your orchestrator receives no jobs. Gateway
+    Setting price-per-pixel above the network median means your Orchestrator receives no jobs. Gateway
     selection in `go-livepeer` filters by price competitiveness. Compare against the rates visible on the
     network capabilities dashboard before going live.
   </Accordion>
@@ -502,7 +502,7 @@ paid traffic.
     you can warm one SDXL plus, perhaps, a smaller pipeline like `image-to-text` (4 GB floor per
     `Salesforce/blip-image-captioning-large`) but not two SDXL variants. Cold models (`warm: false`) share
     VRAM via swap on first request; price them lower because the cold-start latency makes them less attractive
-    to gateways.
+    to Gateways.
   </Accordion>
   <Accordion title="Same flow, different model" icon="arrows-rotate">
     Replace the `model_id` in `aiModels.json` and the `MODEL_ID` in the download command with your chosen
@@ -539,7 +539,7 @@ between HF identifier and Ollama tag for each LLM is the only piece that does no
 standard runner. Reference: the Ollama tag library at [`ollama.com/library`](https://ollama.com/library).
 
 Otherwise the pattern is identical: declare in `aiModels.json`, ensure the runner image is available, restart
-`go-livepeer`, verify on the capabilities tool, test through your self-hosted gateway with an
+`go-livepeer`, verify on the capabilities tool, test through your self-hosted Gateway with an
 OpenAI-compatible chat completion request.
 
 <CustomDivider />
@@ -553,12 +553,12 @@ OpenAI-compatible chat completion request.
     image pull failed (check Docker Hub connectivity).
   </Accordion>
   <Accordion title="Orchestrator absent from capabilities tool but runner loaded" icon="signal">
-    Check [`explorer.livepeer.org`](https://explorer.livepeer.org) that your orchestrator is in the active
+    Check [`explorer.livepeer.org`](https://explorer.livepeer.org) that your Orchestrator is in the active
     set. Capability advertisement requires on-chain registration with sufficient stake.
   </Accordion>
   <Accordion title="Localhost works but gateway fails" icon="globe">
     Confirm `serviceAddr` is reachable from outside your network. Open the relevant port at the firewall,
-    confirm DNS, and confirm the orchestrator is binding to a public interface instead of `localhost`.
+    confirm DNS, and confirm the Orchestrator is binding to a public interface instead of `localhost`.
   </Accordion>
   <Accordion title="Inference returns low-quality output" icon="image">
     Check that you are using the SDXL Lightning recommended sampling (4 steps, low guidance). Different SDXL
@@ -578,7 +578,7 @@ Every claim in this tutorial is grounded in one of the following readable refere
     - [`livepeer/ai-worker/runner/src/runner/pipelines`](https://github.com/livepeer/ai-worker/tree/main/runner/src/runner/pipelines) – supported pipeline list and their I/O shapes
     - [`livepeer/ai-worker/runner/dl_checkpoints.sh`](https://github.com/livepeer/ai-worker/blob/main/runner/dl_checkpoints.sh) – model download script, environment variables, HF integration
     - [`livepeer/ai-worker/runner/src/runner/main.py`](https://github.com/livepeer/ai-worker/blob/main/runner/src/runner/main.py) – FastAPI app, `/health` endpoint, port binding
-    - [`github.com/livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) – orchestrator, gateway, AI worker mode
+    - [`github.com/livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer) – Orchestrator, Gateway, AI worker mode
     - [`livepeer/go-livepeer/cmd/livepeer/livepeer.go`](https://github.com/livepeer/go-livepeer/blob/master/cmd/livepeer/livepeer.go) – flag definitions for `-aiWorker`, `-aiModels`, `-aiModelsDir`, `-gateway`, `-orchAddr`, `-serviceAddr`
     - [`livepeer/go-livepeer/ai/worker/docker.go`](https://github.com/livepeer/go-livepeer/blob/master/ai/worker/docker.go) – pipeline-to-image map keyed on canonical pipeline name strings
   </Accordion>
@@ -588,13 +588,13 @@ Every claim in this tutorial is grounded in one of the following readable refere
     - [`hub.docker.com/r/livepeer/ai-runner`](https://hub.docker.com/r/livepeer/ai-runner) – runner image, tags
     - [`hub.docker.com/r/tztcloud/livepeer-ollama-runner`](https://hub.docker.com/r/tztcloud/livepeer-ollama-runner) – Ollama-based LLM runner
     - [`tools.livepeer.cloud/ai/network-capabilities`](https://tools.livepeer.cloud/ai/network-capabilities) – live capability dashboard
-    - [`explorer.livepeer.org`](https://explorer.livepeer.org) – orchestrator active-set status
+    - [`explorer.livepeer.org`](https://explorer.livepeer.org) – Orchestrator active-set status
   </Accordion>
 </AccordionGroup>
 
 <CustomDivider />
 
-Your model is now running on the Livepeer network, advertised to gateways, and callable through your self-hosted gateway. For custom architectures that do not fit a native pipeline, see the [advanced paths](/v2/developers/build/tutorials/huggingface-to-livepeer-advanced).
+Your model is now running on the Livepeer Network, advertised to Gateways, and callable through your self-hosted Gateway. For custom architectures that do not fit a native pipeline, see the [advanced paths](/v2/developers/build/tutorials/huggingface-to-livepeer-advanced).
 
 ## AI agent prompt
 
@@ -611,7 +611,7 @@ Complete the "Add a Hugging Face Model to Livepeer" tutorial for a model that fi
     Three structurally different paths: existing pipeline, custom pipeline, BYOC.
   </Card>
   <Card title="Full AI Pipeline Tutorial" icon="diagram-project" href="/v2/orchestrators/guides/tutorials/full-ai-pipeline-tutorial" arrow horizontal>
-    Local end-to-end pipeline: gateway routes inference to orchestrator and the result returns through the full pipeline.
+    Local end-to-end pipeline: Gateway routes inference to Orchestrator and the result returns through the full pipeline.
   </Card>
   <Card title="Realtime AI Tutorial" icon="video" href="/v2/orchestrators/guides/tutorials/realtime-ai-tutorial" arrow horizontal>
     Live video-to-video pipeline: continuous WebRTC stream in, transformed stream out.

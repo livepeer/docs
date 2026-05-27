@@ -46,7 +46,7 @@ The Livepeer Explorer at [explorer.livepeer.org](https://explorer.livepeer.org/)
 
 ## Round Status
 
-A round is one period during which orchestrators can call `reward` once, parameters can be changed, and a new active set is fixed. Rounds on Arbitrum One are approximately 21 hours long, set by `roundLength` measured in L1 blocks. Each round closes when its block count is reached; the next round begins when an orchestrator calls `RoundsManager.initializeRound()`.
+A round is one period during which Orchestrators can call `reward` once, parameters can be changed, and a new Active Set is fixed. Rounds on Arbitrum One are approximately 21 hours long, set by `roundLength` measured in L1 blocks. Each round closes when its block count is reached; the next round begins when an Orchestrator calls `RoundsManager.initializeRound()`.
 
 <DynamicTableV2
   headerList={['Metric', 'What it shows', 'Why it matters']}
@@ -58,13 +58,13 @@ A round is one period during which orchestrators can call `reward` once, paramet
     },
     {
       Metric: <Subtitle variant="changelog">**Initialized / Locked**</Subtitle>,
-      'What it shows': '`Initialized` once any orchestrator has called `initializeRound()`. `Locked` in the final blocks of a round when bond changes and parameter updates are no longer accepted.',
-      'Why it matters': 'Indicates whether stake changes and reward calls are currently possible. A round that stays uninitialised signals the active set is not actively running.',
+      'What it shows': '`Initialized` once any Orchestrator has called `initializeRound()`. `Locked` in the final blocks of a round when bond changes and parameter updates are no longer accepted.',
+      'Why it matters': 'Indicates whether stake changes and reward calls are currently possible. A round that stays uninitialised signals the Active Set is not actively running.',
     },
     {
       Metric: <Subtitle variant="changelog">**Blocks Remaining / Time Remaining**</Subtitle>,
       'What it shows': 'L1 blocks until the round ends, plus an approximate time estimate using a 12-second L1 block average.',
-      'Why it matters': 'Tells delegators how long they have to bond, change delegate, or wait for a reward call. Tells orchestrators how long they have to call `reward` before missing the round.',
+      'Why it matters': 'Tells Delegators how long they have to bond, change delegate, or wait for a reward call. Tells Orchestrators how long they have to call `reward` before missing the round.',
     },
     {
       Metric: <Subtitle variant="changelog">**Fees (current round)**</Subtitle>,
@@ -73,8 +73,8 @@ A round is one period during which orchestrators can call `reward` once, paramet
     },
     {
       Metric: <Subtitle variant="changelog">**Rewards (current round)**</Subtitle>,
-      'What it shows': 'LPT minted by orchestrators that have called `reward()` this round, displayed as `claimed / mintable LPT`.',
-      'Why it matters': 'Shows how much of the round\'s scheduled inflation has been claimed. A reward call ratio below 100% means some active orchestrators have skipped the round, leaving LPT unminted.',
+      'What it shows': 'LPT minted by Orchestrators that have called `reward()` this round, displayed as `claimed / mintable LPT`.',
+      'Why it matters': 'Shows how much of the round\'s scheduled inflation has been claimed. A reward call ratio below 100% means some active Orchestrators have skipped the round, leaving LPT unminted.',
     },
     {
       Metric: <Subtitle variant="changelog">**Total Supply**</Subtitle>,
@@ -93,7 +93,7 @@ A round is one period during which orchestrators can call `reward` once, paramet
 
 ## Activity Metrics
 
-Fee volume is denominated in ETH (gateways pay in ETH via probabilistic micropayment tickets) and converted to USD at the price oracle value at redemption. Estimated usage converts fee volume into minutes of compute delivered using a per-pixel reference price; methodology last updated 21 August 2023 ([forum post](https://forum.livepeer.org/t/livepeer-explorer-minutes-estimation-methodology/2140)).
+Fee volume is denominated in ETH (Gateways pay in ETH via probabilistic micropayment tickets) and converted to USD at the price oracle value at redemption. Estimated usage converts fee volume into minutes of compute delivered using a per-pixel reference price; methodology last updated 21 August 2023 ([forum post](https://forum.livepeer.org/t/livepeer-explorer-minutes-estimation-methodology/2140)).
 
 <DynamicTableV2
   headerList={['Metric', 'What it shows', 'Why it matters']}
@@ -124,6 +124,14 @@ Fee volume is denominated in ETH (gateways pay in ETH via probabilistic micropay
       'Why it matters': 'The standard "TTM revenue" figure for crypto valuation comparisons.',
     },
   ]}
+/>
+
+<iframe
+  src="https://dune.com/embeds/4073378/6884213"
+  height="420"
+  width="100%"
+  style={{ border: 'none', borderRadius: '8px' }}
+  title="Livepeer transcoding tickets and fees, weekly"
 />
 
 Live: weekly transcoding fee volume from Rick Staa's Dune dashboard. Source: [`dune.com/queries/4073378`](https://dune.com/queries/4073378). For real-time daily data, see the [Explorer homepage](https://explorer.livepeer.org/).
@@ -183,22 +191,22 @@ flowchart LR
     {
       Metric: <Subtitle variant="changelog">**Net Inflation (computed)**</Subtitle>,
       'What it shows': 'Annualised Inflation × (1 − `treasuryRewardCutRate`). The portion of new LPT that reaches stakers after the treasury takes its share.',
-      'Why it matters': 'Real dilution to a delegator. The treasury cut reduces inflation reaching the active set without changing the headline rate.',
+      'Why it matters': 'Real dilution to a Delegator. The treasury cut reduces inflation reaching the Active Set without changing the headline rate.',
     },
     {
       Metric: <Subtitle variant="changelog">**Participation Rate**</Subtitle>,
-      'What it shows': '`totalActiveStake / totalSupply`, the percent of LPT bonded to active orchestrators. Subgraph field: `Protocol.participationRate`.',
+      'What it shows': '`totalActiveStake / totalSupply`, the percent of LPT bonded to active Orchestrators. Subgraph field: `Protocol.participationRate`.',
       'Why it matters': 'Both a security signal (more stake means more economic exposure backing work) and a yield modulator (drives inflation up or down).',
     },
     {
       Metric: <Subtitle variant="changelog">**Supply Change (1Y)**</Subtitle>,
       'What it shows': 'Realised annual change in Total Supply, including reward-call skip rate. Shown directly on the Explorer Round Status panel.',
-      'Why it matters': 'Differs from configured inflation when orchestrators miss reward calls. The honest measure of LPT dilution holders see.',
+      'Why it matters': 'Differs from configured inflation when Orchestrators miss reward calls. The honest measure of LPT dilution holders see.',
     },
     {
       Metric: <Subtitle variant="changelog">**LPT Price in ETH**</Subtitle>,
       'What it shows': 'On-chain price oracle value used for ticket settlement and yield calculations. Subgraph field: `Protocol.lptPriceEth`.',
-      'Why it matters': 'The exchange rate that converts ETH fees into LPT-equivalent yield, and the input gateways use to size winning tickets.',
+      'Why it matters': 'The exchange rate that converts ETH fees into LPT-equivalent yield, and the input Gateways use to size winning tickets.',
     },
     {
       Metric: <Subtitle variant="changelog">**FDV (computed)**</Subtitle>,
@@ -217,40 +225,40 @@ flowchart LR
 
 ## Decentralisation Metrics
 
-Concentration metrics are computed from the orchestrator subgraph entity. Active set size and delegator count are direct subgraph fields; concentration ratios and the Nakamoto coefficient are derived from the orchestrator stake distribution.
+Concentration metrics are computed from the Orchestrator subgraph entity. Active Set size and Delegator count are direct subgraph fields; concentration ratios and the Nakamoto coefficient are derived from the Orchestrator stake distribution.
 
 <DynamicTableV2
   headerList={['Metric', 'What it shows', 'Why it matters']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**Active Orchestrators**</Subtitle>,
-      'What it shows': 'Count of orchestrators in the current active set. Subgraph field: `Protocol.activeTranscoderCount`. Capped at `numActiveTranscoders` (currently 100 {/* REVIEW: confirm cap pre-merge */}).',
-      'Why it matters': 'The number of independent operators that run the network. Active set turnover signals competitive pressure on stake.',
+      'What it shows': 'Count of Orchestrators in the current Active Set. Subgraph field: `Protocol.activeTranscoderCount`. Capped at `numActiveTranscoders` (currently 100 {/* REVIEW: confirm cap pre-merge */}).',
+      'Why it matters': 'The number of independent operators that run the network. Active Set turnover signals competitive pressure on stake.',
     },
     {
       Metric: <Subtitle variant="changelog">**Delegators**</Subtitle>,
-      'What it shows': 'Total distinct delegator addresses across the network. Subgraph field: `Protocol.delegatorsCount`.',
+      'What it shows': 'Total distinct Delegator addresses across the network. Subgraph field: `Protocol.delegatorsCount`.',
       'Why it matters': 'The size of the staking community. Growth here signals broader LPT distribution.',
     },
     {
       Metric: <Subtitle variant="changelog">**Average Stake per Orchestrator (computed)**</Subtitle>,
       'What it shows': '`totalActiveStake / activeTranscoderCount`.',
-      'Why it matters': 'Indicates whether stake is evenly distributed across the active set or concentrated in a few large operators.',
+      'Why it matters': 'Indicates whether stake is evenly distributed across the Active Set or concentrated in a few large operators.',
     },
     {
       Metric: <Subtitle variant="changelog">**Average Stake per Delegator (computed)**</Subtitle>,
       'What it shows': '`totalActiveStake / delegatorsCount`.',
-      'Why it matters': 'Distinguishes a network of many small delegators from one of a few whales.',
+      'Why it matters': 'Distinguishes a network of many small Delegators from one of a few whales.',
     },
     {
       Metric: <Subtitle variant="changelog">**Top 10 Stake Concentration (computed)**</Subtitle>,
-      'What it shows': 'Sum of `totalStake` for the top 10 orchestrators divided by `totalActiveStake`. Computed from the orchestrators subgraph query.',
+      'What it shows': 'Sum of `totalStake` for the top 10 Orchestrators divided by `totalActiveStake`. Computed from the Orchestrators subgraph query.',
       'Why it matters': 'Standard concentration measure. Lower is more decentralised.',
     },
     {
       Metric: <Subtitle variant="changelog">**Nakamoto Coefficient (computed)**</Subtitle>,
-      'What it shows': 'Minimum number of orchestrators needed to control 33% of `totalActiveStake`. Walk orchestrators desc by stake until cumulative > 33%.',
-      'Why it matters': 'The standard institutional decentralisation metric. A higher Nakamoto coefficient means more orchestrators must coordinate to influence governance or active-set dynamics.',
+      'What it shows': 'Minimum number of Orchestrators needed to control 33% of `totalActiveStake`. Walk Orchestrators desc by stake until cumulative > 33%.',
+      'Why it matters': 'The standard institutional decentralisation metric. A higher Nakamoto coefficient means more Orchestrators must coordinate to influence governance or active-set dynamics.',
     },
   ]}
 />
@@ -259,15 +267,15 @@ Concentration metrics are computed from the orchestrator subgraph entity. Active
 
 ## Staking Metrics
 
-Forecasted Yield on the orchestrator list is computed live from network parameters (`inflation`, `inflationChange`, `totalActiveStake`, `lptPriceEth`), the orchestrator's parameters (`rewardCut`, `feeShare`, recent fee volume, reward call ratio), and configurable assumptions (time horizon, delegation amount, factors, future inflation). The result is an estimate, not a guarantee.
+Forecasted Yield on the Orchestrator list is computed live from network parameters (`inflation`, `inflationChange`, `totalActiveStake`, `lptPriceEth`), the Orchestrator's parameters (`rewardCut`, `feeShare`, recent fee volume, reward call ratio), and configurable assumptions (time horizon, delegation amount, factors, future inflation). The result is an estimate, not a guarantee.
 
 <DynamicTableV2
   headerList={['Metric', 'What it shows', 'Why it matters']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**Total Staked (LPT)**</Subtitle>,
-      'What it shows': 'Sum of bonded LPT across all active orchestrators. Subgraph field: `Protocol.totalActiveStake`.',
-      'Why it matters': 'The denominator of staking ratio. Excludes stake bonded to inactive orchestrators.',
+      'What it shows': 'Sum of bonded LPT across all active Orchestrators. Subgraph field: `Protocol.totalActiveStake`.',
+      'Why it matters': 'The denominator of staking ratio. Excludes stake bonded to inactive Orchestrators.',
     },
     {
       Metric: <Subtitle variant="changelog">**Staking Ratio**</Subtitle>,
@@ -281,8 +289,8 @@ Forecasted Yield on the orchestrator list is computed live from network paramete
     },
     {
       Metric: <Subtitle variant="changelog">**Forecasted Yield**</Subtitle>,
-      'What it shows': 'Estimated rewards plus fees over a chosen time horizon if the reader were to delegate a chosen LPT amount to a specific orchestrator. Computed live in the Explorer using the formula in the [yield calculation reference](https://docs.livepeer.org/delegators/reference/yield-calculation).',
-      'Why it matters': 'Lets a delegator compare orchestrators on a single yield number. The popover decomposes it into LPT rewards and ETH fees so the source of yield is visible.',
+      'What it shows': 'Estimated rewards plus fees over a chosen time horizon if the reader were to delegate a chosen LPT amount to a specific Orchestrator. Computed live in the Explorer using the formula in the [yield calculation reference](https://docs.livepeer.org/delegators/reference/yield-calculation).',
+      'Why it matters': 'Lets a Delegator compare Orchestrators on a single yield number. The popover decomposes it into LPT rewards and ETH fees so the source of yield is visible.',
     },
     {
       Metric: <Subtitle variant="changelog">**Yield Assumptions**</Subtitle>,
@@ -296,7 +304,7 @@ Forecasted Yield on the orchestrator list is computed live from network paramete
 
 ## Orchestrator Columns
 
-Reward Cut and Fee Cut apply to different income streams and are commonly confused. Reward Cut applies to LPT inflation; Fee Cut applies to ETH fees. The orchestrator list at [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) sorts by Forecasted Yield by default; every column is sortable.
+Reward Cut and Fee Cut apply to different income streams and are commonly confused. Reward Cut applies to LPT inflation; Fee Cut applies to ETH fees. The Orchestrator list at [explorer.livepeer.org/Orchestrators](https://explorer.livepeer.org/orchestrators) sorts by Forecasted Yield by default; every column is sortable.
 
 <DynamicTableV2
   headerList={['Metric', 'What it shows', 'Why it matters']}
@@ -308,37 +316,37 @@ Reward Cut and Fee Cut apply to different income streams and are commonly confus
     },
     {
       Metric: <Subtitle variant="changelog">**Delegated Stake**</Subtitle>,
-      'What it shows': 'Total LPT bonded to this orchestrator: own bond plus all delegators. Subgraph field: `Transcoder.totalStake`.',
+      'What it shows': 'Total LPT bonded to this Orchestrator: own bond plus all Delegators. Subgraph field: `Transcoder.totalStake`.',
       'Why it matters': 'Determines active-set ranking and reward share. Larger stake means a larger share of inflation rewards each round.',
     },
     {
       Metric: <Subtitle variant="changelog">**Trailing 90D Fees**</Subtitle>,
-      'What it shows': 'ETH redeemed by this orchestrator in the last 90 calendar days. Subgraph field: `Transcoder.ninetyDayVolumeETH`.',
-      'Why it matters': 'The orchestrator\'s actual demand-side performance. A high value means gateways are routing to this orchestrator at scale.',
+      'What it shows': 'ETH redeemed by this Orchestrator in the last 90 calendar days. Subgraph field: `Transcoder.ninetyDayVolumeETH`.',
+      'Why it matters': 'The Orchestrator\'s actual demand-side performance. A high value means Gateways are routing to this Orchestrator at scale.',
     },
     {
       Metric: <Subtitle variant="changelog">**Reward Cut**</Subtitle>,
-      'What it shows': 'Percent of inflation rewards the orchestrator keeps. The rest is distributed to delegators by stake share. Subgraph field: `Transcoder.rewardCut` (PPM-million; divide by 10000 for percent).',
-      'Why it matters': 'A higher Reward Cut means the delegator receives less LPT inflation. Lower is better for the delegator.',
+      'What it shows': 'Percent of inflation rewards the Orchestrator keeps. The rest is distributed to Delegators by stake share. Subgraph field: `Transcoder.rewardCut` (PPM-million; divide by 10000 for percent).',
+      'Why it matters': 'A higher Reward Cut means the Delegator receives less LPT inflation. Lower is better for the Delegator.',
     },
     {
       Metric: <Subtitle variant="changelog">**Fee Cut**</Subtitle>,
-      'What it shows': 'Percent of ETH fees the orchestrator keeps. Stored as `feeShare` (the inverse direction): Fee Cut = `1 − feeShare`. Subgraph field: `Transcoder.feeShare` (PPM-million).',
-      'Why it matters': 'A higher Fee Cut means the delegator receives less ETH from each job. Lower is better for the delegator. Often confused with Reward Cut, but they apply to different income streams.',
+      'What it shows': 'Percent of ETH fees the Orchestrator keeps. Stored as `feeShare` (the inverse direction): Fee Cut = `1 − feeShare`. Subgraph field: `Transcoder.feeShare` (PPM-million).',
+      'Why it matters': 'A higher Fee Cut means the Delegator receives less ETH from each job. Lower is better for the Delegator. Often confused with Reward Cut, but they apply to different income streams.',
     },
     {
       Metric: <Subtitle variant="changelog">**Reward Call Ratio (90d)**</Subtitle>,
-      'What it shows': 'Percent of the last 90 rounds in which this orchestrator successfully called `reward()`. Computed from the `pools` subgraph query, counting non-null `rewardTokens` over total rounds.',
-      'Why it matters': 'A reliability signal. An orchestrator that misses reward calls forfeits that round\'s LPT inflation for everyone bonded to them, including delegators.',
+      'What it shows': 'Percent of the last 90 rounds in which this Orchestrator successfully called `reward()`. Computed from the `pools` subgraph query, counting non-null `rewardTokens` over total rounds.',
+      'Why it matters': 'A reliability signal. An Orchestrator that misses reward calls forfeits that round\'s LPT inflation for everyone bonded to them, including Delegators.',
     },
     {
       Metric: <Subtitle variant="changelog">**Latest Fee/Reward Change**</Subtitle>,
-      'What it shows': 'Days since the orchestrator last changed Reward Cut or Fee Cut. Computed from `feeShareUpdateTimestamp` and `rewardCutUpdateTimestamp`.',
-      'Why it matters': 'A recent change may signal the orchestrator is competing for delegation. A multi-year-stable rate means the operator is settled.',
+      'What it shows': 'Days since the Orchestrator last changed Reward Cut or Fee Cut. Computed from `feeShareUpdateTimestamp` and `rewardCutUpdateTimestamp`.',
+      'Why it matters': 'A recent change may signal the Orchestrator is competing for delegation. A multi-year-stable rate means the operator is settled.',
     },
     {
       Metric: <Subtitle variant="changelog">**Treasury Cut (per pool)**</Subtitle>,
-      'What it shows': 'Percent of each round\'s LPT inflation routed to the protocol treasury before any orchestrator or delegator allocation. On-chain: `BondingManager.treasuryRewardCutRate()`.',
+      'What it shows': 'Percent of each round\'s LPT inflation routed to the protocol treasury before any Orchestrator or Delegator allocation. On-chain: `BondingManager.treasuryRewardCutRate()`.',
       'Why it matters': 'Reduces real LPT yield to all stakers in proportion to the treasury cut. Currently set by governance.',
     },
   ]}
@@ -348,44 +356,44 @@ Reward Cut and Fee Cut apply to different income streams and are commonly confus
 
 ## Gateway Columns
 
-Gateway metrics are demand-side: who is routing jobs and paying fees. The gateway list at [explorer.livepeer.org/gateways](https://explorer.livepeer.org/gateways) shows every gateway with a recent winning ticket redemption.
+Gateway metrics are demand-side: who is routing jobs and paying fees. The Gateway list at [explorer.livepeer.org/Gateways](https://explorer.livepeer.org/gateways) shows every Gateway with a recent winning ticket redemption.
 
 <DynamicTableV2
   headerList={['Metric', 'What it shows', 'Why it matters']}
   itemsList={[
     {
       Metric: <Subtitle variant="changelog">**Gateway**</Subtitle>,
-      'What it shows': 'Rank, ENS name or address. The account routing jobs to orchestrators and paying fees.',
-      'Why it matters': 'Identity for the demand side of the network. Major gateways correspond to specific products built on Livepeer.',
+      'What it shows': 'Rank, ENS name or address. The account routing jobs to Orchestrators and paying fees.',
+      'Why it matters': 'Identity for the demand side of the network. Major Gateways correspond to specific products built on Livepeer.',
     },
     {
       Metric: <Subtitle variant="changelog">**Deposit**</Subtitle>,
       'What it shows': 'Current ETH deposit balance funded for ticket redemptions. Subgraph field: `Broadcaster.deposit`.',
-      'Why it matters': 'A funded deposit means the gateway can pay for jobs. Drained deposits cause settlement failures and signal an inactive gateway.',
+      'Why it matters': 'A funded deposit means the Gateway can pay for jobs. Drained deposits cause settlement failures and signal an inactive Gateway.',
     },
     {
       Metric: <Subtitle variant="changelog">**Reserve**</Subtitle>,
-      'What it shows': 'Reserve ETH available for orchestrators to claim if the deposit runs out mid-session. Subgraph field: `Broadcaster.reserve`.',
-      'Why it matters': 'A backstop against deposit exhaustion. Per-orchestrator reserve share is `reserve / activeTranscoderCount`.',
+      'What it shows': 'Reserve ETH available for Orchestrators to claim if the deposit runs out mid-session. Subgraph field: `Broadcaster.reserve`.',
+      'Why it matters': 'A backstop against deposit exhaustion. Per-Orchestrator reserve share is `reserve / activeTranscoderCount`.',
     },
     {
       Metric: <Subtitle variant="changelog">**90d Fees**</Subtitle>,
-      'What it shows': 'ETH paid by this gateway through winning ticket settlements in the last 90 days. Subgraph field: `Broadcaster.ninetyDayVolumeETH`.',
-      'Why it matters': 'Recent demand contribution. The gateway\'s share of 90d Fees Paid network-wide.',
+      'What it shows': 'ETH paid by this Gateway through winning ticket settlements in the last 90 days. Subgraph field: `Broadcaster.ninetyDayVolumeETH`.',
+      'Why it matters': 'Recent demand contribution. The Gateway\'s share of 90d Fees Paid network-wide.',
     },
     {
       Metric: <Subtitle variant="changelog">**Total Fees**</Subtitle>,
-      'What it shows': 'Lifetime ETH paid by this gateway. Subgraph field: `Broadcaster.totalVolumeETH`.',
-      'Why it matters': 'Cumulative gateway impact on the network. Used for ranking and historical analysis.',
+      'What it shows': 'Lifetime ETH paid by this Gateway. Subgraph field: `Broadcaster.totalVolumeETH`.',
+      'Why it matters': 'Cumulative Gateway impact on the network. Used for ranking and historical analysis.',
     },
     {
       Metric: <Subtitle variant="changelog">**Number of Active Gateways (computed)**</Subtitle>,
-      'What it shows': 'Count of `Broadcaster` entities where `lastActiveDay` is within the last 30 days. Computed from the gateways subgraph query.',
-      'Why it matters': 'Demand-side decentralisation. A network served by many gateways is more resilient than one dominated by a single integrator.',
+      'What it shows': 'Count of `Broadcaster` entities where `lastActiveDay` is within the last 30 days. Computed from the Gateways subgraph query.',
+      'Why it matters': 'Demand-side decentralisation. A network served by many Gateways is more resilient than one dominated by a single integrator.',
     },
     {
       Metric: <Subtitle variant="changelog">**Top Gateway Concentration (computed)**</Subtitle>,
-      'What it shows': 'Sum of top-10 gateway 90d fees divided by network 90d fees. Computed from the same subgraph query.',
+      'What it shows': 'Sum of top-10 Gateway 90d fees divided by network 90d fees. Computed from the same subgraph query.',
       'Why it matters': 'The dual of Top 10 Stake Concentration on the supply side. A high value signals demand-side concentration risk.',
     },
   ]}
@@ -395,7 +403,7 @@ Gateway metrics are demand-side: who is routing jobs and paying fees. The gatewa
 
 ## Performance Leaderboard
 
-A measurement service runs reference test jobs against every active orchestrator from each measurement region. Scores aggregate the results. Transcoding and AI scores are tracked separately; AI is further split by pipeline (text-to-image, image-to-image, image-to-video, audio-to-text, text-to-speech, live-video-to-video) and model. The leaderboard sits at [explorer.livepeer.org/leaderboard](https://explorer.livepeer.org/leaderboard).
+A measurement service runs reference test jobs against every active Orchestrator from each measurement region. Scores aggregate the results. Transcoding and AI scores are tracked separately; AI is further split by pipeline (text-to-image, image-to-image, image-to-video, audio-to-text, text-to-speech, live-video-to-video) and model. The leaderboard sits at [explorer.livepeer.org/leaderboard](https://explorer.livepeer.org/leaderboard).
 
 <DynamicTableV2
   headerList={['Metric', 'What it shows', 'Why it matters']}
@@ -403,32 +411,32 @@ A measurement service runs reference test jobs against every active orchestrator
     {
       Metric: <Subtitle variant="changelog">**Total Score (0-10)**</Subtitle>,
       'What it shows': 'Composite score per region. Transcoding: combines Latency Score and Success Rate. AI: emphasises Success Rate over Latency Score.',
-      'Why it matters': 'Single-number ranking for orchestrator quality. The leaderboard sorts by this column by default.',
+      'Why it matters': 'Single-number ranking for Orchestrator quality. The leaderboard sorts by this column by default.',
     },
     {
       Metric: <Subtitle variant="changelog">**Success Rate (%)**</Subtitle>,
-      'What it shows': 'Percent of test jobs the orchestrator successfully completed in the most recent measurement window for the selected region.',
-      'Why it matters': 'Reliability metric. Failed jobs cost the gateway nothing but signal that the orchestrator cannot consistently deliver.',
+      'What it shows': 'Percent of test jobs the Orchestrator successfully completed in the most recent measurement window for the selected region.',
+      'Why it matters': 'Reliability metric. Failed jobs cost the Gateway nothing but signal that the Orchestrator cannot consistently deliver.',
     },
     {
       Metric: <Subtitle variant="changelog">**Latency Score (0-10)**</Subtitle>,
-      'What it shows': 'Round-trip-time score. Transcoding: average test segment duration vs. round-trip time. AI: average round-trip time vs. the median across orchestrators.',
+      'What it shows': 'Round-trip-time score. Transcoding: average test segment duration vs. round-trip time. AI: average round-trip time vs. the median across Orchestrators.',
       'Why it matters': 'Quality signal for time-sensitive work like live video transcoding and real-time AI.',
     },
     {
       Metric: <Subtitle variant="changelog">**Region**</Subtitle>,
       'What it shows': 'Geographic origin of the test job: GLOBAL, FRA (Frankfurt), LAX (Los Angeles), MDW (Chicago), NYC (New York), PRG (Prague), SIN (Singapore), SAO (São Paulo), LON (London). Specific list varies by pipeline type.',
-      'Why it matters': 'Latency is region-dependent. An orchestrator strong in Europe may be weak in Asia. Gateways select by region for latency-critical workloads.',
+      'Why it matters': 'Latency is region-dependent. An Orchestrator strong in Europe may be weak in Asia. Gateways select by region for latency-critical workloads.',
     },
     {
       Metric: <Subtitle variant="changelog">**Pipeline / Model**</Subtitle>,
       'What it shows': 'For AI: the specific pipeline (e.g. `text-to-image`) and model (e.g. `SDXL-Lightning`) the score is for.',
-      'Why it matters': 'AI capability is per-model, not per-orchestrator. An orchestrator may run SDXL-Lightning at high score and not run live video-to-video at all.',
+      'Why it matters': 'AI capability is per-model, not per-Orchestrator. An Orchestrator may run SDXL-Lightning at high score and not run live video-to-video at all.',
     },
     {
       Metric: <Subtitle variant="changelog">**Price Per Pixel**</Subtitle>,
-      'What it shows': 'The orchestrator\'s advertised price-per-pixel for transcoding work. Source: [`nyc.livepeer.com/orchestratorStats`](https://nyc.livepeer.com/orchestratorStats), joined into the leaderboard response.',
-      'Why it matters': 'Cost side of the gateway selection decision. Performance plus price is what determines real routing.',
+      'What it shows': 'The Orchestrator\'s advertised price-per-pixel for transcoding work. Source: [`nyc.livepeer.com/orchestratorStats`](https://nyc.livepeer.com/orchestratorStats), joined into the leaderboard response.',
+      'Why it matters': 'Cost side of the Gateway selection decision. Performance plus price is what determines real routing.',
     },
   ]}
 />
@@ -484,8 +492,8 @@ The Treasury holds LPT funded by a configurable share of each round's inflation.
     },
     {
       Metric: <Subtitle variant="changelog">**Active Set Cap**</Subtitle>,
-      'What it shows': 'Maximum orchestrators eligible per round: `numActiveTranscoders`. On-chain: `BondingManager.numActiveTranscoders()`. Currently 100 {/* REVIEW: confirm cap pre-merge */}.',
-      'Why it matters': 'Hard ceiling on how many independent orchestrators can earn from the active set in any given round.',
+      'What it shows': 'Maximum Orchestrators eligible per round: `numActiveTranscoders`. On-chain: `BondingManager.numActiveTranscoders()`. Currently 100 {/* REVIEW: confirm cap pre-merge */}.',
+      'Why it matters': 'Hard ceiling on how many independent Orchestrators can earn from the Active Set in any given round.',
     },
   ]}
 />
@@ -498,13 +506,13 @@ For treasury balance over time, see Doug Petkanics's [Livepeer Treasury dashboar
 
 A chronological feed of every state-changing protocol call sits at [explorer.livepeer.org/transactions](https://explorer.livepeer.org/transactions). Event types:
 
-- **`BondEvent`**: a delegator bonded LPT to an orchestrator. Includes new delegators, additional bonds, and switches from one delegate to another.
-- **`UnbondEvent` / `RebondEvent`**: a delegator started unbonding or rebonded before withdrawing.
-- **`RewardEvent`**: an orchestrator called `reward()` for a round and minted that round's share of LPT inflation.
-- **`WinningTicketRedeemedEvent`**: a winning probabilistic ticket was settled on-chain, transferring ETH from gateway to orchestrator.
-- **`DepositFundedEvent` / `ReserveFundedEvent`**: a gateway funded its deposit or reserve.
-- **`TranscoderActivatedEvent` / `TranscoderDeactivatedEvent`**: an orchestrator entered or left the active set.
-- **`TranscoderUpdateEvent`**: an orchestrator changed `rewardCut`, `feeShare`, or service URI.
+- **`BondEvent`**: a Delegator bonded LPT to an Orchestrator. Includes new Delegators, additional bonds, and switches from one delegate to another.
+- **`UnbondEvent` / `RebondEvent`**: a Delegator started unbonding or rebonded before withdrawing.
+- **`RewardEvent`**: an Orchestrator called `reward()` for a round and minted that round's share of LPT inflation.
+- **`WinningTicketRedeemedEvent`**: a winning probabilistic ticket was settled on-chain, transferring ETH from Gateway to Orchestrator.
+- **`DepositFundedEvent` / `ReserveFundedEvent`**: a Gateway funded its deposit or reserve.
+- **`TranscoderActivatedEvent` / `TranscoderDeactivatedEvent`**: an Orchestrator entered or left the Active Set.
+- **`TranscoderUpdateEvent`**: an Orchestrator changed `rewardCut`, `feeShare`, or service URI.
 
 Every event is queryable from the subgraph and links through to the underlying Arbiscan transaction.
 
@@ -515,7 +523,7 @@ Every event is queryable from the subgraph and links through to the underlying A
 For analysts and researchers building dashboards or running scripts, the canonical endpoints in one block:
 
 <BorderedBox variant="accent">
-  <Subtitle fontSize="1rem" marginBottom="0.5rem">**Explorer (live, authoritative for current state)**</Subtitle>
+  <Subtitle style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>**Explorer (live, authoritative for current state)**</Subtitle>
 
   Homepage: `https://explorer.livepeer.org/`
   Orchestrators: `https://explorer.livepeer.org/orchestrators`
@@ -526,24 +534,24 @@ For analysts and researchers building dashboards or running scripts, the canonic
   Transactions: `https://explorer.livepeer.org/transactions`
   Per-account: `https://explorer.livepeer.org/accounts/<address>/orchestrating`
 
-  <Subtitle fontSize="1rem" marginTop="1rem" marginBottom="0.5rem">**Subgraph (Arbitrum One, every metric the Explorer reads)**</Subtitle>
+  <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**Subgraph (Arbitrum One, every metric the Explorer reads)**</Subtitle>
 
   GraphQL: `https://gateway.thegraph.com/api/{API_KEY}/subgraphs/id/FE63YgkzcpVocxdCEyEYbvjYqEf2kb1A6daMYRxmejYC`
 
   Default deployment ID is configurable; the value above is the public default referenced in `livepeer/explorer/lib/chains.ts`.
 
-  <Subtitle fontSize="1rem" marginTop="1rem" marginBottom="0.5rem">**Performance leaderboard API**</Subtitle>
+  <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**Performance leaderboard API**</Subtitle>
 
   Aggregated transcoding stats: `https://leaderboard-serverless.vercel.app/api/aggregated_stats`
-  Per-orchestrator: `https://leaderboard-serverless.vercel.app/api/raw_stats?orchestrator=<address>`
+  Per-Orchestrator: `https://leaderboard-serverless.vercel.app/api/raw_stats?orchestrator=<address>`
   AI aggregated stats: `<AI_METRICS_SERVER_URL>/api/aggregated_stats?pipeline=<id>&model=<name>`
   Available pipelines: `<AI_METRICS_SERVER_URL>/api/pipelines?region=<region>`
 
-  <Subtitle fontSize="1rem" marginTop="1rem" marginBottom="0.5rem">**Pricing (orchestrator-advertised prices)**</Subtitle>
+  <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**Pricing (Orchestrator-advertised prices)**</Subtitle>
 
-  All orchestrators: `https://nyc.livepeer.com/orchestratorStats`
+  All Orchestrators: `https://nyc.livepeer.com/orchestratorStats`
 
-  <Subtitle fontSize="1rem" marginTop="1rem" marginBottom="0.5rem">**Dune dashboards**</Subtitle>
+  <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**Dune dashboards**</Subtitle>
 
   Main: [`dune.com/ff3314/livepeer`](https://dune.com/ff3314/livepeer)
   AI: [`dune.com/rickstaa/livepeer-ai`](https://dune.com/rickstaa/livepeer-ai)
@@ -551,7 +559,7 @@ For analysts and researchers building dashboards or running scripts, the canonic
   Profitability: [`dune.com/Lizzl/livepeer-profitability-dashboard`](https://dune.com/Lizzl/livepeer-profitability-dashboard)
   Specific queries: [`4073378`](https://dune.com/queries/4073378) (transcoding fees, weekly), [`3983737`](https://dune.com/queries/3983737) (AI fees, weekly)
 
-  <Subtitle fontSize="1rem" marginTop="1rem" marginBottom="0.5rem">**On-chain contracts (Arbitrum One)**</Subtitle>
+  <Subtitle style={{ fontSize: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>**On-chain contracts (Arbitrum One)**</Subtitle>
 
   Controller: `0xD8E8328501E9645d16Cf49539efC04f734606ee4`
   PollCreator: `0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6`

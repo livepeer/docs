@@ -64,7 +64,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
 
   <StyledStep title="Verify on Livepeer Explorer">
 
-    Open [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) and search by the orchestrator's Ethereum address.
+    Open [explorer.livepeer.org/Orchestrators](https://explorer.livepeer.org/orchestrators) and search by the Orchestrator's Ethereum address.
 
     Check:
 
@@ -85,7 +85,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
         <TableRow>
           <TableCell>Service URI</TableCell>
           <TableCell>Matches `-serviceAddr` exactly</TableCell>
-          <TableCell>Update via `livepeer_cli` → Set orchestrator config → service URI.</TableCell>
+          <TableCell>Update via `livepeer_cli` → Set Orchestrator config → service URI.</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>Stake</TableCell>
@@ -93,14 +93,14 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
           <TableCell>If stake shows 0, the bond transaction may not have confirmed. Check Arbiscan.</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>Reward cut / Fee cut</TableCell>
+          <TableCell>Reward Cut / Fee Cut</TableCell>
           <TableCell>Match the values set during activation</TableCell>
           <TableCell>Adjustable via `livepeer_cli` at any time.</TableCell>
         </TableRow>
       </tbody>
     </StyledTable>
 
-    For AI-enabled nodes, also check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). The configured pipelines should appear with the correct warm/cold status.
+    For AI-enabled nodes, also check [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). The configured pipelines should appear with the correct warm/cold status.
 
   </StyledStep>
 
@@ -112,7 +112,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
     curl -k https://YOUR_PUBLIC_IP:8935/status
     ```
 
-    Any response (including a JSON error) confirms port 8935 is open and reachable. A connection timeout means the firewall is blocking the port - gateways cannot route work to an unreachable node.
+    Any response (including a JSON error) confirms port 8935 is open and reachable. A connection timeout means the firewall is blocking the port - Gateways cannot route work to an unreachable node.
 
     If the port is blocked: check firewall rules, NAT/port-forwarding configuration, and cloud security group settings.
 
@@ -120,7 +120,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
 
   <StyledStep title="Test video transcoding (video and dual mode)">
 
-    Send a test stream to confirm transcoding works on-chain. Use a gateway (or another node as gateway) pointed at the orchestrator, then ffmpeg:
+    Send a test stream to confirm transcoding works on-chain. Use a Gateway (or another node as Gateway) pointed at the Orchestrator, then FFmpeg:
 
     ```bash icon="terminal" filename="test-stream"
     ffmpeg -re \
@@ -132,7 +132,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
       rtmp://localhost:1935/test_stream
     ```
 
-    Check the orchestrator logs for job confirmation:
+    Check the Orchestrator logs for job confirmation:
 
     ```bash icon="terminal" filename="check-transcode"
     docker compose logs 2>&1 | grep -i "got segment\|transcode result" | tail -10
@@ -153,7 +153,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
     A valid ffprobe response showing stream metadata confirms the full video path is working.
 
     <Note>
-      For this test to work, a gateway must be routing the RTMP stream to the orchestrator. If running a standalone orchestrator without a local gateway, skip this test and monitor for `Got segment` messages after the node enters the active set and gateways start routing production traffic.
+      For this test to work, a Gateway must be routing the RTMP stream to the Orchestrator. If running a standalone Orchestrator without a local Gateway, skip this test and monitor for `Got segment` messages after the node enters the Active Set and Gateways start routing production traffic.
     </Note>
 
   </StyledStep>
@@ -186,7 +186,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
 
     Expected: `verify-output.png: PNG image data` with a non-zero file size.
 
-    Also confirm the AI runner container is healthy:
+    Also confirm the AI Runner container is healthy:
 
     ```bash icon="terminal" filename="check-runner"
     docker ps | grep -i "ai-runner"
@@ -203,7 +203,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
 
   <StyledStep title="Confirm reward calling is active">
 
-    Reward calling distributes LPT inflation to the orchestrator each round (~22 hours). Confirm it is enabled:
+    Reward calling distributes LPT inflation to the Orchestrator each round (~22 hours). Confirm it is enabled:
 
     ```bash icon="terminal" filename="check-reward"
     docker compose config | grep -i "reward"
@@ -211,7 +211,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
 
     The startup command should omit `-reward=false`. Its absence means automatic calling is enabled.
 
-    After the first full round completes, verify on Arbiscan that a `reward()` transaction appeared from the orchestrator address. Also check [Livepeer Explorer](https://explorer.livepeer.org) - the Rewards section on the orchestrator page updates after each successful call.
+    After the first full round completes, verify on Arbiscan that a `reward()` transaction appeared from the Orchestrator address. Also check [Livepeer Explorer](https://explorer.livepeer.org) - the Rewards section on the Orchestrator page updates after each successful call.
 
     Check the logs for the reward call message:
 
@@ -259,7 +259,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
         </TableRow>
         <TableRow>
           <TableCell>`current_round`</TableCell>
-          <TableCell>Current Livepeer protocol round - confirms on-chain connectivity</TableCell>
+          <TableCell>Current Livepeer Protocol round - confirms on-chain connectivity</TableCell>
         </TableRow>
       </tbody>
     </StyledTable>
@@ -333,7 +333,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
     </TableRow>
     <TableRow>
       <TableCell>Video transcoding</TableCell>
-      <TableCell>ffmpeg + logs</TableCell>
+      <TableCell>FFmpeg + logs</TableCell>
       <TableCell>`Got segment` in logs</TableCell>
       <TableCell>Video, Dual</TableCell>
     </TableRow>
@@ -345,7 +345,7 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
     </TableRow>
     <TableRow>
       <TableCell>AI capabilities</TableCell>
-      <TableCell>tools.livepeer.cloud</TableCell>
+      <TableCell>tools.Livepeer.cloud</TableCell>
       <TableCell>Pipelines listed as Warm</TableCell>
       <TableCell>AI, Dual</TableCell>
     </TableRow>
@@ -370,19 +370,19 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
 
 <AccordionGroup>
   <Accordion title="No transcoding output" icon="film">
-    Check the GPU was detected at startup (`Transcoding on Nvidia GPU` in logs). Confirm the `-nvidia` flag matches the GPU device ID. Confirm port 8935 is open from external machines. Check the orchestrator logs for error messages on job receipt. See <LinkArrow href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting" label="Troubleshooting" newline={false} />.
+    Check the GPU was detected at startup (`Transcoding on Nvidia GPU` in logs). Confirm the `-nvidia` flag matches the GPU device ID. Confirm port 8935 is open from external machines. Check the Orchestrator logs for error messages on job receipt. See <LinkArrow href="/v2/orchestrators/guides/monitoring-and-tooling/troubleshooting" label="Troubleshooting" newline={false} />.
   </Accordion>
   <Accordion title="AI inference request returns error" icon="microchip">
-    Check the AI runner container is running (`docker ps`). Check its logs for model loading errors (`docker logs <container>`). Confirm `aiModels.json` is valid JSON with correct field names. Ensure the model_id matches exactly (case-sensitive, including the org prefix). Confirm `/var/run/docker.sock` is mounted in the orchestrator container.
+    Check the AI Runner container is running (`docker ps`). Check its logs for model loading errors (`docker logs <container>`). Confirm `aiModels.json` is valid JSON with correct field names. Ensure the model_id matches exactly (case-sensitive, including the org prefix). Confirm `/var/run/docker.sock` is mounted in the Orchestrator container.
   </Accordion>
   <Accordion title="Explorer listing delay" icon="magnifying-glass">
-    Confirm the activation transaction succeeded on Arbiscan. Check the service URI is set and reachable. Verify the stake bonding transactions (both `approve` and `bond`) confirmed. Recent activations appear on Explorer after the next round, because the active set updates once per round (~22 hours).
+    Confirm the activation transaction succeeded on Arbiscan. Check the service URI is set and reachable. Verify the stake bonding transactions (both `approve` and `bond`) confirmed. Recent activations appear on Explorer after the next round, because the Active Set updates once per round (~22 hours).
   </Accordion>
   <Accordion title="Reward-call visibility" icon="gift">
     Confirm the startup command omits `-reward=false`. Check the Arbitrum ETH balance, because reward calls require gas. Confirm the node was online during round initialisation. Check logs for reward call errors. See <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/reward-call-tuning" label="Reward Call Tuning" newline={false} /> for low-stake profitability analysis.
   </Accordion>
   <Accordion title="No jobs after 48 hours" icon="clock">
-    The #1 cause is port 8935 not reachable from the internet. Re-test from an external machine. The second cause is price above gateway caps - check current rates on tools.livepeer.cloud and compare. Third: not in the active set (for video jobs) - check rank on Explorer. AI jobs route by capability, not stake, so ensure capabilities appear on tools.livepeer.cloud.
+    The #1 cause is port 8935 not reachable from the internet. Re-test from an external machine. The second cause is price above Gateway caps - check current rates on tools.Livepeer.cloud and compare. Third: not in the Active Set (for video jobs) - check rank on Explorer. AI jobs route by capability, not stake, so ensure capabilities appear on tools.Livepeer.cloud.
   </Accordion>
 </AccordionGroup>
 
@@ -396,10 +396,10 @@ Finish setup by confirming the node is on-chain, processing jobs, and exposing t
 
 <CardGroup cols={2}>
   <Card title="Staking and Earning" icon="coins" href="/v2/orchestrators/guides/staking-and-rewards/earning-model">
-    How orchestrators earn from service fees and LPT inflation rewards.
+    How Orchestrators earn from service fees and LPT inflation rewards.
   </Card>
   <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/config-and-optimisation/pricing-strategy">
-    Set competitive video and AI prices to attract work from gateways.
+    Set competitive video and AI prices to attract work from Gateways.
   </Card>
   <Card title="Monitoring and Tools" icon="gauge" href="/v2/orchestrators/guides/monitoring-and-tooling/operator-toolbox">
     Full monitoring: Grafana dashboards, alerting, Explorer operations, troubleshooting.

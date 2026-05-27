@@ -36,7 +36,7 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Tip>
-  Warm the model gateways request most often on the pipeline with the highest demand. Check tools.livepeer.cloud weekly – demand shifts as new models are listed and gateways update their routing preferences.
+  Warm the model Gateways request most often on the pipeline with the highest demand. Check tools.Livepeer.cloud weekly – demand shifts as new models are listed and Gateways update their routing preferences.
 </Tip>
 
 ---
@@ -55,7 +55,7 @@ Model sourcing and downloading is covered separately in <LinkArrow href="/v2/orc
 
 ### Impact on job routing
 
-Gateways track first-response latency per orchestrator. Nodes with fast first responses win more jobs. For latency-sensitive pipelines – particularly `text-to-image` and `image-to-image` – cold loading creates a competitive disadvantage on the first request of each session.
+Gateways track first-response latency per Orchestrator. Nodes with fast first responses win more jobs. For latency-sensitive pipelines – particularly `text-to-image` and `image-to-image` – cold loading creates a competitive disadvantage on the first request of each session.
 
 The practical rule: warm your primary revenue pipeline. Keep secondary pipelines cold until VRAM capacity allows warming them.
 
@@ -133,13 +133,13 @@ A 24 GB GPU holds one large diffusion model warm, with a small pipeline (Whisper
 
 ## Model rotation by demand
 
-Demand on the Livepeer AI network shifts over time. A model leading one week often falls back the next as new models are listed or gateway preferences change. Warm model selection should track demand and revenue opportunity.
+Demand on the Livepeer AI network shifts over time. A model leading one week often falls back the next as new models are listed or Gateway preferences change. Warm model selection should track demand and revenue opportunity.
 
 ### Checking current demand
 
-Visit [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) weekly. Filter by pipeline to see which models active gateways are requesting. Models with the most gateway registrations are receiving the most routing traffic.
+Visit [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) weekly. Filter by pipeline to see which models active Gateways are requesting. Models with the most Gateway registrations are receiving the most routing traffic.
 
-The [Livepeer Explorer AI leaderboard](https://explorer.livepeer.org) shows per-orchestrator earnings data, which reveals which price tiers and pipelines are earning the most jobs.
+The [Livepeer Explorer AI leaderboard](https://explorer.livepeer.org) shows per-Orchestrator earnings data, which reveals which price tiers and pipelines are earning the most jobs.
 
 ### Rotating the warm model
 
@@ -162,7 +162,7 @@ To swap which model is warm, update `aiModels.json` and restart the AI worker:
 ]
 ```
 
-The model with `"warm": true` loads at startup. The cold entry is available but will incur first-request latency. After restarting the AI worker container, verify the new warm model appears with **Warm** status at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+The model with `"warm": true` loads at startup. The cold entry is available but will incur first-request latency. After restarting the AI worker container, verify the new warm model appears with **Warm** status at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
 
 Restart the AI worker container and leave the full go-livepeer process running to minimise downtime:
 
@@ -229,15 +229,15 @@ Both flags are experimental. Apply one at a time and verify output quality befor
 
 ## Monitoring model loading
 
-Verify model state after startup by checking the AI runner container logs:
+Verify model state after startup by checking the AI Runner container logs:
 
 ```bash icon="terminal" title="Check model loading logs"
 docker logs <ai-runner-container> 2>&1 | grep -E "warm|loaded|error" | tail -30
 ```
 
-Then confirm via the network registry. Your orchestrator should appear under the correct pipeline with **Warm** status:
+Then confirm via the network registry. Your Orchestrator should appear under the correct pipeline with **Warm** status:
 
-[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
+[tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
 
 A warm model missing from the registry after 5 minutes usually indicates one of these causes:
 - `Error loading warm model` – warm model conflict (too many `"warm": true` entries for available GPUs)

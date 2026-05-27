@@ -127,7 +127,7 @@ Livepeer uses a system of Ethereum smart contracts to permissionlessly govern it
 The [Livepeer Protocol](https://github.com/livepeer/protocol/tree/delta) <LivepeerIcon size={12} color="var(--accent)"/> is deployed on [Arbitrum One](https://arbiscan.io/accounts/label/livepeer) <ArbitrumIcon size={14} color="var(--arbitrum)"/> and uses these contracts to govern:
 
 - Livepeer Token (LPT) ownership and delegation
-- Staking and selection of active orchestrators
+- Staking and selection of active Orchestrators
 - Distribution of inflationary rewards and fees to participants
 - Time-based progression of the protocol through rounds
 - Payment processing through a probabilistic micropayment system
@@ -298,11 +298,11 @@ The Controller is the central registry for all protocol contracts. Every other c
 <Badge color="blue">
   Arbitrum One
 </Badge>
-The BondingManager is the most critical economic contract in the protocol. It manages the active orchestrator pool as a sorted doubly-linked list, handles all LPT bonding and unbonding, and distributes inflationary rewards and fees each round.
+The BondingManager is the most critical economic contract in the protocol. It manages the active Orchestrator pool as a sorted doubly-linked list, handles all LPT bonding and unbonding, and distributes inflationary rewards and fees each round.
 
-The `feeShare` in the protocol is defined as: **the percentage of fees paid to delegators by the transcoder (orchestrator)**. It is not the gateway's cut – it is the orchestrator's share of fees that they pass on to their delegators.
+The `feeShare` in the protocol is defined as: **the percentage of fees paid to Delegators by the transcoder (Orchestrator)**. It is not the Gateway's cut – it is the Orchestrator's share of fees that they pass on to their Delegators.
 
-Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid to delegators by transcoder".
+Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid to Delegators by transcoder".
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="BondingManager" />}>
   **Address (Arbitrum One)**:
@@ -312,11 +312,11 @@ Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid
 
 **Purpose**:
 
-- Manages the active orchestrator pool (sorted by stake using SortedDoublyLL)
-- Handles `bond()`, `unbond()`, and `withdrawStake()` for all delegators
-- Distributes inflationary LPT rewards to orchestrators and their delegators each round
-- Manages the unbonding period – delegators must wait `unbondingPeriod` rounds before withdrawing
-- Tracks per-round earnings pools for each orchestrator
+- Manages the active Orchestrator pool (sorted by stake using SortedDoublyLL)
+- Handles `bond()`, `unbond()`, and `withdrawStake()` for all Delegators
+- Distributes inflationary LPT rewards to Orchestrators and their Delegators each round
+- Manages the unbonding period – Delegators must wait `unbondingPeriod` rounds before withdrawing
+- Tracks per-round earnings pools for each Orchestrator
 - Calls `checkpointBondingState()` on BondingVotes on every state change for governance weight
 - Since Delta upgrade: sends `treasuryRewardCutRate` fraction of each reward to Treasury; contributions halt automatically when treasury balance exceeds `treasuryBalanceCeiling`
 
@@ -327,7 +327,7 @@ Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid
 **Key functions** (from `BondingManager.sol`, `delta` branch):
 
 <FField name="bond" params={["uint256 _amount", "address _to"]}>
-  Delegate LPT stake to an orchestrator
+  Delegate LPT stake to an Orchestrator
 </FField>
 <FField name="unbond" params={["uint256 _amount"]}>
   Begin withdrawal; creates an unbonding lock, starts the unbonding period
@@ -336,7 +336,7 @@ Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid
   Cancel unbonding and re-bond stake to current delegate
 </FField>
 <FField name="rebondFromUnbonded" params={["address _to", "uint256 _unbondingLockId"]}>
-  Re-bond to a new orchestrator from unbonded state
+  Re-bond to a new Orchestrator from unbonded state
 </FField>
 <FField name="withdrawStake" params={["uint256 _unbondingLockId"]}>
   Complete withdrawal after unbonding period expires
@@ -345,10 +345,10 @@ Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid
   Withdraw accumulated ETH fees to a recipient address
 </FField>
 <FField name="transcoder" params={["uint256 _rewardCut", "uint256 _feeShare"]}>
-  Register as an orchestrator or update parameters; `_rewardCut` is % of reward kept by orchestrator; `_feeShare` is % of fees passed to delegators
+  Register as an Orchestrator or update parameters; `_rewardCut` is % of reward kept by Orchestrator; `_feeShare` is % of fees passed to Delegators
 </FField>
 <FField name="reward">
-  Called by active orchestrators each round to mint inflationary LPT and distribute to earnings pool
+  Called by active Orchestrators each round to mint inflationary LPT and distribute to earnings pool
 </FField>
 <FField name="claimEarnings" params={["uint256 _endRound"]}>
   Claim accumulated rewards and fees. Note: `_endRound` is unused; earnings are always claimed through the current round regardless of the value passed.
@@ -357,19 +357,19 @@ Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid
   Publicly callable function to fix a stale voting power checkpoint for any account. Useful for operators after an inconsistent state.
 </FField>
 <FField name="transferBond" params={["address _delegator", "uint256 _amount", "address _oldDelegateNewPosPrev", "address _oldDelegateNewPosNext", "address _newDelegateNewPosPrev", "address _newDelegateNewPosNext"]}>
-  Transfer ownership of a bond (or portion) to a new delegator. Used for stake migrations between wallets.
+  Transfer ownership of a bond (or portion) to a new Delegator. Used for stake migrations between wallets.
 </FField>
 <FField name="pendingStake" returns="uint256" params={["address _addr", "uint256 _endRound"]}>
-  Returns unclaimed pending stake for a delegator through the current round
+  Returns unclaimed pending stake for a Delegator through the current round
 </FField>
 <FField name="pendingFees" returns="uint256" params={["address _addr", "uint256 _endRound"]}>
-  Returns unclaimed pending ETH fees for a delegator through the current round
+  Returns unclaimed pending ETH fees for a Delegator through the current round
 </FField>
 <FField name="getTranscoder" params={["address _transcoder"]}>
-  Returns orchestrator state: lastRewardRound, rewardCut, feeShare, activationRound, deactivationRound, cumulativeRewards, cumulativeFees, lastFeeRound
+  Returns Orchestrator state: lastRewardRound, rewardCut, feeShare, activationRound, deactivationRound, cumulativeRewards, cumulativeFees, lastFeeRound
 </FField>
 <FField name="getDelegator" params={["address _delegator"]}>
-  Returns delegator state: bondedAmount, fees, delegateAddress, delegatedAmount, startRound, lastClaimRound, nextUnbondingLockId
+  Returns Delegator state: bondedAmount, fees, delegateAddress, delegatedAmount, startRound, lastClaimRound, nextUnbondingLockId
 </FField>
 
 **Contract**
@@ -386,7 +386,7 @@ Source: `BondingManager.sol` includes this as struct comment: "// % of fees paid
 <Badge color="blue">
   Arbitrum One
 </Badge>
-The TicketBroker implements Livepeer's off-chain probabilistic micropayment (PM) system. Gateways pre-fund a deposit and reserve on-chain; they send lottery tickets to orchestrators off-chain with each transcoding job. Orchestrators redeem winning tickets on-chain to claim payment. This amortises per-segment payment costs across many tickets.
+The TicketBroker implements Livepeer's off-chain probabilistic micropayment (PM) system. Gateways pre-fund a deposit and reserve on-chain; they send lottery tickets to Orchestrators off-chain with each transcoding job. Orchestrators redeem winning tickets on-chain to claim payment. This amortises per-segment payment costs across many tickets.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="TicketBroker" />}>
   **Address (Arbitrum One)**:
@@ -396,10 +396,10 @@ The TicketBroker implements Livepeer's off-chain probabilistic micropayment (PM)
 
 **Purpose**:
 
-- Holds gateway ETH deposits and reserves
+- Holds Gateway ETH deposits and reserves
 - Validates and settles winning probabilistic payment tickets
-- Manages the unlock period before gateways can withdraw funds
-- Tracks claimed reserves per orchestrator per round to prevent over-redemption
+- Manages the unlock period before Gateways can withdraw funds
+- Tracks claimed reserves per Orchestrator per round to prevent over-redemption
 - Emits `WinningTicketRedeemed` (ticket redemption attempt) and `WinningTicketTransfer` (ETH actually moved) events used for on-chain payment monitoring
 
 **Key functions** (from `MixinTicketBrokerCore.sol`):
@@ -449,7 +449,7 @@ The TicketBroker implements Livepeer's off-chain probabilistic micropayment (PM)
 <Badge color="blue">
   Arbitrum One
 </Badge>
-The RoundsManager defines the protocol's time unit. A round is a fixed number of Arbitrum blocks. The current round must be initialised before orchestrators can call `reward()`. It stores per-round block hashes used as randomness for ticket validation.
+The RoundsManager defines the protocol's time unit. A round is a fixed number of Arbitrum blocks. The current round must be initialised before Orchestrators can call `reward()`. It stores per-round block hashes used as randomness for ticket validation.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="RoundsManager" />}>
   **Address (Arbitrum One)**:
@@ -461,13 +461,13 @@ The RoundsManager defines the protocol's time unit. A round is a fixed number of
 
 - Tracks the current round number and round length in blocks
 - Stores block hashes per round for ticket randomness (used by TicketBroker)
-- Enforces the round lock period – orchestrators cannot change parameters during the lock window at end of each round
+- Enforces the round lock period – Orchestrators cannot change parameters during the lock window at end of each round
 - `initializeRound()` must be called at the start of each new round before reward calls proceed
 
 **Key functions** (from `RoundsManager.sol`):
 
 <FField name="initializeRound">
-  Initialise a new round; callable by any address; updates block hash store and lip upgrade rounds
+  Initialise a new round; callable by any address; updates block hash store and LIP upgrade rounds
 </FField>
 <FField name="currentRound" returns="uint256">
   Returns current round number
@@ -502,7 +502,7 @@ The RoundsManager defines the protocol's time unit. A round is a fixed number of
 <Badge color="blue">
   Arbitrum One
 </Badge>
-The Minter controls LPT token inflation. Each round it calculates the mintable token supply based on the configured inflation rate. Since the Delta upgrade (LIP-91), a configurable fraction of each round's reward is minted to the Treasury rather than solely to orchestrators and delegators.
+The Minter controls LPT token inflation. Each round it calculates the mintable token supply based on the configured inflation rate. Since the Delta upgrade (LIP-91), a configurable fraction of each round's reward is minted to the Treasury rather than solely to Orchestrators and Delegators.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="Minter" />}>
   **Address (Arbitrum One)**:
@@ -515,8 +515,8 @@ The Minter controls LPT token inflation. Each round it calculates the mintable t
 - Manages LPT token inflation schedule
 - Calculates mintable tokens per round based on current `inflation` rate and total LPT supply
 - Adjusts inflation up or down each round based on actual bonding rate vs `targetBondingRate`
-- Called by BondingManager during orchestrator `reward()` calls – not called directly
-- Holds ETH received from TicketBroker redemptions and disburses to orchestrators
+- Called by BondingManager during Orchestrator `reward()` calls – not called directly
+- Holds ETH received from TicketBroker redemptions and disburses to Orchestrators
 
 **Key functions** (from `Minter.sol`):
 
@@ -565,7 +565,7 @@ The Minter controls LPT token inflation. Each round it calculates the mintable t
 <Badge color="blue">
   Arbitrum One
 </Badge>
-The ServiceRegistry stores each orchestrator's publicly advertised HTTPS service URI on-chain. Gateway nodes query this registry during network initialisation to discover orchestrators. Each update emits a `ServiceURIUpdate` event that off-chain indexers track.
+The ServiceRegistry stores each Orchestrator's publicly advertised HTTPS service URI on-chain. Gateway nodes query this registry during network initialisation to discover Orchestrators. Each update emits a `ServiceURIUpdate` event that off-chain indexers track.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="ServiceRegistry" />}>
   **Address (Arbitrum One)**:
@@ -575,9 +575,9 @@ The ServiceRegistry stores each orchestrator's publicly advertised HTTPS service
 
 **Purpose**:
 
-- Allows orchestrators to register and update their service endpoint URIs
-- Enables gateway nodes to discover orchestrators when using `-network arbitrum-one-mainnet`
-- Not used when a gateway specifies `-orchAddr` directly
+- Allows Orchestrators to register and update their service endpoint URIs
+- Enables Gateway nodes to discover Orchestrators when using `-network arbitrum-one-mainnet`
+- Not used when a Gateway specifies `-orchAddr` directly
 
 **Key functions** (from `ServiceRegistry.sol`):
 
@@ -585,7 +585,7 @@ The ServiceRegistry stores each orchestrator's publicly advertised HTTPS service
   Orchestrator registers or updates their HTTPS endpoint; emits `ServiceURIUpdate(address indexed _addr, string _serviceURI)`
 </FField>
 <FField name="getServiceURI" returns="string" params={["address _addr"]}>
-  Returns the registered URI for a given orchestrator address
+  Returns the registered URI for a given Orchestrator address
 </FField>
 
 **Contract**
@@ -602,7 +602,7 @@ The ServiceRegistry stores each orchestrator's publicly advertised HTTPS service
 <Badge color="blue">
   Arbitrum One
 </Badge>
-A standalone ServiceRegistry for AI subnet orchestrators. Detached from the Controller – its address is hardcoded in go-livepeer (`starter.go`) rather than resolved dynamically. Deployed by a different deployer than the main protocol contracts.
+A standalone ServiceRegistry for AI subnet Orchestrators. Detached from the Controller – its address is hardcoded in go-livepeer (`starter.go`) rather than resolved dynamically. Deployed by a different deployer than the main protocol contracts.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="AIServiceRegistry" />}>
   **Address (Arbitrum One)**:
@@ -612,7 +612,7 @@ A standalone ServiceRegistry for AI subnet orchestrators. Detached from the Cont
 
 **Purpose**:
 
-- Stores service URI and capability metadata for AI-enabled orchestrators
+- Stores service URI and capability metadata for AI-enabled Orchestrators
 - Used when a node is started with `-aiServiceRegistry` flag
 - Same interface as ServiceRegistry (`setServiceURI`, `getServiceURI`)
 </Accordion>
@@ -621,7 +621,7 @@ A standalone ServiceRegistry for AI subnet orchestrators. Detached from the Cont
 
 ## Token and Utility Contracts
 
-The LivepeerToken contract originates on Ethereum Mainnet and is bridged to Arbitrum One via paired gateway contracts, with a BridgeMinter handling L1 mint operations.
+The LivepeerToken contract originates on Ethereum Mainnet and is bridged to Arbitrum One via paired Gateway contracts, with a BridgeMinter handling L1 mint operations.
 All active protocol operations use the Arbitrum One representation.
 LPT must be bridged before it can be staked, delegated, or used for payments.
 <Info>
@@ -674,7 +674,7 @@ The LivepeerToken is the native protocol token. It is an ERC-20 with AccessContr
 
 **Purpose**:
 
-- ERC-20 token used for bonding, staking, gateway payment reserves, and governance voting weight
+- ERC-20 token used for bonding, staking, Gateway payment reserves, and governance voting weight
 - `approve()` must be called before bonding or funding deposits
 - On Arbitrum One: minted by Minter (inflationary rewards) and by the bridge (inflows from L1)
 
@@ -761,7 +761,7 @@ Holds MINTER_ROLE on the L1 LivepeerToken. Called by the bridge when LPT is tran
 <Badge color="blue">
   Arbitrum One
 </Badge>
-Paired bridge gateway contracts on Ethereum Mainnet (L1) and Arbitrum One (L2). LPT bridged L1→L2 is locked in L1Escrow; LPT bridged L2→L1 is released from escrow or minted via BridgeMinter. Based on the Dai bridge architecture.
+Paired bridge Gateway contracts on Ethereum Mainnet (L1) and Arbitrum One (L2). LPT bridged L1→L2 is locked in L1Escrow; LPT bridged L2→L1 is released from escrow or minted via BridgeMinter. Based on the Dai bridge architecture.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="Bridge Gateways" />}>
   **L2LPTGateway (Arbitrum One)**:
@@ -820,7 +820,7 @@ graph LR
 <Badge color="blue">
   Arbitrum One
 </Badge>
-BondingVotes implements the ERC-5805 votes interface, storing per-round stake checkpoints for every delegator and orchestrator. The LivepeerGovernor queries it to determine voting power at proposal creation time. Checkpoints are written automatically by BondingManager on every bond, unbond, reward, and earnings claim.
+BondingVotes implements the ERC-5805 votes interface, storing per-round stake checkpoints for every Delegator and Orchestrator. The LivepeerGovernor queries it to determine voting power at proposal creation time. Checkpoints are written automatically by BondingManager on every bond, unbond, reward, and earnings claim.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="BondingVotes" />}>
   **Address (Arbitrum One)**:
@@ -833,7 +833,7 @@ BondingVotes implements the ERC-5805 votes interface, storing per-round stake ch
 - Stores per-round stake checkpoints for every participant
 - Implements ERC-5805 (`getPastVotes`, `getPastTotalSupply`) used by LivepeerGovernor
 - Checkpoints are written by BondingManager – not called directly by users
-- Supports delegator vote overrides: a delegator can override their orchestrator's vote
+- Supports Delegator vote overrides: a Delegator can override their Orchestrator's vote
 
 **Key functions** (from `BondingVotes.sol`, `delta` branch):
 
@@ -911,7 +911,7 @@ The `Update` struct contains: `address[] target`, `uint256[] value`, `bytes[] da
 <Badge color="blue">
   Arbitrum One
 </Badge>
-Implements [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/governance)'s upgradeable Governor framework adapted for Livepeer's stake-weighted voting. Voting power equals bonded LPT as recorded by BondingVotes at proposal creation time. Supports GovernorCountingOverridable – delegators can override their orchestrator's vote on any proposal.
+Implements [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/governance)'s upgradeable Governor framework adapted for Livepeer's stake-weighted voting. Voting power equals bonded LPT as recorded by BondingVotes at proposal creation time. Supports GovernorCountingOverridable – Delegators can override their Orchestrator's vote on any proposal.
 
 <Accordion title={<CustomCardTitle variant="accordion" icon={<ArbitrumIcon color="var(--arbitrum)" />} title="LivepeerGovernor" />}>
   **Address (Arbitrum One)**:
@@ -922,7 +922,7 @@ Implements [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/govern
 **Purpose**:
 
 - On-chain voting for protocol proposals, weighted by bonded LPT stake
-- Delegators can override their orchestrator's vote (GovernorCountingOverridable)
+- Delegators can override their Orchestrator's vote (GovernorCountingOverridable)
 - Passed proposals execute through the Treasury timelock, then through the Governor to the Controller
 - `bumpGovernorVotesTokenAddress()` must be called if BondingVotes address ever changes
 
@@ -1018,7 +1018,7 @@ An [OpenZeppelin](https://docs.openzeppelin.com/contracts/5.x/api/governance#Tim
 
 ## Migration Contracts
 
-The [Confluence upgrade (2022)](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e) migrated the Livepeer protocol from Ethereum Mainnet to Arbitrum One.
+The [Confluence upgrade (2022)](https://medium.com/livepeer-blog/the-confluence-upgrade-is-live-3b6b342ea71e) migrated the Livepeer Protocol from Ethereum Mainnet to Arbitrum One.
 These contracts facilitated that migration.
 <br />The migration is complete - no new migrations are possible - but both contracts remain registered in the Controller.
 <Info> L2Migrator continues to process pending `claimStake` calls from participants who have not yet claimed their migrated stake as of March 2026.</Info>
@@ -1041,7 +1041,7 @@ Facilitated the migration of bonded stake and delegations from Ethereum Mainnet 
 
 - Receives cross-chain migration messages from the L1Migrator via the Arbitrum bridge
 - Allows participants to claim their migrated bonded stake on Arbitrum One via `claimStake()`
-- Allows delegators to claim migrated delegations via `claimDelegatorStake()`
+- Allows Delegators to claim migrated delegations via `claimDelegatorStake()`
 - Holds residual ETH from migration fee payments; no new migrations are possible
 
 **Key functions**:
@@ -1050,7 +1050,7 @@ Facilitated the migration of bonded stake and delegations from Ethereum Mainnet 
   Claim migrated stake on Arbitrum One; callable by participants who completed an L1 migration
 </FField>
 <FField name="finalizeMigrateDelegator" params={["address _l1Addr", "address _l2Addr", "address _delegate", "uint256 _stake", "uint256 _fees"]}>
-  Finalise a delegator migration initiated on L1; called via the bridge
+  Finalise a Delegator migration initiated on L1; called via the bridge
 </FField>
 
 </Accordion>
@@ -1134,7 +1134,7 @@ For the complete list of all current, paused, migration-residual, legacy-operati
     On-chain treasury, funding proposals, SPEs, and the treasury balance ceiling.
   </Card>
   <Card title={<CustomCardTitle icon="landmark" title="Governance" />} href="/v2/about/protocol/governance-model" horizontal arrow>
-    On-chain voting, proposal lifecycle, and delegator vote overrides.
+    On-chain voting, proposal lifecycle, and Delegator vote overrides.
   </Card>
   <Card title={<CustomCardTitle icon="chart-line" title="Economics" />} href="/v2/about/protocol/economics" horizontal arrow>
     Inflation model, bonding rate targets, reward distribution, and fee economics.

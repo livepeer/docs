@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
@@ -425,7 +426,7 @@ function run(options = {}) {
     if (args.mode === 'write') {
       affectedFiles.push({ fullPath, relPath, originalContent: content });
       const updated = applyReplacements(content, replacements);
-      fs.writeFileSync(fullPath, updated, 'utf8');
+      atomicWrite(fullPath, updated);
     }
   }
 
@@ -482,7 +483,7 @@ function run(options = {}) {
 
       for (const af of affectedFiles) {
         if (regressedFiles.has(af.relPath)) {
-          fs.writeFileSync(af.fullPath, af.originalContent, 'utf8');
+          atomicWrite(af.fullPath, af.originalContent);
           reverted++;
         }
       }

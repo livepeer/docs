@@ -27,58 +27,58 @@ purpose: explain
 ---
 import { MathInline, MathBlock } from '/snippets/components/elements/math/Math.jsx'
 
-Delegation returns are driven by a small set of on-chain mechanics: rounds, active-set selection, reward calls, and earnings checkpoints. Understanding those moving parts explains why orchestrator reliability matters as much as headline commission.
+Delegation returns are driven by a small set of on-chain mechanics: rounds, active-set selection, reward calls, and earnings checkpoints. Understanding those moving parts explains why Orchestrator reliability matters as much as headline commission.
 
 ## Rounds
 
 A round is the protocol's accounting unit. Livepeer uses rounds to:
 
-- elect the active set
+- elect the Active Set
 - update inflation-related state
-- determine when orchestrators can mint that round's rewards
+- determine when Orchestrators can mint that round's rewards
 - snapshot bonded stake for governance
 
 Reader-facing shorthand is still "about one day per round", but the exact cadence depends on chain timing. Use the Explorer for the current round and countdown rather than relying on any fixed hourly estimate.
 
-## The active set
+## The Active Set
 
-Only active orchestrators can earn inflation rewards for a round. If your orchestrator drops out of the active set, your stake stays bonded but does not earn round rewards until they return or you redelegate.
+Only active Orchestrators can earn inflation rewards for a round. If your Orchestrator drops out of the Active Set, your stake stays bonded but does not earn round rewards until they return or you redelegate.
 
 <Info>
-  The active-set size is governance-controlled. Current public Livepeer product surfaces still describe the active set as 100 orchestrators, but if you need an operationally exact value, re-check `numActiveTranscoders()` directly before automating against it.
+  The active-set size is governance-controlled. Current public Livepeer product surfaces still describe the Active Set as 100 Orchestrators, but if you need an operationally exact value, re-check `numActiveTranscoders()` directly before automating against it.
 </Info>
 
 ## The `reward()` call
 
-Every active orchestrator has to submit `reward()` on-chain each round. That call is what causes the protocol to mint and account for that round's inflationary LPT for the orchestrator's pool.
+Every active Orchestrator has to submit `reward()` on-chain each round. That call is what causes the protocol to mint and account for that round's inflationary LPT for the Orchestrator's pool.
 
-If the orchestrator misses the call:
+If the Orchestrator misses the call:
 
 - no inflation reward is minted for that pool for that round
 - the missed round does not get backfilled later
-- delegators in that pool permanently miss that round's inflation
+- Delegators in that pool permanently miss that round's inflation
 
-That is why a reliable reward-call history is a first-order delegator signal.
+That is why a reliable reward-call history is a first-order Delegator signal.
 
 ## How delegation is accounted for
 
-When delegator <MathInline latex={String.raw`D`} /> bonds to orchestrator <MathInline latex={String.raw`O`} />, the orchestrator's effective stake becomes:
+When Delegator <MathInline latex={String.raw`D`} /> bonds to Orchestrator <MathInline latex={String.raw`O`} />, the Orchestrator's effective stake becomes:
 
 <MathBlock latex={String.raw`B_O = B_{self,O} + \sum_D b_{D,O}`} />
 
-That total stake is what matters for active-set ranking and reward allocation. Your tokens remain yours, but your stake weight is attributed to the orchestrator you selected.
+That total stake is what matters for active-set ranking and reward allocation. Your tokens remain yours, but your stake weight is attributed to the Orchestrator you selected.
 
 ## Reward accounting
 
-At the protocol level, inflation available to an orchestrator's pool for round <MathInline latex={String.raw`t`} /> is proportional to that pool's share of total bonded stake:
+At the protocol level, inflation available to an Orchestrator's pool for round <MathInline latex={String.raw`t`} /> is proportional to that pool's share of total bonded stake:
 
 <MathBlock latex={String.raw`R_O = R_t \cdot \frac{B_O}{B_T}`} />
 
-Your share of that pool's delegator rewards is then determined by your share of the pool after the orchestrator's `rewardCut`:
+Your share of that pool's Delegator rewards is then determined by your share of the pool after the Orchestrator's `rewardCut`:
 
 <MathBlock latex={String.raw`R_{D,O} = R_O (1 - c_O) \cdot \frac{b_{D,O}}{B_O}`} />
 
-The protocol tracks this through cumulative reward accounting rather than updating every delegator record every round.
+The protocol tracks this through cumulative reward accounting rather than updating every Delegator record every round.
 
 ## Claim timing matters
 
@@ -86,8 +86,8 @@ The protocol tracks this through cumulative reward accounting rather than updati
 
 The critical edge case is timing:
 
-- if you claim after your orchestrator has already called `reward()` for the current round, accounting includes that round
-- if you claim before your orchestrator has called `reward()` for the current round, you can skip that round's reward accounting entirely
+- if you claim after your Orchestrator has already called `reward()` for the current round, accounting includes that round
+- if you claim before your Orchestrator has called `reward()` for the current round, you can skip that round's reward accounting entirely
 
 As of 6 April 2026, the Explorer warning for this behaviour is still not fully shipped in production UI terms because Explorer PR `#613` remains open. Do not rely on the interface to catch the timing for you.
 
@@ -127,5 +127,5 @@ stateDiagram-v2
 
 ## References
 
-- [Livepeer protocol repository](https://github.com/livepeer/protocol)
+- [Livepeer Protocol repository](https://github.com/livepeer/protocol)
 - [Livepeer Explorer](https://explorer.livepeer.org)

@@ -47,7 +47,7 @@ import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-AI Gateways receive HTTP inference requests, match each one to a capable orchestrator, and return the result to the client.
+AI Gateways receive HTTP inference requests, match each one to a capable Orchestrator, and return the result to the client.
 No ETH deposit is required for standard off-chain AI operation.
 
 The pipeline differs fundamentally from video transcoding:
@@ -55,7 +55,7 @@ The pipeline differs fundamentally from video transcoding:
 - routing and pricing is by pipeline and model capability rather than by pixel throughput.
 
 <Note>
-  how AI jobs flow through your gateway. For initial setup and startup commands, see Setup → AI Gateway Quickstart. For custom container workloads, see BYOC Pipelines.
+  how AI jobs flow through your Gateway. For initial setup and startup commands, see Setup → AI Gateway Quickstart. For custom container workloads, see BYOC Pipelines.
 </Note>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -80,7 +80,7 @@ flowchart LR
     GW -->|"JSON response\nimages / text / audio"| CLIENT
 ```
 
-The `AISessionManager` is the gateway component responsible for session tracking, capability matching, and failover. It is the AI equivalent of the video pipeline's `BroadcastSessionsManager`.
+The `AISessionManager` is the Gateway component responsible for session tracking, capability matching, and failover. It is the AI equivalent of the video pipeline's `BroadcastSessionsManager`.
 
 <Card
   title="Source reference: AISessionManager"
@@ -106,7 +106,7 @@ The `AISessionManager` is the gateway component responsible for session tracking
 | Output | Streaming HLS manifest | JSON response (images, text, audio) |
 | Session type | Long-running streaming session | Short request/response |
 | Orchestrator selection | Price + latency + segment history | Pipeline capability + model availability + price |
-| GPU requirement on orchestrator | Optional (CPU mode exists) | Required |
+| GPU requirement on Orchestrator | Optional (CPU mode exists) | Required |
 
 {/* ============================================================
     3. PIPELINE TYPES
@@ -115,11 +115,11 @@ The `AISessionManager` is the gateway component responsible for session tracking
 <CustomDivider style={{margin: "0 0 -2rem 0"}} />
 ## Available Pipelines
 
-Livepeer AI inference routes across three integration patterns. As a gateway operator, you do not build or implement these - you configure which orchestrators you connect to and which pipeline endpoints you expose.
+Livepeer AI inference routes across three integration patterns. As a Gateway operator, you do not build or implement these - you configure which Orchestrators you connect to and which pipeline endpoints you expose.
 
 <AccordionGroup>
   <Accordion title="Standard API pipelines" icon="code">
-    Pre-built, well-defined inference endpoints. Each pipeline has a fixed URL path and request/response schema. Your gateway routes requests to orchestrators advertising the matching pipeline and model.
+    Pre-built, well-defined inference endpoints. Each pipeline has a fixed URL path and request/response schema. Your Gateway routes requests to Orchestrators advertising the matching pipeline and model.
 
     | Pipeline | Endpoint | Output | Pricing unit |
     |---|---|---|---|
@@ -158,14 +158,14 @@ Livepeer AI inference routes across three integration patterns. As a gateway ope
   </Accordion>
 
   <Accordion title="ComfyStream (real-time video AI)" icon="video">
-    ComfyStream integrates ComfyUI workflows with the Livepeer gateway protocol to process live video frames in real time. Each frame is sent to a ComfyStream worker, transformed by a ComfyUI graph (style transfer, depth estimation, face animation), and reassembled into an output stream. TensorRT-accelerated models target 15–30 FPS throughput.
+    ComfyStream integrates ComfyUI workflows with the Livepeer Gateway protocol to process live video frames in real time. Each frame is sent to a ComfyStream worker, transformed by a ComfyUI graph (style transfer, depth estimation, face animation), and reassembled into an output stream. TensorRT-accelerated models target 15–30 FPS throughput.
 
     **Use ComfyStream for:**
     - Real-time style transfer on live streams
     - Per-frame AI effects (depth estimation, face animation, overlays)
     - Interactive AI art with webcam or live video input
 
-    From a gateway operator perspective, ComfyStream workers appear as AI-capable orchestrators. You connect to them via `-orchAddr` the same way as standard AI orchestrators. The pipeline capability they advertise distinguishes them.
+    From a Gateway operator perspective, ComfyStream workers appear as AI-capable Orchestrators. You connect to them via `-orchAddr` the same way as standard AI Orchestrators. The pipeline capability they advertise distinguishes them.
 
     <Card
       title="ComfyStream repository"
@@ -174,14 +174,14 @@ Livepeer AI inference routes across three integration patterns. As a gateway ope
       horizontal
       arrow
     >
-      livepeer/comfystream
+      Livepeer/ComfyStream
     </Card>
   </Accordion>
 
   <Accordion title="BYOC (custom containers)" icon="box">
-    BYOC lets orchestrators run custom Docker inference containers and advertise them as capabilities. Your gateway routes by capability descriptor (for example, `image-to-image` or `depth`) rather than by model name. The orchestrator handles everything inside the container.
+    BYOC lets Orchestrators run custom Docker inference containers and advertise them as capabilities. Your Gateway routes by capability descriptor (for example, `image-to-image` or `depth`) rather than by model name. The Orchestrator handles everything inside the container.
 
-    BYOC from the gateway side is covered in full on the BYOC Pipelines page. The key operator responsibilities are routing by capability, tracking health per capability, and configuring retry policy for cold-start delays.
+    BYOC from the Gateway side is covered in full on the BYOC Pipelines page. The key operator responsibilities are routing by capability, tracking health per capability, and configuring retry policy for cold-start delays.
   </Accordion>
 </AccordionGroup>
 
@@ -192,27 +192,27 @@ Livepeer AI inference routes across three integration patterns. As a gateway ope
 
 ## Orchestrator Discovery
 
-AI gateways operating off-chain do not use the on-chain registry. You specify orchestrators directly.
+AI Gateways operating off-chain do not use the on-chain registry. You specify Orchestrators directly.
 
 ```bash
 -orchAddr https://orch1.example.com:8935,https://orch2.example.com:8935
 ```
 
-The format is `scheme://host:port`. All orchestrators must be running `ai-runner` containers and advertising the pipelines you intend to route. If an orchestrator does not support a requested pipeline, the job fails or falls back to the next orchestrator if one is available.
+The format is `scheme://host:port`. All Orchestrators must be running `ai-runner` containers and advertising the pipelines you intend to route. If an Orchestrator does not support a requested pipeline, the job fails or falls back to the next Orchestrator if one is available.
 
 <Warning>
-  There is no unified AI model registry. You cannot query the network for a list of all available models across all orchestrators. This is a known gap in the current architecture. To discover what models and pipelines a specific orchestrator supports, query their info endpoint directly - {/* REVIEW: confirm exact endpoint path with Rick/j0sh */} typically at `https://orch1.example.com:8935/getOrchestratorInfo`.
+  There is no unified AI model registry. You cannot query the network for a list of all available models across all Orchestrators. This is a known gap in the current architecture. To discover what models and pipelines a specific Orchestrator supports, query their info endpoint directly - {/* REVIEW: confirm exact endpoint path with Rick/j0sh */} typically at `https://orch1.example.com:8935/getOrchestratorInfo`.
 </Warning>
 
 **Current discovery methods:**
 
-- Query orchestrator info endpoints directly
+- Query Orchestrator info endpoints directly
 - Check `tools.livepeer.cloud/ai/network-capabilities` for a community view of warm models across the public network
 - Join Discord `#local-gateways` - SPE operators post their offerings and available models
-- Check Livepeer Explorer for registered orchestrators
+- Check Livepeer Explorer for registered Orchestrators
 
 <Tip>
-  Check [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before selecting a model ID. Models already loaded in GPU memory (warm models) return results significantly faster than cold models that must load from disk first.
+  Check [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) before selecting a model ID. Models already loaded in GPU memory (warm models) return results significantly faster than cold models that must load from disk first.
 </Tip>
 
 <CustomDivider style={{margin: "0 0 -2rem 0"}} />
@@ -222,18 +222,18 @@ The format is `scheme://host:port`. All orchestrators must be running `ai-runner
 
 ## Capability Matching
 
-When a request arrives at your gateway, the `AISessionManager` matches it to an orchestrator based on two criteria:
+When a request arrives at your Gateway, the `AISessionManager` matches it to an Orchestrator based on two criteria:
 
-1. **Pipeline:** does the orchestrator advertise this pipeline type? (e.g., `text-to-image`)
-2. **Model:** does the orchestrator have the requested `model_id` available?
+1. **Pipeline:** does the Orchestrator advertise this pipeline type? (e.g., `text-to-image`)
+2. **Model:** does the Orchestrator have the requested `model_id` available?
 
-If no orchestrator matches both criteria, the request fails with an error. If multiple orchestrators match, the manager routes to the best-performing one based on latency history and current load.
+If no Orchestrator matches both criteria, the request fails with an error. If multiple Orchestrators match, the manager routes to the best-performing one based on latency history and current load.
 
 **Warm vs cold models:**
 
 Orchestrators load models into GPU memory. A model loaded and ready to serve immediately is "warm". A model that must be downloaded or loaded from disk before it can serve is "cold". Cold starts add seconds to minutes of latency for the first request. Warm models respond in milliseconds.
 
-During the current beta phase, orchestrators support one warm model per GPU. {/* REVIEW: confirm whether warm-per-GPU limit has changed since beta - check v1--models-config.mdx for current status */}
+During the current beta phase, Orchestrators support one warm model per GPU. {/* REVIEW: confirm whether warm-per-GPU limit has changed since beta - check v1--models-config.mdx for current status */}
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 {/* ============================================================
@@ -254,16 +254,16 @@ The AI pipeline uses several components that do not exist in the video pipeline:
 
 <AccordionGroup>
   <Accordion title="AISessionManager" icon="gear">
-    Manages AI processing sessions and selects orchestrators with matching AI capabilities. Tracks performance per orchestrator per pipeline. Handles retry and failover when an orchestrator fails mid-request. Defined in `server/ai_http.go`.
+    Manages AI processing sessions and selects Orchestrators with matching AI capabilities. Tracks performance per Orchestrator per pipeline. Handles retry and failover when an Orchestrator fails mid-request. Defined in `server/ai_http.go`.
   </Accordion>
   <Accordion title="MediaMTX integration" icon="stream">
-    Handles media streaming for real-time AI pipelines (ComfyStream and live-video-to-video). MediaMTX manages the stream lifecycle and frame routing between the gateway and the AI worker.
+    Handles media streaming for real-time AI pipelines (ComfyStream and live-video-to-video). MediaMTX manages the stream lifecycle and frame routing between the Gateway and the AI worker.
   </Accordion>
   <Accordion title="Trickle protocol" icon="droplet">
     Enables efficient low-latency streaming for real-time AI video pipelines. The Trickle protocol incrementally delivers video frames to the AI worker rather than buffering full segments, keeping end-to-end latency low for live AI effects.
   </Accordion>
   <Accordion title="ai_process.go workflow" icon="diagram-project">
-    The `server/ai_process.go` file defines the core AI job workflow: authenticate the request, select a capable orchestrator, process the payment (off-chain for standard AI), and manage the live AI pipeline session. This is where per-pixel pricing calculations happen for image pipelines.
+    The `server/ai_process.go` file defines the core AI job workflow: authenticate the request, select a capable Orchestrator, process the payment (off-chain for standard AI), and manage the live AI pipeline session. This is where per-pixel pricing calculations happen for image pipelines.
   </Accordion>
 </AccordionGroup>
 
@@ -274,7 +274,7 @@ The AI pipeline uses several components that do not exist in the video pipeline:
 
 ## Retry Logic
 
-If an orchestrator fails to return a result (timeout, model not loaded, GPU error), the `AISessionManager` retries the request with the next best orchestrator.
+If an Orchestrator fails to return a result (timeout, model not loaded, GPU error), the `AISessionManager` retries the request with the next best Orchestrator.
 
 The retry timeout is controlled by:
 
@@ -282,7 +282,7 @@ The retry timeout is controlled by:
 -aiProcessingRetryTimeout 30s
 ```
 
-The value accepts Go duration format: `30s`, `1m`, `2m30s`. For pipelines that use slow-loading models (cold starts), increase this value - otherwise the gateway will retry before the orchestrator has had time to load the model.
+The value accepts Go duration format: `30s`, `1m`, `2m30s`. For pipelines that use slow-loading models (cold starts), increase this value - otherwise the Gateway will retry before the Orchestrator has had time to load the model.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 {/* ============================================================
@@ -293,9 +293,9 @@ The value accepts Go duration format: `30s`, `1m`, `2m30s`. For pipelines that u
 
 <Tabs>
   <Tab title="Off-chain AI (standard)">
-    The default AI gateway mode. No ETH deposit, no TicketBroker interaction, no Arbitrum RPC required.
+    The default AI Gateway mode. No ETH deposit, no TicketBroker interaction, no Arbitrum RPC required.
 
-    The gateway connects directly to orchestrators via `-orchAddr`. Payment is handled outside the Livepeer PM system - typically via direct billing arrangement with orchestrator operators, or by running your own orchestrator.
+    The Gateway connects directly to Orchestrators via `-orchAddr`. Payment is handled outside the Livepeer PM system - typically via direct billing arrangement with Orchestrator operators, or by running your own Orchestrator.
 
     Start command (minimum flags):
 
@@ -309,7 +309,7 @@ The value accepts Go duration format: `30s`, `1m`, `2m30s`. For pipelines that u
     ```
   </Tab>
   <Tab title="On-chain AI (dual gateway)">
-    When running a dual gateway (AI + video, on-chain), the PM payment system applies to AI jobs as well. ETH deposit and reserve are required. The gateway uses the same ticket-based payment mechanism as video transcoding.
+    When running a dual Gateway (AI + video, on-chain), the PM payment system applies to AI jobs as well. ETH deposit and reserve are required. The Gateway uses the same ticket-based payment mechanism as video transcoding.
 
     Additional flags required for on-chain AI:
 
@@ -335,12 +335,12 @@ The value accepts Go duration format: `30s`, `1m`, `2m30s`. For pipelines that u
 ## Platform Constraints
 
 <Warning>
-  The Livepeer AI binary is Linux-only. Windows and macOS builds are not available. This constraint affects orchestrators, not gateways - but it limits your testing options if you do not have a Linux machine available.
+  The Livepeer AI binary is Linux-only. Windows and macOS builds are not available. This constraint affects Orchestrators, not Gateways - but it limits your testing options if you do not have a Linux machine available.
 </Warning>
 
-The AI inference stack requires a CUDA/GPU toolchain that is only available on Linux. The limitation applies to `ai-runner` containers running on orchestrators.
+The AI inference stack requires a CUDA/GPU toolchain that is only available on Linux. The limitation applies to `ai-runner` containers running on Orchestrators.
 
-| Platform | Video gateway | AI gateway (go-livepeer) | AI binary (orchestrator) |
+| Platform | Video Gateway | AI Gateway (go-livepeer) | AI binary (Orchestrator) |
 |---|---|---|---|
 | Linux | Yes | Yes | Yes |
 | macOS | Yes | Yes | No (GPU toolchain unavailable) |
@@ -377,9 +377,9 @@ Community-maintained resources that partially fill this gap:
 
 | Resource | What it shows | URL |
 |---|---|---|
-| Livepeer Tools | Warm models on public AI network | [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) |
-| Discord #local-gateways | SPE operator offerings | [discord.gg/livepeer](https://discord.gg/livepeer) |
-| Orchestrator info endpoint | What a specific orchestrator supports | `https://orch.example.com:8935/getOrchestratorInfo` |
+| Livepeer Tools | Warm models on public AI network | [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) |
+| Discord #local-Gateways | SPE operator offerings | [discord.gg/Livepeer](https://discord.gg/livepeer) |
+| Orchestrator info endpoint | What a specific Orchestrator supports | `https://orch.example.com:8935/getOrchestratorInfo` |
 
 A unified AI capability registry is an active area of community discussion. Contribute to the conversation on the [Livepeer Forum](https://forum.livepeer.org).
 

@@ -87,7 +87,7 @@ The key decisions for Orchestrator setup are:
     <TableRow>
       <TableCell>**Discovery**</TableCell>
       <TableCell>Gateways find the node via protocol registry</TableCell>
-      <TableCell>Only gateways with explicit `-orchAddr`</TableCell>
+      <TableCell>Only Gateways with explicit `-orchAddr`</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Rewards**</TableCell>
@@ -97,19 +97,19 @@ The key decisions for Orchestrator setup are:
     <TableRow>
       <TableCell>**Requires**</TableCell>
       <TableCell>Arbitrum RPC, arbETH, LPT stake</TableCell>
-      <TableCell>GPU and a gateway to serve</TableCell>
+      <TableCell>GPU and a Gateway to serve</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**Use for**</TableCell>
-      <TableCell>Production orchestrators serving the network</TableCell>
-      <TableCell>Private orchestrators for a specific gateway, development, testing</TableCell>
+      <TableCell>Production Orchestrators serving the network</TableCell>
+      <TableCell>Private Orchestrators for a specific Gateway, development, testing</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
 
 ## Software Path
 
-**go-livepeer** is the Livepeer protocol implementation. It runs as a single process or in split orchestrator/transcoder mode. Handles protocol operations, GPU compute, and job routing. All setup paths use go-livepeer for the compute side.
+**go-livepeer** is the Livepeer Protocol implementation. It runs as a single process or in split Orchestrator/transcoder mode. Handles protocol operations, GPU compute, and job routing. All setup paths use go-livepeer for the compute side.
 
 **OrchestratorSiphon** is a Python companion tool that handles keystore operations, reward calling, and governance on a separate secure machine. The GPU machine still runs go-livepeer in transcoder mode. Siphon exists because GPU machines restart - and a missed reward round is permanent LPT loss.
 
@@ -163,7 +163,7 @@ The key decisions for Orchestrator setup are:
     <TableRow>
       <TableCell>**Solo**</TableCell>
       <TableCell>One go-livepeer process runs protocol and GPU. Full control over pricing, workloads, stake, and earnings. Direct on-chain payouts. Governance weight. Single point of failure for rewards.</TableCell>
-      <TableCell>Active set threshold (video) or minimal (AI)</TableCell>
+      <TableCell>Active Set threshold (video) or minimal (AI)</TableCell>
       <TableCell>1</TableCell>
       <TableCell><LinkArrow href="/v2/orchestrators/setup/guide" label="Setup Guide" newline={false} /></TableCell>
     </TableRow>
@@ -177,7 +177,7 @@ The key decisions for Orchestrator setup are:
     <TableRow>
       <TableCell>**O-T split**</TableCell>
       <TableCell>Orchestrator process (protocol, routing, no GPU) and transcoder process (GPU compute) on separate machines. Keystore isolated from GPU. GPU machines scale independently. Reward calling from stable server. Foundation for running a pool.</TableCell>
-      <TableCell>Active set threshold</TableCell>
+      <TableCell>Active Set threshold</TableCell>
       <TableCell>2+</TableCell>
       <TableCell><LinkArrow href="/v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup" label="O-T Split" newline={false} /></TableCell>
     </TableRow>
@@ -190,7 +190,7 @@ Running a pool (accepting external GPU operators) is an extension of the O-T spl
 
 ## Workload Mode
 
-The Livepeer protocol routes video and AI as separate job types through different mechanisms. Video jobs flow through the segment-based transcoding pipeline. AI jobs flow through the capability-based inference pipeline. <Badge color="green">Dual</Badge> mode runs both from one orchestrator process - the most common production configuration.
+The Livepeer Protocol routes video and AI as separate job types through different mechanisms. Video jobs flow through the segment-based transcoding pipeline. AI jobs flow through the capability-based inference pipeline. <Badge color="green">Dual</Badge> mode runs both from one Orchestrator process - the most common production configuration.
 
 <StyledTable variant="bordered">
   <thead>

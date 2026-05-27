@@ -441,6 +441,20 @@ if [ "$SKIP_STRUCTURE_CHECK" != "1" ]; then
 fi
 
 # ═══════════════════════════════════════════════════════════════
+# HARD GATE 6: SECRET LEAK (gitleaks, if installed)
+# ═══════════════════════════════════════════════════════════════
+# Authoritative scan runs in CI (.github/workflows/interface-governance-secret-scan.yml).
+# This local short-circuit catches the obvious case before push so the contributor
+# can rotate before the leak reaches origin. Silent no-op if gitleaks isn't on PATH —
+# CI is still the source of truth.
+if [ "$SKIP_ALL" != "1" ] && command -v gitleaks >/dev/null 2>&1; then
+    if ! gitleaks protect --staged --redact --no-banner >/dev/null 2>&1; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        WARNINGS+=("Secret detected in staged changes (gitleaks). Rotate the leaked credential, then unstage and recommit.")
+    fi
+fi
+
+# ═══════════════════════════════════════════════════════════════
 # VERDICT
 # ═══════════════════════════════════════════════════════════════
 

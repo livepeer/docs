@@ -21,16 +21,20 @@ const path = require('path');
 const REPO_ROOT = process.cwd();
 const { parsePipelineArgs, runAtomic, printPipelineHelp } = require(path.join(REPO_ROOT, 'tools/lib/governance/pipeline-mode'));
 
+// Per-validator scope-flag interfaces — each validator accepts different scope-of-files flags.
+// `staged`, `files`, `full` keys map to the validator-specific flag array (or null for "no flag,
+// validator scans its default scope"). When `null`, the dispatcher invokes the validator with no
+// scope arg and the validator handles scope internally (e.g. via git diff-cached).
 const VALIDATORS = [
-  'check-anchor-usage.js',
-  'check-description-quality.js',
-  'check-docs-path-sync.js',
-  'check-double-headers.js',
-  'check-mdx-safe-markdown.js',
-  'check-page-endings.js',
-  'enforce-generated-file-banners.js',
-  'lint-structure.js',
-].map((f) => path.join(REPO_ROOT, 'operations/scripts/validators/content/structure', f));
+  { script: 'check-anchor-usage.js',           staged: null, files: ['--scope', 'v2/**/*.mdx'], full: ['--scope', 'v2/**/*.mdx'] },
+  { script: 'check-description-quality.js',    staged: null, files: ['--path', 'v2'], full: ['--path', 'v2'] },
+  { script: 'check-docs-path-sync.js',         staged: ['--staged'], files: ['--staged'], full: [] },
+  { script: 'check-double-headers.js',         staged: ['--staged'], files: ['--files'], full: [] },
+  { script: 'check-mdx-safe-markdown.js',      staged: ['--staged'], files: ['--files'], full: [] },
+  { script: 'check-page-endings.js',           staged: null, files: null, full: null }, // uses git diff-cached internally
+  { script: 'enforce-generated-file-banners.js', staged: ['--check', '--staged'], files: ['--check', '--staged'], full: ['--check'] },
+  { script: 'lint-structure.js',               staged: null, files: null, full: ['--full'] }, // uses git internally for staged/changed
+].map((v) => ({ ...v, abs: path.join(REPO_ROOT, 'operations/scripts/validators/content/structure', v.script) }));
 
 const REMEDIATORS = {
   mdxSafe: path.join(REPO_ROOT, 'operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js'),
@@ -47,13 +51,30 @@ function scopeFlags(args) {
   return ['--staged'];
 }
 
+function scopeKey(args) {
+  if (args.files) return 'files';
+  if (args.full) return 'full';
+  return 'staged'; // default: staged
+}
+
 function modePr(args) {
-  const scope = scopeFlags(args);
+  const key = scopeKey(args);
   let exitCode = 0;
   for (const v of VALIDATORS) {
-    if (!fs.existsSync(v)) continue;
-    const r = runAtomic(v, scope);
-    exitCode = Math.max(exitCode, r.exitCode);
+    if (!fs.existsSync(v.abs)) continue;
+    const flagArr = v[key];
+    if (flagArr === null) {
+      // Validator handles scope internally (e.g. via git diff-cached). Invoke with no scope arg.
+      const r = runAtomic(v.abs, []);
+      exitCode = Math.max(exitCode, r.exitCode);
+    } else {
+      // Pass the resolved scope flags. For `--files`, append the actual paths.
+      const flags = (key === 'files' && flagArr.includes('--files') && args.files)
+        ? [...flagArr, args.files]
+        : flagArr;
+      const r = runAtomic(v.abs, flags);
+      exitCode = Math.max(exitCode, r.exitCode);
+    }
   }
   return exitCode;
 }
