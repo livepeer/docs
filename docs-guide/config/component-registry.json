@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "generated": "2026-04-08T15:37:45.482Z",
+    "generated": "2026-05-27T10:48:46.728Z",
     "generator": "operations/scripts/generate-component-registry.js",
-    "componentCount": 132
+    "componentCount": 136
   },
   "categories": {
     "elements": {
@@ -22,7 +22,7 @@
       "purpose": "One-per-page structural skeleton — heroes, portals, frame-mode"
     },
     "integrators": {
-      "count": 19,
+      "count": 23,
       "purpose": "Fetches, embeds, or binds to external/third-party data"
     },
     "config": {
@@ -1327,6 +1327,20 @@
           "description": "Icon configuration used by the component."
         },
         {
+          "name": "iconBackgroundColor",
+          "type": "string",
+          "required": false,
+          "defaultValue": "\"transparent\"",
+          "description": "Background colour for the centred icon wrapper."
+        },
+        {
+          "name": "gap",
+          "type": "string",
+          "required": false,
+          "defaultValue": "",
+          "description": "Optional gap between grid cells."
+        },
+        {
           "name": "spinDuration",
           "type": "string",
           "required": false,
@@ -2562,7 +2576,7 @@
           "name": "borderRadius",
           "type": "string",
           "required": false,
-          "defaultValue": "\"12px\"",
+          "defaultValue": "\"var(--lp-spacing-px-12)\"",
           "description": "border Radius prop."
         },
         {
@@ -2870,6 +2884,13 @@
           "required": true,
           "defaultValue": "",
           "description": "embed Url prop."
+        },
+        {
+          "name": "url",
+          "type": "any",
+          "required": true,
+          "defaultValue": "",
+          "description": "Alias for embedUrl. Accepts regular YouTube watch, short, embed, or youtu.be URLs."
         },
         {
           "name": "title",
@@ -5007,6 +5028,43 @@
       "examples": []
     },
     {
+      "name": "ContractVerifier",
+      "file": "snippets/components/integrators/feeds/ContractVerifier.jsx",
+      "category": "integrators",
+      "status": "experimental",
+      "description": "Interactive widget to verify Livepeer contract addresses on-chain using generated contract data and chain RPC lookups.",
+      "subniche": "feeds",
+      "accepts": "contract address data",
+      "dataSource": "snippets/data/contract-addresses/contractAddressesData.json, Arbitrum One RPC, Blockscout API",
+      "aiDiscoverability": "props-extracted",
+      "deprecated": "",
+      "see": "",
+      "params": [
+        {
+          "name": "data",
+          "type": "Object",
+          "required": true,
+          "defaultValue": "",
+          "description": "Pipeline contract addresses data object."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "defaultValue": "''",
+          "description": "Optional CSS class override."
+        },
+        {
+          "name": "style",
+          "type": "Object",
+          "required": false,
+          "defaultValue": "{}",
+          "description": "Optional inline style override."
+        }
+      ],
+      "examples": []
+    },
+    {
       "name": "DiscordAnnouncements",
       "file": "snippets/components/integrators/blog/BlogCards.jsx",
       "category": "integrators",
@@ -5181,6 +5239,73 @@
       "examples": []
     },
     {
+      "name": "HistoricalContractsAccordion",
+      "file": "snippets/components/integrators/feeds/CanonicalContractAccordions.jsx",
+      "category": "integrators",
+      "status": "stable",
+      "description": "Renders historical contract accordions from generated contract lifecycle data.",
+      "subniche": "feeds",
+      "accepts": "contract category arrays",
+      "dataSource": "snippets/data/contract-addresses/contractAddressesData.json",
+      "aiDiscoverability": "none",
+      "deprecated": "",
+      "see": "",
+      "params": [
+        {
+          "name": "",
+          "type": "any",
+          "required": true,
+          "defaultValue": "",
+          "description": ""
+        },
+        {
+          "name": "sourceData",
+          "type": "Object",
+          "required": true,
+          "defaultValue": "",
+          "description": "Full contract addresses data object."
+        },
+        {
+          "name": "getIcon",
+          "type": "Function",
+          "required": true,
+          "defaultValue": "",
+          "description": "Icon resolver for category metadata."
+        }
+      ],
+      "examples": []
+    },
+    {
+      "name": "HistoricalContractTable",
+      "file": "snippets/components/integrators/feeds/HistoricalContractTable.jsx",
+      "category": "integrators",
+      "status": "stable",
+      "description": "Renders historical contract version tables from generated contract lifecycle data.",
+      "subniche": "feeds",
+      "accepts": "contract category and source data",
+      "dataSource": "snippets/data/contract-addresses/contractAddressesData.json",
+      "aiDiscoverability": "none",
+      "deprecated": "",
+      "see": "",
+      "params": [
+        {
+          "name": "category",
+          "type": "string",
+          "required": true,
+          "defaultValue": "",
+          "description": "Historical category key to render."
+        },
+        {
+          "name": "sourceData",
+          "type": "Object",
+          "required": true,
+          "defaultValue": "",
+          "description": "Full contract addresses data object."
+        }
+      ],
+      "examples": []
+    },
+    {
       "name": "LatestVersion",
       "file": "snippets/components/integrators/feeds/Release.jsx",
       "category": "integrators",
@@ -5264,6 +5389,36 @@
           "required": false,
           "defaultValue": "{}",
           "description": "Optional inline style override."
+        }
+      ],
+      "examples": []
+    },
+    {
+      "name": "NonActiveContractsAccordion",
+      "file": "snippets/components/integrators/feeds/CanonicalContractAccordions.jsx",
+      "category": "integrators",
+      "status": "stable",
+      "description": "Renders grouped non-active contract accordions from the contract addresses pipeline data.",
+      "subniche": "feeds",
+      "accepts": "contract group arrays",
+      "dataSource": "snippets/data/contract-addresses/contractAddressesData.json",
+      "aiDiscoverability": "none",
+      "deprecated": "",
+      "see": "",
+      "params": [
+        {
+          "name": "",
+          "type": "any",
+          "required": true,
+          "defaultValue": "",
+          "description": ""
+        },
+        {
+          "name": "renderRows",
+          "type": "Function",
+          "required": true,
+          "defaultValue": "",
+          "description": "Row builder for each contract group."
         }
       ],
       "examples": []
@@ -5415,6 +5570,20 @@
           "required": false,
           "defaultValue": "null",
           "description": "img prop."
+        },
+        {
+          "name": "categoryName",
+          "type": "string",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Forum category name for badge display."
+        },
+        {
+          "name": "categoryColor",
+          "type": "string",
+          "required": false,
+          "defaultValue": "null",
+          "description": "Hex colour for category badge."
         },
         {
           "name": "className",
@@ -6928,6 +7097,13 @@
           "description": "Gap between badges."
         },
         {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "defaultValue": "\"0.5rem 0 1.5rem 0\"",
+          "description": "Margin around the badge row."
+        },
+        {
           "name": "style",
           "type": "object",
           "required": false,
@@ -6981,10 +7157,17 @@
           "description": "padding prop."
         },
         {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "defaultValue": "\"\"",
+          "description": "Optional margin override."
+        },
+        {
           "name": "borderRadius",
           "type": "string",
           "required": false,
-          "defaultValue": "\"8px\"",
+          "defaultValue": "\"var(--lp-spacing-px-8)\"",
           "description": "border Radius prop."
         },
         {
@@ -7146,6 +7329,20 @@
           "required": false,
           "defaultValue": "\"\"",
           "description": "Optional bottom margin override."
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "defaultValue": "\"\"",
+          "description": "Optional margin override."
+        },
+        {
+          "name": "padding",
+          "type": "string",
+          "required": false,
+          "defaultValue": "\"\"",
+          "description": "Optional padding override."
         },
         {
           "name": "textAlign",
@@ -7392,6 +7589,13 @@
           "required": false,
           "defaultValue": "\"var(--lp-spacing-3)\"",
           "description": "Gap between items."
+        },
+        {
+          "name": "margin",
+          "type": "string",
+          "required": false,
+          "defaultValue": "\"0.25rem 0 0.5rem\"",
+          "description": "Margin around the icon badge row."
         },
         {
           "name": "style",

@@ -43,6 +43,15 @@ function runIfExists(p, flags) {
   return runAtomic(path.join(REPO_ROOT, p), flags).exitCode;
 }
 
+function atomicFlags(p, scope) {
+  if (p.endsWith('check-component-props.js')) {
+    if (scope.includes('--staged')) return ['--scope=changed'];
+    if (scope.includes('--full')) return ['--scope=full'];
+    return scope;
+  }
+  return scope;
+}
+
 function main() {
   let args; try { args = parsePipelineArgs(process.argv.slice(2)); } catch (e) { console.error(e.message); process.exit(2); }
   if (args.help) { printPipelineHelp('dispatch-component-registry.js', 'component-registry'); process.exit(0); }
@@ -50,7 +59,7 @@ function main() {
   let code = 0;
   // Detect
   for (const p of (ATOMICS.detect || [])) {
-    code = Math.max(code, runIfExists(p, scope));
+    code = Math.max(code, runIfExists(p, atomicFlags(p, scope)));
   }
   // Repair (only in scheduled+write or manual)
   if ((args.mode === 'scheduled' && args.write) || args.mode === 'manual') {
