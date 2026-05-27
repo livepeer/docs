@@ -1,6 +1,6 @@
 # Folder-allowlist audit
 
-Generated 2026-05-25
+Generated 2026-05-26
 
 **Total drift entries: 0**
 
@@ -21,7 +21,7 @@ Generated 2026-05-25
 
 ## docs-guide
 
-- Permitted: 20
+- Permitted: 19
 - Drift: 0
 
 ## tools/config

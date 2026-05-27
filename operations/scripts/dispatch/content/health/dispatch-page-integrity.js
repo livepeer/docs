@@ -67,13 +67,40 @@ function modeScheduled(args) {
 }
 
 function modeManual(args) {
-  const scope = scopeFlags(args).length === 0 ? ['--staged'] : scopeFlags(args);
   const writeFlag = args.write ? '--write' : '--dry-run';
   const verifyFlag = args.verify || args.write ? ['--verify'] : [];
+
+  // repair-page-links and repair-page-imports ONLY accept --files (no --staged, no --full).
+  // repair-mdx-safe-markdown accepts --staged|--files. When --staged is requested, resolve it
+  // to the actual list of staged v2 .mdx files and pass --files to all three.
+  let filesScope;
+  if (args.files) {
+    filesScope = ['--files', args.files];
+  } else if (args.staged) {
+    try {
+      const { execSync } = require('child_process');
+      const staged = execSync('git diff --cached --name-only --diff-filter=ACMRT', { encoding: 'utf8' })
+        .split('\n')
+        .filter((f) => f && /\.mdx$/i.test(f) && f.startsWith('v2/'))
+        .join(',');
+      filesScope = staged ? ['--files', staged] : null;
+    } catch { filesScope = null; }
+  } else if (args.full) {
+    filesScope = ['--files', 'v2'];
+  } else {
+    filesScope = null; // no scope — let each atomic decide (or skip)
+  }
+
+  // If no scope resolved (e.g. --staged with no staged files), skip remediators cleanly.
+  if (!filesScope) {
+    console.log('dispatch-page-integrity: no target files in scope (use --files, --staged with staged files, or --full).');
+    return 0;
+  }
+
   let exitCode = 0;
-  exitCode = Math.max(exitCode, runAtomic(ATOMICS.repairLinks, [writeFlag, ...verifyFlag, ...scope]).exitCode);
-  exitCode = Math.max(exitCode, runAtomic(ATOMICS.repairImports, [writeFlag, ...verifyFlag, ...scope]).exitCode);
-  exitCode = Math.max(exitCode, runAtomic(ATOMICS.repairMdx, [writeFlag, ...verifyFlag, ...scope]).exitCode);
+  exitCode = Math.max(exitCode, runAtomic(ATOMICS.repairLinks, [writeFlag, ...verifyFlag, ...filesScope]).exitCode);
+  exitCode = Math.max(exitCode, runAtomic(ATOMICS.repairImports, [writeFlag, ...verifyFlag, ...filesScope]).exitCode);
+  exitCode = Math.max(exitCode, runAtomic(ATOMICS.repairMdx, [writeFlag, ...verifyFlag, ...filesScope]).exitCode);
   return exitCode;
 }
 

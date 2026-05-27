@@ -19,7 +19,11 @@ const REPO_ROOT = process.cwd();
 const { parsePipelineArgs, runAtomic, printPipelineHelp } = require(path.join(REPO_ROOT, 'tools/lib/governance/pipeline-mode'));
 
 const ATOMICS = {
-    detect: [
+    // update-livepeer-release is an integrator (fetches go-livepeer latest tag, writes
+    // snippets/data/releases/latestReleaseData.jsx). No drift-check mode — only --dry-run / --write.
+    // Runs in post-merge or scheduled with --write; PR mode skips it (no point checking drift
+    // against external service state at PR time).
+    generate: [
       'operations/scripts/integrators/maintenance/release/update-livepeer-release.js'
     ]
   };
@@ -57,10 +61,11 @@ function main() {
       runIfExists(p, ['--dry-run', ...scope]);
     }
   }
-  // Generate (for post-merge concerns)
-  if (args.mode === 'post-merge' || (args.mode === 'scheduled' && (ATOMICS.generate || []).length > 0)) {
+  // Generate (for post-merge concerns). This atomic only accepts --dry-run / --write
+  // (no --check), so adapt: in PR/scheduled-without-write, use --dry-run; only --write actually writes.
+  if (args.mode === 'post-merge' || args.mode === 'scheduled' || args.mode === 'manual') {
     for (const p of (ATOMICS.generate || [])) {
-      code = Math.max(code, runIfExists(p, args.write ? ['--write'] : ['--check']));
+      code = Math.max(code, runIfExists(p, args.write ? [] : ['--dry-run']));
     }
   }
   process.exit(code);

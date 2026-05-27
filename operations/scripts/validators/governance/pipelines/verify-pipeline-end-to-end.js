@@ -52,6 +52,21 @@ const DRIFT_SIGNALS = [
   /Actions planned:\s+[1-9]/,
   /Run with --write to apply/i,
   /Total:\s+\d+,\s+Added:\s+\d+,\s+Already had:\s+\d+/, // workflow-governance "all clean" case still exits 1 oddly
+  // Content scans that finish but report violations / warnings / errors
+  /Description quality scan complete/i,
+  /(?:errors|warnings):\s+[1-9]\d*/i,
+  // Folder-allowlist drift: "would archive N entry/entries"
+  /would archive [1-9]\d*\s+entr(?:y|ies)/i,
+  // Governance marker drift: missing GOVERNANCE.md
+  /Missing GOVERNANCE\.md\s+\([1-9]/,
+  // lint-structure drift: "N violation(s), M warning(s) across K file(s)"
+  /[1-9]\d*\s+violation\(s\),\s+\d+\s+warning\(s\)/i,
+  /[1-9]\d*\s+violation\(s\)/i,
+  // Per-violation line format (lint-structure, anchor-usage, etc.): "line N: <rule-name>"
+  /^\s+line \d+:\s+[a-z-]+/im,
+  // Remediator preview/would patterns (drift detected, dry-run preview shown)
+  /would repair\s+v[12]\//i,
+  /previewed [1-9]\d* (?:change|repair|replacement)/i,
 ];
 
 // Patterns that indicate the pipeline cannot run cleanly without environment / infra (secret missing, etc.)
@@ -81,10 +96,12 @@ function runDispatcher(scriptRel, timeoutMs) {
     timeout: timeoutMs,
     env: { ...process.env, NODE_PATH: 'tools/node_modules', PIPELINE_VERIFICATION: '1' },
   });
+  // Keep full combined output for classification. Meta dispatchers cascade children's output —
+  // drift signals from the FIRST child must remain visible after children of later steps run cleanly.
   return {
     exitCode: result.status,
     timedOut: result.signal === 'SIGTERM',
-    combined: ((result.stdout || '') + (result.stderr || '')).slice(-1000),
+    combined: ((result.stdout || '') + (result.stderr || '')),
     durationMs: result.timing || null,
   };
 }

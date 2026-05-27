@@ -1,12 +1,12 @@
 # Full Script Inventory Audit
 
-Generated: 2026-05-25T11:42:10.804Z
+Generated: 2026-05-25T13:27:34.241Z
 Mode: audit
 Scan roots: .githooks, .github/scripts, workspace/scripts, operations/tests/unit, operations/tests/integration, operations/tests/utils, operations/tests, operations/scripts, tools/lib, tools/dev, tools/config
 
 ## Summary
 
-Total scripts discovered: 502
+Total scripts discovered: 504
 By trigger category:
 - Unmanaged: 0
 - Orphaned: 123
@@ -16,11 +16,11 @@ By trigger category:
 - P5 - Scheduled: 0
 - P6 - On-demand: 0
 - Indirect - Library: 134
-- Manual - CLI only: 183
+- Manual - CLI only: 185
 
-Grade distribution: A 0 | B 67 | C 188 | F 247
-Pipeline verification: MATCH 317 | MISMATCH 169 | MISSING 16
-Classification JSON sync: In JSON 502 | Not in JSON 0 | Phantom 0
+Grade distribution: A 0 | B 67 | C 188 | F 249
+Pipeline verification: MATCH 319 | MISMATCH 169 | MISSING 16
+Classification JSON sync: In JSON 504 | Not in JSON 0 | Phantom 0
 Output chain summary: 2 chains detected
 
 ## Orphaned
@@ -486,6 +486,7 @@ Output chain summary: 2 chains detected
 | operations/scripts/remediators/content/classification/normalise-frontmatter-keys.js | remediator | Normalises capitalised frontmatter YAML keys to lowercase canonical form across v2 MDX pages. | manual — batch remediation utility, run with --dry-run first | manual (none) | MATCH | stdout only | No | v2/ (all MDX files, excluding _workspace, x-archived, translations) | MISSING | 6/9 | F | invalid-purpose, invalid-scope, missing-domain, missing-needs, header-json-category-mismatch |
 | operations/scripts/interfaces/governance/notify-linked-issues.js | interface | Notifies linked issues when a PR is opened against docs-v2 | manual | manual (none) | MATCH | stdout only | No | .github/workflows/interface-governance-close-linked-issues.yml | D-ACT-08 (workflows are dispatchers, scripts carry the type) | 7/9 | F | invalid-category, invalid-purpose, missing-domain, header-json-category-mismatch |
 | operations/scripts/interfaces/governance/issue-auto-label.js | interface | Parses issue form sections and applies structured labels based on template type | manual | manual (none) | MATCH | stdout only | No | .github/workflows/interface-governance-label-issues.yml | D-ACT-08 (workflows are dispatchers, scripts carry the type) | 7/9 | F | invalid-category, invalid-purpose, missing-domain, header-json-category-mismatch |
+| operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js | validator | Per-dispatcher end-to-end verification — runs every dispatcher in --mode pr --dry-run and classifies the result as pass / drift-detected / fail / timeout / infra-skip, then enriches pipeline-inventory.json with lastVerified data and emits a verification report SME and contributors read to answer "is pipeline X healthy?" | manual — SME-driven full verification snapshot, run on-demand or pre-release | manual (none) | MATCH | operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.md, operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.json | No | 65 dispatchers under operations/scripts/dispatch/ | D-GOV-03 (proves each pipeline is functionally healthy) | 7/9 | F | invalid-purpose, invalid-scope, missing-domain, header-json-category-mismatch |
 | operations/scripts/audits/components/library/audit-component-styles.js | audit | qa:component-quality | manual > snippets/components (all .jsx) > stdout:report | manual (none) | MATCH | stdout only | No | snippets/components | — | 7/9 | F | invalid-category, invalid-purpose, missing-domain, header-json-category-mismatch |
 | operations/scripts/remediators/components/library/repair-ai-discoverability.js | remediator | qa:component-quality | manual > snippets/components (all .jsx) > repaired files, placeholder JSONs | manual (none) | MATCH | operations/scripts/remediators/components/library/snapshots, operations/scripts/remediators/components/library/snapshots | No | snippets/components, snippets/data/snapshots | — | 7/9 | C | invalid-purpose, missing-domain, header-json-category-mismatch |
 | operations/scripts/remediators/components/library/repair-component-styles.js | remediator | qa:component-quality | manual > snippets/components (all .jsx) > repaired files | manual (none) | MATCH | stdout only | No | snippets/components | — | 7/9 | C | invalid-purpose, missing-domain, header-json-category-mismatch |
@@ -521,6 +522,7 @@ Output chain summary: 2 chains detected
 | operations/scripts/audits/content/reference/audit-glossary-gaps.js | audit | Scans v2 MDX pages for terminology candidates not | manual \| post-PR \| cron | manual (none) | MATCH | stdout only | No | operations/scripts/audits/content/reference | MISSING | 6/9 | F | invalid-category, invalid-purpose, missing-domain, missing-needs, header-json-category-mismatch |
 | operations/scripts/audits/governance/repo/audit-script-purpose-fit.js | audit | Semantic SME audit: for every script in the repo, surface @purpose, inputs read, outputs written, callers, and auto-flags so the SME can verdict keep/refactor/merge/archive per concern | manual — SME-driven review (one-time deep audit per Phase 1 of the consolidation plan) | manual (none) | MATCH | operations/scripts/audits/governance/repo/workspace/reports/script-audit | No | operations/scripts/**, tools/scripts/** | D-GOV-08 (every script and folder is governed) | 7/9 | F | invalid-category, invalid-purpose, invalid-scope, missing-domain, header-json-category-mismatch |
 | operations/scripts/interfaces/governance/lib/rolling-issue.js | utility | Shared helper for rolling issue create/update/close pattern | MISSING | manual (none) | MISSING | none detected | No | .github/workflows/ (scanner and validator workflows) | D-GOV-03 (every detection must self-repair or escalate) | 7/9 | F | invalid-purpose, invalid-scope, missing-domain, missing-pipeline, header-json-category-mismatch |
+| operations/scripts/audits/governance/repo/audit-pipeline-inventory.js | audit | Single canonical pipeline inventory: one row per dispatcher with tier classification, atomics called, output destinations, live consumers, schedule, and test coverage — gives SME and contributors a one-stop "is pipeline X healthy" view across all 65 dispatchers | manual — SME-driven full-inventory snapshot, run on-demand | manual (none) | MATCH | operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.md, operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.json | No | operations/scripts/dispatch/**, .github/workflows/*.yml, operations/tests/integration/pipeline-*.js | D-GOV-03 (every pipeline must declare its detect-repair-verify state); D-ACT-04 (canonical naming) | 7/9 | F | invalid-category, invalid-purpose, invalid-scope, missing-domain, header-json-category-mismatch |
 | operations/tests/unit/post-remediation-verify.test.js | validator | Tests the post-remediation verification orchestrator | MISSING | manual (none) | MISSING | none detected | No | operations/scripts/dispatch/governance/post-remediation-verify.js | D-GOV-03 | 7/9 | C | invalid-purpose, missing-domain, missing-pipeline, header-json-category-mismatch |
 | operations/tests/unit/openapi-reference-audit.test.js | validator | tooling:api-spec | manual — not yet in pipeline | manual (none) | MATCH | ,  | No | tests/unit, tests/integration, v2, api | F-R17 | 8/9 | C | invalid-scope, header-json-category-mismatch |
 | operations/tests/unit/openapi-rolling-issue.test.js | validator | tooling:api-spec | manual — not yet in pipeline | manual (npm script: test:openapi:issue) | MATCH | stdout only | No | tests/unit, tests/utils, .github/workflows/openapi-reference-validation.yml | F-R17 | 8/9 | C | invalid-scope, header-json-category-mismatch |
@@ -772,6 +774,7 @@ Output chain summary: 2 chains detected
 - operations/scripts/audits/content/veracity/docs-page-research.js
 - operations/scripts/audits/content/veracity/docs-research-adjudication.js
 - operations/scripts/audits/governance/repo/audit-folder-allowlist.js
+- operations/scripts/audits/governance/repo/audit-pipeline-inventory.js
 - operations/scripts/audits/governance/repo/audit-script-purpose-fit.js
 - operations/scripts/audits/governance/repo/audit-tasks-folders.js
 - operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js
@@ -1065,6 +1068,7 @@ Output chain summary: 2 chains detected
 - operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js
 - operations/scripts/validators/governance/compliance/validate-codex-task-contract.js
 - operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh
+- operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js
 - operations/scripts/validators/governance/pr/audit-script-inventory.js
 - operations/scripts/validators/governance/pr/check-component-immutability.js
 - operations/scripts/validators/governance/pr/check-governance-approvals.js

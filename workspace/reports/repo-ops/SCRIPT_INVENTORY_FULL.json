@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T11:42:10.804Z",
+  "generated_at": "2026-05-25T13:27:34.241Z",
   "mode": "audit",
   "scope": "full-repo",
   "scoped_script_paths": [
@@ -30,6 +30,7 @@
     "operations/scripts/audits/content/veracity/docs-page-research.js",
     "operations/scripts/audits/content/veracity/docs-research-adjudication.js",
     "operations/scripts/audits/governance/repo/audit-folder-allowlist.js",
+    "operations/scripts/audits/governance/repo/audit-pipeline-inventory.js",
     "operations/scripts/audits/governance/repo/audit-script-purpose-fit.js",
     "operations/scripts/audits/governance/repo/audit-tasks-folders.js",
     "operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js",
@@ -323,6 +324,7 @@
     "operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js",
     "operations/scripts/validators/governance/compliance/validate-codex-task-contract.js",
     "operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh",
+    "operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js",
     "operations/scripts/validators/governance/pr/audit-script-inventory.js",
     "operations/scripts/validators/governance/pr/check-component-immutability.js",
     "operations/scripts/validators/governance/pr/check-governance-approvals.js",
@@ -508,7 +510,7 @@
   ],
   "output_dir": "workspace/reports/repo-ops",
   "summary": {
-    "total_scripts": 502,
+    "total_scripts": 504,
     "by_trigger": {
       "Unmanaged": 0,
       "Orphaned": 123,
@@ -518,21 +520,21 @@
       "P5": 0,
       "P6": 0,
       "Indirect": 134,
-      "Manual": 183
+      "Manual": 185
     },
     "grade_distribution": {
       "A": 0,
       "B": 67,
       "C": 188,
-      "F": 247
+      "F": 249
     },
     "pipeline_verification": {
-      "MATCH": 317,
+      "MATCH": 319,
       "MISMATCH": 169,
       "MISSING": 16
     },
     "classification_sync": {
-      "in_json": 502,
+      "in_json": 504,
       "not_in_json": 0,
       "phantom": 0
     },
@@ -24923,6 +24925,62 @@
           "trigger_group": "Manual"
         },
         {
+          "path": "operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js",
+          "script": "verify-pipeline-end-to-end",
+          "category": "validator",
+          "purpose": "Per-dispatcher end-to-end verification — runs every dispatcher in --mode pr --dry-run and classifies the result as pass / drift-detected / fail / timeout / infra-skip, then enriches pipeline-inventory.json with lastVerified data and emits a verification report SME and contributors read to answer \"is pipeline X healthy?\"",
+          "scope": "65 dispatchers under operations/scripts/dispatch/",
+          "domain": "",
+          "needs": "D-GOV-03 (proves each pipeline is functionally healthy)",
+          "purpose_statement": "Reads workspace/reports/governance/pipeline-inventory.json. For every entry not on the infrastructure-dependent exclusion list, spawns the dispatcher with --mode pr --dry-run and a 90s timeout. Captures exit code + last 400 chars of combined output. Applies drift-signal regex (stale generated file, missing companion, \"out of date\" reports) to classify exit-1 as drift-detected (working pipeline + stale repo state) vs fail (real bug). Writes back into pipeline-inventory.json under each row's `verification` block + emits workspace/reports/governance/pipeline-verification.md with summary + failures section.",
+          "pipeline_declared": "manual — SME-driven full verification snapshot, run on-demand or pre-release",
+          "usage": "node operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js [--concern <name>] [--timeout <ms>] [--limit <N>]",
+          "header": "/**\n * @script      verify-pipeline-end-to-end\n * @type        validator\n * @concern     governance\n * @niche       pipelines\n * @purpose     Per-dispatcher end-to-end verification — runs every dispatcher in --mode pr --dry-run and classifies the result as pass / drift-detected / fail / timeout / infra-skip, then enriches pipeline-inventory.json with lastVerified data and emits a verification report SME and contributors read to answer \"is pipeline X healthy?\"\n * @description Reads workspace/reports/governance/pipeline-inventory.json. For every entry not on the infrastructure-dependent exclusion list, spawns the dispatcher with --mode pr --dry-run and a 90s timeout. Captures exit code + last 400 chars of combined output. Applies drift-signal regex (stale generated file, missing companion, \"out of date\" reports) to classify exit-1 as drift-detected (working pipeline + stale repo state) vs fail (real bug). Writes back into pipeline-inventory.json under each row's `verification` block + emits workspace/reports/governance/pipeline-verification.md with summary + failures section.\n * @mode        check\n * @pipeline    manual — SME-driven full verification snapshot, run on-demand or pre-release\n * @scope       65 dispatchers under operations/scripts/dispatch/\n * @usage       node operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js [--concern <name>] [--timeout <ms>] [--limit <N>]\n * @policy      D-GOV-03 (proves each pipeline is functionally healthy)\n */",
+          "header_field_count": 7,
+          "has_any_header": true,
+          "has_framework_header": true,
+          "category_valid": true,
+          "purpose_valid": false,
+          "scope_valid": false,
+          "triggers": [
+            {
+              "type": "manual",
+              "caller": "none",
+              "pipeline": "manual"
+            }
+          ],
+          "outputs": [
+            {
+              "output_path": "operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.md",
+              "type": "generated-output",
+              "call": "writeFileSync"
+            },
+            {
+              "output_path": "operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.json",
+              "type": "generated-output",
+              "call": "writeFileSync"
+            }
+          ],
+          "outputs_display": "operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.md, operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.json",
+          "downstream_consumers": [],
+          "downstream_display": "No",
+          "in_json": true,
+          "category_match": false,
+          "purpose_match": true,
+          "pipeline_verified": "MATCH",
+          "declared_pipeline_set": {},
+          "actual_pipeline_set": {},
+          "pipeline_actual": "manual (none)",
+          "grade": "F",
+          "flags": [
+            "invalid-purpose",
+            "invalid-scope",
+            "missing-domain",
+            "header-json-category-mismatch"
+          ],
+          "trigger_group": "Manual"
+        },
+        {
           "path": "operations/scripts/audits/components/library/audit-component-styles.js",
           "script": "audit-component-styles",
           "category": "audit",
@@ -26706,6 +26764,63 @@
           "trigger_group": "Manual"
         },
         {
+          "path": "operations/scripts/audits/governance/repo/audit-pipeline-inventory.js",
+          "script": "audit-pipeline-inventory",
+          "category": "audit",
+          "purpose": "Single canonical pipeline inventory: one row per dispatcher with tier classification, atomics called, output destinations, live consumers, schedule, and test coverage — gives SME and contributors a one-stop \"is pipeline X healthy\" view across all 65 dispatchers",
+          "scope": "operations/scripts/dispatch/**, .github/workflows/*.yml, operations/tests/integration/pipeline-*.js",
+          "domain": "",
+          "needs": "D-GOV-03 (every pipeline must declare its detect-repair-verify state); D-ACT-04 (canonical naming)",
+          "purpose_statement": "Walks operations/scripts/dispatch/ for every dispatcher. Parses JSDoc for concern/niche/type/pipeline/mode/purpose. Statically extracts the atomics each dispatcher invokes (ATOMICS const + runAtomic/runIfExists/runIfExists). Greps v2/ + snippets/ for live consumers of declared outputs. Cross-references workflow YAMLs for the Tier-1 caller. Checks pipeline-smoke-test exclusion list and pipeline-functional-tests TESTS array for test coverage. Emits per-concern sections to workspace/reports/governance/pipeline-inventory.md plus a JSON sibling for programmatic consumers.",
+          "pipeline_declared": "manual — SME-driven full-inventory snapshot, run on-demand",
+          "usage": "node operations/scripts/audits/governance/repo/audit-pipeline-inventory.js [--json] [--concern <name>]",
+          "header": "/**\n * @script      audit-pipeline-inventory\n * @type        audit\n * @concern     governance\n * @niche       repo\n * @purpose     Single canonical pipeline inventory: one row per dispatcher with tier classification, atomics called, output destinations, live consumers, schedule, and test coverage — gives SME and contributors a one-stop \"is pipeline X healthy\" view across all 65 dispatchers\n * @description Walks operations/scripts/dispatch/ for every dispatcher. Parses JSDoc for concern/niche/type/pipeline/mode/purpose. Statically extracts the atomics each dispatcher invokes (ATOMICS const + runAtomic/runIfExists/runIfExists). Greps v2/ + snippets/ for live consumers of declared outputs. Cross-references workflow YAMLs for the Tier-1 caller. Checks pipeline-smoke-test exclusion list and pipeline-functional-tests TESTS array for test coverage. Emits per-concern sections to workspace/reports/governance/pipeline-inventory.md plus a JSON sibling for programmatic consumers.\n * @mode        scan\n * @pipeline    manual — SME-driven full-inventory snapshot, run on-demand\n * @scope       operations/scripts/dispatch/**, .github/workflows/*.yml, operations/tests/integration/pipeline-*.js\n * @usage       node operations/scripts/audits/governance/repo/audit-pipeline-inventory.js [--json] [--concern <name>]\n * @policy      D-GOV-03 (every pipeline must declare its detect-repair-verify state); D-ACT-04 (canonical naming)\n */",
+          "header_field_count": 7,
+          "has_any_header": true,
+          "has_framework_header": true,
+          "category_valid": false,
+          "purpose_valid": false,
+          "scope_valid": false,
+          "triggers": [
+            {
+              "type": "manual",
+              "caller": "none",
+              "pipeline": "manual"
+            }
+          ],
+          "outputs": [
+            {
+              "output_path": "operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.md",
+              "type": "generated-output",
+              "call": "writeFileSync"
+            },
+            {
+              "output_path": "operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.json",
+              "type": "generated-output",
+              "call": "writeFileSync"
+            }
+          ],
+          "outputs_display": "operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.md, operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.json",
+          "downstream_consumers": [],
+          "downstream_display": "No",
+          "in_json": true,
+          "category_match": false,
+          "purpose_match": true,
+          "pipeline_verified": "MATCH",
+          "declared_pipeline_set": {},
+          "actual_pipeline_set": {},
+          "pipeline_actual": "manual (none)",
+          "grade": "F",
+          "flags": [
+            "invalid-category",
+            "invalid-purpose",
+            "invalid-scope",
+            "missing-domain",
+            "header-json-category-mismatch"
+          ],
+          "trigger_group": "Manual"
+        },
+        {
           "path": "operations/tests/unit/post-remediation-verify.test.js",
           "script": "post-remediation-verify.test",
           "category": "validator",
@@ -28380,7 +28495,7 @@
           "trigger_group": "Manual"
         }
       ],
-      "count": 183
+      "count": 185
     }
   },
   "scripts": [
@@ -29857,6 +29972,63 @@
         "phantom-pipeline"
       ],
       "trigger_group": "Orphaned"
+    },
+    {
+      "path": "operations/scripts/audits/governance/repo/audit-pipeline-inventory.js",
+      "script": "audit-pipeline-inventory",
+      "category": "audit",
+      "purpose": "Single canonical pipeline inventory: one row per dispatcher with tier classification, atomics called, output destinations, live consumers, schedule, and test coverage — gives SME and contributors a one-stop \"is pipeline X healthy\" view across all 65 dispatchers",
+      "scope": "operations/scripts/dispatch/**, .github/workflows/*.yml, operations/tests/integration/pipeline-*.js",
+      "domain": "",
+      "needs": "D-GOV-03 (every pipeline must declare its detect-repair-verify state); D-ACT-04 (canonical naming)",
+      "purpose_statement": "Walks operations/scripts/dispatch/ for every dispatcher. Parses JSDoc for concern/niche/type/pipeline/mode/purpose. Statically extracts the atomics each dispatcher invokes (ATOMICS const + runAtomic/runIfExists/runIfExists). Greps v2/ + snippets/ for live consumers of declared outputs. Cross-references workflow YAMLs for the Tier-1 caller. Checks pipeline-smoke-test exclusion list and pipeline-functional-tests TESTS array for test coverage. Emits per-concern sections to workspace/reports/governance/pipeline-inventory.md plus a JSON sibling for programmatic consumers.",
+      "pipeline_declared": "manual — SME-driven full-inventory snapshot, run on-demand",
+      "usage": "node operations/scripts/audits/governance/repo/audit-pipeline-inventory.js [--json] [--concern <name>]",
+      "header": "/**\n * @script      audit-pipeline-inventory\n * @type        audit\n * @concern     governance\n * @niche       repo\n * @purpose     Single canonical pipeline inventory: one row per dispatcher with tier classification, atomics called, output destinations, live consumers, schedule, and test coverage — gives SME and contributors a one-stop \"is pipeline X healthy\" view across all 65 dispatchers\n * @description Walks operations/scripts/dispatch/ for every dispatcher. Parses JSDoc for concern/niche/type/pipeline/mode/purpose. Statically extracts the atomics each dispatcher invokes (ATOMICS const + runAtomic/runIfExists/runIfExists). Greps v2/ + snippets/ for live consumers of declared outputs. Cross-references workflow YAMLs for the Tier-1 caller. Checks pipeline-smoke-test exclusion list and pipeline-functional-tests TESTS array for test coverage. Emits per-concern sections to workspace/reports/governance/pipeline-inventory.md plus a JSON sibling for programmatic consumers.\n * @mode        scan\n * @pipeline    manual — SME-driven full-inventory snapshot, run on-demand\n * @scope       operations/scripts/dispatch/**, .github/workflows/*.yml, operations/tests/integration/pipeline-*.js\n * @usage       node operations/scripts/audits/governance/repo/audit-pipeline-inventory.js [--json] [--concern <name>]\n * @policy      D-GOV-03 (every pipeline must declare its detect-repair-verify state); D-ACT-04 (canonical naming)\n */",
+      "header_field_count": 7,
+      "has_any_header": true,
+      "has_framework_header": true,
+      "category_valid": false,
+      "purpose_valid": false,
+      "scope_valid": false,
+      "triggers": [
+        {
+          "type": "manual",
+          "caller": "none",
+          "pipeline": "manual"
+        }
+      ],
+      "outputs": [
+        {
+          "output_path": "operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.md",
+          "type": "generated-output",
+          "call": "writeFileSync"
+        },
+        {
+          "output_path": "operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.json",
+          "type": "generated-output",
+          "call": "writeFileSync"
+        }
+      ],
+      "outputs_display": "operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.md, operations/scripts/audits/governance/repo/workspace/reports/governance/pipeline-inventory.json",
+      "downstream_consumers": [],
+      "downstream_display": "No",
+      "in_json": true,
+      "category_match": false,
+      "purpose_match": true,
+      "pipeline_verified": "MATCH",
+      "declared_pipeline_set": {},
+      "actual_pipeline_set": {},
+      "pipeline_actual": "manual (none)",
+      "grade": "F",
+      "flags": [
+        "invalid-category",
+        "invalid-purpose",
+        "invalid-scope",
+        "missing-domain",
+        "header-json-category-mismatch"
+      ],
+      "trigger_group": "Manual"
     },
     {
       "path": "operations/scripts/audits/governance/repo/audit-script-purpose-fit.js",
@@ -45702,6 +45874,62 @@
       "trigger_group": "Manual"
     },
     {
+      "path": "operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js",
+      "script": "verify-pipeline-end-to-end",
+      "category": "validator",
+      "purpose": "Per-dispatcher end-to-end verification — runs every dispatcher in --mode pr --dry-run and classifies the result as pass / drift-detected / fail / timeout / infra-skip, then enriches pipeline-inventory.json with lastVerified data and emits a verification report SME and contributors read to answer \"is pipeline X healthy?\"",
+      "scope": "65 dispatchers under operations/scripts/dispatch/",
+      "domain": "",
+      "needs": "D-GOV-03 (proves each pipeline is functionally healthy)",
+      "purpose_statement": "Reads workspace/reports/governance/pipeline-inventory.json. For every entry not on the infrastructure-dependent exclusion list, spawns the dispatcher with --mode pr --dry-run and a 90s timeout. Captures exit code + last 400 chars of combined output. Applies drift-signal regex (stale generated file, missing companion, \"out of date\" reports) to classify exit-1 as drift-detected (working pipeline + stale repo state) vs fail (real bug). Writes back into pipeline-inventory.json under each row's `verification` block + emits workspace/reports/governance/pipeline-verification.md with summary + failures section.",
+      "pipeline_declared": "manual — SME-driven full verification snapshot, run on-demand or pre-release",
+      "usage": "node operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js [--concern <name>] [--timeout <ms>] [--limit <N>]",
+      "header": "/**\n * @script      verify-pipeline-end-to-end\n * @type        validator\n * @concern     governance\n * @niche       pipelines\n * @purpose     Per-dispatcher end-to-end verification — runs every dispatcher in --mode pr --dry-run and classifies the result as pass / drift-detected / fail / timeout / infra-skip, then enriches pipeline-inventory.json with lastVerified data and emits a verification report SME and contributors read to answer \"is pipeline X healthy?\"\n * @description Reads workspace/reports/governance/pipeline-inventory.json. For every entry not on the infrastructure-dependent exclusion list, spawns the dispatcher with --mode pr --dry-run and a 90s timeout. Captures exit code + last 400 chars of combined output. Applies drift-signal regex (stale generated file, missing companion, \"out of date\" reports) to classify exit-1 as drift-detected (working pipeline + stale repo state) vs fail (real bug). Writes back into pipeline-inventory.json under each row's `verification` block + emits workspace/reports/governance/pipeline-verification.md with summary + failures section.\n * @mode        check\n * @pipeline    manual — SME-driven full verification snapshot, run on-demand or pre-release\n * @scope       65 dispatchers under operations/scripts/dispatch/\n * @usage       node operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js [--concern <name>] [--timeout <ms>] [--limit <N>]\n * @policy      D-GOV-03 (proves each pipeline is functionally healthy)\n */",
+      "header_field_count": 7,
+      "has_any_header": true,
+      "has_framework_header": true,
+      "category_valid": true,
+      "purpose_valid": false,
+      "scope_valid": false,
+      "triggers": [
+        {
+          "type": "manual",
+          "caller": "none",
+          "pipeline": "manual"
+        }
+      ],
+      "outputs": [
+        {
+          "output_path": "operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.md",
+          "type": "generated-output",
+          "call": "writeFileSync"
+        },
+        {
+          "output_path": "operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.json",
+          "type": "generated-output",
+          "call": "writeFileSync"
+        }
+      ],
+      "outputs_display": "operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.md, operations/scripts/validators/governance/pipelines/workspace/reports/governance/pipeline-verification.json",
+      "downstream_consumers": [],
+      "downstream_display": "No",
+      "in_json": true,
+      "category_match": false,
+      "purpose_match": true,
+      "pipeline_verified": "MATCH",
+      "declared_pipeline_set": {},
+      "actual_pipeline_set": {},
+      "pipeline_actual": "manual (none)",
+      "grade": "F",
+      "flags": [
+        "invalid-purpose",
+        "invalid-scope",
+        "missing-domain",
+        "header-json-category-mismatch"
+      ],
+      "trigger_group": "Manual"
+    },
+    {
       "path": "operations/scripts/validators/governance/pr/audit-script-inventory.js",
       "script": "audit-script-inventory",
       "category": "validator",
@@ -56837,6 +57065,11 @@
         "purpose_match": true
       },
       {
+        "path": "operations/scripts/audits/governance/repo/audit-pipeline-inventory.js",
+        "category_match": false,
+        "purpose_match": true
+      },
+      {
         "path": "operations/scripts/audits/governance/repo/audit-script-purpose-fit.js",
         "category_match": false,
         "purpose_match": true
@@ -58298,6 +58531,11 @@
       },
       {
         "path": "operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh",
+        "category_match": false,
+        "purpose_match": true
+      },
+      {
+        "path": "operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js",
         "category_match": false,
         "purpose_match": true
       },
@@ -60304,6 +60542,7 @@
     "operations/scripts/audits/content/veracity/docs-page-research.js",
     "operations/scripts/audits/content/veracity/docs-research-adjudication.js",
     "operations/scripts/audits/governance/repo/audit-folder-allowlist.js",
+    "operations/scripts/audits/governance/repo/audit-pipeline-inventory.js",
     "operations/scripts/audits/governance/repo/audit-script-purpose-fit.js",
     "operations/scripts/audits/governance/repo/audit-tasks-folders.js",
     "operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js",
@@ -60613,6 +60852,7 @@
     "operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js",
     "operations/scripts/validators/governance/compliance/validate-codex-task-contract.js",
     "operations/scripts/validators/governance/compliance/verify-pay-orc-gate-finalize.sh",
+    "operations/scripts/validators/governance/pipelines/verify-pipeline-end-to-end.js",
     "operations/scripts/validators/governance/pr/audit-script-inventory.js",
     "operations/scripts/validators/governance/pr/check-component-immutability.js",
     "operations/scripts/validators/governance/pr/check-governance-approvals.js",
@@ -68899,7 +69139,11 @@
     "workspace/reports/governance/folder-allowlist/audit.json",
     "workspace/reports/governance/folder-allowlist/audit.md",
     "workspace/reports/governance/gap-report.mdx",
+    "workspace/reports/governance/pipeline-inventory.json",
+    "workspace/reports/governance/pipeline-inventory.md",
     "workspace/reports/governance/pipeline-test-coverage.md",
+    "workspace/reports/governance/pipeline-verification.json",
+    "workspace/reports/governance/pipeline-verification.md",
     "workspace/reports/handover/2026-04-15-REQUIREMENTS.md",
     "workspace/reports/handover/2026-04-15-critical-review.md",
     "workspace/reports/health/wcag/wcag-audit.json",
@@ -69209,6 +69453,12 @@
     "workspace/thread-outputs/build/changelog-process-log.md",
     "workspace/thread-outputs/build/staleness-remediation-report.md",
     "workspace/thread-outputs/design/auto-remediation-hook-architecture.md",
+    "workspace/thread-outputs/production-cleanup/cleanup-ledger.md",
+    "workspace/thread-outputs/production-cleanup/dispatch-briefs/agent-contract.md",
+    "workspace/thread-outputs/production-cleanup/feature-catalogue.md",
+    "workspace/thread-outputs/production-cleanup/future-upgrades.md",
+    "workspace/thread-outputs/production-cleanup/gold-standard.md",
+    "workspace/thread-outputs/production-cleanup/needs-collab.md",
     "workspace/thread-outputs/repo-consolidation-deep/CATALOG-FRESHNESS-2026-05-23.md",
     "workspace/thread-outputs/repo-consolidation-deep/SLICE-00-MASTER.md",
     "workspace/thread-outputs/repo-consolidation-deep/SLICE-02-ai-tools.md",
@@ -69282,6 +69532,7 @@
     "workspace/thread-outputs/sessions/edit-verification.jsonl",
     "workspace/thread-outputs/sessions/flags.jsonl",
     "workspace/thread-outputs/sessions/issue-849-comment.md",
+    "workspace/thread-outputs/sessions/livepeer-docs-feature-email.md",
     "workspace/thread-outputs/sessions/phase-gate.jsonl",
     "workspace/thread-outputs/sessions/recovered-chats/224cfe73--224cfe73.md",
     "workspace/thread-outputs/sessions/recovered-chats/2d2f7e0d--2d2f7e0d.md",

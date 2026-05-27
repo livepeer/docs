@@ -33,6 +33,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 | Tracker | Master task list, backlog, Notion sync | Active | 2026-03-29 |
 | About | About tab — IA lock + content | Active | 2026-03-29 |
 | Cleanup | Repo cleanup | Active | 2026-03-29 |
+| Principal Engineer Audit | 5-category docs-as-infra audit (architecture, auto-doc pipeline, script quality, DX, security). 5 parallel agents → 24 ranked findings (4H/13M/7L). Report at `workspace/thread-outputs/audits/docs-as-infra-principal-engineer-audit-2026-05-26.md`. Top 3 fix recipes (SHA-pin Actions + gitleaks; discovery-based dispatch + registry validator + all-types catalog assertion; shared atomic-write + signal-handler lib) | Done — audit only, no code changes | 2026-05-26 |
 | MASTER CLEAN | Consolidate all frameworks, tab content, tasks into one folder | Active — audit done, awaiting approval to build | 2026-03-29 |
 | Contracts & Changelogs | Production audit complete (30 items, 20 fixes). OG images generated. Deprecated components removed. SEO/AEO surfaces corrected. Remaining: cherry-pick workflow to docs-v2 for dispatch test (BL-023, P0) | Active — audit done | 2026-03-31 |
 | Changelog Pipeline | 24 targets registered, 19 resource pages populated, nav grouped into 5 categories, script cleanForMdx + commit labels fixed. Remaining: changelog.mdx format fix, LLM commits-mode feature, managed:true activation | Active | 2026-03-30 |

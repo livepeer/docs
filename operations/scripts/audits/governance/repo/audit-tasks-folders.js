@@ -217,7 +217,8 @@ function normalizeCliRepoPath(inputPath) {
 function normalizeAuditOutputDir(inputPath) {
   const repoPath = normalizeCliRepoPath(inputPath || DEFAULT_AUDIT_OUTPUT_DIR);
   if (!repoPath) return DEFAULT_AUDIT_OUTPUT_DIR;
-  if (!repoPath.startsWith('tasks')) {
+  // Reports must live under workspace/ (D-ACT-09). Legacy `tasks/` paths are no longer permitted.
+  if (!repoPath.startsWith('workspace/')) {
     throw new Error(`--audit-output-dir must resolve under workspace/: ${repoPath}`);
   }
   return repoPath;
@@ -315,7 +316,11 @@ function walkDirectory(rootAbsPath, onDir, onFile) {
 
 function scanTasksTree() {
   if (!fs.existsSync(TASKS_ROOT) || !fs.statSync(TASKS_ROOT).isDirectory()) {
-    throw new Error('tasks directory not found in current workspace');
+    // tasks/ was archived in the 2026-05-23 governance cleanup. No drift to audit when
+    // the folder doesn't exist. Return empty result instead of throwing — this audit
+    // is now effectively a "verify tasks/ stays archived" check.
+    console.log('audit-tasks-folders: tasks/ directory absent (archived 2026-05-23) — no drift to audit, skipping.');
+    return { folders: new Set(), files: [] };
   }
 
   const folders = new Set();

@@ -111,22 +111,27 @@ const AGGREGATE_DETAILS = {
 // Markers read by this generator:
 //   @catalog-layout  — expected: 'grouped-tables'
 //   @diagram         — expected: 'pipeline-flow' (renders Mermaid chart before tables)
-const TYPE_ORDER = ['audit', 'automation', 'generator', 'validator', 'remediator', 'dispatch'];
+// D-ACT-07 canonical 7 types. Order matches the canonical pipeline flow:
+// audit (scan + report) → generator (produce) → validator (check) → remediator (fix) →
+// integrator (fetch external) → dispatch (orchestrate) → interface (event-driven respond).
+const TYPE_ORDER = ['audit', 'generator', 'validator', 'remediator', 'integrator', 'dispatch', 'interface'];
 const TYPE_ICONS = {
   audit: '🔍',
-  automation: '⚙️',
   generator: '🏭',
   validator: '✅',
   remediator: '🔧',
-  dispatch: '🚦'
+  integrator: '🔌',
+  dispatch: '🚦',
+  interface: '💬'
 };
 const TYPE_LABELS = {
   audit: 'Audits',
-  automation: 'Automations',
   generator: 'Generators',
   validator: 'Validators',
   remediator: 'Remediators',
-  dispatch: 'Dispatch'
+  integrator: 'Integrators',
+  dispatch: 'Dispatch',
+  interface: 'Interfaces'
 };
 
 // Canonical pipeline tiers — normalised from freeform JSDoc @pipeline strings.
