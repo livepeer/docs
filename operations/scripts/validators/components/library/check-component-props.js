@@ -375,9 +375,17 @@ function checkCustomDividerPlacement(content, filePath, issues) {
   }
 
   if (hasRelatedPages && relatedPagesLine > 0) {
+    // Look back over the 4 nearest NON-EMPTY lines (not a fixed line window): code
+    // fences and JSX comments are blanked to preserve line numbers, so a multi-line
+    // comment between the divider and the heading would otherwise push the divider out
+    // of a fixed window and produce a false positive.
     let dividerBeforeRelated = false;
-    for (let j = relatedPagesLine - 2; j >= Math.max(0, relatedPagesLine - 5); j -= 1) {
-      if (/^<CustomDivider/.test(lines[j].trim())) { dividerBeforeRelated = true; break; }
+    let nonEmptySeen = 0;
+    for (let j = relatedPagesLine - 2; j >= 0 && nonEmptySeen < 4; j -= 1) {
+      const t = lines[j].trim();
+      if (!t) continue;
+      nonEmptySeen += 1;
+      if (/^<CustomDivider/.test(t)) { dividerBeforeRelated = true; break; }
     }
     if (!dividerBeforeRelated) {
       addIssue(issues, {

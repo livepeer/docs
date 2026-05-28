@@ -79,6 +79,7 @@ function buildSkipMap(lines) {
   let inFrontmatter = false;
   let fmCount = 0;
   let inFence = false;
+  let inJsxComment = false;
   for (let i = 0; i < lines.length; i += 1) {
     const t = lines[i].trim();
     if (t === '---' && fmCount < 2) {
@@ -89,12 +90,23 @@ function buildSkipMap(lines) {
       continue;
     }
     if (inFrontmatter) { skip[i] = true; continue; }
+    if (inJsxComment) {
+      skip[i] = true;
+      if (t.includes('*/}')) inJsxComment = false;
+      continue;
+    }
     if (/^```/.test(t)) {
       skip[i] = true;
       inFence = !inFence;
       continue;
     }
-    if (inFence) skip[i] = true;
+    if (inFence) { skip[i] = true; continue; }
+    // JSX comment open. If it doesn't close on the same line, enter multi-line state.
+    if (t.includes('{/*')) {
+      skip[i] = true;
+      if (!t.includes('*/}')) inJsxComment = true;
+      continue;
+    }
   }
   return skip;
 }
@@ -106,10 +118,13 @@ function findInsertions(content) {
   for (let i = 0; i < lines.length; i += 1) {
     if (skip[i]) continue;
     if (!RELATED_HEADING_RE.test(lines[i].trim())) continue;
-    // Look back up to LOOKBACK_LINES non-empty lines for a divider.
+    // Look back up to LOOKBACK_LINES non-empty, non-skipped lines for a divider.
+    // Skipped lines (frontmatter, code fences, JSX comments) don't count — a divider
+    // inside a {/* ... */} comment is not an active divider.
     let dividerFound = false;
     let nonEmptySeen = 0;
     for (let j = i - 1; j >= 0 && nonEmptySeen < LOOKBACK_LINES; j -= 1) {
+      if (skip[j]) continue;
       const trimmed = lines[j].trim();
       if (!trimmed) continue;
       nonEmptySeen += 1;
