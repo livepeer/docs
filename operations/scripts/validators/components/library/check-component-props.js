@@ -312,6 +312,11 @@ function checkInlineStyles(content, filePath, issues) {
   }
 }
 
+// Full-page single-component mounts (Source/Canonical/Changelog/Page/Catalog wrappers,
+// OpenAPI, IndexSource). A leading visual divider is meaningless on these — they render
+// one component as the whole page — so they're exempt from the opening-divider rule.
+const SINGLE_MOUNT_RE = /^<([A-Z]\w*(Source|Canonical|Changelog|Page|Catalog)|OpenAPI|IndexSource)\b/;
+
 function checkCustomDividerPlacement(content, filePath, issues) {
   const cleaned = stripCodeBlocks(stripJsxComments(content));
   const lines = cleaned.split('\n');
@@ -319,11 +324,12 @@ function checkCustomDividerPlacement(content, filePath, issues) {
   // Track frontmatter boundaries (two --- markers)
   let fmDashCount = 0;
   let pastFrontmatter = false;
-  let foundFirstDivider = false;
-  let firstH2Line = -1;
+  let firstContentLine = -1;     // first non-empty, non-import content line
+  let firstContentText = '';
+  let dividerBeforeFirstHeading = false;
+  let firstHeadingSeen = false;
   let hasRelatedPages = false;
   let relatedPagesLine = -1;
-  let lastDividerLine = -1;
 
   for (let i = 0; i < lines.length; i += 1) {
     const trimmed = lines[i].trim();
@@ -338,40 +344,45 @@ function checkCustomDividerPlacement(content, filePath, issues) {
     // Skip lines inside frontmatter
     if (!pastFrontmatter) continue;
 
-    // Skip import lines and empty lines
-    if (/^import\b/.test(trimmed) || /^"import\b/.test(trimmed)) continue;
+    // Skip import/export lines and empty lines
+    if (/^import\b/.test(trimmed) || /^"import\b/.test(trimmed) || /^export\b/.test(trimmed)) continue;
     if (!trimmed) continue;
 
-    // First non-empty, non-import line after frontmatter/imports
-    if (!foundFirstDivider) {
-      if (/^<CustomDivider/.test(trimmed)) {
-        foundFirstDivider = true;
-        lastDividerLine = i + 1;
-        continue;
-      }
-      // First content element is not a CustomDivider
-      addIssue(issues, {
-        id: 'prop-divider-missing-opening', check: '5.26',
-        title: 'Missing opening CustomDivider',
-        severity: 'high', path: filePath, line: i + 1,
-        evidence: `First content element is not <CustomDivider>. Found: ${trimmed.slice(0, 50)}`,
-        recommendation: 'Add <CustomDivider /> as the first visual element after imports.'
-      });
-      foundFirstDivider = true;
+    if (firstContentLine === -1) {
+      firstContentLine = i + 1;
+      firstContentText = trimmed;
     }
 
-    if (/^## /.test(trimmed) && firstH2Line === -1) {
-      firstH2Line = i + 1;
+    // A CustomDivider before the first markdown heading satisfies the opening-divider
+    // rule. This accepts the established "intro callout then divider" house pattern
+    // (e.g. <CenteredContainer><Tip/></CenteredContainer> followed by <CustomDivider/>).
+    if (!firstHeadingSeen && /^<CustomDivider/.test(trimmed)) {
+      dividerBeforeFirstHeading = true;
     }
 
-    if (/^<CustomDivider/.test(trimmed)) {
-      lastDividerLine = i + 1;
+    if (/^#{1,3}\s/.test(trimmed) && !firstHeadingSeen) {
+      firstHeadingSeen = true;
     }
 
-    if (/^##\s+(related|related\s+pages)/i.test(trimmed)) {
+    if (/^##\s+related\b/i.test(trimmed)) {
       hasRelatedPages = true;
       relatedPagesLine = i + 1;
     }
+  }
+
+  // Opening-divider rule: flag only genuine cases — a page that reaches a markdown heading
+  // with no <CustomDivider> before it, and that isn't a single-component mount. Pages with
+  // no heading at all (hero / landing / iframe / single-mount layouts) are exempt: a leading
+  // divider is not part of their structure and there is no unambiguous insertion point.
+  const isSingleMount = SINGLE_MOUNT_RE.test(firstContentText);
+  if (firstHeadingSeen && !dividerBeforeFirstHeading && !isSingleMount) {
+    addIssue(issues, {
+      id: 'prop-divider-missing-opening', check: '5.26',
+      title: 'Missing opening CustomDivider',
+      severity: 'high', path: filePath, line: firstContentLine,
+      evidence: `No <CustomDivider> before the first heading. First content: ${firstContentText.slice(0, 50)}`,
+      recommendation: 'Add <CustomDivider /> before the first section heading (after any intro callout).'
+    });
   }
 
   if (hasRelatedPages && relatedPagesLine > 0) {

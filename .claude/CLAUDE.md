@@ -30,6 +30,7 @@ Alison Haire (Wonderland). Documentation lead. Decision authority.
 
 | Thread | Working on | Status | Last update |
 |---|---|---|---|
+| Health Audit Pre-PR | Run all health audit pipelines (PR mode) on docs-v2-dev-draft, aggregate results, assess PR-readiness before PR to docs-v2 | Active | 2026-05-27 |
 | Tracker | Master task list, backlog, Notion sync | Active | 2026-03-29 |
 | About | About tab — IA lock + content | Active | 2026-03-29 |
 | Cleanup | Repo cleanup | Active | 2026-03-29 |

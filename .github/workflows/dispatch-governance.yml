@@ -84,15 +84,19 @@ jobs:
           NODE_PATH: tools/node_modules
         run: node operations/tests/integration/pipeline-functional-tests.js
       # ── Post-audit drift gates (Principal Engineer audit 2026-05-26 H1/H2/H3) ──
-      # These three validators were added in Sprint 1. Each blocks PR if drift detected.
-      # REGISTRY_STRICT is intentionally NOT enabled here yet — 72 polluted JSDoc
-      # entries remain (45 indirect libraries that need validator-exemption + 27
-      # legacy 'utility'-typed dev tools). Enable when the backfill thread closes.
+      # All four validators added in Sprint 1, each blocks PR if drift detected.
+      # REGISTRY_STRICT promoted 2026-05-27 once registry pollution reached 0
+      # (deriveFromPath path-pattern enhancement closed the final 72 entries).
       - name: catalog all-types assertion (strict)
         env:
           NODE_PATH: tools/node_modules
           CATALOG_STRICT: "1"
         run: node operations/tests/unit/script-docs.test.js
+      - name: registry taxonomy gate (strict)
+        env:
+          NODE_PATH: tools/node_modules
+          REGISTRY_STRICT: "1"
+        run: node operations/scripts/generators/governance/catalogs/generate-script-registry.js --dry-run
       - name: pipeline-orphans gate (strict)
         env:
           NODE_PATH: tools/node_modules

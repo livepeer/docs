@@ -3,7 +3,7 @@
 Operator note: external HTTP/HTTPS links are classified only and marked as `🟡 untested-external` in this phase.
 
 ## Run Metadata
-- Timestamp: 2026-05-27T10:46:32.042Z
+- Timestamp: 2026-05-28T09:08:33.392Z
 - Mode: full
 - Strict: false (internal refs only)
 - Files analyzed: 821
