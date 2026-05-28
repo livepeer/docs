@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            mint-dev-locks.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          utility
  * @purpose           tooling:dev-tools
  * @scope             tests/unit, tools/dev/preview/mint-dev.sh

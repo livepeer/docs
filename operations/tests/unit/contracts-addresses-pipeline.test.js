@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            contracts-addresses-pipeline.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:contracts-registry
  * @scope             tests/unit, .github/scripts/fetch-contract-addresses.js, operations/scripts/integrators/content/data/contracts/, .github/workflows/update-contract-addresses*.yml, operations/scripts/generators/content/seo/generate-ai-sitemap.js, snippets/components/integrators/feeds/ContractVerifier.jsx, snippets/data/contract-addresses/, v2/about

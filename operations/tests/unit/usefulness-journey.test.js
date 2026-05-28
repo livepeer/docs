@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            usefulness-journey.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          utility
  * @purpose           qa:content-quality
  * @scope             full-repo

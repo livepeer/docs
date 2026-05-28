@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            docs-page-scope.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests, tools/lib

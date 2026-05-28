@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            export-portable-skills.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/integrators/ai/agents/export-portable-skills.js, tools/lib/ai/codex-skill-templates.js, ai-tools/agent-packs/skills

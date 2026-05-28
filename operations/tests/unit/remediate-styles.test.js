@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            remediate-styles.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:style-governance
  * @scope             tests,tools/scripts/remediators/styles

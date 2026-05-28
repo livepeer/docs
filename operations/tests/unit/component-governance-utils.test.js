@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            component-governance-utils.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests

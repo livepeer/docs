@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            check-mintlify-canonical-sync.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/config/mintlify-canonical-sync.js, operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js, operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js, docs-guide/canonical/collation-data/Mintlify

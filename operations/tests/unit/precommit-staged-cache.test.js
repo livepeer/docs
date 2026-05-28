@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            precommit-staged-cache.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests/unit, tools/lib/bootstrap/precommit-staged-cache.js

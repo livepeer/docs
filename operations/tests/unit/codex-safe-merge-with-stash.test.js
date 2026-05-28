@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            codex-safe-merge-with-stash.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          utility
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/x-archive/codex-safe-merge-with-stash.js

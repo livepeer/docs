@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            ownerless-governance.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, tests/utils, operations/tests/WHEN-TESTS-RUN.md, docs-guide, operations/governance/config/ownerless-governance-surfaces.json, AGENTS.md, .allowlist, .github, .claude, .cursor, .windsurf, README.md, docs-guide/contributing/agent-instructions.mdx

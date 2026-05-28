@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            script-docs-test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             .githooks, .github/scripts, tests, tools/scripts, workspace/scripts, docs-guide/catalog/scripts-catalog.mdx

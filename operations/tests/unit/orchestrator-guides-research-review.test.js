@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            orchestrator-guides-research-review.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          generator
  * @purpose           tooling:dev-tools
  * @scope             tests/unit, operations/scripts/dispatch/content/veracity/orchestrator-guides-research-review.js, tools/config/scoped-navigation/docs-gate-work.json

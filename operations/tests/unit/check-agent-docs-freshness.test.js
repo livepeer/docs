@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            check-agent-docs-freshness.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/validators/governance/compliance/check-agent-docs-freshness.js, AGENTS.md, .github/copilot-instructions.md, .claude, .cursor, .windsurf, docs-guide/policies, docs-guide/contributing/agent-instructions.mdx

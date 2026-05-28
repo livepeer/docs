@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            ai-tools-registry.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             operations/tests/unit, ai-tools/registry, tools/lib/ai/ai-tools-registry.js, operations/scripts/generators/governance/catalogs/generate-ai-tools-registry-artifacts.js, operations/scripts/validators/governance/compliance/validate-ai-tools-registry.js, operations/governance/config/ownerless-governance-surfaces.json, docs-guide/tooling/ai-tools.mdx, docs-guide/policies/source-of-truth-policy.mdx, docs-guide/policies/audit-system-overview.mdx, docs-guide/policies/skill-pipeline-map.mdx

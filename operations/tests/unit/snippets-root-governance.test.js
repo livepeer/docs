@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            snippets-root-governance.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             operations/tests/unit, snippets/guide.mdx, snippets/snippets-registry.mdx, snippets/_workspace/archive, operations/governance/config/generated-artifacts.json

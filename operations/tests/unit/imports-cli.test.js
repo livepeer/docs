@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            imports-cli.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @type              validator
  * @purpose           qa:import-integrity

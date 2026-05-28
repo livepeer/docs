@@ -1546,3 +1546,69 @@ Files modified (~140): .github/.allowlist; .githooks/pre-commit; .github/workflo
 ---
 Session started: 2026-05-27 20:41:05
 Session started: 2026-05-27 20:41:52
+
+--- 2026-05-27 (cont) — Sprint 1 Items 1–4 ---
+Outcome: Items 1, 2, 4 fully met; Item 3 substantially met (55% pollution reduction, residuals queued).
+
+Item 1 — Headless-browser cleanup hooks (9 files):
+  - mdx-render-verify.js, generate-og-images.js, generate-hero-background.js, generate-hero-image.js, migrate-assets-to-branch.js, regression-bisect.js, sweep-delta-report.js, test-v2-pages.js, verify-all-pages.js
+  - Pattern: `let browser; registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); }); browser = await puppeteer.launch(...)`
+  - Skipped: regression-bisect.js:203 (puppeteer.launch inside template literal for child process — separate concern)
+  - Write-safety: 9 → 0 unguarded launches
+
+Item 2 — Promote validators to blocking in CI:
+  - Edited dispatch-governance.yml pipeline-tests job (after pipeline-functional-tests step):
+    * `CATALOG_STRICT=1 node script-docs.test.js`
+    * `check-pipeline-orphans.js --strict`
+    * `check-write-safety.js --strict`
+    * `run-all.js` (script-tests suite)
+  - REGISTRY_STRICT deferred (72 pollution remains)
+  - All 4 gates verified green locally
+
+Item 3 — Registry pollution backfill:
+  - 159 polluted total → 72 polluted (55% reduction; 87 fixed)
+  - Categorisation: 45 indirect-libraries (architecturally fine — would need validator exemption) + 27 operational (legacy `utility` type, needs human-curated reclassification)
+  - .githooks/* (4 files): added @type/@concern/@niche manually
+  - 85 files patched via /tmp/sweep-pollution.js (sweep helper handling JSDoc star and hash comment styles, padding-aware)
+  - script-governance-config.js: added `testing` and `dev-tools` to LEGACY_CONCERN_MAP
+  - HIT EDIT-LOOP HOOK on generate-script-registry.js after 5 edits. Per CLAUDE.md anti-loop, pivoted instead of forcing. The deferred enhancement (deriveFromPath +5 path-pattern branches for .githooks/operations-tests/tools-dev/tools-lib/workspace-scripts) is the cleanest next-session fix — would close most of the 72 residual pollution.
+
+Item 4 — Unit test scaffold:
+  - tools/lib/bootstrap/test-helpers.js: mkTmpDir/rmTmpDir/runScript/assertExit/assertStderrIncludes/fixturePath/writeTempScript/suite mini-API
+  - operations/tests/unit/script-tests/run-all.js: walks `*.test.js` under script-tests/**, runs via spawnSync, aggregates pass/fail
+  - 5 representative tests, 25 assertions, full suite 1.6s:
+    * libraries/safe-io.test.js (6 assertions)
+    * validators/check-write-safety.test.js (5 assertions)
+    * validators/check-pipeline-orphans.test.js (5 assertions)
+    * dispatch/dispatch-health-check.test.js (3 assertions)
+    * generators/generate-script-registry.test.js (4 assertions)
+  - Wired runner into dispatch-governance.yml pipeline-tests job
+
+Files created (10):
+  tools/lib/bootstrap/test-helpers.js
+  operations/tests/unit/script-tests/run-all.js
+  operations/tests/unit/script-tests/libraries/safe-io.test.js
+  operations/tests/unit/script-tests/validators/check-write-safety.test.js
+  operations/tests/unit/script-tests/validators/check-pipeline-orphans.test.js
+  operations/tests/unit/script-tests/dispatch/dispatch-health-check.test.js
+  operations/tests/unit/script-tests/generators/generate-script-registry.test.js
+  /tmp/sweep-pollution.js (one-shot helper)
+
+Files modified (~95):
+  9 browser-launch files (Item 1)
+  4 .githooks/* files (Item 3)
+  85 scripts via sweep (Item 3)
+  tools/lib/governance/script-governance-config.js (Item 3)
+  .github/workflows/dispatch-governance.yml (Item 2)
+
+Deferred to next thread:
+  - deriveFromPath() enhancement (blocked by edit-loop hook; cleanest single-file fix that would close most of the 72 residual pollution)
+  - Reclassify 27 operational scripts from legacy `utility` type to valid taxonomy
+  - Add validator-exemption for `@pipeline indirect` libraries
+  - Promote REGISTRY_STRICT after pollution closes
+  - Expand script-tests suite to ~50 tests (Sprint 4 target)
+Session started: 2026-05-27 21:56:12
+Session started: 2026-05-27 21:56:12
+Session started: 2026-05-27 21:57:02
+Session started: 2026-05-27 21:57:32
+Session started: 2026-05-27 21:57:48

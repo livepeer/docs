@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            codex-task-cleanup.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          utility
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/integrators/ai/codex/task-cleanup.js

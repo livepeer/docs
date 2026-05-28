@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            domain-pages-audit
+ *  @type validator
+ *  @concern governance
+ *  @niche integration
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             operations/tests/integration, workspace/reports/page-audits, docs.livepeer.org
