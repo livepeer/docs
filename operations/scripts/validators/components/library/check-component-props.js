@@ -150,15 +150,32 @@ function stripJsxComments(content) {
 
 function extractMermaidBlocks(content) {
   const blocks = [];
-  const re = /```mermaid\n([\s\S]*?)```/g;
+  // (a) Markdown fenced mermaid blocks: ```mermaid ... ```
+  const fenceRe = /```mermaid\n([\s\S]*?)```/g;
   let match;
-  while ((match = re.exec(content)) !== null) {
+  while ((match = fenceRe.exec(content)) !== null) {
+    blocks.push({
+      startLine: getLineNumber(content, match.index),
+      content: match[1]
+    });
+  }
+  // (b) JSX <Mermaid chart={`...`} /> components — same mermaid semantics, different wrapper.
+  const jsxRe = /<Mermaid\b[^>]*?chart=\{`([\s\S]*?)`\}/g;
+  while ((match = jsxRe.exec(content)) !== null) {
     blocks.push({
       startLine: getLineNumber(content, match.index),
       content: match[1]
     });
   }
   return blocks;
+}
+
+function stripMermaidContexts(content) {
+  // Used by prop-hardcoded-hex so hex literals inside any mermaid context are not
+  // flagged as "hardcoded" — those are governed under prop-mermaid-ungoverned-colour.
+  return content
+    .replace(/```mermaid[\s\S]*?```/g, (m) => '\n'.repeat((m.match(/\n/g) || []).length))
+    .replace(/<Mermaid\b[^>]*?chart=\{`[\s\S]*?`\}\s*\/?\s*>/g, (m) => '\n'.repeat((m.match(/\n/g) || []).length));
 }
 
 // --- Data source loading ------------------------------------------------------
@@ -281,7 +298,7 @@ function checkInlineStyles(content, filePath, issues) {
   }
 
   const hexRe = /#[0-9A-Fa-f]{6}\b/g;
-  const noMermaid = cleaned.replace(/```mermaid[\s\S]*?```/g, '');
+  const noMermaid = stripMermaidContexts(cleaned);
   let hexMatch;
   while ((hexMatch = hexRe.exec(noMermaid)) !== null) {
     addIssue(issues, {
