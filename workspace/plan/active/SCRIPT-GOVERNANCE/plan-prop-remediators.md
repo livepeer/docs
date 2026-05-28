@@ -40,10 +40,14 @@ Live counts via `check-component-props.js --scope=full` (2026-05-27):
 **Phase 1 — Low-risk, deterministic categories (build first).**
 These can be applied without human judgement once the rule is locked.
 
-1. `prop-divider-missing-before-related` (22) — pure structural regex, no JSX edit
-2. `prop-divider-missing-opening` (645) — structural, needs first-heading + first-paragraph detection
-3. `prop-mermaid-ungoverned-colour` (296) — token-mapping inside mermaid fences only
-4. `prop-hardcoded-hex` (76) — same mapping, outside mermaid (smaller scope)
+1. ✅ `prop-divider-missing-before-related` (22) — pure structural regex, no JSX edit. **DONE 2026-05-28** (commit 1b3021aa4): `repair-divider-before-related.js`, 20 insertions applied. Uses non-empty-line lookback (handles JSX comments between divider and heading).
+2. `prop-divider-missing-opening` (623) — structural, needs first-heading + first-paragraph detection. **Still open** — riskiest of the structural set (623 pages), needs care with import-block detection.
+3. `prop-mermaid-ungoverned-colour` (247) — token-mapping inside mermaid fences only. **Still open** — needs a per-hex brand-token decision (which governed colour replaces each ungoverned one). Not safe to auto-map.
+4. ✅ `prop-hardcoded-hex` (68→50) — **DONE 2026-05-28** (commit 1b3021aa4): `repair-hardcoded-hex.js`, sourced from style.css (the component-governance colour source of truth, NOT MermaidColours.jsx which is mermaid-only). Fixed the #2d9a67 typo of the dark accent across 8 dev pages → var(--accent). Skips ambiguous hexes (#ffffff = bg-page AND on-accent) and off-palette status colours. Remaining 50 are intentional palette docs (allowlisted style-guide.mdx) or off-palette status colours needing a brand decision.
+
+**Validator fix shipped alongside Phase 1** (commit 1b3021aa4): `check-component-props.js` prop-hardcoded-hex now strips `<Mermaid chart={`...`}>` JSX blocks (not just ` ```mermaid ` fences) so governed mermaid colours in the JSX wrapper aren't false-flagged. Both remediators wired into `dispatch-component-registry.js` repair step (PR previews via --dry-run; scheduled+write / manual applies with --verify).
+
+**Known validator follow-up:** `prop-divider-missing-before-related` 4-line lookback misses dividers separated by a 3-line JSX comment (2 false positives at v2/gateways/guides/node-pipelines/guide.mdx + production-gateways.mdx). The remediator handles these correctly; the validator's lookback should skip JSX comments.
 
 Deliverables per category: one `repair-<category>.js` under
 `operations/scripts/remediators/components/library/`, with `--dry-run`/`--write`/
