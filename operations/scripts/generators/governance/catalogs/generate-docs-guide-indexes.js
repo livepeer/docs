@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -353,7 +354,7 @@ function writeIfChanged(repoPath, nextContent, shouldWrite) {
 
   if (changed && shouldWrite) {
     fs.mkdirSync(path.dirname(path.join(REPO_ROOT, repoPath)), { recursive: true });
-    fs.writeFileSync(path.join(REPO_ROOT, repoPath), normalizedNext, 'utf8');
+    atomicWrite(path.join(REPO_ROOT, repoPath), normalizedNext, 'utf8');
   }
 
   return { changed, path: repoPath };

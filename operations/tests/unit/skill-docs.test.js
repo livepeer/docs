@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            skill-docs.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, ai-tools/ai-skills, tools/lib/ai/codex-skill-templates.js

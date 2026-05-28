@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            repair-spelling.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/unit, operations/scripts/remediators/content

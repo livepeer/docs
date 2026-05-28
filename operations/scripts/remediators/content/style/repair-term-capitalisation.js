@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
@@ -144,8 +145,11 @@ function buildZoneMap(content) {
   const zones = [];
   let m;
 
-  if (content.startsWith('---')) {
-    const close = content.indexOf('---', 3);
+  // Tolerate leading whitespace/blank lines before frontmatter (Mintlify and gray-matter do).
+  const fmOpen = content.match(/^\s*---\r?\n/);
+  if (fmOpen) {
+    const searchFrom = fmOpen[0].length;
+    const close = content.indexOf('---', searchFrom);
     if (close > 0) {
       zones.push({ start: 0, end: close + 3, type: 'frontmatter' });
     }
@@ -340,8 +344,17 @@ function run(options = {}) {
 
     if (args.mode === 'write') {
       affectedFiles.push({ fullPath, relPath, originalContent: content });
-      const updated = applyReplacements(content, replacements);
-      fs.writeFileSync(fullPath, updated, 'utf8');
+      // Iterate to stability: tier-2 multi-word rules ("Livepeer Protocol") depend on
+      // tier-1 single-word rules ("livepeer" → "Livepeer") landing first. Apply, re-scan,
+      // re-apply until processFile returns []. Cap at 8 iterations as a safety net.
+      let updated = applyReplacements(content, replacements);
+      for (let pass = 0; pass < 8; pass += 1) {
+        const more = processFile(updated, rules);
+        if (more.length === 0) break;
+        updated = applyReplacements(updated, more);
+        totalReplacements += more.length;
+      }
+      atomicWrite(fullPath, updated, 'utf8');
     }
   }
 
@@ -392,7 +405,7 @@ function run(options = {}) {
 
       for (const af of affectedFiles) {
         if (regressedFiles.has(af.relPath)) {
-          fs.writeFileSync(af.fullPath, af.originalContent, 'utf8');
+          atomicWrite(af.fullPath, af.originalContent, 'utf8');
           reverted++;
         }
       }

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            cleanup-local-dev-sessions.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          utility
  * @purpose           tooling:dev-tools
  * @scope             tests/unit, operations/scripts/integrators/governance/cleanup-local-dev-sessions.js

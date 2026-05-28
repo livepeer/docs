@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 const WORKFLOWS_DIR = path.join(REPO_ROOT, '.github/workflows');
@@ -143,7 +144,7 @@ function main() {
     if (dryRun) {
       console.log(`  + ${file} → type:${info.type} concern:${info.concern} pipeline:${info.pipeline}`);
     } else {
-      fs.writeFileSync(filePath, header + content);
+      atomicWrite(filePath, header + content);
       console.log(`  ✓ ${file} → type:${info.type} concern:${info.concern} pipeline:${info.pipeline}`);
     }
     added++;

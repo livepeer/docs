@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            run-pr-checks.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @type              validator
  * @purpose           qa:repo-health

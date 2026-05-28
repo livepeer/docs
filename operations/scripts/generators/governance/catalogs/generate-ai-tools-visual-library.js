@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   normalizeRepoPath,
   renderInventoryReport,
@@ -1692,7 +1693,7 @@ function writeIfChanged(repoPath, content, shouldWrite) {
   const changed = existing !== content;
   if (changed && shouldWrite) {
     fs.mkdirSync(path.dirname(path.join(REPO_ROOT, normalizedPath)), { recursive: true });
-    fs.writeFileSync(path.join(REPO_ROOT, normalizedPath), content, 'utf8');
+    atomicWrite(path.join(REPO_ROOT, normalizedPath), content, 'utf8');
   }
   return { path: normalizedPath, changed };
 }

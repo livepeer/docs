@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../tools/lib/bootstrap/safe-io');
 
 const REGISTRY_PATH = 'docs-guide/canonical/collation-data/Mintlify/mintlify-canonical-consumers.json';
 const TEXT_EXTENSIONS = new Set([
@@ -128,7 +129,7 @@ function readRepoText(repoRoot, repoPath) {
 }
 
 function writeRepoText(repoRoot, repoPath, text) {
-  fs.writeFileSync(path.join(repoRoot, repoPath), text, 'utf8');
+  atomicWrite(path.join(repoRoot, repoPath), text, 'utf8');
 }
 
 function isTextFile(repoPath) {

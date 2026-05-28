@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            codex-skill-sync.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             operations/tests/unit, operations/scripts/integrators/ai/agents/sync-codex-skills.js, ai-tools/ai-skills/templates

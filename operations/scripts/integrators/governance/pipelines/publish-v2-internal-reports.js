@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 
 const manifest = require('../../../../../operations/config/content/reports/v2-internal-report-pages');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -615,7 +616,7 @@ function writeIfChanged(targetAbsPath, nextContent, args) {
     ? fs.readFileSync(targetAbsPath, 'utf8')
     : null;
   if (prev === nextContent) return false;
-  if (DRY_RUN) { console.log('[dry-run] Would write:', targetAbsPath); } else { fs.writeFileSync(targetAbsPath, nextContent, 'utf8'); };
+  if (DRY_RUN) { console.log('[dry-run] Would write:', targetAbsPath); } else { atomicWrite(targetAbsPath, nextContent, 'utf8'); };
   return true;
 }
 
@@ -700,7 +701,7 @@ function cleanupDynamicPages(records, args) {
         if (!args.check) {
           const placeholder = buildRetiredLegacyAliasContent(entry.categorySlug, fileName);
           if (fs.readFileSync(fullPath, 'utf8') !== placeholder) {
-            if (DRY_RUN) { console.log('[dry-run] Would write:', fullPath); } else { fs.writeFileSync(fullPath, placeholder, 'utf8'); };
+            if (DRY_RUN) { console.log('[dry-run] Would write:', fullPath); } else { atomicWrite(fullPath, placeholder, 'utf8'); };
           }
         }
         continue;
@@ -820,7 +821,7 @@ function updateDocsJson(records, args) {
   if (args.check || prev === next) {
     return { changed: false, groupsWritten: nextManagedGroups.length };
   }
-  if (DRY_RUN) { console.log('[dry-run] Would write:', DOCS_JSON_PATH); } else { fs.writeFileSync(DOCS_JSON_PATH, next, 'utf8'); };
+  if (DRY_RUN) { console.log('[dry-run] Would write:', DOCS_JSON_PATH); } else { atomicWrite(DOCS_JSON_PATH, next, 'utf8'); };
   return { changed: true, groupsWritten: nextManagedGroups.length };
 }
 

@@ -16,6 +16,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const { execSync } = require('child_process')
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   extractLeadingScriptHeader,
   getSectionLines,
@@ -1612,15 +1613,15 @@ function writeReports(report, options) {
   const indexPath = path.join(REPO_ROOT, REPORTS_INDEX_PATH)
 
   if (options.format === 'both' || options.format === 'md') {
-    fs.writeFileSync(mdPath, buildMarkdownReport(report), 'utf8')
+    atomicWrite(mdPath, buildMarkdownReport(report), 'utf8')
   }
 
   if (options.format === 'both' || options.format === 'json') {
-    fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
+    atomicWrite(jsonPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8')
   }
 
   fs.mkdirSync(path.dirname(indexPath), { recursive: true })
-  fs.writeFileSync(indexPath, buildReportsIndex(), 'utf8')
+  atomicWrite(indexPath, buildReportsIndex(), 'utf8')
 
   return {
     outputDir,

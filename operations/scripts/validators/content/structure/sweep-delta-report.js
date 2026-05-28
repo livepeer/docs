@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 let puppeteer;
 try {
@@ -93,7 +94,9 @@ async function main(argv = process.argv.slice(2)) {
   const baseUrl = await ensureServer(args.baseUrl);
   console.log(`Server: ${baseUrl}\n`);
 
-  const browser = await puppeteer.launch({
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
@@ -194,7 +197,7 @@ async function main(argv = process.argv.slice(2)) {
       },
       ...currentResults
     };
-    fs.writeFileSync(BASELINE_PATH, JSON.stringify(newBaseline, null, 2) + '\n');
+    atomicWrite(BASELINE_PATH, JSON.stringify(newBaseline, null, 2) + '\n');
     console.log(`\nBaseline updated at ${BASELINE_PATH}`);
   }
 

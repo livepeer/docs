@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            migrate-assets-to-branch.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests/unit, operations/scripts/remediators/assets, operations/scripts/audits/content/quality/audit-media-assets.js

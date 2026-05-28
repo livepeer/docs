@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            openapi-reference-audit.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           tooling:api-spec
  * @scope             tests/unit, tests/integration, v2, api

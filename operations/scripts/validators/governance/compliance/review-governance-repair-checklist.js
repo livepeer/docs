@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { buildRepairPlan, runAudit } = require('../pr/audit-script-inventory.js');
 const { parseDeclaredPipelines } = require('../../../../../tools/lib/governance/script-governance-config');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_OUTPUT_DIR = 'workspace/reports/repo-ops';
@@ -492,11 +493,11 @@ function writeOutputs(report, args) {
   ensureDirectory(outputDir);
 
   if (args.json) {
-    fs.writeFileSync(path.join(outputDir, DEFAULT_JSON_PATH), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+    atomicWrite(path.join(outputDir, DEFAULT_JSON_PATH), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   }
 
   if (args.md) {
-    fs.writeFileSync(path.join(outputDir, DEFAULT_MD_PATH), buildMarkdownReport(report), 'utf8');
+    atomicWrite(path.join(outputDir, DEFAULT_MD_PATH), buildMarkdownReport(report), 'utf8');
   }
 }
 

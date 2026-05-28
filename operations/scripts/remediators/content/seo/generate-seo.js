@@ -28,6 +28,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // Configuration
 const REPO_ROOT = process.cwd();
@@ -468,7 +469,7 @@ function main() {
 
         // Write file if not dry run
         if (!isDryRun) {
-          fs.writeFileSync(file, result.newContent, "utf8");
+          atomicWrite(file, result.newContent, "utf8");
         }
       } else {
         results.skipped++;

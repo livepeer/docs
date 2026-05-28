@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            agent-write-admission.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @type              validator
  * @purpose           governance:agent-governance

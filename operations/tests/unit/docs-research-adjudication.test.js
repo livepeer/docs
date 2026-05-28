@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            docs-research-adjudication.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/audits/content/veracity/docs-research-adjudication.js, workspace/research/adjudication, operations/scripts/audits/content/veracity/docs-page-research.js, operations/scripts/dispatch/content/veracity/docs-page-research-pr-report.js

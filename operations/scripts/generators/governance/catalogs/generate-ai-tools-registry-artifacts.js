@@ -18,6 +18,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = 'ai-tools/registry/ai-tools-registry.json';
@@ -38,7 +39,7 @@ function readJson(repoPath) {
 }
 
 function writeJson(repoPath, value) {
-  fs.writeFileSync(path.join(REPO_ROOT, repoPath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(path.join(REPO_ROOT, repoPath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function listTrackedFiles(root, predicate) {

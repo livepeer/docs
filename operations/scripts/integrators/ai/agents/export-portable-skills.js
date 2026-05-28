@@ -16,6 +16,7 @@
 const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   RESOURCE_BUNDLES,
   collectResourceEntries,
@@ -377,7 +378,7 @@ function writeOutputs(skillPlans, manifestPlan, staleDirs) {
     plan.fileOps.forEach((entry) => {
       if (entry.op === 'unchanged') return;
       fs.mkdirSync(path.dirname(entry.absPath), { recursive: true });
-      if (DRY_RUN) { console.log('[dry-run] Would write:', entry.absPath); } else { fs.writeFileSync(entry.absPath, entry.expected); };
+      if (DRY_RUN) { console.log('[dry-run] Would write:', entry.absPath); } else { atomicWrite(entry.absPath, entry.expected); };
     });
     plan.staleFiles.forEach((relPath) => {
       removeFileAndEmptyParents(path.join(plan.dirPath, relPath), plan.dirPath);
@@ -385,7 +386,7 @@ function writeOutputs(skillPlans, manifestPlan, staleDirs) {
   });
 
   if (manifestPlan.op !== 'unchanged') {
-    if (DRY_RUN) { console.log('[dry-run] Would write:', manifestPlan.path); } else { fs.writeFileSync(manifestPlan.path, manifestPlan.expected, 'utf8'); };
+    if (DRY_RUN) { console.log('[dry-run] Would write:', manifestPlan.path); } else { atomicWrite(manifestPlan.path, manifestPlan.expected, 'utf8'); };
   }
 
   staleDirs.forEach((entry) => {

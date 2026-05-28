@@ -19,6 +19,7 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { escapeForJsx } = require(path.join(process.cwd(), 'operations/scripts/config/mdx-sanitise'));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const dryRun = process.argv.includes('--dry-run');
 const verbose = process.argv.includes('--verbose');
@@ -172,7 +173,7 @@ async function main() {
     console.log('--dry-run: would write to', OUTPUT_PATH);
     process.exit(0);
   }
-  fs.writeFileSync(OUTPUT_PATH, jsx, 'utf8');
+  atomicWrite(OUTPUT_PATH, jsx, 'utf8');
   console.log(`fetch-luma-events: wrote ${OUTPUT_PATH}`);
 }
 

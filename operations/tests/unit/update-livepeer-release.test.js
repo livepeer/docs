@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            update-livepeer-release.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:data-refresh
  * @scope             .github/scripts, snippets/data/globals

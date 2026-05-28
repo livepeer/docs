@@ -16,6 +16,7 @@
 
 const path = require('path')
 const fs = require('fs')
+const { registerCleanup } = require('../../../../tools/lib/bootstrap/safe-io')
 
 const args = process.argv.slice(2)
 
@@ -162,7 +163,9 @@ async function main() {
     }
   }
 
-  const browser = await puppeteer.launch({
+  let browser
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}) })
+  browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })

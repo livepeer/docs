@@ -18,6 +18,7 @@ const VERIFY_MODE = process.argv.includes('--verify');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const WRITE = process.argv.includes('--write');
 const REPO = process.cwd();
@@ -288,7 +289,7 @@ for (const filePath of scripts) {
     }
 
     if (WRITE) {
-      fs.writeFileSync(filePath, newContent, 'utf8');
+      atomicWrite(filePath, newContent, 'utf8');
       console.log(`  ✓ ${rel}`);
     } else {
       console.log(`  [dry-run] ${rel}`);

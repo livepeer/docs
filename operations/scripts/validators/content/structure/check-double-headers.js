@@ -15,8 +15,11 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { bootstrapRepoNodePaths } = require('../../../../../tools/lib/bootstrap/repo-node-paths');
+bootstrapRepoNodePaths(__dirname);
 const matter = require('gray-matter');
 const { getAuthoredMdxFiles, getStagedAuthoredDocsPageFiles } = require('../../../../../operations/tests/utils/file-walker');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const RULE_DUPLICATE_TITLE = 'duplicate-title';
 const RULE_DUPLICATE_DESCRIPTION = 'duplicate-description';
@@ -485,7 +488,7 @@ async function scanFile(filePath, options = {}) {
     return result;
   }
 
-  fs.writeFileSync(absPath, nextContent, 'utf8');
+  atomicWrite(absPath, nextContent, 'utf8');
 
   result.findings.forEach((finding) => {
     if (finding.fixable && finding.range) {

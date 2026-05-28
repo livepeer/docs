@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            authoring-tools.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           tooling:dev-tools
  * @scope             tests/unit, tools/editor-extensions/authoring-tools, operations/scripts/format-mdx.js

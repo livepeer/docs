@@ -16,10 +16,13 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { bootstrapRepoNodePaths } = require('../../../../../tools/lib/bootstrap/repo-node-paths');
+bootstrapRepoNodePaths(__dirname);
 const { unified } = require('unified');
 const remarkParse = require('remark-parse').default;
 const remarkMdx = require('remark-mdx').default;
 const { getAuthoredMdxFiles } = require('../../../../../operations/tests/utils/file-walker');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const PROPER_NOUNS = {
   livepeer: 'Livepeer',
@@ -153,15 +156,8 @@ function resolveTargetFiles(explicitFiles) {
 
 function splitFrontmatter(raw) {
   const normalized = String(raw || '');
-  if (!normalized.startsWith('---')) {
-    return {
-      prefix: '',
-      body: normalized,
-      bodyStartOffset: 0
-    };
-  }
-
-  const match = normalized.match(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n)?/);
+  // Tolerate leading whitespace/blank lines before frontmatter (Mintlify and gray-matter do).
+  const match = normalized.match(/^\s*---\r?\n[\s\S]*?\r?\n---(?:\r?\n)?/);
   if (!match) {
     return {
       prefix: '',
@@ -453,7 +449,7 @@ function run(argv = process.argv.slice(2)) {
       }
       const next = applyReplacements(analysis.raw, analysis.replacements);
       if (next !== analysis.raw) {
-        fs.writeFileSync(analysis.filePath, next, 'utf8');
+        atomicWrite(analysis.filePath, next, 'utf8');
         changedFiles += 1;
       }
     });

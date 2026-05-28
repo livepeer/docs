@@ -15,27 +15,62 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 const REPO_ROOT = process.cwd();
 const { parsePipelineArgs, runAtomic, printPipelineHelp } = require(path.join(REPO_ROOT, 'tools/lib/governance/pipeline-mode'));
 
-const ATOMICS = {
-    detect: [
-      'operations/scripts/validators/components/library/check-component-health.js',
-      'operations/scripts/validators/components/library/check-component-css.js',
-      'operations/scripts/validators/components/library/check-component-props.js',
-      'operations/scripts/validators/components/library/check-naming-conventions.js',
-      'operations/scripts/audits/components/library/audit-ai-discoverability.js'
-    ],
-    generate: [
-      'operations/scripts/generators/components/library/generate-component-registry.js'
-    ]
-  };
+// Per-detector scope-flag interfaces — each detector accepts different scope flags.
+// Keys `staged`, `files`, `full` map to detector-specific arg arrays. `null` means
+// "invoke with no scope arg" (detector either has no concept of scope, or resolves
+// it internally). When using `--files`, the dispatcher appends the resolved path list.
+const DETECTORS = [
+  // check-component-health: accepts only --check/--report; no scope concept.
+  { script: 'operations/scripts/validators/components/library/check-component-health.js',
+    staged: ['--check'], files: ['--check'], full: ['--check'] },
+  // check-component-css: accepts --path, --staged.
+  { script: 'operations/scripts/validators/components/library/check-component-css.js',
+    staged: ['--staged'], files: null, full: [] },
+  // check-component-props: accepts --scope=full|changed (custom semantics).
+  { script: 'operations/scripts/validators/components/library/check-component-props.js',
+    staged: ['--scope=changed'], files: ['--scope=changed'], full: ['--scope=full'] },
+  // check-naming-conventions: accepts --path, --files. No --staged support —
+  // dispatcher translates --staged to actual file list via git diff-cached.
+  { script: 'operations/scripts/validators/components/library/check-naming-conventions.js',
+    staged: 'TRANSLATE_STAGED', files: ['--files'], full: [] },
+  // audit-ai-discoverability: accepts --staged.
+  { script: 'operations/scripts/audits/components/library/audit-ai-discoverability.js',
+    staged: ['--staged'], files: null, full: [] },
+];
 
-function scopeFlags(args) {
-  if (args.files) return ['--files', args.files];
-  if (args.staged) return ['--staged'];
-  if (args.full) return ['--full'];
-  return [];
+const GENERATORS = [
+  'operations/scripts/generators/components/library/generate-component-registry.js'
+];
+
+function scopeKey(args) {
+  if (args.files) return 'files';
+  if (args.full) return 'full';
+  return 'staged'; // default
+}
+
+function getStagedFiles() {
+  try {
+    const out = execSync('git diff --cached --name-only --diff-filter=ACMR', { encoding: 'utf8' });
+    return out.split('\n').map(s => s.trim()).filter(Boolean);
+  } catch { return []; }
+}
+
+function resolveFlags(detector, key, args) {
+  const flagSpec = detector[key];
+  if (flagSpec === null) return null; // skip this detector for this scope
+  if (flagSpec === 'TRANSLATE_STAGED') {
+    const staged = getStagedFiles();
+    if (staged.length === 0) return []; // nothing staged → full scan
+    return ['--files', staged.join(',')];
+  }
+  if (key === 'files' && flagSpec.includes('--files') && args.files) {
+    return [...flagSpec, args.files];
+  }
+  return flagSpec;
 }
 
 function runIfExists(p, flags) {
@@ -43,39 +78,20 @@ function runIfExists(p, flags) {
   return runAtomic(path.join(REPO_ROOT, p), flags).exitCode;
 }
 
-function atomicFlags(p, scope) {
-  if (p.endsWith('check-component-props.js')) {
-    if (scope.includes('--staged')) return ['--scope=changed'];
-    if (scope.includes('--full')) return ['--scope=full'];
-    return scope;
-  }
-  return scope;
-}
-
 function main() {
   let args; try { args = parsePipelineArgs(process.argv.slice(2)); } catch (e) { console.error(e.message); process.exit(2); }
   if (args.help) { printPipelineHelp('dispatch-component-registry.js', 'component-registry'); process.exit(0); }
-  const scope = scopeFlags(args);
+  const key = scopeKey(args);
   let code = 0;
   // Detect
-  for (const p of (ATOMICS.detect || [])) {
-    code = Math.max(code, runIfExists(p, atomicFlags(p, scope)));
+  for (const d of DETECTORS) {
+    const flags = resolveFlags(d, key, args);
+    if (flags === null) continue;
+    code = Math.max(code, runIfExists(d.script, flags));
   }
-  // Repair (only in scheduled+write or manual)
-  if ((args.mode === 'scheduled' && args.write) || args.mode === 'manual') {
-    const repairFlags = args.write ? ['--write', '--verify', ...scope] : ['--dry-run', ...scope];
-    for (const p of (ATOMICS.repair || [])) {
-      code = Math.max(code, runIfExists(p, repairFlags));
-    }
-  } else if (args.mode === 'pr' && (ATOMICS.repair || []).length > 0) {
-    // PR mode: dry-run preview of repairs (advisory)
-    for (const p of (ATOMICS.repair || [])) {
-      runIfExists(p, ['--dry-run', ...scope]);
-    }
-  }
-  // Generate (for post-merge concerns)
-  if (args.mode === 'post-merge' || (args.mode === 'scheduled' && (ATOMICS.generate || []).length > 0)) {
-    for (const p of (ATOMICS.generate || [])) {
+  // Generate (post-merge or scheduled)
+  if (args.mode === 'post-merge' || args.mode === 'scheduled') {
+    for (const p of GENERATORS) {
       code = Math.max(code, runIfExists(p, args.write ? ['--write'] : ['--check']));
     }
   }

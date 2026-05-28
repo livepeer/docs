@@ -15,6 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const { execSync } = require('child_process');
+const { atomicWrite, registerCleanup } = require('../../../../tools/lib/bootstrap/safe-io');
 const { stdin } = process;
 
 let puppeteer;
@@ -78,7 +79,7 @@ function getServerStatePath() {
 }
 
 function writeState(state) {
-  fs.writeFileSync(getStatePath(), JSON.stringify(state, null, 2) + '\n');
+  atomicWrite(getStatePath(), JSON.stringify(state, null, 2) + '\n');
 }
 
 function isNoise(text) {
@@ -186,7 +187,12 @@ async function verifyRoute(route, baseUrl) {
     return { passed: false, error: 'Puppeteer not installed. Run: cd tools && npm install' };
   }
 
-  const browser = await puppeteer.launch({
+  // SIGTERM/SIGINT during a render leaves Chromium orphaned — the exact bug
+  // the May 2026 Zombie Prevention thread fixed by killing 158 zombies. Register
+  // cleanup BEFORE launch so the signal handler can see the variable.
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });

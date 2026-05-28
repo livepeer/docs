@@ -22,6 +22,7 @@ const { getRepoNodeModuleDirs } = require('../../../../../tools/lib/bootstrap/re
 const { getMdxFiles, getStagedDocsPageFiles } = require('../../../../../operations/tests/utils/file-walker');
 const { resolveCspellConfig } = require('../../../../../operations/tests/utils/spell-checker');
 const { parseMdx } = require('../../../integrators/content/language-translation/lib/mdx-parser');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const URL_REGEX = /\b(?:https?:\/\/|mailto:)[^\s<`)"']+/gi;
@@ -587,8 +588,8 @@ function renderDiff(relativePath, before, after) {
   const beforePath = path.join(tempDir, 'before.mdx');
   const afterPath = path.join(tempDir, 'after.mdx');
 
-  fs.writeFileSync(beforePath, before, 'utf8');
-  fs.writeFileSync(afterPath, after, 'utf8');
+  atomicWrite(beforePath, before, 'utf8');
+  atomicWrite(afterPath, after, 'utf8');
 
   const diff = spawnSync(
     'git',
@@ -683,7 +684,7 @@ async function run(options = {}) {
 
     if (args.mode === 'write' && fileResult.repairs.length > 0) {
       const nextContent = applyRepairs(fileResult.content, fileResult.repairs);
-      fs.writeFileSync(fileResult.filePath, nextContent, 'utf8');
+      atomicWrite(fileResult.filePath, nextContent, 'utf8');
       const diffText = renderDiff(fileResult.relativePath, fileResult.content, nextContent);
       if (diffText) {
         log(diffText);

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            codex-commit.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/dispatch/ai/codex/codex-commit.js

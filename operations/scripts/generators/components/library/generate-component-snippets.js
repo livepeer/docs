@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
@@ -161,7 +162,7 @@ function main() {
   }
 
   if (writeMode) {
-    fs.writeFileSync(SNIPPETS_PATH, generated, 'utf8');
+    atomicWrite(SNIPPETS_PATH, generated, 'utf8');
     const count = Object.keys(snippets).length;
     console.log(`Wrote ${count} snippets to ${SNIPPETS_PATH}`);
     process.exit(0);

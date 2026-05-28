@@ -29,6 +29,7 @@ const { checkJourneys } = require('../../../../../tools/lib/docs-usefulness/jour
 const { LlmEvaluator } = require('../../../../../tools/lib/docs-usefulness/llm-evaluator');
 const prompts = require('../../../../../tools/lib/docs-usefulness/prompts');
 const { loadAndValidateUsefulnessConfig } = require('../../../../../tools/lib/docs-usefulness/config-validator');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REMOVED_FLAGS = new Set([
   '--accuracy-mode',
@@ -339,7 +340,7 @@ function escapeCsv(value) {
 
 function writeJsonl(filePath, rows) {
   const output = rows.map((row) => JSON.stringify(row)).join('\n');
-  fs.writeFileSync(filePath, output ? `${output}\n` : '');
+  atomicWrite(filePath, output ? `${output}\n` : '');
 }
 
 function writeCsv(filePath, rows) {
@@ -369,7 +370,7 @@ function writeCsv(filePath, rows) {
     });
     lines.push(values.join(','));
   });
-  fs.writeFileSync(filePath, `${lines.join('\n')}\n`);
+  atomicWrite(filePath, `${lines.join('\n')}\n`);
 }
 
 function parseCsvRows(raw) {
@@ -780,9 +781,9 @@ async function main() {
   const formats = new Set(args.format);
   if (formats.has('jsonl')) writeJsonl(path.join(args.outDir, 'page-matrix.jsonl'), rows);
   if (formats.has('csv')) writeCsv(path.join(args.outDir, 'page-matrix.csv'), rows);
-  if (formats.has('json')) fs.writeFileSync(path.join(args.outDir, 'run-metadata.json'), JSON.stringify(metadata, null, 2));
+  if (formats.has('json')) atomicWrite(path.join(args.outDir, 'run-metadata.json'), JSON.stringify(metadata, null, 2));
   if (formats.has('md')) {
-    fs.writeFileSync(
+    atomicWrite(
       path.join(args.outDir, 'summary.md'),
       buildSummaryMarkdown({
         rows,

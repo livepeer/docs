@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 const V2_DIR = path.join(REPO_ROOT, 'v2');
@@ -155,7 +156,13 @@ function applyReplacements(content) {
   }
 
   // Capitalise sentences that now start with lowercase after a deleted prefix.
-  out = out.replace(/(\.\s+)([a-z])/g, (m, prefix, letter) => prefix + letter.toUpperCase());
+  // Skip protected zones (frontmatter, code blocks, JSX comments) — without this guard,
+  // a description ending in "." followed by a lowercase frontmatter key (e.g. "keywords:")
+  // would have the key capitalised, corrupting YAML.
+  out = out.replace(/(\.\s+)([a-z])/g, (m, prefix, letter, offset) => {
+    if (typeof offset === 'number' && isProtectedZone(out, offset)) return m;
+    return prefix + letter.toUpperCase();
+  });
 
   return { content: out, changes };
 }
@@ -178,7 +185,7 @@ function main() {
     totalChanges += changes;
     filesChanged += 1;
     if (args.write) {
-      fs.writeFileSync(abs, content);
+      atomicWrite(abs, content);
       changedFiles.push(rel);
       console.log(`✓ ${rel}: ${changes} replacement(s)`);
     } else {

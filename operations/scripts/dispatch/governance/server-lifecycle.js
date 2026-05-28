@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 
 function getRepoRoot() {
   try {
@@ -73,7 +74,7 @@ function getSessionId() {
 
 function writeServerState(state) {
   const statePath = path.join('/tmp', `claude-mdx-server-${getSessionId()}.json`);
-  fs.writeFileSync(statePath, JSON.stringify(state, null, 2) + '\n');
+  atomicWrite(statePath, JSON.stringify(state, null, 2) + '\n');
 }
 
 /**

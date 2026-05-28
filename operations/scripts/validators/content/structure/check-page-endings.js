@@ -17,6 +17,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { isExcludedV2ExperimentalPath } = require('../../../../../tools/lib/docs/docs-publishability');
 const { isGeneratedDocsPageFile } = require('../../../../../tools/lib/docs/docs-page-scope');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const TODO_COMMENT = '<!-- TODO: add page ending -->';
 const REPO_ROOT = getRepoRoot();
@@ -346,7 +347,7 @@ function analyzeFile(file, options) {
   let fixed = false;
   if (options.fix && verdict === 'warning' && !new RegExp(`${TODO_COMMENT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`).test(raw)) {
     const nextContent = raw.replace(/\s*$/, '');
-    fs.writeFileSync(file.absPath, `${nextContent}\n\n${TODO_COMMENT}\n`, 'utf8');
+    atomicWrite(file.absPath, `${nextContent}\n\n${TODO_COMMENT}\n`, 'utf8');
     fixed = true;
   }
 

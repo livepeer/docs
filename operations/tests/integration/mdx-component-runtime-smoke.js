@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            mdx-component-runtime-smoke
+ *  @type validator
+ *  @concern governance
+ *  @niche integration
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/integration, .githooks/server-manager.js, tests/run-pr-checks.js

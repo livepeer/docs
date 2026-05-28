@@ -16,6 +16,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -136,7 +137,7 @@ async function main() {
     console.log(jsx);
   } else {
     fs.mkdirSync("snippets/data/social-feeds", { recursive: true });
-    fs.writeFileSync(OUTPUT_PATH, jsx);
+    atomicWrite(OUTPUT_PATH, jsx);
     console.log(`Written to ${OUTPUT_PATH}`);
   }
 }

@@ -16,6 +16,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   RESOURCE_BUNDLES,
   collectResourceEntries,
@@ -352,7 +353,7 @@ function syncTemplate(template, options) {
     fileOps.forEach((entry) => {
       if (entry.op === 'unchanged') return;
       fs.mkdirSync(path.dirname(entry.absPath), { recursive: true });
-      fs.writeFileSync(entry.absPath, toBuffer(entry.expected));
+      atomicWrite(entry.absPath, toBuffer(entry.expected));
     });
 
     pruned.forEach((relPath) => {

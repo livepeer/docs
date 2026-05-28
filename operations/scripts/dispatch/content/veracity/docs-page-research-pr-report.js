@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync, execSync } = require('child_process');
 const crypto = require('crypto');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_REGISTRY = 'workspace/research/claims';
 
@@ -334,12 +335,12 @@ function buildMarkdown(summary) {
 
 function writeJson(filePath, value) {
   ensureDirForFile(filePath);
-  fs.writeFileSync(path.resolve(REPO_ROOT, filePath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(path.resolve(REPO_ROOT, filePath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function writeText(filePath, value) {
   ensureDirForFile(filePath);
-  fs.writeFileSync(path.resolve(REPO_ROOT, filePath), value, 'utf8');
+  atomicWrite(path.resolve(REPO_ROOT, filePath), value, 'utf8');
 }
 
 function runResearch(args, targetFiles, reportMd, reportJson) {

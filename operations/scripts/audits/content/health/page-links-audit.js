@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const { extractImports } = require('../../../../tests/utils/mdx-parser');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   canonicalRouteFromFile,
   collectExistingRoutes,
@@ -2099,10 +2100,10 @@ async function runAudit(options = {}) {
 
   if (!options.skipWriteReports) {
     ensureDir(path.dirname(args.report));
-    fs.writeFileSync(args.report, report, 'utf8');
+    atomicWrite(args.report, report, 'utf8');
 
     ensureDir(path.dirname(args.reportJson));
-    fs.writeFileSync(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
+    atomicWrite(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
   }
 
   console.log(`📝 Report written: ${relFromRoot(args.report)}`);

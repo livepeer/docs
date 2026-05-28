@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const STAGE_ID = 'cleanup-quarantine-manager';
 const REPO_ROOT = process.cwd();
@@ -365,8 +366,8 @@ function main() {
   const manifestMdPath = path.join(path.dirname(manifestJsonPath), 'cleanup-quarantine-manifest.md');
 
   ensureDir(path.dirname(manifestJsonPath));
-  fs.writeFileSync(manifestJsonPath, `${JSON.stringify(manifest, null, 2)}\n`);
-  fs.writeFileSync(manifestMdPath, buildMarkdown(manifest));
+  atomicWrite(manifestJsonPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  atomicWrite(manifestMdPath, buildMarkdown(manifest));
 
   console.log(`✅ ${STAGE_ID} wrote:`);
   console.log(`- ${toPosix(path.relative(REPO_ROOT, manifestJsonPath))}`);

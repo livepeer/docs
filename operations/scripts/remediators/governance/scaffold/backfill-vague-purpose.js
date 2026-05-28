@@ -17,6 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_INPUT = '/tmp/vague-purpose-list.json';
@@ -124,7 +125,7 @@ function processScript(scriptRel, options) {
   if (updated === source) return { skipped: 'no-change' };
 
   if (options.write) {
-    fs.writeFileSync(scriptAbs, updated);
+    atomicWrite(scriptAbs, updated);
   }
   return {
     applied: true,

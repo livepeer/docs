@@ -14,6 +14,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const { BRANCH_WATCH_STATE_PATH } = require("./constants");
+const { atomicWrite } = require('../../../../../../tools/lib/bootstrap/safe-io');
 
 function loadBranchWatchState() {
   try {
@@ -79,7 +80,7 @@ function diffBranchWatchState(previousState = null, nextState = null) {
 function writeBranchWatchState(state, dryRun = false) {
   if (dryRun) return;
   fs.mkdirSync(path.dirname(BRANCH_WATCH_STATE_PATH), { recursive: true });
-  fs.writeFileSync(BRANCH_WATCH_STATE_PATH, JSON.stringify(state, null, 2));
+  atomicWrite(BRANCH_WATCH_STATE_PATH, JSON.stringify(state, null, 2));
 }
 
 module.exports = {

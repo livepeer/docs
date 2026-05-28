@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            docs-fact-registry.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/validators/content/veracity/docs-fact-registry.js, workspace/research/claims

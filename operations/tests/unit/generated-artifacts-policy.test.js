@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            generated-artifacts-policy.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests/unit, tools/lib/governance/generated-artifacts.js, operations/governance/config/generated-artifacts.json

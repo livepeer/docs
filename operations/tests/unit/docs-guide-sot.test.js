@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            docs-guide-sot.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests, docs-guide, README.md, operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js, operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js, operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js

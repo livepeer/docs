@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            governance-approval-policy.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @type              validator
  * @purpose           governance:repo-health

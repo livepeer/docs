@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
 const { validateSnippetImports } = require('../../../../../tools/editor-extensions/authoring-tools/lib/authoring-core');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   getDocsJsonGroupFiles,
   getDocsJsonTabFiles,
@@ -647,9 +648,9 @@ function runAudit(options = {}) {
 
   if (!options.skipWriteReports) {
     ensureDir(path.dirname(args.report));
-    fs.writeFileSync(args.report, markdownReport, 'utf8');
+    atomicWrite(args.report, markdownReport, 'utf8');
     ensureDir(path.dirname(args.reportJson));
-    fs.writeFileSync(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
+    atomicWrite(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
   }
 
   const exitCode = args.strict && findings.length > 0 ? 1 : 0;

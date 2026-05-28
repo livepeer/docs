@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            docs-page-research.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/audits/content/veracity/docs-page-research.js, operations/scripts/validators/content/veracity/docs-fact-registry.js, workspace/research/claims

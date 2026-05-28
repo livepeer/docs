@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const JS_EXTENSIONS = new Set(['.js', '.cjs', '.mjs', '.ts', '.tsx']);
@@ -563,7 +564,7 @@ function applyRowTransform(row, args) {
 
   if (args.write) {
     try {
-      fs.writeFileSync(fullPath, nextContent, 'utf8');
+      atomicWrite(fullPath, nextContent, 'utf8');
     } catch (error) {
       return { status: 'error', path: row.path, reason: `Unable to write file: ${error.message}` };
     }

@@ -16,6 +16,7 @@ const VERIFY_MODE = process.argv.includes('--verify');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO = process.cwd();
 const raw = execSync(
@@ -49,7 +50,7 @@ for (const f of allFiles) {
   if (p !== content) { content = p; changed = true; }
 
   if (changed) {
-    fs.writeFileSync(f, content);
+    atomicWrite(f, content);
     console.log('  ✓ ' + f);
     fixed++;
   }

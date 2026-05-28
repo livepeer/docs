@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            mdx-guards.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests, v2/pages, snippets/pages, snippets/snippetsWiki

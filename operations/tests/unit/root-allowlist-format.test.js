@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            root-allowlist-format.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, .allowlist, operations/governance/config/root-governance.json, tools/lib/governance/root-governance.js

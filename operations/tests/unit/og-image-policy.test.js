@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            og-image-policy.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/unit, operations/scripts/snippets/lib

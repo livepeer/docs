@@ -25,6 +25,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
@@ -242,7 +243,7 @@ function main() {
     filesChanged++;
     affected.push(t);
     if (args.mode === 'write') {
-      fs.writeFileSync(t.fullPath, out);
+      atomicWrite(t.fullPath, out);
       console.log(`fixed (${changed}): ${t.relPath}`);
     } else {
       console.log(`would fix (${changed}): ${t.relPath}`);

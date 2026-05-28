@@ -18,6 +18,7 @@ const path = require('path');
 const { execFileSync, spawnSync } = require('child_process');
 const { bootstrapRepoNodePaths } = require('../../../../../tools/lib/bootstrap/repo-node-paths');
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   AGGREGATE_INDEX_PATH,
   CATEGORY_ENUM,
@@ -1155,7 +1156,7 @@ function runNodeCommand(args) {
 function writeRepoFile(repoPath, content) {
   const absPath = path.join(REPO_ROOT, repoPath);
   ensureDirectory(path.dirname(absPath));
-  fs.writeFileSync(absPath, content, 'utf8');
+  atomicWrite(absPath, content, 'utf8');
 }
 
 function snapshotFiles(repoPaths) {
@@ -1923,10 +1924,10 @@ function writeReportFiles(report, options) {
   ensureDirectory(outputDir);
 
   if (options.json) {
-    fs.writeFileSync(path.join(outputDir, DEFAULT_JSON_PATH), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+    atomicWrite(path.join(outputDir, DEFAULT_JSON_PATH), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   }
   if (options.md) {
-    fs.writeFileSync(path.join(outputDir, DEFAULT_MD_PATH), buildMarkdownReport(report), 'utf8');
+    atomicWrite(path.join(outputDir, DEFAULT_MD_PATH), buildMarkdownReport(report), 'utf8');
   }
 }
 

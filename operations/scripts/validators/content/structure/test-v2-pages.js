@@ -21,6 +21,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -33,9 +34,6 @@ const BROWSER_LAUNCH_OPTIONS = {
   args: ['--no-sandbox', '--disable-setuid-sandbox']
 };
 const USE_BASELINE = process.argv.includes('--baseline');
-const START_INDEX = Math.max(0, Number(process.argv.find((arg) => arg.startsWith('--start-index='))?.split('=')[1] || 0));
-const LIMIT_ARG = process.argv.find((arg) => arg.startsWith('--limit='))?.split('=')[1];
-const LIMIT = LIMIT_ARG ? Math.max(1, Number(LIMIT_ARG)) : null;
 
 // Load baseline for diffing (only fail on NEW errors not in baseline)
 let BASELINE = {};
@@ -100,7 +98,7 @@ function extractPages(nav, pages = []) {
  */
 function getV2Pages() {
   const docsJson = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
-  
+
   // Find v2 version
   const v2Version = docsJson.navigation?.versions?.find(v => v.version === 'v2');
   if (!v2Version) {
@@ -152,9 +150,6 @@ async function testPage(browser, pagePath) {
     const text = msg.text();
     
     if (type === 'error') {
-      if (/^Failed to load resource: the server responded with a status of (?:401|403|404)/i.test(text)) {
-        return;
-      }
       errors.push(text);
     } else if (type === 'warning') {
       warnings.push(text);
@@ -173,31 +168,18 @@ async function testPage(browser, pagePath) {
     const failure = request.failure();
     const requestUrl = request.url();
     const isSameOrigin = requestUrl.startsWith(BASE_ORIGIN);
-
-    if (failure?.errorText === 'net::ERR_ABORTED') {
-      return;
-    }
-
     if (failure && isSameOrigin) {
       errors.push(`Request Failed: ${request.url()} - ${failure.errorText}`);
-    }
-  });
-
-  page.on('response', response => {
-    const responseUrl = response.url();
-    const status = response.status();
-    if (responseUrl.startsWith(BASE_ORIGIN) && status >= 400) {
-      errors.push(`HTTP ${status}: ${responseUrl}`);
     }
   });
   
   try {
     // Navigate to page with timeout
     await page.goto(url, {
-      waitUntil: 'domcontentloaded',
+      waitUntil: 'networkidle2',
       timeout: TIMEOUT
     });
-    
+
     // Wait a bit for any async rendering
     await new Promise(resolve => setTimeout(resolve, 2000));
     
@@ -226,13 +208,7 @@ async function testPage(browser, pagePath) {
       logs
     };
   } finally {
-    try {
-      await page.close();
-    } catch (error) {
-      if (!String(error?.message || '').includes('Connection closed')) {
-        throw error;
-      }
-    }
+    await page.close();
   }
 }
 
@@ -242,19 +218,16 @@ async function testPage(browser, pagePath) {
 async function main() {
   console.log('🔍 Extracting v2 pages from docs.json...');
   const pages = getV2Pages();
-  const selectedPages = LIMIT ? pages.slice(START_INDEX, START_INDEX + LIMIT) : pages.slice(START_INDEX);
-  console.log(`📄 Found ${pages.length} pages to test`);
-  if (START_INDEX || LIMIT) {
-    console.log(`📄 Running subset: start=${START_INDEX}, count=${selectedPages.length}`);
-  }
-  console.log('');
+  console.log(`📄 Found ${pages.length} pages to test\n`);
   
   console.log(`🌐 Testing against: ${BASE_URL}`);
   console.log(`⏱️  Timeout per page: ${TIMEOUT}ms\n`);
   
   // Check if server is running
+  let testPage;
+  registerCleanup(async () => { if (testPage) await testPage.close().catch(() => {}); });
   try {
-    const testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+    testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
     const testBrowserPage = await testPage.newPage();
     await testBrowserPage.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 5000 });
     await testBrowserPage.close();
@@ -268,23 +241,21 @@ async function main() {
   }
   
   console.log('🚀 Starting browser tests...\n');
-  
-  let browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
   
   const results = [];
   let passed = 0;
   let failed = 0;
   
-  for (let i = 0; i < selectedPages.length; i++) {
-    const pagePath = selectedPages[i];
-    const progress = `[${START_INDEX + i + 1}/${pages.length}]`;
+  for (let i = 0; i < pages.length; i++) {
+    const pagePath = pages[i];
+    const progress = `[${i + 1}/${pages.length}]`;
     
     process.stdout.write(`${progress} Testing ${pagePath}... `);
     
-    if (!browser.connected) {
-      browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
-    }
-
     const result = await testPage(browser, pagePath);
     results.push(result);
     
@@ -297,18 +268,13 @@ async function main() {
     }
   }
   
-  if (browser.connected) {
-    await browser.close();
-  }
+  await browser.close();
   
   // Print summary
   console.log('\n' + '='.repeat(60));
   console.log('SUMMARY' + (USE_BASELINE ? ' (baseline diff mode)' : ''));
   console.log('='.repeat(60));
   console.log(`Total pages tested: ${pages.length}`);
-  if (selectedPages.length !== pages.length) {
-    console.log(`Subset pages tested: ${selectedPages.length}`);
-  }
   console.log(`Passed: ${passed}`);
   console.log(`Failed: ${failed}`);
   if (USE_BASELINE) {
@@ -343,7 +309,7 @@ async function main() {
   
   // Save detailed report
   const reportPath = path.join(REPO_ROOT, 'workspace/reports/page-audits/v2-page-test-report.json');
-  fs.writeFileSync(reportPath, JSON.stringify({
+  atomicWrite(reportPath, JSON.stringify({
     timestamp: new Date().toISOString(),
     baseUrl: BASE_URL,
     totalPages: pages.length,

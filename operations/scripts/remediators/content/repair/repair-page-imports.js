@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const importsAudit = require('../../../audits/content/health/page-imports-audit');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../../');
 const DEFAULT_REPORT_DIR = path.join(REPO_ROOT, 'operations', 'reports', 'health', 'page-imports');
@@ -200,7 +201,7 @@ function run(options = {}) {
     });
 
     if (args.mode === 'write' && appliedForFile > 0 && next !== content) {
-      fs.writeFileSync(absPath, next, 'utf8');
+      atomicWrite(absPath, next, 'utf8');
     }
   });
 
@@ -216,9 +217,9 @@ function run(options = {}) {
   const markdownReport = renderMarkdown(summary);
 
   ensureDir(path.dirname(args.report));
-  fs.writeFileSync(args.report, markdownReport, 'utf8');
+  atomicWrite(args.report, markdownReport, 'utf8');
   ensureDir(path.dirname(args.reportJson));
-  fs.writeFileSync(args.reportJson, `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
+  atomicWrite(args.reportJson, `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
 
   return {
     ...summary,

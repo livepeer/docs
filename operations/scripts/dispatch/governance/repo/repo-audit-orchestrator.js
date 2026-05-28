@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const STAGE_ID = 'repo-audit-orchestrator';
 const REPO_ROOT = process.cwd();
@@ -486,8 +487,8 @@ function main() {
   const summaryJsonPath = path.join(outputDirAbs, 'repo-audit-summary.json');
   const summaryMdPath = path.join(outputDirAbs, 'repo-audit-summary.md');
 
-  fs.writeFileSync(summaryJsonPath, `${JSON.stringify(summary, null, 2)}\n`);
-  fs.writeFileSync(summaryMdPath, buildMarkdown(summary));
+  atomicWrite(summaryJsonPath, `${JSON.stringify(summary, null, 2)}\n`);
+  atomicWrite(summaryMdPath, buildMarkdown(summary));
 
   console.log(`✅ ${STAGE_ID} wrote:`);
   console.log(`- ${toPosix(path.relative(REPO_ROOT, summaryJsonPath))}`);

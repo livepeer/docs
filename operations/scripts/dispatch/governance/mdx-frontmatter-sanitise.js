@@ -17,6 +17,7 @@ const { stdin } = process;
 
 // Reuse the canonical remediators so the rules stay in one place.
 const fmQuotes = require('../../remediators/content/style/remediate-frontmatter-quotes.js');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 
 const EM_DASH = '—';
 const EN_DASH = '–';
@@ -180,7 +181,7 @@ stdin.on('end', () => {
     }
 
     if (fixes.length > 0) {
-      fs.writeFileSync(fp, workingContent);
+      atomicWrite(fp, workingContent);
       console.log(JSON.stringify({
         systemMessage: `FRONTMATTER AUTO-FIX in ${path.basename(fp)}: ${fixes.join('; ')}. File rewritten.`
       }));

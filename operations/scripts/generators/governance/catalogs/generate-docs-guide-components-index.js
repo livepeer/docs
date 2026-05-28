@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { VALID_CATEGORIES, VALID_STATUSES } = require('../../../../../tools/lib/governance/component-governance-utils');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -351,7 +352,7 @@ function buildOutputs() {
 function writeOutputs(outputs) {
   outputs.forEach((content, filePath) => {
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    fs.writeFileSync(filePath, content, 'utf8');
+    atomicWrite(filePath, content, 'utf8');
   });
 }
 

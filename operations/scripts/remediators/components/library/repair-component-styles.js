@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // ---------------------------------------------------------------------------
 // Config
@@ -295,7 +296,7 @@ function main() {
 
     if (changed) {
       if (writeMode) {
-        fs.writeFileSync(file, content, 'utf8');
+        atomicWrite(file, content, 'utf8');
         console.log(`  FIXED  ${relPath} (${fixes.length} repair(s))`);
       } else {
         console.log(`  WOULD FIX  ${relPath} (${fixes.length} repair(s))`);

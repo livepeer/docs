@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_REGISTRY = 'workspace/research/claims';
 const VALID_STATUSES = new Set([
@@ -440,7 +441,7 @@ function buildReport(registries, domain) {
 
 function writeJson(absPath, value) {
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function run(args) {

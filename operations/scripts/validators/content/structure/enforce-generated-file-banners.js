@@ -17,6 +17,7 @@ const path = require('path');
 const { spawnSync } = require('child_process'); // retained for getStagedFiles
 const { loadI18nConfig } = require('../../../integrators/content/language-translation/lib/config');
 const { parseProvenanceComment } = require('../../../integrators/content/language-translation/lib/provenance');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   GENERATED_HIDDEN_MARKER,
   parseGeneratedHiddenBanner,
@@ -212,7 +213,7 @@ function normalizeI18nNoteParity(repoPath, sourceHasNote) {
   if (!sourceHasNote && hasGeneratedNote(content)) {
     const next = removeGeneratedNotes(content);
     if (next !== content) {
-      fs.writeFileSync(fullPath, next, 'utf8');
+      atomicWrite(fullPath, next, 'utf8');
       return true;
     }
   }

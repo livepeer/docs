@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 
@@ -61,7 +62,7 @@ function main() {
     const { content, changes } = repairContent(fs.readFileSync(abs, 'utf8'));
     if (changes === 0) continue;
     totalChanges += changes; filesChanged += 1;
-    if (args.write) { fs.writeFileSync(abs, content); console.log(`✓ ${rel}: ${changes}`); }
+    if (args.write) { atomicWrite(abs, content); console.log(`✓ ${rel}: ${changes}`); }
     else console.log(`would repair ${rel}: ${changes}`);
   }
   console.log(`\nrepair-content-quality: ${args.write ? 'applied' : 'previewed'} ${totalChanges} change(s) across ${filesChanged} file(s).`);
