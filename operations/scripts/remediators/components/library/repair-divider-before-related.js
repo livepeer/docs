@@ -27,7 +27,7 @@ const SKIP_V2_DIRS = new Set(['_workspace', 'x-archive', 'x-deprecated', 'cn', '
 // Match the validator's looser pattern: any "## Related ..." heading (Blog Posts, Resources, Pages, etc.)
 const RELATED_HEADING_RE = /^##\s+related\b/i;
 const DIVIDER_RE = /^<CustomDivider\b/;
-const LOOKBACK_LINES = 4;
+const LOOKBACK_LINES = 2; // aligned with check-component-props.js: divider within 2 nearest non-empty lines
 const INSERT_LINE = '<CustomDivider />';
 
 function parseArgs(argv) {

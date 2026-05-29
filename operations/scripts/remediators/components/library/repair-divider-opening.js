@@ -137,6 +137,7 @@ function main() {
   let skippedNoImport = 0;
   for (const abs of files) {
     const rel = path.relative(REPO_ROOT, abs);
+    if (PARTIAL_PATH_RE.test('/' + rel.split(path.sep).join('/'))) continue; // skip imported partials
     const original = fs.readFileSync(abs, 'utf8');
     const headingIdx = findOpeningHeading(original);
     if (headingIdx === -1) continue;

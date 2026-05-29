@@ -380,7 +380,8 @@ function checkCustomDividerPlacement(content, filePath, issues) {
   // no heading at all (hero / landing / iframe / single-mount layouts) are exempt: a leading
   // divider is not part of their structure and there is no unambiguous insertion point.
   const isSingleMount = SINGLE_MOUNT_RE.test(firstContentText);
-  if (firstHeadingSeen && !dividerBeforeFirstHeading && !isSingleMount) {
+  const isPartial = PARTIAL_PATH_RE.test(filePath);
+  if (firstHeadingSeen && !dividerBeforeFirstHeading && !isSingleMount && !isPartial) {
     addIssue(issues, {
       id: 'prop-divider-missing-opening', check: '5.26',
       title: 'Missing opening CustomDivider',
@@ -395,9 +396,16 @@ function checkCustomDividerPlacement(content, filePath, issues) {
     // fences and JSX comments are blanked to preserve line numbers, so a multi-line
     // comment between the divider and the heading would otherwise push the divider out
     // of a fixed window and produce a false positive.
+    // A <CustomDivider> must sit within the 2 nearest NON-EMPTY content lines before the
+    // Related heading. Depth 2 allows one closing paragraph between the divider and the
+    // heading (a common, valid pattern: divider → closing CTA → ## Related) while still
+    // flagging pages with no divider at all. Code fences and JSX comments are blanked, so
+    // skipping blank lines correctly ignores a divider commented out inside {/* ... */}.
+    // (Depth 1 would falsely flag the divider-then-prose pattern; a deeper window would
+    // reach an unrelated opening divider on short pages.)
     let dividerBeforeRelated = false;
     let nonEmptySeen = 0;
-    for (let j = relatedPagesLine - 2; j >= 0 && nonEmptySeen < 4; j -= 1) {
+    for (let j = relatedPagesLine - 2; j >= 0 && nonEmptySeen < 2; j -= 1) {
       const t = lines[j].trim();
       if (!t) continue;
       nonEmptySeen += 1;
