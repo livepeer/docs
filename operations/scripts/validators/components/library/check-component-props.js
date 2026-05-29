@@ -317,6 +317,11 @@ function checkInlineStyles(content, filePath, issues) {
 // one component as the whole page — so they're exempt from the opening-divider rule.
 const SINGLE_MOUNT_RE = /^<([A-Z]\w*(Source|Canonical|Changelog|Page|Catalog)|OpenAPI|IndexSource)\b/;
 
+// Partial / fragment files: imported into a parent page (not standalone routes), so the
+// opening-divider rule does not apply — a divider would render inside the parent's layout
+// (e.g. at the top of each tab panel). Identified by their conventional directory homes.
+const PARTIAL_PATH_RE = /(^|\/)(custom\/views|composables|groups|stubs|components)\//;
+
 function checkCustomDividerPlacement(content, filePath, issues) {
   const cleaned = stripCodeBlocks(stripJsxComments(content));
   const lines = cleaned.split('\n');
