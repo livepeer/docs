@@ -29,12 +29,12 @@ import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>go-livepeer exposes Prometheus metrics on the same port as livepeer_cli (port 7935 by default). Start the livepeer/monitor Docker container pointed at that port for a ready-made Prometheus + Grafana stack.</Tip>
+  <Tip>go-livepeer exposes Prometheus metrics on the same port as livepeer_cli (port 7935 by default). Start the Livepeer/monitor Docker container pointed at that port for a ready-made Prometheus + Grafana stack.</Tip>
 </CenteredContainer>
 
 ---
 
-go-livepeer emits Prometheus metrics when started with the `-metrics` flag. The `livepeer/monitor` Docker image bundles Prometheus, Grafana, and starter dashboard templates for monitoring both broadcaster (gateway) and orchestrator nodes.
+go-livepeer emits Prometheus metrics when started with the `-metrics` flag. The `livepeer/monitor` Docker image bundles Prometheus, Grafana, and starter dashboard templates for monitoring both broadcaster (Gateway) and Orchestrator nodes.
 
 <CustomDivider />
 
@@ -51,7 +51,7 @@ livepeer -broadcaster \
 
 The metrics endpoint is available at `http://<cliAddr>/metrics`. With the default `-cliAddr 127.0.0.1:7935`, metrics are at `http://127.0.0.1:7935/metrics`.
 
-When running both a broadcaster and an orchestrator on the same host, assign different `-cliAddr` ports to each:
+When running both a broadcaster and an Orchestrator on the same host, assign different `-cliAddr` ports to each:
 
 ```bash
 livepeer -broadcaster -metrics -cliAddr 127.0.0.1:7935 ...
@@ -84,9 +84,9 @@ go-livepeer exposes metrics with the `livepeer_` prefix. Useful metrics include:
 
 | Metric | Type | Description |
 |---|---|---|
-| `livepeer_broadcaster_segments_sent_total` | Counter | Total segments sent to orchestrators |
+| `livepeer_broadcaster_segments_sent_total` | Counter | Total segments sent to Orchestrators |
 | `livepeer_broadcaster_segments_emerged_total` | Counter | Transcoded segments received back |
-| `livepeer_broadcaster_upload_time_seconds` | Histogram | Time to upload a segment to an orchestrator |
+| `livepeer_broadcaster_upload_time_seconds` | Histogram | Time to upload a segment to an Orchestrator |
 | `livepeer_broadcaster_download_time_seconds` | Histogram | Time to receive a transcoded segment back |
 | `livepeer_broadcaster_transcode_score` | Gauge | Ratio of segments received to segments sent (1.0 = perfect) |
 | `livepeer_broadcaster_sessions_active` | Gauge | Active transcoding/AI sessions |

@@ -56,7 +56,7 @@ import { BorderedBox } from "/snippets/components/wrappers/containers/Containers
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-This is the first of five monitoring guides. Run these checks after starting a gateway, after any configuration change, or when something seems wrong. Health checks are quick - for full observability setup, see <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup" label="Monitoring Setup" newline={false} />.
+This is the first of five monitoring guides. Run these checks after starting a Gateway, after any configuration change, or when something seems wrong. Health checks are quick - for full observability setup, see <LinkArrow href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup" label="Monitoring Setup" newline={false} />.
 
 ## Universal Checks
 
@@ -66,13 +66,13 @@ These checks run on all Gateway operational and node mode configurations.
 
 ### HTTP health endpoint
 
-Confirms the gateway process is running and responding on the configured `-httpAddr` port (_default: 8935_).
+Confirms the Gateway process is running and responding on the configured `-httpAddr` port (_default: 8935_).
 
 ```bash icon="terminal" Check Command
 curl http://localhost:8935/health
 ```
 
-A healthy gateway returns HTTP `200` with a JSON body. Any non-200 response or connection refused means the process is not running or the port is wrong.
+A healthy Gateway returns HTTP `200` with a JSON body. Any non-200 response or connection refused means the process is not running or the port is wrong.
 
 ```json icon="terminal" Expected Response
 {
@@ -82,7 +82,7 @@ A healthy gateway returns HTTP `200` with a JSON body. Any non-200 response or c
 
 ### Node status via livepeer_cli
 
-Confirms the gateway's identity, network connection, active sessions, and (for on-chain gateways) deposit and reserve balances.
+Confirms the Gateway's identity, network connection, active sessions, and (for on-chain Gateways) deposit and reserve balances.
 - Select **Option 1: Get node status** from the interactive menu.
 
 ```bash icon="terminal" CLI Command
@@ -97,7 +97,7 @@ The status output appears under **BROADCASTER STATS** (the CLI uses the legacy t
 
 ### Hardware status
 
-Confirms GPU availability, memory usage, and temperature. Useful for AI and Dual gateways where GPU resources are shared.
+Confirms GPU availability, memory usage, and temperature. Useful for AI and Dual Gateways where GPU resources are shared.
 
 ```bash icon="terminal" Check Command
 # GPU utilisation, memory, temperature
@@ -115,7 +115,7 @@ curl http://localhost:8935/hardware/info
   <Tab title="Video" icon="video">
     <span><Icon icon="link" size={14} /> **On-chain** only</span>
 
-    A <Badge color="blue">Video</Badge> gateway is healthy when:
+    A <Badge color="blue">Video</Badge> Gateway is healthy when:
     1. `/health` returns 200
     2. ETH deposit is non-zero (see On-chain Checks below)
     3. At least one Orchestrator is reachable
@@ -123,13 +123,13 @@ curl http://localhost:8935/hardware/info
 
     ### Check Orchestrator connectivity
 
-    On-chain video gateways discover Orchestrators automatically via the protocol. Verify connected Orchestrators via `livepeer_cli` (Option 1) or the HTTP API:
+    On-chain video Gateways discover Orchestrators automatically via the protocol. Verify connected Orchestrators via `livepeer_cli` (Option 1) or the HTTP API:
 
     ```bash icon="terminal" Check Orchestrators
     curl http://localhost:5935/getOrchestrators
     ```
 
-    An empty array means no Orchestrators are connected. Check the Arbitrum RPC (see on-chain tab) and verify the gateway is registered on the network.
+    An empty array means no Orchestrators are connected. Check the Arbitrum RPC (see on-chain tab) and verify the Gateway is registered on the network.
 
     ### Test RTMP ingest
 
@@ -141,25 +141,25 @@ curl http://localhost:8935/hardware/info
       -f flv rtmp://localhost:1935/live/test
     ```
 
-    If the gateway is healthy, transcoding activity appears in the logs (`-v 6` for verbose). If the stream immediately drops, check the deposit balance (see on-chain tab) and Orchestrator connectivity above.
+    If the Gateway is healthy, transcoding activity appears in the logs (`-v 6` for verbose). If the stream immediately drops, check the deposit balance (see on-chain tab) and Orchestrator connectivity above.
   </Tab>
 
   <Tab title="AI" icon="user-robot">
     <span><Icon icon="cloud" size={14} /> **Off-chain**</span> or <span><Icon icon="link" size={14} /> **On-chain**</span>
 
-    An <Badge color="purple">AI</Badge> gateway is healthy when:
+    An <Badge color="purple">AI</Badge> Gateway is healthy when:
     1. `/health` returns 200
     2. At least one Orchestrator in `-orchAddr` is reachable (off-chain) or discoverable via protocol (on-chain)
     3. A test job succeeds end-to-end
 
     ### Check Orchestrator Reachability
 
-    For off-chain gateways, verify each Orchestrator in the `-orchAddr` list is responding:
+    For off-chain Gateways, verify each Orchestrator in the `-orchAddr` list is responding:
 
     ```bash icon="terminal" Check Orchestrators
     curl https://<orchestrator-address>:<port>/getOrchestratorInfo
     ```
-If an Orchestrator is unreachable, jobs silently fail to route. Replace addresses in `-orchAddr` with known-active AI Orchestrators. Ask in [Discord #local-gateways](https://discord.gg/livepeer) for current addresses.
+If an Orchestrator is unreachable, jobs silently fail to route. Replace addresses in `-orchAddr` with known-active AI Orchestrators. Ask in [Discord #local-Gateways](https://discord.gg/livepeer) for current addresses.
 
     ### Run a test job
 
@@ -177,14 +177,14 @@ If an Orchestrator is unreachable, jobs silently fail to route. Replace addresse
 A successful response returns a base64-encoded image. An error typically means either the Orchestrator does not have this model loaded or `-orchAddr` is misconfigured.
 
     <Note>
-      On-chain AI gateways using `-aiServiceRegistry` discover Orchestrators automatically and do not need `-orchAddr`. Run the on-chain checks below in addition to the test job.
+      On-chain AI Gateways using `-aiServiceRegistry` discover Orchestrators automatically and do not need `-orchAddr`. Run the on-chain checks below in addition to the test job.
     </Note>
   </Tab>
 
   <Tab title="Dual" icon="clone">
     <span><Icon icon="link" size={14} /> **On-chain**</span> (video component requires on-chain)
 
-    A <Badge color="green">Dual</Badge> gateway runs both video and AI workloads on the same port. It is healthy when all video checks AND all AI checks pass.
+    A <Badge color="green">Dual</Badge> Gateway runs both video and AI workloads on the same port. It is healthy when all video checks AND all AI checks pass.
 
     ### Verify both workload types
 
@@ -225,7 +225,7 @@ A successful response returns a base64-encoded image. An error typically means e
   <Tab title="On-chain" icon="link">
     <span><Badge color="blue">Video</Badge> <Badge color="purple">AI</Badge> <Badge color="green">Dual</Badge></span>
 
-    These checks apply to any gateway running in <Icon icon="link" size={14} /> **on-chain** operational mode, regardless of node type.
+    These checks apply to any Gateway running in <Icon icon="link" size={14} /> **on-chain** operational mode, regardless of node type.
 
     ### Check ETH deposit and reserve
 
@@ -235,12 +235,12 @@ A successful response returns a base64-encoded image. An error typically means e
     ```
 
     Look for the **BROADCASTER STATS** section (the CLI uses the legacy term "Broadcaster" for Gateway):
-    - `Deposit` - must be non-zero (the gateway cannot issue PM tickets without a deposit)
+    - `Deposit` - must be non-zero (the Gateway cannot issue PM tickets without a deposit)
     - `Reserve` - must be non-zero (required for ticket redemption)
 
     <Warning>
       Monitor the balance proactively.
-      When the deposit reaches zero, the gateway stops routing jobs with
+      When the deposit reaches zero, the Gateway stops routing jobs with
       <br/> <Icon icon="warning" /> **_no error_** shown to the client.
       <br/><br/>Community-recommended minimum for testing: **0.1 ETH total** (approximately 0.07 ETH deposit + 0.03 ETH reserve).
 </Warning>

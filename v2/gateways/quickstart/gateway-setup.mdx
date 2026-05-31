@@ -40,7 +40,7 @@ import { GatewayOffChainWarning, GatewayOnChainWarning, GatewayOnChainTTestnetNo
 {/* These can be moved to the view using them */}
 import { ResponseFieldAccordion, ResponseFieldExpandable, CustomResponseField, ValueResponseField } from '/snippets/components/displays/response-fields/ResponseField.jsx';
 import { CustomCodeBlock, CodeSection, ComplexCodeBlock, } from '/snippets/components/displays/code/Code.jsx';
-import { TipWithArrow } from '/snippets/components/elements/callouts/Callouts.jsx';
+import { IconCallout } from '/snippets/components/elements/callouts/Callouts.jsx';
 import { DoubleIconLink } from '/snippets/components/elements/links/Links.jsx';
 import { FlexContainer } from '/snippets/components/wrappers/containers/Containers.jsx';
 import { latestReleasePageUrl, latestVersion } from '/snippets/data/globals/latestRelease.jsx';
@@ -61,10 +61,10 @@ import LinuxSupport from './groups/linux/linuxSupport.mdx';
 import MacSupport from './groups/linux/macSupport.mdx';
 import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
 
-<TipWithArrow>
- <Subtitle style={{fontSize: '1.0rem'}}> Use the <Icon icon="circle-chevron-down" /> **Dropdown** at the top-right of this page to view the Quickstart Guide
+<IconCallout showArrow>
+ <Subtitle fontSize="1rem"> Use the <Icon icon="circle-chevron-down" /> **Dropdown** at the top-right of this page to view the Quickstart Guide
  for your preferred OS. </Subtitle>
-</TipWithArrow>
+</IconCallout>
 
 <WidthCard title="go-livepeer" href="https://github.com/livepeer/go-livepeer" icon="github" arrow horizontal>
  <span> *Latest Version:* <Badge color="green">{latestVersion}</Badge> </span>
@@ -80,9 +80,9 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
 - Installation guides for <span><Icon icon="docker" size={20} /> **Docker _(recommended)_** </span> and <span><Icon icon="laptop-code" size={20} /> **Pre-Built Binaries**. </span>
 
 <Note>
- <Subtitle style={{fontSize: '1.0rem'}}><Icon icon="docker" size={20}/> [Docker](https://docs.docker.com/get-docker/) is the recommended way to install and run a Livepeer Gateway Node.</Subtitle>
+ <Subtitle fontSize="1rem"><Icon icon="docker" size={20}/> [Docker](https://docs.docker.com/get-docker/) is the recommended way to install and run a Livepeer Gateway Node.</Subtitle>
   <br/>
- <br/><Subtitle style={{fontSize: '1.0rem'}}><Icon icon="linux" size={20}/> [Linux OS](https://linux.org) is recommended for production use.</Subtitle>
+ <br/><Subtitle fontSize="1rem"><Icon icon="linux" size={20}/> [Linux OS](https://linux.org) is recommended for production use.</Subtitle>
 </Note>
 
 <br />
@@ -236,17 +236,17 @@ This page will get you up & running with a Livepeer Gateway Node for <Badge colo
 
 </View>
 
-## End-to-end test loop with an orchestrator
+## End-to-end test loop with an Orchestrator
 
-Use this loop after both your gateway and orchestrator are online.
+Use this loop after both your Gateway and Orchestrator are online.
 
 <Steps>
   <Step title="Confirm orchestrator endpoint and capabilities">
- Verify your orchestrator is reachable on `:8935` and advertises transcoding
+ Verify your Orchestrator is reachable on `:8935` and advertises transcoding
  support.
   </Step>
   <Step title="Configure gateway routing to that orchestrator">
- In off-chain mode, point the gateway directly with:
+ In off-chain mode, point the Gateway directly with:
 
     ```bash icon="terminal"
     -orchAddr=https://your-orchestrator.example.com:8935
@@ -254,10 +254,10 @@ Use this loop after both your gateway and orchestrator are online.
   </Step>
   <Step title="Ingest a test stream through the gateway">
  Use the quickstart ingest flow (FFmpeg or OBS), then fetch the generated HLS
- manifest from the gateway.
+ manifest from the Gateway.
   </Step>
   <Step title="Validate logs on both nodes">
- Confirm the gateway logs show route selection and the orchestrator logs show
+ Confirm the Gateway logs show route selection and the Orchestrator logs show
  session creation/completion for the same stream.
   </Step>
 </Steps>
@@ -269,7 +269,7 @@ Use this loop after both your gateway and orchestrator are online.
   arrow
   horizontal
 >
- Use this guide for orchestrator-side setup, registration, and verification.
+ Use this guide for Orchestrator-side setup, registration, and verification.
 </Card>
 
 ## Troubleshooting

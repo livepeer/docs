@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Repair auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.
  * @description Auto-repairs deterministic MDX-unsafe markdown patterns across first-party markdown and MDX content.
  * @mode        repair
  * @pipeline    manual
@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   REPO_ROOT,
   collectTargetMarkdownFiles,
@@ -195,7 +196,7 @@ function run(options = {}) {
     });
 
     if (args.mode === 'write') {
-      fs.writeFileSync(filePath, result.content, 'utf8');
+      atomicWrite(filePath, result.content, 'utf8');
       changedFiles.push(filePath);
     }
   });

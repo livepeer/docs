@@ -42,7 +42,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 By the end of this tutorial you'll have an Eliza agent running on Livepeer's LLM pipeline with five capabilities layered in: model routing through the Livepeer plugin, a character file shaping personality and bio, RAG-backed answers from a knowledge corpus, Slack and Discord client connectors, and a SwarmZero multi-agent orchestration that hands off work between specialised agents. Each layer builds on the previous; you can ship after any one of them.
 
-This is the Persona 1 deep activation moment. The LLM chatbot tutorial proved Livepeer can power a chat surface; this tutorial proves it can power a character with persistent identity, retrieval-augmented context, multiple platform integrations, and team-of-agents coordination. Adapted from the Livepeer Agent SPE guide and the existing build-an-ai-agent-on-livepeer tutorial; verified against the current Eliza framework surface.
+This is the Persona 1 deep activation moment. The LLM chatbot tutorial proved Livepeer can power a chat surface; this tutorial proves it can power a character with persistent identity, retrieval-augmented context, multiple platform integrations, and team-of-agents coordination. Adapted from the Livepeer Agent SPE guide and the existing build-an-ai-agent-on-Livepeer tutorial; verified against the current Eliza framework surface.
 
 <CustomDivider />
 
@@ -50,18 +50,18 @@ This is the Persona 1 deep activation moment. The LLM chatbot tutorial proved Li
 
 - Node.js 22 or later
 - `pnpm` (`npm install -g pnpm`)
-- A Livepeer gateway accessible at a URL (paid provider, self-hosted, or the free `dream-gateway.livepeer.cloud` for development)
+- A Livepeer Gateway accessible at a URL (paid provider, self-hosted, or the free `dream-gateway.livepeer.cloud` for development)
 - Optional: Slack workspace admin and Discord server admin access for the client integrations
 - Optional: Python 3.11+ for the SwarmZero multi-agent section
 - A code editor
 
-The free community gateway works for development. Production agents should run against a paid gateway with authentication; the community gateway is shared infrastructure.
+The free community Gateway works for development. Production agents should run against a paid Gateway with authentication; the community Gateway is shared infrastructure.
 
 <CustomDivider />
 
 ## Model Provider Layer
 
-Eliza supports pluggable model providers. The Livepeer plugin routes inference requests to the AI Jobs API endpoint at a Livepeer gateway.
+Eliza supports pluggable model providers. The Livepeer plugin routes inference requests to the AI Jobs API endpoint at a Livepeer Gateway.
 
 <Steps>
   <Step title="Clone Eliza">
@@ -86,7 +86,7 @@ Eliza supports pluggable model providers. The Livepeer plugin routes inference r
     AGENT_NAME=my-livepeer-agent
     ```
 
-    The community gateway accepts unauthenticated requests, so `LIVEPEER_API_KEY` stays empty. For a paid gateway, drop in the Bearer token.
+    The community Gateway accepts unauthenticated requests, so `LIVEPEER_API_KEY` stays empty. For a paid Gateway, drop in the Bearer token.
   </Step>
 
   <Step title="Create a minimal character file">
@@ -445,9 +445,9 @@ The SwarmZero pattern scales to arbitrary agent counts. Production swarms common
 
 Six things change between the local agent and a production deployment.
 
-**Switch to a paid gateway.** The community gateway is for experimentation. Production agents run against a paid gateway with rate limits, authentication, and SLA.
+**Switch to a paid Gateway.** The community Gateway is for experimentation. Production agents run against a paid Gateway with rate limits, authentication, and SLA.
 
-**Monitor model warmth.** Cold-start delays kill agent UX. Either pre-warm the model with a scheduled request every few minutes, or self-host an orchestrator with the target model pinned in memory.
+**Monitor model warmth.** Cold-start delays kill agent UX. Either pre-warm the model with a scheduled request every few minutes, or self-host an Orchestrator with the target model pinned in memory.
 
 **Bound RAG corpus size.** Embedding a 10 MB corpus is fine; 10 GB is not. Chunk size, embedding model, and retrieval count all affect quality. Test retrieval against a held-out set of queries before shipping.
 
@@ -465,7 +465,7 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
 
 <AccordionGroup>
   <Accordion title="Agent starts but every response is gibberish">
-    `modelProvider` is not set to `livepeer`, or the gateway URL is wrong. Confirm `.env` has `LIVEPEER_GATEWAY_URL` set and the character file has `"modelProvider": "livepeer"`.
+    `modelProvider` is not set to `livepeer`, or the Gateway URL is wrong. Confirm `.env` has `LIVEPEER_GATEWAY_URL` set and the character file has `"modelProvider": "livepeer"`.
   </Accordion>
   <Accordion title="Cold-start times out after 60 seconds">
     The default Eliza request timeout is shorter than some Livepeer cold-starts. Either increase the timeout in the Livepeer plugin config, or pre-warm the model with a one-token request on agent start.

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            page-integrity-dispatch.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @type              validator
  * @purpose           infrastructure:pipeline-orchestration

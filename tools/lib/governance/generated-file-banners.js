@@ -76,6 +76,7 @@ function buildGeneratedFrontmatterLines(options = {}) {
   const maintenance = normalizeInline(options.maintenance);
   const status = normalizeInline(options.status);
   const generator = normalizeInline(options.generator);
+  const lastVerified = normalizeInline(options.lastVerified) || new Date().toISOString().slice(0, 10);
 
   const lines = ['---'];
 
@@ -92,6 +93,7 @@ function buildGeneratedFrontmatterLines(options = {}) {
   if (maintenance) lines.push(`maintenance: ${maintenance}`);
   if (status) lines.push(`status: ${status}`);
   if (generator) lines.push(`generator: ${asQuotedYaml(generator)}`);
+  lines.push(`lastVerified: ${lastVerified}`);
 
   if (keywords.length > 0) {
     if (keywordsStyle === 'multiline') {

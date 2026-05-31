@@ -32,14 +32,14 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>Free, off-chain AI inference against the Livepeer network via the Cloud Community Gateway. Curl in ten minutes.</Tip>
+  <Tip>Free, off-chain AI inference against the Livepeer Network via the Cloud Community Gateway. Curl in ten minutes.</Tip>
 </CenteredContainer>
 
 <CustomDivider />
 
-By the end of this quickstart you'll have run a text-to-image inference call against the Livepeer network, downloaded the generated image, and seen the same call work through both `@livepeer/ai` (TypeScript) and `livepeer-ai-python`. The path needs only a terminal or a runtime.
+By the end of this quickstart you'll have run a text-to-image inference call against the Livepeer Network, downloaded the generated image, and seen the same call work through both `@livepeer/ai` (TypeScript) and `livepeer-ai-python`. The path needs only a terminal or a runtime.
 
-The path runs against `dream-gateway.livepeer.cloud`, the free Cloud SPE Community Gateway. It is off-chain, public, and shaped for experimentation. Production workloads should run against a paid gateway or a self-hosted one; see <LinkArrow href="/v2/developers/navigator" label="navigator" newline={false} /> for the trade-offs.
+The path runs against `dream-gateway.livepeer.cloud`, the free Cloud SPE Community Gateway. It is off-chain, public, and shaped for experimentation. Production workloads should run against a paid Gateway or a self-hosted one; see <LinkArrow href="/v2/developers/navigator" label="navigator" newline={false} /> for the trade-offs.
 
 <CustomDivider />
 
@@ -59,7 +59,7 @@ The network does the GPU work. Your machine only sends the request and receives 
 
 <Steps>
   <Step title="Send a POST request">
-    The community gateway accepts unauthenticated POSTs at `/text-to-image`. Pick your client below.
+    The community Gateway accepts unauthenticated POSTs at `/text-to-image`. Pick your client below.
 
     <Tabs>
       <Tab title="curl">
@@ -110,7 +110,7 @@ The network does the GPU work. Your machine only sends the request and receives 
   </Step>
 
   <Step title="Inspect the response">
-    The gateway returns a JSON object with an `images` array. Each image has a hosted URL, a deterministic `seed`, and an NSFW classifier flag.
+    The Gateway returns a JSON object with an `images` array. Each image has a hosted URL, a deterministic `seed`, and an NSFW classifier flag.
 
     ```json
     {
@@ -132,7 +132,7 @@ The network does the GPU work. Your machine only sends the request and receives 
     curl -O https://dream-gateway.livepeer.cloud/stream/d0fc1fc6/8fdf5a94.png
     ```
 
-    Open the downloaded `.png`. That image was generated on a GPU run by an independent orchestrator on the Livepeer network.
+    Open the downloaded `.png`. That image was generated on a GPU run by an independent Orchestrator on the Livepeer Network.
   </Step>
 </Steps>
 
@@ -150,7 +150,7 @@ The same call works through the official SDKs. Pick the language that matches yo
     npm install @livepeer/ai
     ```
 
-    Call the gateway:
+    Call the Gateway:
 
     ```ts
     import { Livepeer } from '@livepeer/ai';
@@ -178,7 +178,7 @@ The same call works through the official SDKs. Pick the language that matches yo
     pip install livepeer-ai
     ```
 
-    Call the gateway:
+    Call the Gateway:
 
     ```python
     from livepeer_ai import Livepeer
@@ -218,7 +218,7 @@ Other supported models (cold-start on first request, then warm):
 - `prompthero/openjourney-v4`
 - `stabilityai/sd-turbo`, `stabilityai/sdxl-turbo` (limited-commercial licence)
 
-A cold model takes between 30 seconds and a few minutes for the first response while an orchestrator loads it into GPU memory.
+A cold model takes between 30 seconds and a few minutes for the first response while an Orchestrator loads it into GPU memory.
 
 For all available pipelines (image-to-image, image-to-video, audio-to-text, LLM, and more), see <LinkArrow href="/v2/developers/build/ai-and-agents/ai-pipelines" label="AI pipelines" newline={false} />.
 
@@ -228,26 +228,26 @@ For all available pipelines (image-to-image, image-to-video, audio-to-text, LLM,
 
 <AccordionGroup>
   <Accordion title="No orchestrator available for model">
-    No orchestrator on the network currently has capacity for the requested model. Retry after a short wait, or pick one of the warm models above. The pipeline reference page lists which models are kept warm.
+    No Orchestrator on the network currently has capacity for the requested model. Retry after a short wait, or pick one of the warm models above. The pipeline reference page lists which models are kept warm.
   </Accordion>
   <Accordion title="Cold model load (slow first request)">
-    The first request to a non-warm model triggers an orchestrator to load weights into GPU memory. Subsequent requests against the same model are fast. The community gateway does not stream progress; the request blocks until the model is ready.
+    The first request to a non-warm model triggers an Orchestrator to load weights into GPU memory. Subsequent requests against the same model are fast. The community Gateway does not stream progress; the request blocks until the model is ready.
   </Accordion>
   <Accordion title="Validation error on `width` or `height`">
     Most SDXL-family models accept multiples of 64 between 512 and 1024. Drop down to 768 or 1024 squared if a request fails on dimensions.
   </Accordion>
   <Accordion title="Rate limit on the community gateway">
-    The community gateway is shared infrastructure. High-volume callers should move to a paid gateway or self-host. A paid gateway accepts the same request shape; pass a Bearer token in the `Authorization` header.
+    The community Gateway is shared infrastructure. High-volume callers should move to a paid Gateway or self-host. A paid Gateway accepts the same request shape; pass a Bearer token in the `Authorization` header.
   </Accordion>
 </AccordionGroup>
 
 <Warning>
-  The community gateway is shaped for experimentation. Production workloads should run against a paid gateway or a self-hosted gateway. See <LinkArrow href="/v2/developers/navigator" label="navigator" newline={false} />.
+  The community Gateway is shaped for experimentation. Production workloads should run against a paid Gateway or a self-hosted Gateway. See <LinkArrow href="/v2/developers/navigator" label="navigator" newline={false} />.
 </Warning>
 
 <CustomDivider />
 
-You now have a working inference call against the Livepeer network. The [AI pipelines](/v2/developers/build/ai-and-agents/ai-pipelines) page documents all nine batch endpoints with request schemas and curl examples for each.
+You now have a working inference call against the Livepeer Network. The [AI pipelines](/v2/developers/build/ai-and-agents/ai-pipelines) page documents all nine batch endpoints with request schemas and curl examples for each.
 
 ## Next Steps
 

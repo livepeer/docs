@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth.
  * @description Generate the governed script registry from script headers so classification, catalogs, and script-docs enforcement share one derived source of truth.
  * @mode        generate
  * @pipeline    manual
@@ -17,10 +17,12 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const {
   GOVERNED_ROOTS,
   SCRIPT_EXTENSIONS,
+  VALID_CONCERNS,
   normalizeRepoPath,
   shouldExcludeScriptPath
 } = require('../../../../../tools/lib/governance/script-governance-config');
@@ -32,6 +34,9 @@ const {
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 const OUTPUT_PATH = 'tools/config/registry/script-registry.json';
 const DRY_RUN = process.argv.includes('--dry-run');
+const STRICT = process.argv.includes('--strict') || process.env.REGISTRY_STRICT === '1';
+const VALID_TYPES_SET = new Set(['audit', 'generator', 'validator', 'remediator', 'dispatch', 'integrator', 'interface']);
+const VALID_CONCERNS_SET = new Set(VALID_CONCERNS);
 
 // Aligned to actions framework: D-ACT-07 (integrator), D-ACT-01 (interface)
 const VALID_TYPES = new Set(['audit', 'generator', 'validator', 'remediator', 'dispatch', 'integrator', 'interface']);
@@ -187,6 +192,32 @@ function main() {
     entries.push(entry);
   }
 
+  // Validation gate: silent omission of scripts from downstream surfaces is the
+  // same bug class as the May 2026 catalog 5→7-type regression. Fail loudly when
+  // an active script lands with an empty or off-taxonomy concern/type so the
+  // contributor can fix the JSDoc header before it ships.
+  const active = entries.filter((e) => e.status === 'active');
+  const polluted = active.filter((e) =>
+    !VALID_TYPES_SET.has(e.type) ||
+    !VALID_CONCERNS_SET.has(e.concern)
+  );
+
+  if (polluted.length > 0) {
+    const empties = polluted.filter((e) => !e.concern).length;
+    console.error(`\n⚠️  Registry pollution: ${polluted.length} active script(s) have invalid type/concern (${empties} with empty concern).`);
+    console.error(`Canonical types:    ${[...VALID_TYPES_SET].join(', ')}`);
+    console.error(`Canonical concerns: ${[...VALID_CONCERNS_SET].join(', ')}`);
+    console.error(`First 10:`);
+    polluted.slice(0, 10).forEach((e) => {
+      console.error(`  ${e.path}  type="${e.type}"  concern="${e.concern}"`);
+    });
+    if (STRICT) {
+      console.error(`\n[--strict] failing on pollution. Fix the JSDoc @type/@concern tags or drop --strict.\n`);
+      process.exit(1);
+    }
+    console.error(`\nReporting only. Re-run with --strict (or REGISTRY_STRICT=1) to make this blocking.\n`);
+  }
+
   const output = JSON.stringify(entries, null, 2) + '\n';
   const outputFull = path.join(REPO_ROOT, OUTPUT_PATH);
 
@@ -199,7 +230,7 @@ function main() {
   }
 
   fs.mkdirSync(path.dirname(outputFull), { recursive: true });
-  fs.writeFileSync(outputFull, output, 'utf8');
+  atomicWrite(outputFull, output, 'utf8');
   console.log(`Wrote ${OUTPUT_PATH} — ${entries.length} entries (${skipped} skipped).`);
 }
 

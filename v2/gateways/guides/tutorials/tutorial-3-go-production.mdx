@@ -49,7 +49,7 @@ This is Tutorial 3 of 3.
 
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
-This tutorial graduates from the local off-chain setup in Tutorials 1 and 2 to a live Livepeer network deployment. There are three independent upgrades - apply any or all depending on the use case.
+This tutorial graduates from the local off-chain setup in Tutorials 1 and 2 to a live Livepeer Network deployment. There are three independent upgrades - apply any or all depending on the use case.
 
 **Time:** 30-90 minutes depending on which upgrades you apply
 **Cost:** ETH on Arbitrum (Upgrade 1 only)
@@ -58,8 +58,8 @@ This tutorial graduates from the local off-chain setup in Tutorials 1 and 2 to a
 <Note>
 This is Tutorial 3 of 3.
 
-- **← Tutorial 1:** [Off-chain transcoding test](/v2/gateways/guides/tutorials/tutorial-1-offchain-transcoding-test)
-- **← Tutorial 2:** [BYOC CPU pipeline](/v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline)
+- **← Tutorial 1:** [Off-chain transcoding test](/v2/Gateways/guides/tutorials/tutorial-1-offchain-transcoding-test)
+- **← Tutorial 2:** [BYOC CPU pipeline](/v2/Gateways/guides/tutorials/tutorial-2-byoc-CPU-pipeline)
 </Note>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -70,14 +70,14 @@ The three upgrades are independent. Choose based on your persona:
 
 | Your situation | Upgrade 1: On-chain | Upgrade 2: GPU | Upgrade 3: Network |
 |----------------|:-------------------:|:--------------:|:------------------:|
-| **AI app developer** - self-hosting gateway for cost savings, using remote signer | ✗ optional | ✓ yes | ✓ yes |
-| **Gateway-as-a-Service provider** - public gateway, inference fees, SPE grants | ✓ yes | ✓ yes | ✓ yes |
-| **SDK / alternative gateway builder** | ✗ remote signer | depends | ✓ yes |
-| **Video operator** - transcoding, broadcast | ✓ required | ✗ orchestrators have GPU | ✓ yes |
+| **AI app developer** - self-hosting Gateway for cost savings, using remote signer | ✗ optional | ✓ yes | ✓ yes |
+| **Gateway-as-a-Service provider** - public Gateway, inference fees, SPE grants | ✓ yes | ✓ yes | ✓ yes |
+| **SDK / alternative Gateway builder** | ✗ remote signer | depends | ✓ yes |
+| **Video operator** - transcoding, broadcast | ✓ required | ✗ Orchestrators have GPU | ✓ yes |
 | **Platform builder** - clearinghouse / NaaP | ✗ clearinghouse | ✓ yes | ✓ yes |
 
 <Tip>
-If you are running an AI gateway (BYOC, LV2V, inference workloads), **Upgrade 1 is optional**. The off-chain remote signer model introduced in Q4 2025 allows production AI gateway operation without holding ETH directly. If you are running a video transcoding gateway, Upgrade 1 is **required** - the video pathway does not support remote signers.
+If you are running an AI Gateway (BYOC, LV2V, inference workloads), **Upgrade 1 is optional**. The off-chain remote signer model introduced in Q4 2025 allows production AI Gateway operation without holding ETH directly. If you are running a video transcoding Gateway, Upgrade 1 is **required** - the video pathway does not support remote signers.
 </Tip>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -86,11 +86,11 @@ If you are running an AI gateway (BYOC, LV2V, inference workloads), **Upgrade 1 
 
 ### What this gives you
 
-On-chain registration connects your gateway to the Livepeer protocol's payment system on Arbitrum One:
-- Your gateway can send ETH probabilistic micropayment (PM) tickets to orchestrators
-- Orchestrators outside your explicit `-orchAddr` list can discover and serve your gateway
-- For video gateways: required for any production transcoding
-- For AI gateways: optional when using a remote signer, but enables full on-chain custody
+On-chain registration connects your Gateway to the Livepeer Protocol's payment system on Arbitrum One:
+- Your Gateway can send ETH probabilistic micropayment (PM) tickets to Orchestrators
+- Orchestrators outside your explicit `-orchAddr` list can discover and serve your Gateway
+- For video Gateways: required for any production transcoding
+- For AI Gateways: optional when using a remote signer, but enables full on-chain custody
 
 ### 1.1 - Acquire ETH on Arbitrum One
 
@@ -98,18 +98,18 @@ You need ETH on Arbitrum One (not Ethereum mainnet). The approximate requirement
 
 | | Amount | Purpose |
 |---|---|---|
-| PM deposit | ~0.065 ETH | Funds payment tickets sent to orchestrators |
-| PM reserve | ~0.03 ETH | Reserve for ticket redemption by orchestrators |
+| PM deposit | ~0.065 ETH | Funds payment tickets sent to Orchestrators |
+| PM reserve | ~0.03 ETH | Reserve for ticket redemption by Orchestrators |
 | Gas buffer | ~0.01 ETH | Transaction fees on Arbitrum |
 | **Total** | **~0.1 ETH** | Safe starting amount |
 
 <Warning>
-ETH price volatility affects these amounts - a Livepeer deposit of a given USD value buys more or fewer tickets as the ETH/USD rate moves. Check current requirements in [#lounge on Discord](https://discord.gg/livepeer) or the [on-chain requirements page](/v2/gateways/setup/requirements/on-chain-setup/on-chain) before depositing.
+ETH price volatility affects these amounts - a Livepeer deposit of a given USD value buys more or fewer tickets as the ETH/USD rate moves. Check current requirements in [#lounge on Discord](https://discord.gg/livepeer) or the [on-chain requirements page](/v2/Gateways/setup/requirements/on-chain-setup/on-chain) before depositing.
 </Warning>
 
 **Options for getting ETH on Arbitrum One:**
 
-- **Bridge from Ethereum mainnet:** [bridge.arbitrum.io](https://bridge.arbitrum.io/) - official bridge, ~15 minutes
+- **Bridge from Ethereum mainnet:** [bridge.Arbitrum.io](https://bridge.arbitrum.io/) - official bridge, ~15 minutes
 - **Buy directly on Arbitrum:** Coinbase, Binance, and OKX all support direct withdrawal to Arbitrum One
 - **Base → Arbitrum:** if you have ETH on Base, use the Base bridge then Across Protocol
 
@@ -117,9 +117,9 @@ ETH price volatility affects these amounts - a Livepeer deposit of a given USD v
 The cheapest path for most people is to buy ETH on a CEX that supports Arbitrum One withdrawals (Coinbase, Binance, OKX) and withdraw directly. This avoids the Ethereum mainnet bridge fee (~$5-20 at moderate gas) and the bridging wait time.
 </Tip>
 
-### 1.2 - Create a dedicated wallet for your gateway
+### 1.2 - Create a dedicated wallet for your Gateway
 
-**Never use a personal wallet for gateway operations.** Create a dedicated keystore:
+**Never use a personal wallet for Gateway operations.** Create a dedicated keystore:
 
 ```bash icon="terminal"
 ./livepeer \
@@ -128,7 +128,7 @@ The cheapest path for most people is to buy ETH on a CEX that supports Arbitrum 
   # Follow CLI prompts to initialise a new keystore
 ```
 
-Note your gateway's Ethereum address. You will send ETH to this address in the next step.
+Note your Gateway's Ethereum address. You will send ETH to this address in the next step.
 
 Alternatively, use `cast` (from Foundry) for a clean key generation:
 ```bash icon="terminal"
@@ -137,12 +137,12 @@ cast wallet new
 ```
 
 <Warning>
-This wallet will hold ETH for gateway operations. Use a hardware wallet or a dedicated key management solution for any material amount. Never put the keystore file in a public repository.
+This wallet will hold ETH for Gateway operations. Use a hardware wallet or a dedicated key management solution for any material amount. Never put the keystore file in a public repository.
 </Warning>
 
 ### 1.3 - Deposit PM funds on-chain
 
-Send ETH to your gateway address, then deposit using `livepeer_cli`:
+Send ETH to your Gateway address, then deposit using `livepeer_cli`:
 
 ```bash icon="terminal"
 ./livepeer_cli \
@@ -154,10 +154,10 @@ Send ETH to your gateway address, then deposit using `livepeer_cli`:
 From the interactive menu:
 
 1. Select **"Deposit broadcasting funds (ETH)"**
-   Enter approximately `0.065` - this becomes your PM deposit (funds the tickets you send to orchestrators)
+   Enter approximately `0.065` - this becomes your PM deposit (funds the tickets you send to Orchestrators)
 
 2. Select **"Fund reserve for PM"** (if shown separately)
-   Enter approximately `0.03` - this is the reserve orchestrators can claim from if your deposit runs out
+   Enter approximately `0.03` - this is the reserve Orchestrators can claim from if your deposit runs out
 
 After depositing, confirm your balance:
 ```bash icon="terminal"
@@ -167,10 +167,10 @@ After depositing, confirm your balance:
 ```
 
 <Tip>
-You can also fund your gateway using `cast send` directly to the Livepeer `TicketBroker` contract on Arbitrum One. The contract address is in the [Contract Addresses reference](/v2/about/resources/reference/livepeer-contract-addresses). This is useful for scripting gateway fund management in CI/CD pipelines.
+You can also fund your Gateway using `cast send` directly to the Livepeer `TicketBroker` contract on Arbitrum One. The contract address is in the [Contract Addresses reference](/v2/about/resources/reference/livepeer-contract-addresses). This is useful for scripting Gateway fund management in CI/CD pipelines.
 </Tip>
 
-### 1.4 - Start your gateway on-chain
+### 1.4 - Start your Gateway on-chain
 
 Replace `-network offchain` with your Arbitrum RPC:
 
@@ -186,18 +186,18 @@ Replace `-network offchain` with your Arbitrum RPC:
 ```
 
 <Tip>
-For an Arbitrum RPC endpoint, use [Infura](https://infura.io) (`https://arbitrum-mainnet.infura.io/v3/YOUR_KEY`) or [Alchemy](https://alchemy.com) (`https://arb-mainnet.g.alchemy.com/v2/YOUR_KEY`). Both offer free tiers sufficient for a single gateway. Self-hosting an Arbitrum node is possible but unnecessary for gateway operation.
+For an Arbitrum RPC endpoint, use [Infura](https://infura.io) (`https://arbitrum-mainnet.infura.io/v3/YOUR_KEY`) or [Alchemy](https://alchemy.com) (`https://arb-mainnet.g.alchemy.com/v2/YOUR_KEY`). Both offer free tiers sufficient for a single Gateway. Self-hosting an Arbitrum node is possible but unnecessary for Gateway operation.
 </Tip>
 
 **Verifying on-chain registration:**
 
-Check your gateway is visible on the network:
+Check your Gateway is visible on the network:
 ```bash icon="terminal"
 curl http://localhost:5935/status
 # Look for: "ethAddress" and "pmInfo" sections
 ```
 
-Visit [explorer.livepeer.org](https://explorer.livepeer.org) and search for your gateway's ETH address. Once funded, it will appear in the protocol state.
+Visit [explorer.livepeer.org](https://explorer.livepeer.org) and search for your Gateway's ETH address. Once funded, it will appear in the protocol state.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -205,13 +205,13 @@ Visit [explorer.livepeer.org](https://explorer.livepeer.org) and search for your
 
 ### What this gives you
 
-GPU acceleration enables real-time AI inference that is not possible at production throughput on CPU. The orchestrator uses NVIDIA GPUs for:
+GPU acceleration enables real-time AI inference that is not possible at production throughput on CPU. The Orchestrator uses NVIDIA GPUs for:
 - Standard ai-runner pipelines: text-to-image, image-to-video, LLM, upscale, etc.
 - BYOC containers with GPU-accelerated models (swap the base image)
 - Video transcoding via NVENC/NVDEC (faster than CPU libx264)
 
 <Tip>
-As the gateway operator, **you do not need a GPU** unless you are also running your own orchestrator. Gateways are routing nodes - compute lives on orchestrators. If you are self-hosting an orchestrator alongside your gateway (Tutorial 1 / 2 pattern), then yes, that orchestrator needs a GPU for AI workloads. If you are routing to public network orchestrators (Upgrade 3), their GPUs handle everything.
+As the Gateway operator, **you do not need a GPU** unless you are also running your own Orchestrator. Gateways are routing nodes - compute lives on Orchestrators. If you are self-hosting an Orchestrator alongside your Gateway (Tutorial 1 / 2 pattern), then yes, that Orchestrator needs a GPU for AI workloads. If you are routing to public network Orchestrators (Upgrade 3), their GPUs handle everything.
 </Tip>
 
 ### 2.1 - GPU requirements by pipeline type
@@ -226,12 +226,12 @@ As the gateway operator, **you do not need a GPU** unless you are also running y
 | Video transcoding (NVENC) | Any CUDA | - |
 
 <Warning>
-GPU VRAM requirements are per active pipeline. Running multiple concurrent pipeline types on a single GPU requires enough VRAM for the largest model loaded. Check the [hardware requirements reference](/v2/gateways/resources/reference/go-livepeer/hardware-requirements) for the current model matrix before purchasing hardware.
+GPU VRAM requirements are per active pipeline. Running multiple concurrent pipeline types on a single GPU requires enough VRAM for the largest model loaded. Check the [hardware requirements reference](/v2/Gateways/resources/reference/go-livepeer/hardware-requirements) for the current model matrix before purchasing hardware.
 </Warning>
 
-### 2.2 - Enable GPU on the orchestrator
+### 2.2 - Enable GPU on the Orchestrator
 
-Add `-nvidia` to your orchestrator startup command:
+Add `-nvidia` to your Orchestrator startup command:
 
 ```bash icon="terminal"
 ./livepeer \
@@ -296,13 +296,13 @@ The `--gpus device=0` flag passes GPU 0 to the container. Use `--gpus all` to pa
 
 ### What this gives you
 
-Removing `-orchAddr localhost` and switching to network discovery means your gateway:
-- Routes to the full public orchestrator network (hundreds of orchestrators globally)
-- Automatically selects orchestrators by price, capability, and past performance
+Removing `-orchAddr localhost` and switching to network discovery means your Gateway:
+- Routes to the full public Orchestrator network (hundreds of Orchestrators globally)
+- Automatically selects Orchestrators by price, capability, and past performance
 - Can handle demand spikes without running your own hardware
-- Participates in the Livepeer network's economic system
+- Participates in the Livepeer Network's economic system
 
-### 3.1 - On-chain gateway: automatic discovery
+### 3.1 - On-chain Gateway: automatic discovery
 
 If you completed Upgrade 1, network discovery works automatically. Remove `-orchAddr` entirely:
 
@@ -318,17 +318,17 @@ If you completed Upgrade 1, network discovery works automatically. Remove `-orch
   -v 6
 ```
 
-The gateway queries the Arbitrum registry for registered orchestrators and selects based on stake weight (video) or capability + price (AI).
+The Gateway queries the Arbitrum registry for registered Orchestrators and selects based on stake weight (video) or capability + price (AI).
 
 <Tip>
-`-maxPricePerUnit` sets the maximum price **you will pay** per pixel per unit to an orchestrator - not a price you charge your customers. If an orchestrator quotes higher than this, the gateway rejects it. Start with a permissive value (e.g., `1000` wei per pixel) and lower it once you understand the typical market rate in the Explorer.
+`-maxPricePerUnit` sets the maximum price **you will pay** per pixel per unit to an Orchestrator - not a price you charge your customers. If an Orchestrator quotes higher than this, the Gateway rejects it. Start with a permissive value (e.g., `1000` wei per pixel) and lower it once you understand the typical market rate in the Explorer.
 </Tip>
 
-### 3.2 - Off-chain gateway: orchestrator list or remote signer discovery
+### 3.2 - Off-chain Gateway: Orchestrator list or remote signer discovery
 
-Off-chain gateways cannot use the Arbitrum registry. You have three options:
+Off-chain Gateways cannot use the Arbitrum registry. You have three options:
 
-**Option A - Explicit orchestrator list (simplest):**
+**Option A - Explicit Orchestrator list (simplest):**
 ```bash icon="terminal"
 ./livepeer \
   -gateway \
@@ -339,20 +339,20 @@ Off-chain gateways cannot use the Arbitrum registry. You have three options:
   -remoteSignerAddr https://signer.eliteencoder.net
 ```
 
-Find available AI orchestrators in the [Livepeer Explorer](https://explorer.livepeer.org) → Orchestrators → filter by capability.
+Find available AI Orchestrators in the [Livepeer Explorer](https://explorer.livepeer.org) → Orchestrators → filter by capability.
 
 **Option B - Discovery endpoint:**
 
-Some orchestrators publish a webhook-format discovery endpoint. Point your gateway at it:
+Some Orchestrators publish a webhook-format discovery endpoint. Point your Gateway at it:
 ```bash icon="terminal"
   -orchAddr https://discovery.livepeer.cloud/orchestrators
 ```
 
-The gateway polls this endpoint for fresh orchestrator lists on the same schedule as the on-chain webhook cadence (~1 minute).
+The Gateway polls this endpoint for fresh Orchestrator lists on the same schedule as the on-chain webhook cadence (~1 minute).
 
-**Option C - Remote signer discovery (recommended for AI gateways):**
+**Option C - Remote signer discovery (recommended for AI Gateways):**
 
-The community remote signer at `signer.eliteencoder.net` provides a `GetOrchestrators` endpoint that returns on-chain orchestrator data, parameterised by capability and model ID. This removes the need to manually manage orchestrator lists:
+The community remote signer at `signer.eliteencoder.net` provides a `GetOrchestrators` endpoint that returns on-chain Orchestrator data, parameterised by capability and model ID. This removes the need to manually manage Orchestrator lists:
 
 ```bash icon="terminal"
 ./livepeer \
@@ -365,12 +365,12 @@ The community remote signer at `signer.eliteencoder.net` provides a `GetOrchestr
 ```
 
 <Tip>
-The community remote signer at `signer.eliteencoder.net` is operated by John (Elite Encoder) and provides free ETH for test workloads. Confirm availability in [#local-gateways on Discord](https://discord.gg/livepeer) before using it in production. For production AI gateways, run your own remote signer using go-livepeer's `-remoteSigner` mode with a dedicated funded Ethereum key.
+The community remote signer at `signer.eliteencoder.net` is operated by John (Elite Encoder) and provides free ETH for test workloads. Confirm availability in [#local-Gateways on Discord](https://discord.gg/livepeer) before using it in production. For production AI Gateways, run your own remote signer using go-livepeer's `-remoteSigner` mode with a dedicated funded Ethereum key.
 </Tip>
 
 ### 3.3 - Set pricing
 
-Before routing to public orchestrators, set your max price to avoid over-paying:
+Before routing to public Orchestrators, set your max price to avoid over-paying:
 
 **For video transcoding:**
 ```bash icon="terminal"
@@ -401,33 +401,33 @@ Create `ai-pricing.json`:
 }
 ```
 
-Pass to the gateway:
+Pass to the Gateway:
 ```bash icon="terminal"
   -maxPricePerCapability /path/to/ai-pricing.json
 ```
 
 <Warning>
-**Common confusion:** `-maxPricePerUnit` and `-maxPricePerCapability` set the maximum price your gateway **pays to orchestrators** for compute. This is not the price you charge your own customers. If you are building a Gateway-as-a-Service product, your user-facing pricing is entirely separate from this network-level setting.
+**Common confusion:** `-maxPricePerUnit` and `-maxPricePerCapability` set the maximum price your Gateway **pays to Orchestrators** for compute. This is not the price you charge your own customers. If you are building a Gateway-as-a-Service product, your user-facing pricing is entirely separate from this network-level setting.
 </Warning>
 
-### 3.4 - Verify public orchestrator routing
+### 3.4 - Verify public Orchestrator routing
 
-Once connected to the network, verify jobs are routing to public orchestrators:
+Once connected to the network, verify jobs are routing to public Orchestrators:
 
 ```bash icon="terminal"
 # In livepeer_cli, select "Get node status"
 # Look for: "Connected Orchestrators" - should show public IP addresses, not localhost
 ```
 
-Check the [Livepeer Explorer](https://explorer.livepeer.org) → your gateway address → "Recent Sessions" to see which orchestrators have handled your jobs.
+Check the [Livepeer Explorer](https://explorer.livepeer.org) → your Gateway address → "Recent Sessions" to see which Orchestrators have handled your jobs.
 
-Use `tools.livepeer.cloud` for a richer view of orchestrator performance, pricing, and availability before locking in your orchestrator selection strategy.
+Use `tools.livepeer.cloud` for a richer view of Orchestrator performance, pricing, and availability before locking in your Orchestrator selection strategy.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
 ## Putting it together - full production command
 
-Here is a complete production gateway command incorporating all three upgrades (on-chain, GPU orchestrator nearby, public network):
+Here is a complete production Gateway command incorporating all three upgrades (on-chain, GPU Orchestrator nearby, public network):
 
 ```bash icon="terminal"
 ./livepeer \
@@ -471,12 +471,12 @@ WantedBy=multi-user.target
 ```
 
 <Tip>
-Run your gateway behind a TLS-terminating reverse proxy (nginx, Caddy) before exposing it to the internet. The go-livepeer gateway serves plain HTTP. If you are building a public API product on top of the gateway, your load balancer handles TLS, rate limiting, and auth - the gateway only handles Livepeer network routing.
+Run your Gateway behind a TLS-terminating reverse proxy (nginx, Caddy) before exposing it to the internet. The go-livepeer Gateway serves plain HTTP. If you are building a public API product on top of the Gateway, your load balancer handles TLS, rate limiting, and auth - the Gateway only handles Livepeer Network routing.
 </Tip>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
-## Monitoring your production gateway
+## Monitoring your production Gateway
 
 Once live, set up monitoring before you need it:
 
@@ -495,10 +495,10 @@ curl -G 'https://loki.livepeer.report/loki/api/v1/query_range' \
 ```
 
 <Tip>
-Set up an alert on your gateway's PM deposit balance. If the deposit runs to zero, orchestrators will stop serving your jobs immediately - they check the deposit before accepting work. A deposit of 0.065 ETH will last weeks to months depending on your job volume, but top it up before it reaches zero to avoid scrambling during an incident.
+Set up an alert on your Gateway's PM deposit balance. If the deposit runs to zero, Orchestrators will stop serving your jobs immediately - they check the deposit before accepting work. A deposit of 0.065 ETH will last weeks to months depending on your job volume, but top it up before it reaches zero to avoid scrambling during an incident.
 </Tip>
 
-The [Monitor and Optimise](/v2/gateways/guides/monitoring-and-tooling/monitoring-setup) page covers the full production monitoring stack: Prometheus metrics exporter, Grafana dashboards, Loki log queries, and ETH balance alerting.
+The [Monitor and Optimise](/v2/Gateways/guides/monitoring-and-tooling/monitoring-setup) page covers the full production monitoring stack: Prometheus metrics exporter, Grafana dashboards, Loki log queries, and ETH balance alerting.
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
 
@@ -545,7 +545,7 @@ With a working production Gateway, these guides cover each operational area in d
 
 <CardGroup cols={2}>
   <Card title="Payments and pricing" href="/v2/gateways/guides/payments-and-pricing/payment-guide" icon="circle-dollar-to-slot">
-    Understand the full PM fee flow: ticket face value, per-pixel AI pricing, deposit lifecycle, and how to set a pricing strategy that balances cost and orchestrator availability.
+    Understand the full PM fee flow: ticket face value, per-pixel AI pricing, deposit lifecycle, and how to set a pricing strategy that balances cost and Orchestrator availability.
   </Card>
   <Card title="Monitor and optimise" href="/v2/gateways/guides/monitoring-and-tooling/monitoring-setup" icon="gauge">
     Production observability: Prometheus metrics, Loki log queries, ETH balance alerts, and the key metrics that predict problems before they become incidents.
@@ -554,6 +554,6 @@ With a working production Gateway, these guides cover each operational area in d
     Run your own remote signer for production off-chain AI workloads. Stateless design, redundancy, JWT auth integration, and NaaP clearinghouse patterns.
   </Card>
   <Card title="Gateway operator opportunities" href="/v2/gateways/guides/roadmap-and-funding/operator-support" icon="briefcase">
-    Inference fees, SPE grants, the NaaP model, and Foundation programmes for gateway operators building public infrastructure.
+    Inference fees, SPE grants, the NaaP model, and Foundation programmes for Gateway operators building public infrastructure.
   </Card>
 </CardGroup>

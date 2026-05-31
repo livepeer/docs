@@ -2,20 +2,22 @@
 /**
  * @script      create-codex-pr
  * @type        dispatch
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex PR creator — generates codex PR with correct branch naming, labels, and body template
+ * @purpose     Create a GitHub PR from a completed Codex task branch with the canonical branch-naming convention, required labels, and a body template derived from the .codex/task-contract.yaml manifest
+ * @description Invoked by the Codex AI agent at end-of-task after codex-commit. Reads .codex/task-contract.yaml for task ID, summary, scope. Validates branch name matches the codex/* pattern, opens PR via gh CLI with required labels (codex, ai-generated, task:{id}) and body containing summary + acceptance criteria + linked task. Pairs with the Codex skills-manifest entry.
  * @mode        dispatch
- * @pipeline    manual — not yet in pipeline
+ * @pipeline    manual — invoked by the Codex agent via ai-tools/agent-packs/codex/skills-manifest.json
  * @scope       operations/scripts, .codex/task-contract.yaml
  * @usage       node operations/scripts/dispatch/ai/codex/create-codex-pr.js [flags]
+ * @policy      Codex task-isolation standard
  */
 
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_CONTRACT_PATH = '.codex/task-contract.yaml';
 const DEFAULT_OUTPUT_PATH = '.codex/pr-body.generated.md';
@@ -520,7 +522,7 @@ function main() {
 
     const outputPathAbs = path.resolve(REPO_ROOT, args.outputPath);
     ensureDirForFile(outputPathAbs);
-    fs.writeFileSync(outputPathAbs, `${body}\n`, 'utf8');
+    atomicWrite(outputPathAbs, `${body}\n`, 'utf8');
 
     const title =
       String(args.title || '').trim() ||

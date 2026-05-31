@@ -47,10 +47,10 @@ This is the Persona 4 activation moment: the sub-three-second path that the RTMP
 ## Required Tools
 
 - Node.js 20 or later
-- A WebRTC-capable Livepeer gateway endpoint (paid provider, self-hosted, or any third-party WHIP/WHEP endpoint)
+- A WebRTC-capable Livepeer Gateway endpoint (paid provider, self-hosted, or any third-party WHIP/WHEP endpoint)
 - A code editor
 
-`@livepeer/react` works against any WHIP/WHEP-compliant endpoint. Self-hosted gateways need WebRTC ingest enabled; see <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} />. Paid gateway providers expose WHIP and WHEP out of the box.
+`@livepeer/react` works against any WHIP/WHEP-compliant endpoint. Self-hosted Gateways need WebRTC ingest enabled; see <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} />. Paid Gateway providers expose WHIP and WHEP out of the box.
 
 <CustomDivider />
 
@@ -61,9 +61,9 @@ The three-second target breaks down across four hops.
 | Hop | Latency budget | Lever |
 |---|---|---|
 | Camera to encoder | 30-50ms | Browser-native; no tuning |
-| WHIP ingest to gateway | 50-200ms | Network distance to gateway |
+| WHIP ingest to Gateway | 50-200ms | Network distance to Gateway |
 | Gateway transcode (passthrough) | 100-300ms | B-frames=0, keyframe interval=1 |
-| WHEP playback to viewer | 50-200ms | Network distance from gateway |
+| WHEP playback to viewer | 50-200ms | Network distance from Gateway |
 
 Total typically lands between 500ms and 2 seconds in good conditions. The three-second target absorbs jitter buffers, ICE renegotiation, and the worst geographic case.
 
@@ -91,7 +91,7 @@ B-frames are the gotcha. If the encoder emits B-frames, WebRTC frame ordering br
     npm install @livepeer/react livepeer
     ```
 
-    `@livepeer/react` provides the `Broadcast` (WHIP) and `Player` (WHEP) primitives. The `livepeer` package is the Node SDK used server-side to create streams against your gateway provider.
+    `@livepeer/react` provides the `Broadcast` (WHIP) and `Player` (WHEP) primitives. The `livepeer` package is the Node SDK used server-side to create streams against your Gateway provider.
   </Step>
 
   <Step title="Configure environment variables">
@@ -109,7 +109,7 @@ B-frames are the gotcha. If the encoder emits B-frames, WebRTC frame ordering br
     NEXT_PUBLIC_WEBRTC_PLAYBACK_BASE=https://<your-gateway>/webrtc
     ```
 
-    The ingest and playback bases point at your gateway's WHIP and WHEP endpoints. Most gateway providers expose both at predictable paths; check the provider's documentation for the exact URLs. For self-hosted gateways, see <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} />.
+    The ingest and playback bases point at your Gateway's WHIP and WHEP endpoints. Most Gateway providers expose both at predictable paths; check the provider's documentation for the exact URLs. For self-hosted Gateways, see <LinkArrow href="/v2/gateways/quickstart/gateway-setup" label="Gateway Setup" newline={false} />.
   </Step>
 </Steps>
 
@@ -144,7 +144,7 @@ export async function POST(req: Request) {
 }
 ```
 
-The `record: false` flag keeps the stream live-only. To save to a VOD asset for replay, set `record: true`; the gateway records the stream to an asset that survives after the broadcaster disconnects.
+The `record: false` flag keeps the stream live-only. To save to a VOD asset for replay, set `record: true`; the Gateway records the stream to an asset that survives after the broadcaster disconnects.
 
 <CustomDivider />
 
@@ -226,7 +226,7 @@ export default function BroadcastPage() {
 }
 ```
 
-`getIngest(streamKey, { baseUrl })` builds the full WHIP URL by combining your gateway's base URL with the stream key. The `Broadcast.Root` component negotiates SDP, manages ICE, and sends media tracks via WebRTC. STUN/TURN servers come from the gateway response.
+`getIngest(streamKey, { baseUrl })` builds the full WHIP URL by combining your Gateway's base URL with the stream key. The `Broadcast.Root` component negotiates SDP, manages ICE, and sends media tracks via WebRTC. STUN/TURN servers come from the Gateway response.
 
 <CustomDivider />
 
@@ -316,11 +316,11 @@ Five things change between this local setup and a production deployment.
 
 **Authentication.** Add user authentication to the `/api/streams` endpoint so anonymous visitors can't create streams. Pair stream creation with JWT-based access control on playback.
 
-**Stream lifecycle.** Streams persist on your gateway even after the broadcaster disconnects. Add a cleanup task or use the gateway's automatic-cleanup setting to release inactive streams.
+**Stream lifecycle.** Streams persist on your Gateway even after the broadcaster disconnects. Add a cleanup task or use the Gateway's automatic-cleanup setting to release inactive streams.
 
-**Recording.** Set `record: true` when creating streams that should survive as VOD assets. The gateway records to an asset accessible via the `playbackId` after the live stream ends.
+**Recording.** Set `record: true` when creating streams that should survive as VOD assets. The Gateway records to an asset accessible via the `playbackId` after the live stream ends.
 
-**Geographic distribution.** A single-region gateway adds latency for distant viewers. For global low-latency, use a gateway provider with multi-region ingest and playback.
+**Geographic distribution.** A single-region Gateway adds latency for distant viewers. For global low-latency, use a Gateway provider with multi-region ingest and playback.
 
 **Player fallback ordering.** The player ranks sources by preference. On some networks (corporate firewalls, VPNs) WebRTC fails to negotiate; HLS fallback takes over. Test both paths under expected viewer network conditions.
 
@@ -338,10 +338,10 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
     `forceEnabled` defaults to false, which means the browser previews before transmitting. Click the **Start** trigger to begin broadcasting. To stream immediately on permission grant, set `forceEnabled={true}` on `Broadcast.Root`.
   </Accordion>
   <Accordion title="Viewer shows black screen with WebRTC source selected">
-    SDP negotiation succeeded but media isn't flowing. Check the browser console for ICE failures. On restrictive networks, TURN relays are necessary; confirm your gateway provider includes TURN servers in the SDP answer.
+    SDP negotiation succeeded but media isn't flowing. Check the browser console for ICE failures. On restrictive networks, TURN relays are necessary; confirm your Gateway provider includes TURN servers in the SDP answer.
   </Accordion>
   <Accordion title="Latency above 5 seconds when both sides on WebRTC">
-    Network distance to the gateway. Check the gateway's geographic location relative to broadcaster and viewer. For multi-region, use a provider with edge ingest and playback.
+    Network distance to the Gateway. Check the Gateway's geographic location relative to broadcaster and viewer. For multi-region, use a provider with edge ingest and playback.
   </Accordion>
   <Accordion title="Stream key visible in browser dev tools">
     The stream key is intentionally client-side because the broadcaster needs it to ingest. Treat it as a session-scoped credential; rotate it on session start, never reuse across users. Consider one-time stream keys for high-value content.
@@ -370,7 +370,7 @@ Build the "Low-Latency Live Streaming App" tutorial as a Next.js App Router proj
     The lower-latency-floor RTMP+HLS path for self-hosted setups.
   </Card>
   <Card title="Gateway Setup" icon="server" href="/v2/gateways/quickstart/gateway-setup">
-    Self-host a WebRTC-capable gateway end-to-end.
+    Self-host a WebRTC-capable Gateway end-to-end.
   </Card>
   <Card title="Production Hardening" icon="shield" href="/v2/developers/guides/production-hardening-checklist">
     Auth, rate limits, geographic distribution, observability.

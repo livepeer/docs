@@ -39,7 +39,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 By the end of this tutorial you'll have a deployable Next.js 15 application that takes a text prompt, calls the Livepeer AI network through a server action, and displays the generated image alongside a history of past generations. The path uses Next.js 15's App Router and server actions, the `@livepeer/ai` TypeScript SDK, and the free Cloud Community Gateway from the <LinkArrow href="/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart" label="AI Jobs Direct Quickstart" newline={false} />.
 
-This is the Persona 1 builder activation moment: the AI Jobs Quickstart proved the API call works; this tutorial proves it ships. Replace the community gateway with a paid one when you deploy to users.
+This is the Persona 1 builder activation moment: the AI Jobs Quickstart proved the API call works; this tutorial proves it ships. Replace the community Gateway with a paid one when you deploy to users.
 
 <CustomDivider />
 
@@ -49,7 +49,7 @@ This is the Persona 1 builder activation moment: the AI Jobs Quickstart proved t
 - `npm`, `pnpm`, or `yarn`
 - A code editor
 
-No API key needed for development. The community gateway accepts unauthenticated POSTs for experimentation; production deployments use a paid gateway with a Bearer token.
+No API key needed for development. The community Gateway accepts unauthenticated POSTs for experimentation; production deployments use a paid Gateway with a Bearer token.
 
 <CustomDivider />
 
@@ -85,7 +85,7 @@ No API key needed for development. The community gateway accepts unauthenticated
     LIVEPEER_GATEWAY_URL=https://dream-gateway.livepeer.cloud
     ```
 
-    The community gateway is fine for development. For production, swap to a paid gateway URL and add `LIVEPEER_API_KEY` for Bearer authentication.
+    The community Gateway is fine for development. For production, swap to a paid Gateway URL and add `LIVEPEER_API_KEY` for Bearer authentication.
   </Step>
 </Steps>
 
@@ -93,7 +93,7 @@ No API key needed for development. The community gateway accepts unauthenticated
 
 ## Server Action
 
-The server action runs server-side, which means the gateway call happens on your Next.js host instead of the browser. This keeps any future API key out of client-side bundles and centralises retry logic.
+The server action runs server-side, which means the Gateway call happens on your Next.js host instead of the browser. This keeps any future API key out of client-side bundles and centralises retry logic.
 
 <Steps>
   <Step title="Create the action file">
@@ -162,7 +162,7 @@ The server action runs server-side, which means the gateway call happens on your
   </Step>
 </Steps>
 
-The action validates the prompt, calls the gateway, and returns a typed result. Validation runs server-side, which means client-side bypass isn't possible.
+The action validates the prompt, calls the Gateway, and returns a typed result. Validation runs server-side, which means client-side bypass isn't possible.
 
 <CustomDivider />
 
@@ -277,9 +277,9 @@ export function Gallery({ items }: { items: GenerationResult[] }) {
 }
 ```
 
-`unoptimized` on the `<Image>` component skips Next.js's image optimisation, which is necessary because the gateway returns URLs Next.js can't proxy through its own `_next/image` endpoint without remote-pattern configuration.
+`unoptimized` on the `<Image>` component skips Next.js's image optimisation, which is necessary because the Gateway returns URLs Next.js can't proxy through its own `_next/image` endpoint without remote-pattern configuration.
 
-To allow Next.js optimisation instead, add the gateway host to `next.config.ts`:
+To allow Next.js optimisation instead, add the Gateway host to `next.config.ts`:
 
 ```ts
 import type { NextConfig } from 'next';
@@ -339,15 +339,15 @@ Open `http://localhost:3000`. Type a prompt, click **Generate**, and the gallery
 
 ## Production Considerations
 
-The community gateway is shaped for experimentation. Production deployments need four changes.
+The community Gateway is shaped for experimentation. Production deployments need four changes.
 
-**One. Switch to a paid gateway.** Set `LIVEPEER_GATEWAY_URL` to a paid gateway endpoint and add `LIVEPEER_API_KEY` to the environment. Update the SDK initialisation to pass the key in the auth header.
+**One. Switch to a paid Gateway.** Set `LIVEPEER_GATEWAY_URL` to a paid Gateway endpoint and add `LIVEPEER_API_KEY` to the environment. Update the SDK initialisation to pass the key in the auth header.
 
 **Two. Rate-limit per user.** Server actions run on your Next.js host; a malicious client can submit the form in a tight loop. Add a per-IP or per-session limit using a Redis backend or a serverless rate-limit library.
 
 **Three. Cache and persist.** Generation costs money. Cache results by `(prompt, modelId, seed)` and persist gallery state in a database so users keep their history across sessions.
 
-**Four. Move large images out of the response path.** The gateway returns a hosted URL; download and rehost on your own CDN for control over availability and retention.
+**Four. Move large images out of the response path.** The Gateway returns a hosted URL; download and rehost on your own CDN for control over availability and retention.
 
 Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
 
@@ -360,10 +360,10 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
     The package needs Node 20 or later for the `fetch` polyfill it relies on. Confirm `node --version` and upgrade if needed.
   </Accordion>
   <Accordion title="`Gateway call failed: No orchestrator available`">
-    No orchestrator on the network has capacity for the requested model right now. Retry, or fall back to the other warm model from the `MODELS` array.
+    No Orchestrator on the network has capacity for the requested model right now. Retry, or fall back to the other warm model from the `MODELS` array.
   </Accordion>
   <Accordion title="Image renders broken in the gallery">
-    Either `unoptimized` is missing from `<Image>`, or the gateway host is missing from `next.config.ts` `remotePatterns`. Pick one path.
+    Either `unoptimized` is missing from `<Image>`, or the Gateway host is missing from `next.config.ts` `remotePatterns`. Pick one path.
   </Accordion>
   <Accordion title="Server action returns 405 in production">
     Server actions need a runtime that supports them. Vercel, Cloudflare, and Node servers all work; static-only hosts (GitHub Pages, plain S3) don't. Deploy to a runtime host.

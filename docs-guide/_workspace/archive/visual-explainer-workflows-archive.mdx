@@ -21,9 +21,9 @@ keywords:
 'og:image:height': 630
 ---
 
-# Visual Explainer – Livepeer docs-v2 Implementation Guide
+# Visual Explainer — Livepeer docs-v2 Implementation Guide
 
-> **What this is:** A practical guide to implementing [nicobailon/visual-explainer](https://github.com/nicobailon/visual-explainer) as a developer/maintainer tooling layer for the `livepeer/docs` `docs-v2` branch. This is not a content authoring tool – it operates alongside the docs, not inside Mintlify.
+> **What this is:** A practical guide to implementing [nicobailon/visual-explainer](https://github.com/nicobailon/visual-explainer) as a developer/maintainer tooling layer for the `livepeer/docs` `docs-v2` branch. This is not a content authoring tool — it operates alongside the docs, not inside Mintlify.
 
 ---
 
@@ -40,7 +40,7 @@ This workflow is currently an **optional, maintainer-focused pilot**.
 
 ## Understanding the Boundary
 
-Visual-explainer outputs **standalone HTML files** to `~/.agent/diagrams/`. It is a **Claude Code skill** – it runs in your terminal workflow, not inside Mintlify. This means:
+Visual-explainer outputs **standalone HTML files** to `~/.agent/diagrams/`. It is a **Claude Code skill** — it runs in your terminal workflow, not inside Mintlify. This means:
 
 - It does **not** replace Mermaid diagrams already rendering correctly in MDX pages
 - It does **not** write to the repo directly
@@ -65,7 +65,7 @@ That's it. No restart required. Claude Code reads the `SKILL.md` on each session
 
 **What it does:** Cross-references every claim in a plan document against the actual codebase. Produces a current vs. planned architecture diagram and flags risks and gaps.
 
-**Why it matters here:** The `livepeeraifirstdocsplan.pdf` is a concrete implementation plan with sprint deliverables. Running `/plan-review` against `docs-v2` gives you a machine-verified gap analysis – which items are landed, which are still outstanding, and where the delta lives in the file system.
+**Why it matters here:** The `livepeeraifirstdocsplan.pdf` is a concrete implementation plan with sprint deliverables. Running `/plan-review` against `docs-v2` gives you a machine-verified gap analysis — which items are landed, which are still outstanding, and where the delta lives in the file system.
 
 **How to run it:**
 
@@ -89,7 +89,7 @@ git checkout docs-v2
 
 ## Priority 2: `/diff-review` on docs-v2 PRs
 
-**What it does:** Generates a full visual review page for any git diff – before/after architecture diagrams, KPI dashboard, structured code review (Good/Bad/Ugly), and a decision log with confidence indicators.
+**What it does:** Generates a full visual review page for any git diff — before/after architecture diagrams, KPI dashboard, structured code review (Good/Bad/Ugly), and a decision log with confidence indicators.
 
 **Why it matters here:** The docs-v2 branch has deep history and broad surface area. PRs touching `docs.json` (navigation structure), `snippets/components/` (component system), or `.github/workflows/` (CI) are structurally complex and hard to reason about in GitHub's flat diff view.
 
@@ -124,12 +124,12 @@ git checkout docs-v2
 
 ## Priority 3: Architecture Diagrams for Commented-Out Mermaid
 
-**What it does:** Generates a full-page, zoom/pan-enabled, dark/light themed diagram using ELK layout – significantly more capable than Mintlify's inline Mermaid renderer.
+**What it does:** Generates a full-page, zoom/pan-enabled, dark/light themed diagram using ELK layout — significantly more capable than Mintlify's inline Mermaid renderer.
 
 **Why it matters here:** Two substantial architecture diagrams are **commented out** in the existing MDX files, almost certainly because they were too complex to render cleanly in-page:
 
-- `v2/gateways/resources/technical/technical-architecture.mdx` – Marketplace Interaction Model (commented out)
-- `v2/gateways/resources/technical/technical-architecture.mdx` – BYOC Container Architecture (commented out)
+- `v2/gateways/resources/technical/technical-architecture.mdx` — Marketplace Interaction Model (commented out)
+- `v2/gateways/resources/technical/technical-architecture.mdx` — BYOC Container Architecture (commented out)
 
 These are exactly the diagrams that orchestrator and gateway operator audiences need most.
 
@@ -165,7 +165,7 @@ Or embed as an iframe if Mintlify supports it in your configuration.
 
 **What it does:** Takes any document that makes claims about code and verifies every claim against the actual codebase. Produces a verification log as a visual HTML page.
 
-**Why it matters here:** The RFP delivery report and retrospective make specific claims about what was built – script/test coverage, component library work, GitHub Actions workflows, CLI tools, AI-first tooling. `/fact-check` produces a machine-verified evidence log.
+**Why it matters here:** The RFP delivery report and retrospective make specific claims about what was built — script/test coverage, component library work, GitHub Actions workflows, CLI tools, AI-first tooling. `/fact-check` produces a machine-verified evidence log.
 
 **How to run it:**
 
@@ -189,7 +189,7 @@ Or embed as an iframe if Mintlify supports it in your configuration.
 
 ## Priority 5: `/project-recap` for Contributor Onboarding
 
-**What it does:** Scans recent git activity and produces an architecture snapshot, decision log, and cognitive debt hotspots – a mental model of the current project state.
+**What it does:** Scans recent git activity and produces an architecture snapshot, decision log, and cognitive debt hotspots — a mental model of the current project state.
 
 **Why it matters here:** The repo has multiple maintainers/contributors and `docs-guide/` as the canonical navigation source of truth. `/project-recap` produces a single visual page that helps reduce orientation time.
 
@@ -205,7 +205,7 @@ cd ~/path/to/livepeer/docs
 - Which areas of the repo have the most recent churn (for example `v2/developers/` and adjacent docs sections)
 - The test suite structure across `tests/` and `.github/workflows/`
 - The automation pipeline map
-- Cognitive debt hotspots – files with high change frequency and high complexity
+- Cognitive debt hotspots — files with high change frequency and high complexity
 
 **How to integrate:**
 
@@ -231,7 +231,7 @@ Regenerate before major handovers or when onboarding new maintainers.
 
 **What it does:** Visual-explainer's HTML table renderer with KPI badges produces significantly more scannable comparison tables than MDX table syntax.
 
-**The specific table worth generating:** A persona-to-entrypoint routing matrix – the implicit routing logic that lives in `docs.json` and the persona portal pages, surfaced as a single visual reference.
+**The specific table worth generating:** A persona-to-entrypoint routing matrix — the implicit routing logic that lives in `docs.json` and the persona portal pages, surfaced as a single visual reference.
 
 **Ask Claude Code:**
 
@@ -251,7 +251,7 @@ Regenerate before major handovers or when onboarding new maintainers.
 | Context | Why to Skip It |
 |---|---|
 | MDX content pages (end-user docs) | Not Mintlify-native; breaks inline reading experience; Mermaid already renders for these |
-| `ai-tools/` directory (llms.txt, docs-index.json, JSON-LD) | Machine-readable formats; visual-explainer produces human-readable HTML – no overlap |
+| `ai-tools/` directory (llms.txt, docs-index.json, JSON-LD) | Machine-readable formats; visual-explainer produces human-readable HTML — no overlap |
 | Test suite output | `lpd` CLI and GitHub Actions CI already provide structured output in the right channels |
 | Automated CI pipeline | Visual-explainer is interactive/agent-driven, not a headless script runner |
 
@@ -329,7 +329,7 @@ Outputs should remain out-of-repo and follow the naming convention in this guide
 
 | File | Relevance to Visual Explainer Use |
 |---|---|
-| `docs.json` | Navigation structure – primary target for `/diff-review` on nav PRs |
+| `docs.json` | Navigation structure — primary target for `/diff-review` on nav PRs |
 | `v2/gateways/resources/technical/technical-architecture.mdx` | Contains commented-out BYOC and Marketplace diagrams to rescue |
 | `v2/gateways/about/architecture.mdx` | English gateway architecture page with diagrams that may benefit from full-page outputs |
 | `tools/scripts/` | Target for `/fact-check` script claim verification |

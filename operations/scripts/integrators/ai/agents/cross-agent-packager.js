@@ -2,19 +2,21 @@
 /**
  * @script      cross-agent-packager
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       agents
- * @purpose     
- * @description Cross-agent packager — bundles audit reports and repo state into agent-consumable packages
+ * @purpose     Bundle audit reports + repo state + skill manifest into an agent-pack consumable by any supported AI agent (claude, codex, cursor, windsurf) so each agent gets equivalent context and skills regardless of host platform
+ * @description Reads the canonical skills catalog and execution manifest from ai-tools/ai-skills/, the latest audit reports from workspace/reports/, and the per-agent target rules. Produces a per-agent pack under ai-tools/agent-packs/{agent}/ (e.g. claude/CLAUDE.md, codex/skills-manifest.json, cursor/rules.md). Called by repo-audit-orchestrator.js when --agent-pack is set.
  * @mode        integrate
- * @pipeline    manual — not yet in pipeline
- * @scope       operations/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs
- * @usage       node operations/scripts/integrators/ai/agents/cross-agent-packager.js [flags]
+ * @pipeline    manual via repo-audit-orchestrator — produces agent-portable packs after audit runs
+ * @scope       operations/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs/
+ * @usage       node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack <name> --output-dir ai-tools/agent-packs
+ * @policy      Agent-portability standard (every supported agent gets equivalent context)
  */
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const STAGE_ID = 'cross-agent-packager';
 const REPO_ROOT = process.cwd();
@@ -169,7 +171,7 @@ function writeCodexPack(baseDirAbs, pipelineSkills, referenceSkills, catalog, ma
   };
 
   const manifestPath = path.join(packDir, 'skills-manifest.json');
-  if (DRY_RUN) { console.log('[dry-run] Would write:', manifestPath); } else { fs.writeFileSync(manifestPath, `${JSON.stringify(payload, null, 2); }}\n`);
+  if (DRY_RUN) { console.log('[dry-run] Would write:', manifestPath); } else { atomicWrite(manifestPath, `${JSON.stringify(payload, null, 2); }}\n`);
 
   return [toPosix(path.relative(REPO_ROOT, manifestPath))];
 }
@@ -239,7 +241,7 @@ function writeCursorPack(baseDirAbs, pipelineSkills, referenceSkills) {
   ensureDir(packDir);
 
   const rulesPath = path.join(packDir, 'rules.md');
-  if (DRY_RUN) { console.log('[dry-run] Would write:', rulesPath); } else { fs.writeFileSync(rulesPath, buildRulePackMarkdown('Cursor', pipelineSkills, referenceSkills); });
+  if (DRY_RUN) { console.log('[dry-run] Would write:', rulesPath); } else { atomicWrite(rulesPath, buildRulePackMarkdown('Cursor', pipelineSkills, referenceSkills); });
 
   return [toPosix(path.relative(REPO_ROOT, rulesPath))];
 }
@@ -249,7 +251,7 @@ function writeClaudePack(baseDirAbs, pipelineSkills, referenceSkills) {
   ensureDir(packDir);
 
   const claudePath = path.join(packDir, 'CLAUDE.md');
-  if (DRY_RUN) { console.log('[dry-run] Would write:', claudePath); } else { fs.writeFileSync(claudePath, buildRulePackMarkdown('Claude Code', pipelineSkills, referenceSkills); });
+  if (DRY_RUN) { console.log('[dry-run] Would write:', claudePath); } else { atomicWrite(claudePath, buildRulePackMarkdown('Claude Code', pipelineSkills, referenceSkills); });
 
   return [toPosix(path.relative(REPO_ROOT, claudePath))];
 }
@@ -259,7 +261,7 @@ function writeWindsurfPack(baseDirAbs, pipelineSkills, referenceSkills) {
   ensureDir(packDir);
 
   const rulesPath = path.join(packDir, 'rules.md');
-  if (DRY_RUN) { console.log('[dry-run] Would write:', rulesPath); } else { fs.writeFileSync(rulesPath, buildRulePackMarkdown('Windsurf', pipelineSkills, referenceSkills); });
+  if (DRY_RUN) { console.log('[dry-run] Would write:', rulesPath); } else { atomicWrite(rulesPath, buildRulePackMarkdown('Windsurf', pipelineSkills, referenceSkills); });
 
   return [toPosix(path.relative(REPO_ROOT, rulesPath))];
 }
@@ -290,7 +292,7 @@ function main() {
   }
 
   const readmePath = path.join(outputDirAbs, 'README.md');
-  if (DRY_RUN) { console.log('[dry-run] Would write:', readmePath); } else { fs.writeFileSync(readmePath, buildTopReadme(pipelineSkills); });
+  if (DRY_RUN) { console.log('[dry-run] Would write:', readmePath); } else { atomicWrite(readmePath, buildTopReadme(pipelineSkills); });
   generated.push(toPosix(path.relative(REPO_ROOT, readmePath)));
 
   console.log(`✅ ${STAGE_ID} generated ${generated.length} file(s):`);

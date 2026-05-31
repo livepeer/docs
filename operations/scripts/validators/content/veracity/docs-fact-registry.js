@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
  * @description Docs fact registry validator — validates repo-native research claim registries and provides normalized claim-family data for the manual research runner.
  * @mode        check
  * @pipeline    manual — experimental research system
@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_REGISTRY = 'workspace/research/claims';
 const VALID_STATUSES = new Set([
@@ -440,7 +441,7 @@ function buildReport(registries, domain) {
 
 function writeJson(absPath, value) {
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function run(args) {

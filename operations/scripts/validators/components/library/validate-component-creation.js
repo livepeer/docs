@@ -2,21 +2,21 @@
 /**
  * @script      validate-component-creation
  * @type        validator
- * @concern     components
- * @niche       library
- * @purpose     governance:quality-gate
- * @description Validates new/modified .jsx files in snippets/components/ for 7-tag JSDoc presence,
- *              PascalCase naming, and folder placement. Self-remediates missing tags where inferable.
- *              Blocks commit only on non-remediable violations. --verify re-checks after --fix.
- * @mode        read-write
- * @pipeline    pre-commit, pr-workflow -> snippets/components/ -> exit-code, stdout:violations
- * @scope       snippets/components/
+ * @concern     maintenance
+ * @niche       component-registry
+ * @purpose     Gate every new/modified .jsx file in snippets/components/ at pre-commit and PR time — enforces the 7-tag JSDoc, PascalCase name, correct folder placement (must be under a known grouping), self-remediates missing tags where inferable, blocks commit only on non-remediable violations
+ * @description Write-time governance for component creation (layer-2 of D-GOV-08 chain). Reads each staged .jsx under snippets/components/, parses or infers the 7-tag JSDoc (script/type/concern/niche/purpose/description/usage), checks naming + folder convention, applies --fix where unambiguous, --verify re-runs the check after fix. Used by repair-component-metadata.js as the gating step.
+ * @mode        check
+ * @pipeline    P1 (pre-commit), P3 (PR via dispatch-component-registry indirectly)
+ * @scope       snippets/components/*.jsx
  * @usage       node operations/scripts/validators/components/library/validate-component-creation.js [--check] [--fix] [--fix --verify] [--dry-run] [--staged] [--files path,path]
+ * @policy      D-GOV-08 (write-time component governance)
  * @policy      R-R10
  */
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   REPO_ROOT,
   VALID_CATEGORIES,
@@ -387,7 +387,7 @@ function runValidation(files, mode) {
 
       if (result.fixedContent !== null && mode === 'fix') {
         try {
-          fs.writeFileSync(absolutePath, result.fixedContent, 'utf8');
+          atomicWrite(absolutePath, result.fixedContent, 'utf8');
           filesRemediated++;
           modifiedFiles.push({ absolutePath, displayPath });
           console.log(`  ${GREEN}✓ File updated${RESET}`);
@@ -477,7 +477,7 @@ function main() {
         const original = originals.get(absolutePath);
         if (original !== undefined) {
           try {
-            fs.writeFileSync(absolutePath, original, 'utf8');
+            atomicWrite(absolutePath, original, 'utf8');
             revertCount++;
           } catch (err) {
             console.error(`${RED}Failed to revert ${absolutePath}: ${err.message}${RESET}`);

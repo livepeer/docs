@@ -3,18 +3,19 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches GitHub Releases for configured solutions and writes per-solution release data modules under snippets/data/social-feed-solutions/.
+ * @purpose     Fetch GitHub Releases per Livepeer solution repo and emit per-solution JSX modules — supplies the "Latest releases" feed on each product's overview page (note: distinct from dispatch-changelogs which writes long-form changelog MDX pages)
+ * @description Reads solution → repo mapping from config, hits GitHub REST API for the Releases endpoint, transforms entries (tag, title, body excerpt, author, published date, prerelease flag) into JSX exports. Writes per-solution outputs to snippets/data/social-feed-solutions/{product}/githubReleasesData.jsx. Requires GITHUB_TOKEN.
  * @mode        integrate
- * @pipeline    config → GitHub REST API → snippets/data/social-feed-solutions/{product}/githubReleasesData.jsx
- * @scope       .github/scripts, snippets/data/social-feed-solutions/
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       GitHub REST API (read-only) → snippets/data/social-feed-solutions/{product}/
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness); public repos only; no secrets in output
  */
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -128,7 +129,7 @@ async function main() {
         console.log(jsx);
       } else {
         fs.mkdirSync(outDir, { recursive: true });
-        fs.writeFileSync(outPath, jsx);
+        atomicWrite(outPath, jsx);
         console.log(`  Written to ${outPath}`);
       }
     } catch (err) {

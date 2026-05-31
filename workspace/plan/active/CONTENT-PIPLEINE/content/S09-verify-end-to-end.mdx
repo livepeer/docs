@@ -29,7 +29,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Ste
 
 Setup and configuration are complete. This page confirms the node is visible to the network and receiving work through the full routing path.
 
-<CustomDivider middleText="Discoverability Checks" />
+<CustomDivider />
 
 ## Active set membership (video and dual mode)
 
@@ -89,7 +89,7 @@ If your pipelines are missing from the registry after five minutes, check these 
 2. `aiModels.json` has invalid syntax — validate with `jq . < aiModels.json`
 3. Model download still in progress — check logs for download progress messages
 
-<CustomDivider middleText="Pricing Checks" />
+<CustomDivider />
 
 ## Confirm pricing is within gateway thresholds
 
@@ -103,7 +103,7 @@ Compare your price against the current distribution on [Livepeer Explorer](https
 
 For AI pipelines, check per-pipeline pricing in your `aiModels.json` against market rates shown on [tools.livepeer.cloud](https://tools.livepeer.cloud).
 
-<CustomDivider middleText="Connectivity Checks" />
+<CustomDivider />
 
 ## Service URI reachability
 
@@ -125,7 +125,7 @@ curl -s http://localhost:7935/status | python3 -m json.tool
 
 Expected: a JSON response showing `nodeType`, `version`, ETH account address, and ETH balance.
 
-<CustomDivider middleText="Performance and Rewards" />
+<CustomDivider />
 
 ## Performance score
 
@@ -162,7 +162,7 @@ grep -i "calling reward\|reward call" /var/log/livepeer/livepeer.log | tail -5
 
 Missing reward calls after a round usually indicate one of three causes: the node was offline during round initialisation, the Arbitrum ETH balance is too low for gas, or `-reward=false` is set in the startup command.
 
-<CustomDivider middleText="First Job Confirmation" />
+<CustomDivider />
 
 ## Confirm first job received
 
@@ -188,7 +188,7 @@ grep -i "RunAI request\|pipeline=" /var/log/livepeer/livepeer.log | tail -10
   If no jobs arrive within 48 hours despite passing all checks above, the most common cause is port 8935 not reachable from the internet. Re-test from an external machine. The second cause is price above gateway caps — compare your price against active orchestrators on the Explorer. Third: for video, confirm you are in the active set; for AI, confirm your capabilities appear on tools.livepeer.cloud.
 </Warning>
 
-<CustomDivider middleText="Verification Checklist" />
+<CustomDivider />
 
 ## Quick-reference checklist
 

@@ -2,7 +2,7 @@
 title: Repo Config Map
 sidebarTitle: Config Map
 description: >-
-  Reference map of all key configuration files in the repository – root configs,
+  Reference map of all key configuration files in the repository — root configs,
   script configs, and environment variable sources.
 keywords:
   - livepeer
@@ -17,17 +17,18 @@ keywords:
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-audience: internal
+audience: developer
 pageType: reference
 purpose: reference
 lastVerified: 2026-03-21
+status: current
 ---
 
 # Repo Config Map
 
 > Canonical reference of all configuration files that govern repo behaviour, routing, pipeline scripts, and environment setup.
 
----
+<CustomDivider />
 
 ## Root Config Files
 
@@ -44,7 +45,7 @@ These files live at the repo root and are read by Mintlify, the pre-commit hook,
 
 Live governed root inventory is generated at [`docs-guide/repo-ops/config/root-governance-map.mdx`](/docs-guide/repo-ops/config/root-governance-map). Do not duplicate the full root inventory in manual docs.
 
----
+<CustomDivider />
 
 ## operations/governance/config/
 
@@ -52,7 +53,7 @@ Top-level governance control-plane manifests live here in the ownerless steady s
 
 ### repo-governance-surfaces.json
 
-```
+``` icon="terminal"
 operations/governance/config/repo-governance-surfaces.json
 ```
 
@@ -81,7 +82,7 @@ Live top-level governance state is generated at [`docs-guide/repo-ops/config/rep
 
 ### governance-approval-policy.json
 
-```
+``` icon="terminal"
 operations/governance/config/governance-approval-policy.json
 ```
 
@@ -100,7 +101,7 @@ operations/governance/config/governance-approval-policy.json
 
 ### root-governance.json
 
-```
+``` icon="terminal"
 operations/governance/config/root-governance.json
 ```
 
@@ -110,7 +111,7 @@ operations/governance/config/root-governance.json
 
 ### generated-artifacts.json
 
-```
+``` icon="terminal"
 operations/governance/config/generated-artifacts.json
 ```
 
@@ -120,7 +121,7 @@ operations/governance/config/generated-artifacts.json
 
 ### agent-write-governance.json
 
-```
+``` icon="terminal"
 operations/governance/config/agent-write-governance.json
 ```
 
@@ -130,7 +131,7 @@ operations/governance/config/agent-write-governance.json
 
 ### ownerless-governance-surfaces.json
 
-```
+``` icon="terminal"
 operations/governance/config/ownerless-governance-surfaces.json
 ```
 
@@ -138,7 +139,7 @@ operations/governance/config/ownerless-governance-surfaces.json
 
 **Read by:** ownerless-governance policy/tests, repo-governance sync validation, PR checks, and adjacent governance consumers such as AI-tools registry relevance checks.
 
----
+<CustomDivider />
 
 ## operations/config/
 
@@ -159,7 +160,7 @@ Current canonical runtime-config surfaces:
 
 `operations/config/**` is the canonical runtime-config home. Active runtime reads must target canonical operations config paths only.
 
----
+<CustomDivider />
 
 ## .github/workspace/
 
@@ -198,7 +199,7 @@ The only repo-ops governance reports treated as live/current are:
 - `workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.md`
 - `workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md`
 
----
+<CustomDivider />
 
 ## operations/scripts/config/
 
@@ -206,7 +207,7 @@ Centralised configuration for fetch scripts, generators, and validators. All fil
 
 ### paths.config.json
 
-```
+``` icon="terminal"
 operations/scripts/config/paths.config.json
 ```
 
@@ -228,11 +229,11 @@ operations/scripts/config/paths.config.json
 
 **When to update:** When repo directories are renamed or new canonical paths need to be registered for script use.
 
----
+<CustomDivider />
 
 ### product-social-config.json
 
-```
+``` icon="terminal"
 operations/scripts/config/product-social-config.json
 ```
 
@@ -254,7 +255,7 @@ operations/scripts/config/product-social-config.json
 
 **When to update:** When a product gains/loses a social channel, changes its Discord server, or switches blog platforms. Scripts skip products where the relevant field is `null`.
 
----
+<CustomDivider />
 
 ## CI Workflow Trigger Files
 
@@ -266,15 +267,15 @@ These are not config files themselves but are the source inputs that trigger CI 
 | `v2/index.mdx` | `generate-docs-guide-catalogs.yml`, `generate-docs-index.yml` |
 | `.github/workflows/**` | `generate-docs-guide-catalogs.yml` (workflows catalog) |
 | `.github/ISSUE_TEMPLATE/**` | `generate-docs-guide-catalogs.yml` (templates catalog) |
-| `operations/scripts/config/product-social-config.json` | No auto-trigger – must manually run social data fetch workflows via workflow dispatch |
+| `operations/scripts/config/product-social-config.json` | No auto-trigger — must manually run social data fetch workflows via workflow dispatch |
 
----
+<CustomDivider />
 
 ## Environment Variables
 
 Runtime secrets and variables are documented in `docs-guide/repo-ops/config/.env.example`.
 
-For secrets required by the solutions social data pipeline specifically, see [Solutions Secrets](solutions-secrets).
+For secrets required by the solutions social data pipeline specifically, see [Solutions Secrets](../secrets/solutions-secrets).
 
 | Variable | Used in | Notes |
 |----------|---------|-------|
@@ -284,11 +285,11 @@ For secrets required by the solutions social data pipeline specifically, see [So
 | `DOCS_V2` | Ghost blog + forum workflows | PAT with `repo` scope; needed for auto-commit cross-workflow triggers |
 | `GITHUB_TOKEN` | `fetch-github-discussions.js`, `fetch-github-releases.js` | Auto-provided by GitHub Actions |
 
----
+<CustomDivider />
 
 ## Related
 
-- [Solutions Secrets](solutions-secrets) – GitHub Actions secrets required by the social data pipeline
-- [Enforcement Map](enforcement-map) – pre-commit gates, CI gates, and validators
-- `docs-guide/features/data-integrations.mdx` – broader data integrations map
-- `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/plan.md` – solutions pipeline implementation plan
+- [Solutions Secrets](../secrets/solutions-secrets) — GitHub Actions secrets required by the social data pipeline
+- [Enforcement Map](../maps/enforcement-map) — pre-commit gates, CI gates, and validators
+- `docs-guide/features/data-integrations.mdx` — broader data integrations map
+- `workspace/plan/active/SOLUTIONS-SOCIAL-DATA/plan.md` — solutions pipeline implementation plan

@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     governance
  * @niche       reports
- * @purpose     
+ * @purpose     Audit inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
  * @description V2 folder governance cleanup matrix generator — inventories non-publishable and legacy v2 artifacts and emits human-review markdown/json recommendations before any moves are applied.
  * @mode        scan
  * @pipeline    manual
@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { isExcludedV2ExperimentalPath } = require('../../../../../tools/lib/docs/docs-publishability');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_REPORT_MD = 'workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.md';
 const DEFAULT_REPORT_JSON = 'workspace/reports/repo-ops/v2-folder-governance-cleanup-matrix.json';
@@ -112,13 +113,13 @@ function readJson(repoPath, fallbackValue) {
 function writeJson(repoPath, payload) {
   const absPath = path.join(REPO_ROOT, repoPath);
   ensureDir(path.dirname(absPath));
-  fs.writeFileSync(absPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+  atomicWrite(absPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
 }
 
 function writeText(repoPath, content) {
   const absPath = path.join(REPO_ROOT, repoPath);
   ensureDir(path.dirname(absPath));
-  fs.writeFileSync(absPath, content, 'utf8');
+  atomicWrite(absPath, content, 'utf8');
 }
 
 function usage() {

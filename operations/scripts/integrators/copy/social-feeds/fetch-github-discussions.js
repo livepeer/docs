@@ -3,18 +3,19 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches GitHub Discussions for configured solutions and writes per-solution discussion data modules under snippets/data/social-feed-solutions/.
+ * @purpose     Fetch GitHub Discussions per Livepeer solution repo (daydream, embody, streamplace, etc.) and emit per-solution JSX modules used to render Community / Q&A feeds on the product pages
+ * @description Reads solution → repo mapping from config, hits GitHub GraphQL API for the Discussions feed, transforms entries (title, body excerpt, author, category, replies, upvotes) into JSX exports. Writes per-solution outputs to snippets/data/social-feed-solutions/{product}/githubDiscussionsData.jsx. Requires GITHUB_TOKEN (anonymous works for public repos but is rate-limited).
  * @mode        integrate
- * @pipeline    config → GitHub GraphQL API → snippets/data/social-feed-solutions/{product}/githubDiscussionsData.jsx
- * @scope       .github/scripts, snippets/data/social-feed-solutions/
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       GitHub GraphQL API (read-only) → snippets/data/social-feed-solutions/{product}/
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness); public repos only; no secrets in output
  */
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -165,7 +166,7 @@ async function main() {
         console.log(jsx);
       } else {
         fs.mkdirSync(outDir, { recursive: true });
-        fs.writeFileSync(outPath, jsx);
+        atomicWrite(outPath, jsx);
         console.log(`  Written to ${outPath}`);
       }
     } catch (err) {

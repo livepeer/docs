@@ -143,17 +143,3 @@ export const gatewayConfigurationFlagSections = [
     ]
   }
 ];
-
-export const gatewayConfigurationFlagRows = gatewayConfigurationFlagSections.flatMap(
-  ({ title, rows }) => [
-    {
-      Flag: title,
-      __separator: true,
-    },
-    ...rows.map((row) => ({
-      Flag: row.flag,
-      Type: row.type,
-      Description: row.description,
-    })),
-  ]
-);

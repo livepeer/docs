@@ -38,20 +38,20 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
 import { FlexContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
-<FlexContainer justify="center" style={{padding: 0, margin: 0}}>
+<FlexContainer justify="center" padding="0" margin="0">
   <CardTitleTextWithArrow icon="github" horizontal href="https://github.com/livepeer/protocol"> Livepeer Protocol </CardTitleTextWithArrow>
 </FlexContainer>
 <CustomDivider style={{margin: 0, marginBottom: "-1rem"}} />
 
 <Quote>
-The Livepeer protocol is a layered system. Smart contracts on Arbitrum One handle staking, payments, and coordination. Off-chain protocols handle job negotiation and per-segment payment. Node software runs the actual media and AI compute work. Each layer has a defined role, and the boundaries between them are what make the network scalable and verifiable.
+The Livepeer Protocol is a layered system. Smart contracts on Arbitrum One handle staking, payments, and coordination. Off-chain protocols handle job negotiation and per-segment payment. Node software runs the actual media and AI compute work. Each layer has a defined role, and the boundaries between them are what make the network scalable and verifiable.
 </Quote>
 
 <CustomDivider style={{margin: 0, marginBottom: "-2rem"}} />
 
 The protocol is structured so that on-chain contracts coordinate economic security and off-chain components handle high-throughput compute. The blockchain settles state that must be globally agreed upon - stake, payments, governance. Everything else runs off-chain and references the chain only when it has to.
 
-<CustomDivider middleText="Layered Architecture" />
+<CustomDivider />
 
 ## Three Architectural Layers
 
@@ -81,11 +81,11 @@ The protocol stack has three layers, each with a different responsibility and a 
   ]}
 />
 
-<CustomDivider middleText="Blockchain Layer" />
+<CustomDivider />
 
 ## Blockchain Layer
 
-The blockchain layer is the protocol's source of truth for any state that must be globally agreed and economically secured. Smart contracts deployed on Arbitrum One coordinate stake, settle payments, govern parameters, and define the active set of Orchestrators eligible for work.
+The blockchain layer is the protocol's source of truth for any state that must be globally agreed and economically secured. Smart contracts deployed on Arbitrum One coordinate stake, settle payments, govern parameters, and define the Active Set of Orchestrators eligible for work.
 
 The contracts are organised around a central `Controller` that records the deployed address of every other protocol contract. Contracts query the Controller to find each other, which makes upgrades possible without redeploying the entire system.
 
@@ -122,7 +122,7 @@ The LPT token contract is deployed on Ethereum mainnet and bridged to Arbitrum O
 
 For full contract addresses and source links see <LinkArrow href="/v2/about/protocol/blockchain-contracts" label="Blockchain Contracts" newline={false} />.
 
-<CustomDivider middleText="Protocol Layer" />
+<CustomDivider />
 
 ## Protocol Layer
 
@@ -170,7 +170,7 @@ The probabilistic micropayment design is the load-bearing piece. Without it, eve
 
 For the mechanisms in detail see <LinkArrow href="/v2/about/protocol/mechanisms" label="Core Mechanisms" newline={false} />.
 
-<CustomDivider middleText="Node Layer" />
+<CustomDivider />
 
 ## Node Layer
 
@@ -193,7 +193,7 @@ A node started with `-broadcaster` (or `-gateway`) accepts video streams and AI 
     },
     {
       "Node role": "Transcoder",
-      "Started with": "go-livepeer -transcoder -orchAddr <addr>",
+      "Started with": "go-livepeer -transcoder -orchAddr ADDR",
       "Responsibility": "Perform video encoding work for a connected Orchestrator (O-T split configuration)",
     },
     {
@@ -206,7 +206,7 @@ A node started with `-broadcaster` (or `-gateway`) accepts video streams and AI 
 
 The node layer is what interacts with both other layers. Gateways read the on-chain ServiceRegistry to discover Orchestrators, then talk to those Orchestrators directly through the protocol layer. Orchestrators read on-chain stake and bonding state, accept off-chain jobs, redeem winning tickets back on-chain, and call `reward()` once per round to claim inflation.
 
-<CustomDivider middleText="System Interactions" />
+<CustomDivider />
 
 ## How the Layers Interact
 
@@ -218,13 +218,13 @@ Most tickets are losing tickets and never settle. A small fraction win and are r
 
 For the per-job state machine and per-workload pipeline differences see <LinkArrow href="/v2/about/network/job-pipelines" label="Job Pipelines" newline={false} />.
 
-<CustomDivider middleText="Design Principles" />
+<CustomDivider />
 
 ## What This Architecture Buys
 
 The layered design reflects three deliberate tradeoffs.
 
-The blockchain handles only what must be globally agreed: stake, payments at the redemption boundary, governance, and the active set. Everything else is pushed off-chain, which is what makes the per-segment cost low enough to compete with centralised infrastructure.
+The blockchain handles only what must be globally agreed: stake, payments at the redemption boundary, governance, and the Active Set. Everything else is pushed off-chain, which is what makes the per-segment cost low enough to compete with centralised infrastructure.
 
 The protocol layer is the verification surface. Gateways check that returned segments match the input - if they do not, the Gateway stops sending work. Slashing on-chain only intervenes for repeated or provable misbehaviour. Most quality enforcement happens through Gateway selection, which costs the misbehaving Orchestrator future revenue without requiring an on-chain transaction.
 

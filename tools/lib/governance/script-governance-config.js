@@ -110,7 +110,9 @@ const LEGACY_CONCERN_MAP = {
   content: null,       // must be manually mapped to copy/health/maintenance/discoverability/integrations
   components: 'maintenance',
   ai: 'discoverability',
-  governance: 'governance'
+  governance: 'governance',
+  testing: 'governance', // test scripts validate repo invariants — governance concern
+  'dev-tools': 'governance'
 };
 
 // Legacy type values (accepted during transition, mapped to new values)

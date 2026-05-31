@@ -1,21 +1,22 @@
 #!/usr/bin/env node
 /**
  * @script      mintlify-canonical-sync
- * @type        config
- * @concern     
- * @niche       
- * @purpose     
- * @description Shared Mintlify canonical sync library — validates archived-source cleanup, consumer references, and deterministic rewrite plans for the canonical Mintlify governance surface.
+ * @type        integrator
+ * @concern     copy
+ * @niche       canonical-sync
+ * @purpose     Shared library — validate Mintlify archived-source cleanup, list consumer references in v2/ that depend on the canonical Mintlify collation data, produce deterministic rewrite plans when canonical sources change
+ * @description Library imported by check-mintlify-canonical-sync.js (validator) and sync-mintlify-canonical-consumers.js (remediator). Exports listConsumers(), planRewrites(canonicalChanges), validateArchiveState(). Pairs with dispatch-canonical-sync.js as the shared logic layer.
  * @mode        integrate
- * @pipeline    manual -- library module
- * @scope       docs-guide/canonical/collation-data/Mintlify, operations/scripts/validators/governance, operations/scripts/remediators/content/repair
- * @usage       const sync = require('./mintlify-canonical-sync');
- * @policy      R-R14, R-R18
+ * @pipeline    library — imported by the canonical-sync pipeline validator + remediator
+ * @scope       docs-guide/canonical/collation-data/Mintlify/ → v2/ consumers
+ * @usage       const sync = require('operations/scripts/config/mintlify-canonical-sync');
+ * @policy      R-R14, R-R18; D-GOV-08 (single source of truth for canonical-sync logic)
  */
 
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../tools/lib/bootstrap/safe-io');
 
 const REGISTRY_PATH = 'docs-guide/canonical/collation-data/Mintlify/mintlify-canonical-consumers.json';
 const TEXT_EXTENSIONS = new Set([
@@ -128,7 +129,7 @@ function readRepoText(repoRoot, repoPath) {
 }
 
 function writeRepoText(repoRoot, repoPath, text) {
-  fs.writeFileSync(path.join(repoRoot, repoPath), text, 'utf8');
+  atomicWrite(path.join(repoRoot, repoPath), text, 'utf8');
 }
 
 function isTextFile(repoPath) {

@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validates that all JS files in governed locations have core JSDoc tags
  * @description Validates that all JS files in governed locations have core JSDoc tags
  * @mode        check
  * @pipeline    pr-changed -> governed JS files -> exit-code, stdout:violations

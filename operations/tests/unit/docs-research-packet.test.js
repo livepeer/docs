@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            docs-research-packet.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          generator
  * @purpose           tooling:dev-tools
  * @scope             tests/unit, operations/scripts/dispatch/content/veracity/docs-research-packet.js, tools/config/scoped-navigation/docs-gate-work.json

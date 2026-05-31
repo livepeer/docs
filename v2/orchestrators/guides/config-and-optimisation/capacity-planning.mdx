@@ -36,12 +36,12 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <Tip>
-  Set `-maxSessions` to the minimum of your hardware limit and your bandwidth limit. Too low wastes capacity and limits earnings. Too high pushes transcoding behind live segment cadence – segments pile up, gateways log errors, and your reputation score suffers.
+  Set `-maxSessions` to the minimum of your hardware limit and your bandwidth limit. Too low wastes capacity and limits earnings. Too high pushes transcoding behind live segment cadence – segments pile up, Gateways log errors, and your reputation score suffers.
 </Tip>
 
 ---
 
-`-maxSessions` is the ceiling on concurrent transcoding streams your orchestrator accepts. Go-livepeer defaults to 10 sessions. For most hardware, this is either too conservative (leaving GPU capacity unused) or too aggressive (exceeding available bandwidth). The correct value requires measurement.
+`-maxSessions` is the ceiling on concurrent transcoding streams your Orchestrator accepts. Go-livepeer defaults to 10 sessions. For most hardware, this is either too conservative (leaving GPU capacity unused) or too aggressive (exceeding available bandwidth). The correct value requires measurement.
 
 Two constraints determine the session limit independently:
 
@@ -52,7 +52,7 @@ The session limit is `min(hardware_limit, bandwidth_limit)`.
 
 Video transcoding capacity and AI inference capacity use separate limits and separate mechanisms. Video transcoding sessions. AI capacity is configured per pipeline via the `capacity` field in `aiModels.json`.
 
-<CustomDivider middleText="Hardware Limit" />
+<CustomDivider />
 
 ## Measuring hardware capacity
 
@@ -92,7 +92,7 @@ A missing command usually means go-livepeer is installed outside PATH. Add the b
       https://raw.githubusercontent.com/livepeer/go-livepeer/master/cmd/livepeer_bench/transcodingOptions.json
     ```
 
-    This config defines the four standard output renditions (240p, 360p, 480p, 720p). It is the same rendition set most gateways use on the network.
+    This config defines the four standard output renditions (240p, 360p, 480p, 720p). It is the same rendition set most Gateways use on the network.
 
     {/* FACT CHECK: Confirm whether 1080p jobs still appear from some gateways (1080p profile was removed from the benchmark config). Rick to advise whether the benchmark rendition set reflects what operators should plan bandwidth for. */}
 
@@ -194,7 +194,7 @@ For CPU-only setups, omit `-nvidia` from the benchmark command. Start at `-concu
 
 {/* FACT CHECK: v1 docs cite ~5 CPU sessions as a rule of thumb from 2021 hardware. Community to advise current figures for modern CPUs. */}
 
-<CustomDivider middleText="Bandwidth Limit" />
+<CustomDivider />
 
 ## Calculating bandwidth capacity
 
@@ -231,7 +231,7 @@ Every transcoding session consumes upload and download bandwidth. The current st
 
 Use the upload rate as the primary constraint. Residential connections with 100 Mbps download commonly have 20 to 30 Mbps upload, so the upload cap usually dominates.
 
-<CustomDivider middleText="Deriving the Limit" />
+<CustomDivider />
 
 ## Setting maxSessions
 
@@ -275,11 +275,11 @@ livepeer \
     ...
 ```
 
-For a split orchestrator/transcoder setup, set `-maxSessions` on both nodes – the orchestrator uses it to track total capacity; the transcoder uses it to control how many concurrent jobs it accepts.
+For a split Orchestrator/transcoder setup, set `-maxSessions` on both nodes – the Orchestrator uses it to track total capacity; the transcoder uses it to control how many concurrent jobs it accepts.
 
 {/* FACT CHECK: Confirm -maxSessions is still valid on both O and T in the split-node setup. Rick to verify no flag rename in recent go-livepeer releases. */}
 
-<CustomDivider middleText="AI VRAM Budget" />
+<CustomDivider />
 
 ## AI inference and VRAM capacity
 
@@ -340,13 +340,13 @@ VRAM is the binding constraint for AI capacity. A 24 GB GPU holds one large diff
 
 **Video vs AI VRAM:** NVENC and NVDEC use dedicated hardware blocks and consume minimal VRAM for video transcoding. Running video sessions alongside warm AI models on the same GPU is supported, and AI model footprint remains the main VRAM constraint.
 
-<CustomDivider middleText="Tuning Live" />
+<CustomDivider />
 
 ## Tuning after going live
 
 The benchmark estimate is a starting point. Live network conditions add variables the benchmark omits:
 
-- Actual segment sizes and bitrates from gateways vary from the test stream
+- Actual segment sizes and bitrates from Gateways vary from the test stream
 - Upload latency and jitter add overhead beyond raw bandwidth measurements
 - Reward calls and ticket redemptions consume CPU and network intermittently
 
@@ -375,7 +375,7 @@ Monitor these Prometheus metrics after activation:
   </tbody>
 </StyledTable>
 
-After 24 hours of clean operation, increment `-maxSessions` by 1 to 2 and observe. A sudden drop in gateway traffic should send you to the logs first; look for `OrchestratorCapped` errors that show the session ceiling is blocking new jobs.
+After 24 hours of clean operation, increment `-maxSessions` by 1 to 2 and observe. A sudden drop in Gateway traffic should send you to the logs first; look for `OrchestratorCapped` errors that show the session ceiling is blocking new jobs.
 
 {/* FACT CHECK: Confirm `OrchestratorCapped` is still the correct error string in current go-livepeer when MaxSessions is exceeded. Rick to check against current source. */}
 

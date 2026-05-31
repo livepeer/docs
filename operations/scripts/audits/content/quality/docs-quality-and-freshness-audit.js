@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       quality
- * @purpose     
+ * @purpose     Checks for TODO/TBD/Coming Soon markers, thin pages, stale content
  * @description Content freshness audit — checks for TODO/TBD/Coming Soon markers, thin pages, stale content
  * @mode        scan
  * @pipeline    manual
@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const STAGE_ID = 'docs-quality-and-freshness-audit';
 const REPO_ROOT = process.cwd();
@@ -311,8 +312,8 @@ function main() {
   const jsonPath = path.join(outputDirAbs, `${STAGE_ID}.json`);
   const mdPath = path.join(outputDirAbs, `${STAGE_ID}.md`);
 
-  fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
-  fs.writeFileSync(mdPath, buildMarkdown(report));
+  atomicWrite(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
+  atomicWrite(mdPath, buildMarkdown(report));
 
   console.log(`✅ ${STAGE_ID} wrote:`);
   console.log(`- ${toPosix(path.relative(REPO_ROOT, jsonPath))}`);

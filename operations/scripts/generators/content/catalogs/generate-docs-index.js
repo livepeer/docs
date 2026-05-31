@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generate produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
  * @description Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.
  * @mode        generate
  * @pipeline    manual, P3, P6
@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const {
   getRepoRoot,
@@ -297,7 +298,7 @@ function buildDocsIndex({ pages, gitMap, generated }) {
 
 function writeDocsIndex(output) {
   ensureDir(path.dirname(OUTPUT_PATH));
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2) + '\n', 'utf8');
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2) + '\n', 'utf8');
 }
 
 function writeMissingFrontmatterReport({ missingFrontmatter, invalidFrontmatter, missingPages, gitMap }) {
@@ -355,7 +356,7 @@ function writeMissingFrontmatterReport({ missingFrontmatter, invalidFrontmatter,
     lines.push('');
   }
 
-  fs.writeFileSync(REPORT_PATH, lines.join('\n'), 'utf8');
+  atomicWrite(REPORT_PATH, lines.join('\n'), 'utf8');
 }
 
 function backfillFrontmatter({ pages, gitMap }) {
@@ -393,7 +394,7 @@ function backfillFrontmatter({ pages, gitMap }) {
     if (updatedFrontmatter.trim() === String(frontmatter.raw || '').trim()) return;
 
     const updatedContent = `---\n${updatedFrontmatter}\n---\n${frontmatter.body || ''}`;
-    fs.writeFileSync(absPath, updatedContent, 'utf8');
+    atomicWrite(absPath, updatedContent, 'utf8');
     updates.push(resolvedPath);
   });
 

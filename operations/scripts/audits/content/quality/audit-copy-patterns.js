@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       quality
- * @purpose     
+ * @purpose     Audit aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report.
  * @description Aggregate copy pattern violations across a tab or full v2 tree and emit a diagnostic report.
  * @mode        scan
  * @pipeline    manual
@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_OUTPUT_DIR = path.join('workspace', 'reports', 'copy-governance');
 
@@ -256,7 +257,7 @@ function run() {
 
   const outputPath = outputArg || buildDefaultOutputPath(tabArg || null);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, report);
+  atomicWrite(outputPath, report);
   console.log(`Report written to ${outputPath}`);
 }
 

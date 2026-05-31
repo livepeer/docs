@@ -3,17 +3,19 @@
  * @script      generate-ai-sitemap
  * @type        generator
  * @concern     discoverability
- * @niche       seo
- * @purpose     
- * @description AI sitemap generator — produces AI-optimised sitemap files. Dual-mode: --check (enforcer) / --write (generator).
+ * @niche       ai-sitemap
+ * @purpose     Generate the sitemap-ai.xml file at repo root — an AI-crawler-optimised sitemap that lists every v2/ route with priority hints, last-modified, and content-type so AI search engines (Perplexity, ChatGPT browse, Claude search, Phind) can index docs efficiently
+ * @description Reads docs.json navigation tree + per-page frontmatter, emits sitemap-ai.xml at repo root. --check mode validates the committed sitemap-ai.xml matches the regenerated output (exits non-zero on drift). --write mode regenerates. Pairs with dispatch-ai-sitemap.js.
  * @mode        generate
- * @pipeline    manual, P6
- * @scope       operations/scripts, docs.json, v2
- * @usage       node operations/scripts/generators/content/seo/generate-ai-sitemap.js [flags]
+ * @pipeline    P3 (PR drift check), P4 (post-merge regen) via dispatch-ai-sitemap.js
+ * @scope       docs.json, v2/ frontmatter → sitemap-ai.xml (repo root)
+ * @usage       node operations/scripts/generators/content/seo/generate-ai-sitemap.js [--check|--write]
+ * @policy      D-GOV-03 (drift-check via --check)
  */
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   getRepoRoot,
   normalizeRel,
@@ -349,7 +351,7 @@ function main() {
   const outputPath = path.join(REPO_ROOT, OUTPUT_FILE);
 
   if (shouldWrite) {
-    fs.writeFileSync(outputPath, xml, 'utf8');
+    atomicWrite(outputPath, xml, 'utf8');
   }
 
   if (shouldCheck) {

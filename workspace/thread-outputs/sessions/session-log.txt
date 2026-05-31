@@ -1461,3 +1461,154 @@ Total session: 50 v2/*.mdx files modified across both passes.
 Flags raised: 3 — program/programme rule, em-dash script bug, spelling script bug + prop-doc-table case.
 Session started: 2026-05-04 21:53:35
 Session started: 2026-05-04 22:08:07
+Session started: 2026-05-05 10:17:11
+Session started: 2026-05-05 12:28:26
+Session started: 2026-05-06 12:22:52
+Session started: 2026-05-06 13:08:47
+Session started: 2026-05-06 13:32:44
+Session started: 2026-05-06 13:57:53
+Session started: 2026-05-06 14:10:21
+Session started: 2026-05-10 15:16:37
+Session started: 2026-05-11 21:42:09
+Session started: 2026-05-11 22:15:25
+Session started: 2026-05-17 13:34:38
+Session started: 2026-05-17 13:43:13
+Session started: 2026-05-17 13:43:28
+Session started: 2026-05-17 16:22:40
+Session started: 2026-05-17 16:23:01
+Session started: 2026-05-17 16:23:04
+Session started: 2026-05-18 11:35:48
+Session started: 2026-05-18 13:26:48
+Session started: 2026-05-18 13:26:53
+Session started: 2026-05-18 13:31:40
+Session started: 2026-05-18 17:21:20
+--- CHECKPOINT 2026-05-18T11:07:45.763Z [unknown] ---
+(No transcript summary available)
+---
+Session started: 2026-05-18 21:09:38
+Session started: 2026-05-19 09:36:33
+--- CHECKPOINT 2026-05-22T03:32:39.972Z [unknown] ---
+(No transcript summary available)
+---
+Session started: 2026-05-22 13:37:42
+--- CHECKPOINT 2026-05-25T08:41:31.007Z [unknown] ---
+(No transcript summary available)
+---
+Session started: 2026-05-25 18:43:20
+Session started: 2026-05-26 15:31:30
+
+--- 2026-05-26 ~16:00 GMT+10 — Principal Engineer Audit ---
+Thread: Docs-as-Infrastructure Audit (Principal Engineer review)
+Outcome: MET. 5-category audit delivered with exec summary, H/M/L register, top-3 fix recipes.
+Approach: 5 parallel read-only agents (4 Explore + 1 general-purpose for security) briefed with verified repo facts (332 scripts, 11 workflows, 35 skills, 7-type taxonomy, 4-tier Actions architecture). No code edited.
+Findings: 27 weaknesses → 24 cross-cutting items → 4 High / 13 Medium / 7 Low.
+Top 3 High fixes (recipes in report):
+  1. SHA-pin third-party Actions + add gitleaks PR gate (Security 5.1, 5.3)
+  2. Discovery-based meta-dispatch + registry concern validator + all-types catalog assertion (Architecture 1.1, 1.2 + Auto-Doc 2.1)
+  3. Shared atomic-write helper + signal-handler bootstrap library (Script Quality 3.1, 3.2)
+Artifact: workspace/thread-outputs/audits/docs-as-infra-principal-engineer-audit-2026-05-26.md
+Files changed: 1 created (audit report), 1 updated (.claude/CLAUDE.md threads table)
+Session started: 2026-05-27 19:46:46
+
+--- 2026-05-27 — Sprint 1: Principal Engineer Audit fixes ---
+Thread: Docs-as-Infrastructure Audit — Sprint 1 implementation
+Outcome: MET. Top 3 audit fixes shipped, plus one revised mid-flight when verification showed the audit recipe was wrong.
+
+Phase A (no-risk one-shots):
+  - tools/lib/bootstrap/safe-io.js (atomicWrite + signal-handler bootstrap)
+  - generate-script-registry.js: concern/type validator (report-only default, --strict|REGISTRY_STRICT=1 to block). Surfaces 160 polluted active scripts (138 empty concerns).
+  - script-docs.test.js: catalog all-types drift assertion (silent when healthy, blocks under --strict-catalog|CATALOG_STRICT=1)
+  - .github/workflows/interface-governance-secret-scan.yml (gitleaks, SHA-pinned to v2.3.9)
+  - .githooks/pre-commit: HARD GATE 6 gitleaks short-circuit (silent no-op if gitleaks not installed)
+  - .github/.allowlist extended + .github/dependabot.yml (weekly GitHub Actions updates)
+
+Phase B (pilots before bulk):
+  - dispatch-health-check.js: filesystem-discovery pattern. Returns same 6 pipelines as old hardcoded array. Supports @pipeline draft opt-out.
+  - SHA-pinned peter-evans/create-pull-request@v7 → 271a8d03…  in dispatch-health.yml + dispatch-brand.yml (only two occurrences in repo; full coverage)
+  - remediate-us-spelling.js migrated to atomicWrite (2 writeFileSync sites)
+  - check-write-safety.js validator: scans 303 scripts, surfaces non-atomic writes + unguarded headless-browser launches
+
+Phase C (bulk):
+  - check-pipeline-orphans.js: substitute for naive bulk discovery (which would have lumped curated subsets together). Discovery-aware. Zero orphans repo-wide.
+  - Bulk fs.writeFileSync → atomicWrite migration: 135 files, programmatic via one-shot helper. write-safety violations: 135 → 0. Remaining 9 violations are unguarded headless-browser launches (separate category, deferred).
+
+Audit deltas surfaced during execution:
+  - Registry pollution worse than audit said (160 active scripts vs 137; extra 23 are off-taxonomy concerns like "testing")
+  - 9 unguarded headless-browser launches identified — exact zombie-process bug class
+  - Audit's "auto-discover all siblings" recipe doesn't fit 17 of 18 meta-dispatchers (they run curated subsets, not full folders). Replaced with orphans validator.
+
+Verification: catalog test passes, registry generator runs default-clean (warn-only), pipeline-orphans clean, write-safety strict exits 1 on the 9 remaining browser launches, safe-io smoke OK, 3 spot-checked migrated files parse.
+
+Files created (8): tools/lib/bootstrap/safe-io.js; .github/workflows/interface-governance-secret-scan.yml; .github/dependabot.yml; operations/scripts/validators/governance/repo/check-write-safety.js; operations/scripts/validators/governance/pipelines/check-pipeline-orphans.js
+Files modified (~140): .github/.allowlist; .githooks/pre-commit; .github/workflows/dispatch-{health,brand}.yml; operations/scripts/generators/governance/catalogs/generate-script-registry.js; operations/tests/unit/script-docs.test.js; operations/scripts/dispatch/content/health/dispatch-health-check.js; operations/scripts/remediators/content/style/remediate-us-spelling.js; 135 scripts auto-migrated to atomicWrite.
+--- CHECKPOINT 2026-05-27T10:40:08.382Z [unknown] ---
+(No transcript summary available)
+---
+Session started: 2026-05-27 20:41:05
+Session started: 2026-05-27 20:41:52
+
+--- 2026-05-27 (cont) — Sprint 1 Items 1–4 ---
+Outcome: Items 1, 2, 4 fully met; Item 3 substantially met (55% pollution reduction, residuals queued).
+
+Item 1 — Headless-browser cleanup hooks (9 files):
+  - mdx-render-verify.js, generate-og-images.js, generate-hero-background.js, generate-hero-image.js, migrate-assets-to-branch.js, regression-bisect.js, sweep-delta-report.js, test-v2-pages.js, verify-all-pages.js
+  - Pattern: `let browser; registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); }); browser = await puppeteer.launch(...)`
+  - Skipped: regression-bisect.js:203 (puppeteer.launch inside template literal for child process — separate concern)
+  - Write-safety: 9 → 0 unguarded launches
+
+Item 2 — Promote validators to blocking in CI:
+  - Edited dispatch-governance.yml pipeline-tests job (after pipeline-functional-tests step):
+    * `CATALOG_STRICT=1 node script-docs.test.js`
+    * `check-pipeline-orphans.js --strict`
+    * `check-write-safety.js --strict`
+    * `run-all.js` (script-tests suite)
+  - REGISTRY_STRICT deferred (72 pollution remains)
+  - All 4 gates verified green locally
+
+Item 3 — Registry pollution backfill:
+  - 159 polluted total → 72 polluted (55% reduction; 87 fixed)
+  - Categorisation: 45 indirect-libraries (architecturally fine — would need validator exemption) + 27 operational (legacy `utility` type, needs human-curated reclassification)
+  - .githooks/* (4 files): added @type/@concern/@niche manually
+  - 85 files patched via /tmp/sweep-pollution.js (sweep helper handling JSDoc star and hash comment styles, padding-aware)
+  - script-governance-config.js: added `testing` and `dev-tools` to LEGACY_CONCERN_MAP
+  - HIT EDIT-LOOP HOOK on generate-script-registry.js after 5 edits. Per CLAUDE.md anti-loop, pivoted instead of forcing. The deferred enhancement (deriveFromPath +5 path-pattern branches for .githooks/operations-tests/tools-dev/tools-lib/workspace-scripts) is the cleanest next-session fix — would close most of the 72 residual pollution.
+
+Item 4 — Unit test scaffold:
+  - tools/lib/bootstrap/test-helpers.js: mkTmpDir/rmTmpDir/runScript/assertExit/assertStderrIncludes/fixturePath/writeTempScript/suite mini-API
+  - operations/tests/unit/script-tests/run-all.js: walks `*.test.js` under script-tests/**, runs via spawnSync, aggregates pass/fail
+  - 5 representative tests, 25 assertions, full suite 1.6s:
+    * libraries/safe-io.test.js (6 assertions)
+    * validators/check-write-safety.test.js (5 assertions)
+    * validators/check-pipeline-orphans.test.js (5 assertions)
+    * dispatch/dispatch-health-check.test.js (3 assertions)
+    * generators/generate-script-registry.test.js (4 assertions)
+  - Wired runner into dispatch-governance.yml pipeline-tests job
+
+Files created (10):
+  tools/lib/bootstrap/test-helpers.js
+  operations/tests/unit/script-tests/run-all.js
+  operations/tests/unit/script-tests/libraries/safe-io.test.js
+  operations/tests/unit/script-tests/validators/check-write-safety.test.js
+  operations/tests/unit/script-tests/validators/check-pipeline-orphans.test.js
+  operations/tests/unit/script-tests/dispatch/dispatch-health-check.test.js
+  operations/tests/unit/script-tests/generators/generate-script-registry.test.js
+  /tmp/sweep-pollution.js (one-shot helper)
+
+Files modified (~95):
+  9 browser-launch files (Item 1)
+  4 .githooks/* files (Item 3)
+  85 scripts via sweep (Item 3)
+  tools/lib/governance/script-governance-config.js (Item 3)
+  .github/workflows/dispatch-governance.yml (Item 2)
+
+Deferred to next thread:
+  - deriveFromPath() enhancement (blocked by edit-loop hook; cleanest single-file fix that would close most of the 72 residual pollution)
+  - Reclassify 27 operational scripts from legacy `utility` type to valid taxonomy
+  - Add validator-exemption for `@pipeline indirect` libraries
+  - Promote REGISTRY_STRICT after pollution closes
+  - Expand script-tests suite to ~50 tests (Sprint 4 target)
+Session started: 2026-05-27 21:56:12
+Session started: 2026-05-27 21:56:12
+Session started: 2026-05-27 21:57:02
+Session started: 2026-05-27 21:57:32
+Session started: 2026-05-27 21:57:48

@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            test-v2-pages
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             operations/scripts/validators/content/structure, docs.json, v2
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement V2 page tester — validates v2 pages via Puppeteer browser rendering
- * @pipeline          P2, P3
- * @usage             node operations/scripts/validators/content/structure/test-v2-pages.js [flags]
+ * @script      test-v2-pages
  * @type        validator
- * @description test v2 pages
- * @mode        read-only
+ * @concern     health
+ * @niche       page-rendering
+ * @purpose     Validate v2 pages render correctly in the Mintlify dev server — launches Puppeteer against http://localhost:3000, navigates each v2/ route, captures console errors, network 404s, and rendering failures so broken pages don't ship
+ * @description Puppeteer-driven browser tester. Reads docs.json for the route list, navigates each in headless Chrome, waits for body content, checks for console errors / network failures / missing components. Used by dispatch-page-rendering.js as the rendering atomic. Also called directly by v2-wcag-audit.js (which loads each page then runs axe-core) and browser.test.js.
+ * @mode        check
+ * @pipeline    P3 (PR via dispatch-page-rendering.js — note: this dispatcher needs dev server, excluded from smoke tests)
+ * @scope       docs.json routes → http://localhost:3000/{route} → rendered DOM + console events
+ * @usage       node operations/scripts/validators/content/structure/test-v2-pages.js [--routes <comma-list>] [--full]
+ * @policy      D-GOV-03 (paired with the page-rendering pipeline)
  */
 
 /**
@@ -22,6 +21,7 @@
 const fs = require('fs');
 const path = require('path');
 const puppeteer = require('puppeteer');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DOCS_JSON_PATH = path.join(REPO_ROOT, 'docs.json');
@@ -98,7 +98,7 @@ function extractPages(nav, pages = []) {
  */
 function getV2Pages() {
   const docsJson = JSON.parse(fs.readFileSync(DOCS_JSON_PATH, 'utf8'));
-  
+
   // Find v2 version
   const v2Version = docsJson.navigation?.versions?.find(v => v.version === 'v2');
   if (!v2Version) {
@@ -175,11 +175,11 @@ async function testPage(browser, pagePath) {
   
   try {
     // Navigate to page with timeout
-    await page.goto(url, { 
-      waitUntil: 'networkidle2', 
-      timeout: TIMEOUT 
+    await page.goto(url, {
+      waitUntil: 'networkidle2',
+      timeout: TIMEOUT
     });
-    
+
     // Wait a bit for any async rendering
     await new Promise(resolve => setTimeout(resolve, 2000));
     
@@ -224,8 +224,10 @@ async function main() {
   console.log(`⏱️  Timeout per page: ${TIMEOUT}ms\n`);
   
   // Check if server is running
+  let testPage;
+  registerCleanup(async () => { if (testPage) await testPage.close().catch(() => {}); });
   try {
-    const testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+    testPage = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
     const testBrowserPage = await testPage.newPage();
     await testBrowserPage.goto(BASE_URL, { waitUntil: 'domcontentloaded', timeout: 5000 });
     await testBrowserPage.close();
@@ -239,8 +241,10 @@ async function main() {
   }
   
   console.log('🚀 Starting browser tests...\n');
-  
-  const browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
+
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch(BROWSER_LAUNCH_OPTIONS);
   
   const results = [];
   let passed = 0;
@@ -305,7 +309,7 @@ async function main() {
   
   // Save detailed report
   const reportPath = path.join(REPO_ROOT, 'workspace/reports/page-audits/v2-page-test-report.json');
-  fs.writeFileSync(reportPath, JSON.stringify({
+  atomicWrite(reportPath, JSON.stringify({
     timestamp: new Date().toISOString(),
     baseUrl: BASE_URL,
     totalPages: pages.length,

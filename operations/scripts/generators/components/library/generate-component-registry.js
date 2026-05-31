@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Parses JSDoc from all component exports and produces component-registry.json.
  * @description Parses JSDoc from all component exports and produces component-registry.json.
  * @mode        generate
  * @pipeline    manual, P3, P5, P6, manual, manual
@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   extractExports,
   getComponentFiles,
@@ -287,7 +288,7 @@ function buildRegistrySchema() {
 
 function writeJson(targetPath, data) {
   fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-  fs.writeFileSync(targetPath, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
+  atomicWrite(targetPath, `${JSON.stringify(data, null, 2)}\n`, 'utf8');
 }
 
 function run(argv = process.argv.slice(2)) {

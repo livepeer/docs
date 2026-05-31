@@ -1,27 +1,31 @@
 ---
 title: Network Interfaces
 sidebarTitle: Network Interfaces
-description: "The reachable surfaces by which clients, gateways, and orchestrators talk to the Livepeer Network: gateway entry, orchestrator handshake, real-time frame transport."
+description: "The reachable surfaces by which clients, gateways, and orchestrators talk to the Livepeer Network: gateway entry, orchestrator handshake, real-time frame transport, on-chain anchor reads."
 lifecycleStage: discover
-complexity: intermediate
-pageType: concept
-audience: developer
-purpose: explain
-status: current
-veracityStatus: verified
-lastVerified: 2026-05-04
+complexity: advanced
 keywords:
-  - livepeer network interfaces
-  - gateway api entry
+  - livepeer
+  - about
+  - livepeer network
+  - network interfaces
+  - gateway api
   - orchestratorinfo handshake
-  - trickle protocol livepeer
-  - go-livepeer rpc surface
-  - probabilistic micropayment tickets
+  - trickle protocol
+  - capabilities api
 'og:image': /snippets/assets/media/og-images/en/about.png
 'og:image:alt': Livepeer Docs social preview image for About
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
+pageType: concept
+pageVariant: specification
+purpose: explain
+audience: developer
+status: current
+veracityStatus: verified
+lastVerified: 2026-05-04
+aim: Where code talks to the network and what each surface carries
 ---
 
 import { CustomCardTitle, Subtitle } from '/snippets/components/elements/text/Text.jsx'
@@ -33,14 +37,14 @@ import { ScrollableDiagram } from '/snippets/components/displays/diagrams/Scroll
 import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <Quote>
-The Network exposes four reachable surfaces. Clients enter through a gateway. Gateways and orchestrators handshake through `OrchestratorInfo`. Real-time frames move over the trickle protocol. The chain is read directly through Arbitrum One.
+The Network exposes four reachable surfaces. Clients enter through a Gateway. Gateways and Orchestrators handshake through `OrchestratorInfo`. Real-time frames move over the trickle protocol. The chain is read directly through Arbitrum One.
 </Quote>
 
 <CustomDivider style={{ margin: 0, marginBottom: '-2rem' }} />
 
-## Where Code Talks to the Network
+## Network Interfaces
 
-A developer integrating with Livepeer touches different surfaces depending on their role. An application developer calls a gateway. A gateway implementation talks to orchestrators. An orchestrator implementation talks to its workers and to the chain. The four surfaces below are described at the conceptual level; reference specs and code live in the Developers and Gateways tabs.
+A developer integrating with Livepeer touches different surfaces depending on their role. An application developer calls a Gateway. A Gateway implementation talks to Orchestrators. An Orchestrator implementation talks to its workers and to the chain. The four surfaces below are described at the conceptual level; reference specs and code live in the Developers and Gateways tabs.
 
 <DynamicTableV2
   headerList={['Surface', 'Who uses it', 'What it carries']}
@@ -52,29 +56,53 @@ A developer integrating with Livepeer touches different surfaces depending on th
     },
     {
       Surface: <Subtitle variant="changelog">**Orchestrator handshake**</Subtitle>,
-      'Who uses it': 'Gateways discovering and selecting orchestrators',
+      'Who uses it': 'Gateways discovering and selecting Orchestrators',
       'What it carries': '`GetOrchestratorInfo` requests, capability advertisement, ticket parameter exchange, session establishment',
     },
     {
       Surface: <Subtitle variant="changelog">**Real-time frame transport**</Subtitle>,
-      'Who uses it': 'Gateway and orchestrator AI worker, for live video-to-video pipelines',
+      'Who uses it': 'Gateway and Orchestrator AI worker, for live video-to-video pipelines',
       'What it carries': 'Per-frame video data over the trickle protocol; sub-second round-trip',
     },
     {
       Surface: <Subtitle variant="changelog">**On-chain anchor reads**</Subtitle>,
       'Who uses it': 'Anyone querying network state',
-      'What it carries': 'Stake, active set, deposits, service URIs, governance state through Arbitrum One contracts and the subgraph',
+      'What it carries': 'Stake, Active Set, deposits, service URIs, governance state through Arbitrum One contracts and the subgraph',
     },
   ]}
 />
 
+<ScrollableDiagram title="Where Each Interface Sits in the Network" maxHeight="500px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#1a1a1a', 'primaryTextColor': '#E0E4E0', 'primaryBorderColor': '#2b9a66', 'lineColor': '#2b9a66', 'secondaryColor': '#0d0d0d', 'tertiaryColor': '#1a1a1a', 'background': '#0d0d0d', 'fontFamily': "Inter, 'Inter Fallback', -apple-system, system-ui" }}}%%
+flowchart LR
+    classDef default fill:#1a1a1a,color:#E0E4E0,stroke:#2b9a66,stroke-width:2px
+    classDef chain fill:#1a1a1a,color:#E0E4E0,stroke:#f59e0b,stroke-width:2px
+
+    App["Application"]:::default
+    Gw["Gateway"]:::default
+    Orch["Orchestrator"]:::default
+    Worker["AI Worker / Transcoder"]:::default
+    Chain["Arbitrum One contracts<br/>+ subgraph"]:::chain
+
+    App -->|HTTP / RTMP / WHIP<br/>**Gateway entry**| Gw
+    Gw -->|gRPC GetOrchestratorInfo<br/>**Orchestrator handshake**| Orch
+    Gw -.->|trickle channels<br/>**Real-time frame transport**| Worker
+    Orch --> Worker
+    Gw -.->|read state<br/>**On-chain anchor reads**| Chain
+    Orch -.->|read state| Chain
+```
+
+</ScrollableDiagram>
+
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## Gateway Entry
+## Gateway Entry Surface
 
-The gateway is the front door. Application developers do not talk to orchestrators or to the chain directly; they talk to a gateway. The gateway then handles discovery, payment, and result delivery on the application's behalf.
+The Gateway is the front door. Application developers do not talk to Orchestrators or to the chain directly; they talk to a Gateway. The Gateway then handles discovery, payment, and result delivery on the application's behalf.
 
-Three entry transports are supported by gateway implementations today:
+Three entry transports are supported by Gateway implementations today:
 
 <DynamicTableV2
   headerList={['Transport', 'Workload', 'Notes']}
@@ -97,7 +125,35 @@ Three entry transports are supported by gateway implementations today:
   ]}
 />
 
-A developer integrating with Livepeer typically uses one of the language SDKs against a hosted gateway (Studio, Daydream) or a self-operated gateway. The gateway URL is an HTTPS endpoint; authentication and rate limiting are gateway-side decisions, not protocol-level.
+A developer integrating with Livepeer typically uses one of the language SDKs against a hosted Gateway (Studio, Daydream) or a self-operated Gateway. The Gateway URL is an HTTPS endpoint; authentication and rate limiting are Gateway-side decisions, not protocol-level.
+
+The HTTP surface a Gateway exposes covers four families of route. Specific paths vary slightly between Gateway implementations; the families are stable.
+
+<DynamicTableV2
+  headerList={['Route family', 'Example paths', 'What it does']}
+  itemsList={[
+    {
+      'Route family': <Subtitle variant="changelog">**Live ingest**</Subtitle>,
+      'Example paths': '`rtmp://gateway:1935`, `POST /webrtc/{streamId}` (WHIP), `GET /stream/{id}.m3u8` (HLS playback)',
+      'What it does': 'Accept live video for transcoding; serve transcoded outputs',
+    },
+    {
+      'Route family': <Subtitle variant="changelog">**Batch AI inference**</Subtitle>,
+      'Example paths': '`POST /text-to-image`, `POST /image-to-image`, `POST /audio-to-text`, `POST /upscale`, `POST /llm`',
+      'What it does': 'Submit a single AI inference request; receive the result synchronously',
+    },
+    {
+      'Route family': <Subtitle variant="changelog">**Real-time AI streaming**</Subtitle>,
+      'Example paths': '`POST /live/video-to-video/{stream}/{start|update|stop|status}`',
+      'What it does': 'Open and manage a real-time AI session; frames flow over trickle once started',
+    },
+    {
+      'Route family': <Subtitle variant="changelog">**BYOC (capability-routed)**</Subtitle>,
+      'Example paths': '`POST /process/request/{capability}`, `POST /process/stream/{start|update|status|stop|data}`',
+      'What it does': 'Submit work to any registered BYOC pipeline by capability name',
+    },
+  ]}
+/>
 
 <Card title={<CustomCardTitle icon="display-code" title="Build on Livepeer" />} href="/v2/developers/portal" horizontal arrow > SDKs, API references, integration patterns. </Card>
 
@@ -105,7 +161,7 @@ A developer integrating with Livepeer typically uses one of the language SDKs ag
 
 ## Orchestrator Handshake
 
-The handshake between gateway and orchestrator is a session-level RPC. The gateway calls `GetOrchestratorInfo`; the orchestrator returns its capability set, its current price-per-unit, and the ticket parameters the gateway must use.
+The handshake between Gateway and Orchestrator is a session-level RPC. The Gateway calls `GetOrchestratorInfo`; the Orchestrator returns its capability set, its current price-per-unit, and the ticket parameters the Gateway must use.
 
 <ScrollableDiagram title="OrchestratorInfo Handshake and Session Setup" maxHeight="600px">
 
@@ -118,8 +174,8 @@ sequenceDiagram
     participant TB as TicketBroker
 
     G->>O: GetOrchestratorInfo
-    O-->>G: OrchestratorInfo<br/>(capabilities,<br/>price-per-unit,<br/>ticket parameters)
-    G->>G: filter by capability<br/>and price ceiling
+    O-->>G: OrchestratorInfo<br/>(capabilities, price-per-unit, ticket parameters)
+    G->>G: filter by capability and price ceiling
     G->>O: open session, send job + ticket
     O-->>G: result
     Note over G,O: tickets accumulate per segment;<br/>most do not win
@@ -128,13 +184,17 @@ sequenceDiagram
 
 </ScrollableDiagram>
 
-The handshake establishes the session. Once open, the gateway dispatches segments or frames with tickets attached. Tickets are signed by the gateway against the parameters the orchestrator returned in the handshake; the orchestrator validates each ticket before performing the work. Most tickets do not win; only winning tickets are submitted to `TicketBroker` for on-chain settlement.
+The handshake establishes the session. Once open, the Gateway dispatches segments or frames with tickets attached. Tickets are signed by the Gateway against the parameters the Orchestrator returned in the handshake; the Orchestrator validates each ticket before performing the work. Most tickets do not win; only winning tickets are submitted to `TicketBroker` for on-chain settlement.
+
+### Capability Bitstrings
+
+`OrchestratorInfo.Capabilities` is a bitstring carrying every capability the Orchestrator offers, plus a per-capability constraint map keyed by model identifier. Each entry records whether the model is warm-loaded, the Orchestrator's per-model concurrency capacity, and the runner version. The compatibility check at the Gateway is a simple AND across the bitstrings: the Gateway's required capability bits must be a subset of the Orchestrator's offered bits, plus all per-model constraints must be satisfiable.
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## Real-Time Frame Transport (Trickle)
+## Trickle Protocol
 
-For real-time AI workloads, the segment-and-result pattern is too slow. Frames need to move between gateway and orchestrator at sub-second latency, with audio and metadata streaming alongside. The trickle protocol is the transport.
+For real-time AI workloads, the segment-and-result pattern is too slow. Frames need to move between Gateway and Orchestrator at sub-second latency, with audio and metadata streaming alongside. The trickle protocol is the transport.
 
 Trickle is a Livepeer-developed transport with three properties that matter for real-time AI:
 
@@ -144,13 +204,15 @@ Trickle is a Livepeer-developed transport with three properties that matter for 
   - **Operator-controllable.** A built-in HTTP control API lets operators update model parameters mid-stream, which is what makes interactive pipelines like ComfyStream possible.
 </BorderedBox>
 
-The trickle protocol is implemented in the `pytrickle` Python library and in the `go-livepeer` AI worker. ComfyStream and other real-time pipelines depend on it. Real-time AI integrators typically run a `pytrickle`-based gateway client or use a hosted gateway that implements the protocol on the client's behalf.
+The trickle protocol is implemented in the `pytrickle` Python library and in the `go-livepeer` AI worker. ComfyStream and other real-time pipelines depend on it. Real-time AI integrators typically run a `pytrickle`-based Gateway client or use a hosted Gateway that implements the protocol on the client's behalf.
+
+The protocol shape: a publisher posts to `POST /channel/seq` with a monotonically increasing sequence number; subscribers fetch with `GET /channel/seq` for a specific segment, or `GET /channel/-1` for the live edge. Subscribers can preconnect on `seq+1` to remove latency between segment boundaries. Audio, video, and control flow as parallel channels on the same connection, distinguished by channel name.
 
 <Card title={<CustomCardTitle icon="rotate" title="pytrickle Reference" />} href="/v2/developers/resources/reference/pytrickle" horizontal arrow > The trickle protocol library and integration reference. </Card>
 
 <CustomDivider style={{ margin: '-1rem 0 -2rem 0' }} />
 
-## On-Chain Anchor Reads
+## On-Chain Reads
 
 Network state is publicly readable on Arbitrum One. Anyone can query the protocol contracts directly, or query the indexed view through the Livepeer subgraph. No operator relationship is needed to see what the Network is doing.
 
@@ -169,7 +231,7 @@ Network state is publicly readable on Arbitrum One. Anyone can query the protoco
     },
     {
       'Read path': <Subtitle variant="changelog">**Network Capabilities API**</Subtitle>,
-      'What it returns': 'Aggregated capability data across orchestrators (off-chain advertised capabilities beyond what the on-chain registry alone exposes)',
+      'What it returns': 'Aggregated capability data across Orchestrators (off-chain advertised capabilities beyond what the on-chain registry alone exposes)',
       'When to use': 'Capability filtering richer than `ServiceRegistry` alone',
     },
   ]}
@@ -181,7 +243,7 @@ Network state is publicly readable on Arbitrum One. Anyone can query the protoco
 
 <Columns cols={2}>
   <Card title={<CustomCardTitle icon="diagram-project" title="Network Architecture" />} href="/v2/about/network/architecture" horizontal arrow>
-    Where each surface fits in the fleet.
+    Where each surface fits in the Network.
   </Card>
   <Card title={<CustomCardTitle icon="route" title="Job Pipelines" />} href="/v2/about/network/job-pipelines" horizontal arrow>
     What workloads run across these surfaces.
@@ -190,185 +252,6 @@ Network state is publicly readable on Arbitrum One. Anyone can query the protoco
     SDKs, APIs, and code-level reference.
   </Card>
   <Card title={<CustomCardTitle icon="torii-gate" title="Run a Gateway" />} href="/v2/gateways/portal" horizontal arrow>
-    Operator-side gateway implementation.
+    Operator-side Gateway implementation.
   </Card>
 </Columns>
-
-{  /* ---
-title: Network Interfaces
-sidebarTitle: Interfaces
-description: >-
-  How to interact with the Livepeer Network and protocol: REST and gRPC APIs, GraphQL, JS SDK, CLI, and smart contract
-  interfaces.
-lifecycleStage: discover
-complexity: intermediate
-purpose: concept
-pageType: concept
-keywords:
-  - livepeer
-  - about
-  - livepeer network
-  - interfaces
-  - API
-  - SDK
-  - CLI
-  - GraphQL
-  - REST
-  - gRPC
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
-audience: general
-lastVerified: 2026-03-17T00:00:00.000Z
----
-import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
-import { GotoLink } from '/snippets/components/elements/links/Links.jsx'
-
-Livepeer exposes multiple access interfaces for developers, creators, and infrastructure operators to interact with the protocol and network. These include SDKs, REST and gRPC APIs, the CLI, GraphQL endpoints, and playback tooling for on-chain and off-chain applications. This page breaks down each interface by use case, target user, and sample integration paths.
-
-## Interface categories
-
-<DynamicTable
-  headerList={["Interface", "Use case", "Users", "Access"]}
-  itemsList={[
-    { "Interface": "REST API", "Use case": "Start sessions, control workflows", "Users": "App developers, Gateways", "Access": "HTTPS" },
-    { "Interface": "gRPC API", "Use case": "Fast low-latency session control", "Users": "Gateway nodes", "Access": "gRPC" },
-    { "Interface": "GraphQL API", "Use case": "Explore network, jobs, rewards", "Users": "Analysts, explorers", "Access": "GraphQL" },
-    { "Interface": "JS SDK", "Use case": "Playback, ingest, session control", "Users": "Frontend developers", "Access": "JavaScript" },
-    { "Interface": "CLI", "Use case": "Orchestrator & delegator control", "Users": "Node operators", "Access": "Terminal" },
-    { "Interface": "Smart contracts", "Use case": "Protocol-level operations (stake, redeem, govern)", "Users": "Power users, devs", "Access": "Solidity / RPC" }
-  ]}
-/>
-
-## REST API (Livepeer Studio)
-
-Available at: `https://livepeer.studio/api`
-
-**Common endpoints:**
-
-- `POST /stream` - Create video stream ingest session
-- `POST /transcode` - On-demand file transcode
-- `POST /ai/infer` - Submit AI job (e.g. Image enhancement)
-- `GET /session/:id` - Fetch session status
-
-**Docs:** [livepeer.studio/docs](https://livepeer.studio/docs)
-
-## gRPC API (Gateway nodes)
-
-gRPC allows high-throughput, low-latency Orchestrator routing.
-
-**Methods (examples):** `ReserveSession`, `Heartbeat`, `ReportJobComplete`, `OrchestratorList`
-
-Used by: Studio Gateway, Daydream Gateway, Cascade.
-
-**Proto:** [gateway.proto](https://github.com/livepeer/protocol/blob/master/proto/gateway.proto)
-
-## GraphQL Explorer API
-
-Access detailed Livepeer on-chain and network state.
-
-**Endpoint:** `https://explorer.livepeer.org/graphql`
-
-**Example query:**
-
-```graphql icon="terminal"
-query GetOrchestrators {
-  orchestrators {
-    id
-    totalStake
-    rewardCut
-    serviceURI
-  }
-}
-```
-
-Also supports: delegator rewards, inflation rate, total active stake, round info. Used by [Explorer](https://explorer.livepeer.org).
-
-## JS SDK
-
-**GitHub:** [@livepeer/sdk](https://github.com/livepeer/js-sdk)
-
-**Install:**
-
-```bash icon="terminal"
-npm install @livepeer/sdk
-```
-
-**Features:** Ingest (create stream, push video), AI job submit, view session output, wallet support (ETH, credit), playback and stats.
-
-**Example:**
-
-```javascript icon="terminal"
-const { createStream } = require('@livepeer/sdk');
-const stream = await createStream({ name: 'My Stream' });
-```
-
-Used in: Livepeer Studio, Daydream, VJ apps (e.g. MetaDJ).
-
-## CLI
-
-Install via Go build or Docker:
-
-```bash icon="terminal"
-go install github.com/livepeer/go-livepeer
-```
-
-**Commands (examples):** `stake`, `unbond`, `withdraw`, `reward`, `claim`, `transcode`, `broadcast`, `query`
-
-Ideal for Orchestrator testing and protocol analysis.
-
-## Smart contract interfaces
-
-Interact directly with the protocol (Arbitrum) via RPC and ABIs.
-
-<DynamicTable
-  headerList={["Contract", "Function (examples)", "Address source"]}
-  itemsList={[
-    { "Contract": "BondingManager", "Function (examples)": "stake, reward, unbond", "Address source": "See Blockchain contracts" },
-    { "Contract": "TicketBroker", "Function (examples)": "redeem tickets, deposit, withdraw", "Address source": "See Blockchain contracts" },
-    { "Contract": "Governor", "Function (examples)": "vote, queue, execute LIPs", "Address source": "See Blockchain contracts" }
-  ]}
-/>
-
-<Note>
-Current Arbitrum contract addresses and ABIs are listed in [Blockchain contracts](../protocol/blockchain-contracts). Use `ethers.js`, `viem`, `hardhat`, or JSON-RPC to call contracts.
-</Note>
-
-## Workflow examples
-
-**Transcode from web app:**
-
-```javascript icon="terminal"
-await sdk.createStream({ profile: '720p', name: 'MyCam' });
-```
-
-**Run AI image-to-image (curl):**
-
-```bash icon="terminal"
-curl -X POST https://livepeer.studio/api/ai/infer \
-  -d '{ "model": "sdxl", "input": "image.png" }'
-```
-
-**Check node metrics:**
-
-```bash icon="terminal"
-livepeer_cli status
-```
-
-## See also
-
-- [Technical architecture](./technical-architecture) - Stack overview, Orchestrator, Gateway, workers
-- [Marketplace](./marketplace) - Routing and pricing
-- [Job lifecycle](./job-lifecycle) - Session flow and settlement
-- [Blockchain contracts](../protocol/blockchain-contracts) - Contract addresses and ABIs
-- [Livepeer Protocol repo](https://github.com/livepeer/protocol)
-
-## References
-
-- [Livepeer Studio API](https://livepeer.studio/docs)
-- [Livepeer Explorer GraphQL](https://explorer.livepeer.org/graphql)
-- [Livepeer JS SDK](https://github.com/livepeer/js-sdk)
-- [Protocol ABIs](https://github.com/livepeer/protocol/tree/master/abi)
-- [Livepeer Protocol repo](https://github.com/livepeer/protocol) */}

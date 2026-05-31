@@ -1,0 +1,22 @@
+# Dependabot — keeps GitHub Actions SHA pins fresh.
+# Without this, SHA pins rot: maintainers can't tell whether they're on the latest
+# secure release of an action. Dependabot opens a PR with the new SHA whenever an
+# upstream tag is published. Review the diff, merge, move on.
+#
+# Paired with .githooks/pre-commit (HARD GATE 6, local secret-leak short-circuit)
+# and .github/workflows/interface-governance-secret-scan.yml (CI gitleaks).
+# (Principal Engineer audit 2026-05-26, Security W1)
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(actions)"
+    labels:
+      - dependencies
+      - github-actions

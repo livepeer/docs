@@ -1,0 +1,84 @@
+#!/bin/bash
+# @script      post-merge
+# @type        dispatch
+# @concern     governance
+# @niche       hooks
+# @category    orchestrator
+# @purpose     Auto-refresh generated catalogs after merge/pull so dev branches stay in sync with source-of-truth
+# @scope       .githooks
+# @domain      docs
+# @pipeline    P0 (post-merge, hook entry point)
+# @usage       Runs automatically after `git pull` or `git merge` (via core.hooksPath = .githooks)
+#
+# Behaviour:
+# - Detects whether the merge brought in changes to script source / workflows / docs.json / v2 MDX / components.
+# - If yes, runs `dispatch-governance-sync.js --write` which regenerates:
+#   * docs-guide/catalog/{workflows,pages,components,scripts}-catalog.mdx
+#   * docs-guide/repo-ops/config/{repo-governance,root-governance}-map.mdx
+#   * .github/workspace/actions-library/* (via separate action-pages generator)
+#   * sitemap-ai.xml, llms.txt (via discoverability dispatcher)
+#   * docs-index.json
+# - Catalog drift then surfaces as a NEW change in `git status` for the dev to commit
+#   in a follow-up "chore: sync generated catalogs" commit.
+#
+# Bypass:
+#   SKIP_POSTMERGE_SYNC=1  Skip the sync (useful for fast iteration cycles or rebases)
+#
+# Why this exists: see workspace/reports/governance/pipeline-inventory.md — the canonical
+# auto-pop trigger is the GitHub Actions post-merge job on docs-v2, but dev branches
+# (docs-v2-dev, docs-v2-dev-draft) don't get that fire. This hook fills the gap locally.
+
+set -euo pipefail
+
+# Bypass
+if [ "${SKIP_POSTMERGE_SYNC:-0}" = "1" ]; then
+  exit 0
+fi
+
+# Only run if interesting files changed in the merge
+INTERESTING_PATHS_RE='^(operations/scripts|tools/scripts|\.github/workflows|docs\.json|v2/.*\.mdx$|snippets/components/.*\.(jsx|json)$|snippets/data|operations/governance/config)'
+
+# git diff between the merge commit's two parents
+CHANGED=$(git diff --name-only ORIG_HEAD HEAD 2>/dev/null | grep -E "$INTERESTING_PATHS_RE" | head -5 || true)
+if [ -z "$CHANGED" ]; then
+  # No relevant changes — skip the sync entirely.
+  exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+SYNC_SCRIPT="$REPO_ROOT/operations/scripts/dispatch/governance/dispatch-governance-sync.js"
+
+if [ ! -f "$SYNC_SCRIPT" ]; then
+  # Sync script missing — silent skip (don't block the merge).
+  exit 0
+fi
+
+echo ""
+echo "═══════════════════════════════════════════════════════════════"
+echo "Post-merge: refreshing generated catalogs (NODE_PATH=tools/node_modules)"
+echo "Changed files indicating sync needed (first 5):"
+echo "$CHANGED" | sed 's/^/  /'
+echo ""
+echo "Running: dispatch-governance-sync.js --write"
+echo "(skip next time with SKIP_POSTMERGE_SYNC=1 git pull)"
+echo "───────────────────────────────────────────────────────────────"
+
+cd "$REPO_ROOT"
+if NODE_PATH=tools/node_modules node "$SYNC_SCRIPT" --write 2>&1 | tail -20; then
+  echo ""
+  echo "✓ Catalog sync complete"
+else
+  echo ""
+  echo "⚠ Catalog sync had errors — check output above. The merge itself completed."
+fi
+
+# Show what changed (so dev knows what to commit next)
+NEW_CHANGES=$(git status --short 2>/dev/null | grep -v "^ M\|^M " | wc -l | tr -d ' ')
+DIRTY_CHANGES=$(git status --short 2>/dev/null | wc -l | tr -d ' ')
+if [ "$DIRTY_CHANGES" -gt 0 ]; then
+  echo ""
+  echo "Catalog refresh produced changes — review with: git status"
+  echo "Commit with: git add -u && git commit -m 'chore: sync generated catalogs'"
+fi
+
+exit 0

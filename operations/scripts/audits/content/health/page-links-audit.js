@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       health
- * @purpose     
+ * @purpose     Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.
  * @description Audit page-facing link health from canonical operations scripts, with stable outputs under operations/reports/health/page-links.
  * @mode        scan
  * @pipeline    manual, P6
@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const { extractImports } = require('../../../../tests/utils/mdx-parser');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   canonicalRouteFromFile,
   collectExistingRoutes,
@@ -916,7 +917,10 @@ function findMissingPathCandidates(missingAbs, repoFiles) {
 
 function extractRefs(content) {
   const refs = [];
-  const contentForExtraction = String(content || '').replace(/```[\s\S]*?```/g, '');
+  const contentForExtraction = String(content || '')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, '')
+    .replace(/<!--[\s\S]*?-->/g, '');
 
   const markdownRegex = /!?\[([^\]]*)\]\(([^)]+)\)/g;
   let m;
@@ -972,6 +976,16 @@ function shouldValidateExternalRef(ref, externalLinkTypes) {
 
 function analyzeRef(ref, currentFileAbs, repoFiles, routeSet, args, docsConfig, knownPublishedRoutes) {
   const normalizedRaw = normalizeRawPath(ref.rawPath);
+  if (/[{}$]/.test(normalizedRaw)) {
+    return {
+      ...ref,
+      linkType: 'dynamic',
+      resolvedPath: null,
+      exists: null,
+      status: 'skipped',
+      movedCandidates: []
+    };
+  }
   const linkType = classifyPath(normalizedRaw);
 
   if (linkType === 'external-http' || linkType === 'external-https') {
@@ -1105,6 +1119,17 @@ function analyzeRef(ref, currentFileAbs, repoFiles, routeSet, args, docsConfig, 
       resolvedPath: relFromRoot(targetAbs),
       exists: false,
       status: 'skipped-allowlisted',
+      movedCandidates: []
+    };
+  }
+
+  if (/\/rss\.xml$/i.test(stripQueryHash(normalizedRaw))) {
+    return {
+      ...ref,
+      linkType,
+      resolvedPath: relFromRoot(targetAbs),
+      exists: false,
+      status: 'skipped-generated-feed',
       movedCandidates: []
     };
   }
@@ -2075,10 +2100,10 @@ async function runAudit(options = {}) {
 
   if (!options.skipWriteReports) {
     ensureDir(path.dirname(args.report));
-    fs.writeFileSync(args.report, report, 'utf8');
+    atomicWrite(args.report, report, 'utf8');
 
     ensureDir(path.dirname(args.reportJson));
-    fs.writeFileSync(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
+    atomicWrite(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
   }
 
   console.log(`📝 Report written: ${relFromRoot(args.report)}`);

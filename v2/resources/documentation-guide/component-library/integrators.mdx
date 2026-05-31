@@ -1,7 +1,7 @@
 ---
 title: 'Integrators'
 sidebarTitle: 'Integrators'
-description: 'Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.'
+description: 'Fetches, embeds, or binds to external data – feeds, embeds, video, APIs.'
 pageType: reference
 ---
 
@@ -26,7 +26,7 @@ Run command: node operations/scripts/generators/components/documentation/generat
 
 ## Integrators
 
-Fetches, embeds, or binds to external data — feeds, embeds, video, APIs.
+Fetches, embeds, or binds to external data – feeds, embeds, video, APIs.
 
 This category currently contains **19** governed export(s).
 
@@ -36,7 +36,7 @@ This category currently contains **19** governed export(s).
 2. Part of the page's outer structure, typically used once? → `scaffolding/`
 3. Takes content and presents it in a formatted way? → `displays/`
 4. Exists to hold, group, or arrange other things? → `wrappers/`
-5. Single visual piece — no wrapping, no arranging, no fetching? → `elements/`
+5. Single visual piece – no wrapping, no arranging, no fetching? → `elements/`
 
 ### Summary Table
 
@@ -50,7 +50,7 @@ This category currently contains **19** governed export(s).
 | CoinGeckoExchanges | `stable` | `/snippets/components/integrators/feeds/Coingecko.jsx` | Sortable table of exchanges listing a token. Keyboard-accessible sort headers. |
 | ColumnsBlogCardLayout | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Multi-column BlogCard layout using Mintlify Columns. |
 | DiscordAnnouncements | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Discord announcement feed with parsed markdown content. Sanitised HTML. |
-| ExternalContent | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Fetches and renders external markdown with scrollable container and source link. |
+| ExternalContent | `stable` | `/snippets/components/integrators/embeds/DataEmbed.jsx` | Frames external source content with a scrollable container and source link. |
 | ForumLatestLayout | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Latest forum topics with banner image and topic cards. |
 | LatestVersion | `experimental` | `/snippets/components/integrators/feeds/Release.jsx` | Displays the latest release version string from automation data. |
 | LumaEvents | `stable` | `/snippets/components/integrators/blog/BlogCards.jsx` | Upcoming/past event cards from Luma calendar data. |
@@ -252,8 +252,8 @@ import { DiscordAnnouncements } from '/snippets/components/integrators/blog/Blog
 <CustomDivider />
 
 ### ExternalContent
-Use **ExternalContent** when you need fetches and renders external markdown with scrollable container and source link..
-Source description: Fetches and renders external markdown with scrollable container and source link.
+Use **ExternalContent** when you need frames external source content with a scrollable container and source link..
+Source description: Frames external source content with a scrollable container and source link.
 **Import path**
 ```jsx
 import { ExternalContent } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
@@ -261,12 +261,15 @@ import { ExternalContent } from '/snippets/components/integrators/embeds/DataEmb
 **Metadata**
 - Status: `stable`
 - Accepts: `none`
-- Data source: `fetch(url)`
+- Data source: `external source`
 **Props**
 | Prop | Type | Default | Required | Description |
 | --- | --- | --- | --- | --- |
-| `repoName` | `string` | `` | Yes | Repo name used by the component. |
-| `githubUrl` | `string` | `` | Yes | Github url used by the component. |
+| `sourceName` | `string` | `` | No | Source name displayed in the component header. |
+| `sourceUrl` | `string` | `` | No | Source URL used by the header link. |
+| `sourceLabel` | `string` | `"View source"` | No | Label used by the header link. |
+| `repoName` | `string` | `` | No | Legacy source name alias. |
+| `githubUrl` | `string` | `` | No | Legacy source URL alias. |
 | `maxHeight` | `string` | `"1000px"` | No | Max height used by the component. |
 | `icon` | `string` | `"github"` | No | Icon configuration used by the component. |
 | `children` | `React.ReactNode` | `` | Yes | Content rendered inside the component. |

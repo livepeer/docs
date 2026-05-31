@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     governance
  * @niche       scripts
- * @purpose     
+ * @purpose     Audit analyses script file sizes, dependencies, and usage patterns across the repo
  * @description Script footprint auditor — analyses script file sizes, dependencies, and usage patterns across the repo
  * @mode        scan
  * @pipeline    manual — not yet in pipeline
@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const STAGE_ID = 'script-footprint-and-usage-audit';
 const REPO_ROOT = process.cwd();
@@ -349,8 +350,8 @@ function main() {
   const jsonPath = path.join(outputDirAbs, `${STAGE_ID}.json`);
   const mdPath = path.join(outputDirAbs, `${STAGE_ID}.md`);
 
-  fs.writeFileSync(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
-  fs.writeFileSync(mdPath, buildMarkdown(report));
+  atomicWrite(jsonPath, `${JSON.stringify(report, null, 2)}\n`);
+  atomicWrite(mdPath, buildMarkdown(report));
 
   console.log(`✅ ${STAGE_ID} wrote:`);
   console.log(`- ${toPosix(path.relative(REPO_ROOT, jsonPath))}`);

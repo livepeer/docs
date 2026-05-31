@@ -62,11 +62,11 @@ and the protocol layer, how a job flows through the system, and the key internal
 
 For what Orchestrators *do*, see <LinkArrow href="/v2/orchestrators/concepts/capabilities" label="Capabilities" newline={false} />. For why you would run one, see <LinkArrow href="/v2/orchestrators/concepts/incentive-model" label="Incentive Model" newline={false} />.
 
-<CustomDivider middleText="Layer Position" style={{margin: "-1rem 0 -1rem 0"}} />
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Orchestrator Layer Context
 
-The Livepeer network has three functional layers. Orchestrators sit at the **compute layer**, receiving
+The Livepeer Network has three functional layers. Orchestrators sit at the **compute layer**, receiving
 jobs from Gateways and executing them on GPU hardware.
 
 <ScrollableDiagram title="Livepeer Stack: Orchestrator Position" maxHeight="500px">
@@ -94,7 +94,7 @@ graph TB
     D -->|Results| C
     C -->|Results| B
     B -->|Responses| A
-    C <-->|Staking, rewards, registration| PROTO
+    C <-->|Staking, rewards, registration| E
 
     classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
     style APP fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
@@ -132,7 +132,7 @@ graph TB
     <TableRow>
       <TableCell>**Protocol**</TableCell>
       <TableCell>Arbitrum smart contracts</TableCell>
-      <TableCell>Staking, reward distribution, payment settlement, orchestrator registry</TableCell>
+      <TableCell>Staking, reward distribution, payment settlement, Orchestrator registry</TableCell>
     </TableRow>
   </tbody>
 </StyledTable>
@@ -141,7 +141,7 @@ Orchestrators are the only participants that interact with all layers below the 
 jobs from the Gateway layer, executing them at the compute layer, and transacting with the protocol
 layer for staking, rewards, and payment ticket redemption.
 
-<CustomDivider middleText="System Interactions" style={{margin: "-1rem 0 -1rem 0"}} />
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Orchestrator Interactions
 
@@ -185,7 +185,7 @@ Orchestrators interact with four Arbitrum smart contracts:
   <tbody>
     <TableRow>
       <TableCell>**BondingManager**</TableCell>
-      <TableCell>Stake LPT (self-bond), receive delegated stake, set reward cut and fee cut, call rewards each round</TableCell>
+      <TableCell>Stake LPT (self-bond), receive delegated stake, set Reward Cut and Fee Cut, call rewards each round</TableCell>
     </TableRow>
     <TableRow>
       <TableCell>**RoundsManager**</TableCell>
@@ -210,7 +210,7 @@ protocol controller - confirm the current integration status with your setup gui
 {/* REVIEW: Confirm AIServiceRegistry detached-from-controller status is intentional with Mehrdad */}
 </Note>
 
-<CustomDivider middleText="Internal Architecture" style={{margin: "-1rem 0 -1rem 0"}} />
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Dual Pipeline Architecture
 
@@ -233,8 +233,8 @@ flowchart TB
         ORCHCORE["Session Manager\n- Verify payment ticket\n- Authenticate request\n- Route to worker"]
     end
 
-    SEG --> ORC
-    AIREQ --> ORC
+    SEG --> ORCHCORE
+    AIREQ --> ORCHCORE
 
     subgraph VIDEO["Video Pipeline"]
         direction TB
@@ -323,7 +323,7 @@ flowchart TB
   </tbody>
 </StyledTable>
 
-<CustomDivider middleText="Job Lifecycle" style={{margin: "-1rem 0 -1rem 0"}} />
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Request Flow
 
@@ -347,7 +347,7 @@ sequenceDiagram
     WORKER->>ORC: Result
     ORC->>GW: Processed result
     ORC->>ORC: Accumulate payment ticket
-    ORC-->>PROTO: Redeem winning ticket (probabilistic; not every ticket)
+    ORC-->>PROTO: Redeem winning ticket (probabilistic, not every ticket)
     PROTO-->>ORC: ETH (service fee)
 ```
 
@@ -360,7 +360,7 @@ sequenceDiagram
 2. **Ticket verification** - The Orchestrator verifies the ticket is valid (correct signer, sufficient
    face value, within expected value range).
 3. **Pipeline routing** - The Orchestrator routes the job to the video pipeline (transcoder) or the
-   AI pipeline (AI runner) based on the job type.
+   AI pipeline (AI Runner) based on the job type.
 4. **Execution** - The worker processes the job. For video: transcodes the segment to all requested
    output profiles. For AI: runs inference against the loaded model.
 5. **Result return** - The Orchestrator returns the result to the Gateway over HTTP.
@@ -369,7 +369,7 @@ sequenceDiagram
 7. **On-chain redemption** - Winning tickets are submitted to the TicketBroker contract on Arbitrum,
    releasing ETH to the Orchestrator.
 
-<CustomDivider middleText="Deployment Configurations" style={{margin: "-1rem 0 -1rem 0"}} />
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Setup Configurations
 
@@ -418,7 +418,7 @@ scale and operational requirements.
   </Tab>
 </Tabs>
 
-<CustomDivider middleText="Key Components" style={{margin: "-1rem 0 -1rem 0"}} />
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Software Components
 
@@ -455,7 +455,7 @@ The `-aiModels` flag specifies which pipelines and models to load on startup:
 A command-line tool that connects to a running Orchestrator node. Used for:
 
 - Activating the Orchestrator on-chain
-- Configuring reward cut and fee cut
+- Configuring Reward Cut and Fee Cut
 - Setting price per unit and price per Gateway
 - Viewing node status, connected Gateways, and current earnings
 

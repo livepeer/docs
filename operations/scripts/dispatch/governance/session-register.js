@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the sessionStart hook that registers this session in a shared registry file.
  * @description SessionStart hook that registers this session in a shared registry file.
  * @mode        dispatch
  * @pipeline    SessionStart hook / PostToolUse hook → writes to /tmp/claude-session-registry
@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 const { stdin } = process;
 
 const REGISTRY = '/tmp/claude-session-registry';
@@ -63,7 +64,7 @@ stdin.on('end', () => {
     }
 
     // Write back
-    fs.writeFileSync(REGISTRY, JSON.stringify(registry, null, 2));
+    atomicWrite(REGISTRY, JSON.stringify(registry, null, 2));
 
     // On session start (no tool_input), report other active sessions
     if (!filePath) {

@@ -33,14 +33,14 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <Tip>
-  This step connects the orchestrator to Arbitrum One and registers it on the Livepeer protocol. It requires arbETH for gas and LPT for staking. Asset acquisition often takes hours to days because of exchange availability and bridge confirmation times.
+  This step connects the Orchestrator to Arbitrum One and registers it on the Livepeer Protocol. It requires arbETH for gas and LPT for staking. Asset acquisition often takes hours to days because of exchange availability and bridge confirmation times.
 </Tip>
 
 <Warning>
-  Start this step after arbETH and LPT are already in the orchestrator wallet on Arbitrum One. LPT acquisition on Arbitrum often includes exchange settlement and bridging time, so plan for that lead time.
+  Start this step after arbETH and LPT are already in the Orchestrator wallet on Arbitrum One. LPT acquisition on Arbitrum often includes exchange settlement and bridging time, so plan for that lead time.
 </Warning>
 
-<CustomDivider middleText="Connection Steps" />
+<CustomDivider />
 
 <StyledSteps>
 
@@ -78,7 +78,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
     Production nodes need a hosted provider. Public endpoints offer no uptime guarantee and can drop sessions during round initialisation, which forfeits that round's LPT reward.
 
     **Alchemy setup:**
-    1. Create an account at [alchemy.com](https://www.alchemy.com)
+    1. Create an account at [Alchemy.com](https://www.alchemy.com)
     2. Create a new app - select **Arbitrum** and **Mainnet**
     3. Copy the HTTPS endpoint: `https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY`
 
@@ -106,7 +106,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
     The address appears in the startup logs. Record it - this is the address that will receive ETH fees and hold staked LPT.
 
     <Warning>
-      The private key for this account is stored at `~/.lpData/arbitrum-one-mainnet/keystore`. Back it up to offline storage immediately. Loss of the keystore means permanent loss of access to the orchestrator account and all bonded LPT.
+      The private key for this account is stored at `~/.lpData/arbitrum-one-mainnet/keystore`. Back it up to offline storage immediately. Loss of the keystore means permanent loss of access to the Orchestrator account and all bonded LPT.
     </Warning>
 
     Alternatively, check the current account via `livepeer_cli`:
@@ -122,29 +122,29 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
   <StyledStep title="Fund the wallet with arbETH">
 
-    The orchestrator wallet needs ETH on Arbitrum One for gas. All on-chain transactions (activation, reward calls, ticket redemption) consume ETH.
+    The Orchestrator wallet needs ETH on Arbitrum One for gas. All on-chain transactions (activation, reward calls, ticket redemption) consume ETH.
 
     **Recommended minimum:** 0.05 ETH for initial setup and ongoing gas costs.
 
     **How to get arbETH:**
     - Buy ETH directly on an exchange that supports Arbitrum One withdrawals (Binance, Coinbase, Kraken)
-    - Bridge ETH from Ethereum L1 at [bridge.arbitrum.io](https://bridge.arbitrum.io) (bridge confirmation: 10-15 minutes)
+    - Bridge ETH from Ethereum L1 at [bridge.Arbitrum.io](https://bridge.arbitrum.io) (bridge confirmation: 10-15 minutes)
 
-    Verify the balance on [arbiscan.io](https://arbiscan.io) by searching the orchestrator address before proceeding.
+    Verify the balance on [Arbiscan.io](https://arbiscan.io) by searching the Orchestrator address before proceeding.
 
   </StyledStep>
 
   <StyledStep title="Acquire and stake LPT">
 
-    LPT must be bonded to the orchestrator address to enter the active set for video transcoding. The active set is the top 100 orchestrators by total stake (self-bonded + delegated LPT).
+    LPT must be bonded to the Orchestrator address to enter the Active Set for video transcoding. The Active Set is the top 100 Orchestrators by total stake (self-bonded + delegated LPT).
 
     <Note>
-      Check the current active set threshold on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) before acquiring LPT. The threshold fluctuates with network participation. AI-only operators need enough LPT to activate on-chain. Video operators need enough stake for active-set membership.
+      Check the current Active Set threshold on [Livepeer Explorer](https://explorer.livepeer.org/orchestrators) before acquiring LPT. The threshold fluctuates with network participation. AI-only operators need enough LPT to activate on-chain. Video operators need enough stake for active-set membership.
     </Note>
 
     **Where to get LPT on Arbitrum:**
     - Uniswap on Arbitrum (LPT/ETH pool)
-    - Bridge LPT from Ethereum L1 via [bridge.arbitrum.io](https://bridge.arbitrum.io)
+    - Bridge LPT from Ethereum L1 via [bridge.Arbitrum.io](https://bridge.arbitrum.io)
     - See the Arbitrum Exchanges resource page for current options
 
     **LPT acquisition may take hours to days.** This is the expected waiting step in the setup process.
@@ -163,9 +163,9 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
   <StyledStep title="Activate on-chain">
 
-    Activation registers the orchestrator on the Livepeer protocol and sets commission rates.
+    Activation registers the Orchestrator on the Livepeer Protocol and sets commission rates.
 
-    In `livepeer_cli`, select **"Invoke multi-step 'become an orchestrator'"** and follow the prompts:
+    In `livepeer_cli`, select **"Invoke multi-step 'become an Orchestrator'"** and follow the prompts:
 
     <StyledTable variant="bordered">
       <thead>
@@ -177,14 +177,14 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
       </thead>
       <tbody>
         <TableRow>
-          <TableCell>Reward cut</TableCell>
+          <TableCell>Reward Cut</TableCell>
           <TableCell>`10`</TableCell>
-          <TableCell>Percentage of LPT inflation the orchestrator keeps. 10% means delegators receive 90%.</TableCell>
+          <TableCell>Percentage of LPT inflation the Orchestrator keeps. 10% means Delegators receive 90%.</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell>Fee cut</TableCell>
+          <TableCell>Fee Cut</TableCell>
           <TableCell>`95`</TableCell>
-          <TableCell>Percentage of ETH job fees the orchestrator keeps. 95% means delegators receive 5%.</TableCell>
+          <TableCell>Percentage of ETH job fees the Orchestrator keeps. 95% means Delegators receive 5%.</TableCell>
         </TableRow>
         <TableRow>
           <TableCell>Service address</TableCell>
@@ -199,7 +199,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
     {/* TODO: Confirm the exact current livepeer_cli text for the multi-step orchestrator activation flow. */}
 
     <Note>
-      The node joins the active set at the start of the **next round** after activation. Rounds are approximately 22 hours on Arbitrum, so Explorer can show Registered until the next round begins.
+      The node joins the Active Set at the start of the **next round** after activation. Rounds are approximately 22 hours on Arbitrum, so Explorer can show Registered until the next round begins.
     </Note>
 
   </StyledStep>
@@ -216,7 +216,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
     Expected: a JSON response with a `pipelines` array listing the configured AI pipelines.
 
-    Also verify externally at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Search by the orchestrator address - the configured pipelines should appear within 2-5 minutes of startup.
+    Also verify externally at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities). Search by the Orchestrator address - the configured pipelines should appear within 2-5 minutes of startup.
 
     {/* TODO: Confirm whether -aiServiceRegistry still needs explicit configuration or is enabled automatically with -aiWorker. */}
 
@@ -224,13 +224,13 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
   <StyledStep title="Verify on Livepeer Explorer">
 
-    Open [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) and search for the orchestrator's Ethereum address.
+    Open [explorer.livepeer.org/Orchestrators](https://explorer.livepeer.org/orchestrators) and search for the Orchestrator's Ethereum address.
 
     Confirm:
     - **Status** shows Active (may show Registered until the next round completes)
     - **Service URI** matches the configured `-serviceAddr`
     - **Stake** reflects the bonded LPT amount
-    - **Reward cut** and **fee cut** match the activation settings
+    - **Reward Cut** and **Fee Cut** match the activation settings
 
     Update the Service URI through `livepeer_cli` whenever Explorer shows the wrong address or external reachability checks fail:
 
@@ -251,7 +251,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
     The startup command should omit `-reward=false`. Remove that flag and restart when it appears.
 
-    **Reward calling economics:** very low-stake orchestrators can spend more on gas than they receive in LPT. Disable automatic calling with `-reward=false` in that case and call manually via `livepeer_cli` once per round until stake grows. See <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/reward-call-tuning" label="Reward Call Tuning" newline={false} /> for the profitability calculation.
+    **Reward calling economics:** very low-stake Orchestrators can spend more on gas than they receive in LPT. Disable automatic calling with `-reward=false` in that case and call manually via `livepeer_cli` once per round until stake grows. See <LinkArrow href="/v2/orchestrators/guides/config-and-optimisation/reward-call-tuning" label="Reward Call Tuning" newline={false} /> for the profitability calculation.
 
     A missed round forfeits that round's LPT allocation permanently. There is no catch-up mechanism.
 
@@ -259,7 +259,7 @@ import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Ste
 
 </StyledSteps>
 
-<CustomDivider middleText="Troubleshooting" />
+<CustomDivider />
 
 ## Troubleshooting connection issues
 
@@ -273,7 +273,7 @@ Use `curl -k https://YOUR_PUBLIC_IP:8935/status` as the main external reachabili
     Test from an external machine: `curl -k https://YOUR_PUBLIC_IP:8935/status`. If this times out, port 8935 is blocked by a firewall or the address is wrong. Check NAT rules, security group settings (AWS/GCP/Azure), and that the `-serviceAddr` matches the machine's public IP. A domain name is more resilient than a bare IP.
   </Accordion>
   <Accordion title="Active-set eligibility after activation" icon="users">
-    Check stake vs current threshold on [Explorer](https://explorer.livepeer.org/orchestrators). The active set is the top 100 by total stake. Nodes below the threshold are registered but not active - gateways do not route video transcoding to them. Wait up to one full round (22 hours) for the status to update after increasing stake.
+    Check stake vs current threshold on [Explorer](https://explorer.livepeer.org/orchestrators). The Active Set is the top 100 by total stake. Nodes below the threshold are registered but not active - Gateways do not route video transcoding to them. Wait up to one full round (22 hours) for the status to update after increasing stake.
   </Accordion>
   <Accordion title="Transactions failing with gas errors" icon="gas-pump">
     Check the ETH balance on Arbitrum. Reward calls use 350,000-450,000 gas; activation uses similar amounts. At typical Arbitrum gas prices, each transaction costs $0.01-$0.05 USD. Keep at least 0.01 ETH on Arbitrum at all times to prevent failed transactions.

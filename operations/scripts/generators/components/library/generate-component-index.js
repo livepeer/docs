@@ -2,15 +2,13 @@
 /**
  * @script      generate-component-index
  * @type        generator
- * @concern     components
- * @niche       library
- * @purpose     governance:index-management
- * @description Generates per-grouping INDEX.md quick-reference tables from component-registry.json
- *              and component-usage-map.json. Lists all components with name, file, status,
- *              description, and import count. Distinct from LIBRARY.md (full documentation).
+ * @concern     maintenance
+ * @niche       component-registry
+ * @purpose     Generate per-grouping snippets/components/{category}/INDEX.md quick-reference tables from component-registry.json + component-usage-map.json — gives contributors a one-page lookup of every component with name, file, status, description, and import count per category
+ * @description Reads docs-guide/config/component-registry.json (all components) + the component-usage map (where each is imported). For each top-level grouping (wrappers, config, scaffolding, displays, elements, etc.) emits an INDEX.md with the components in that group. Distinct from generate-component-library.js which emits the longer LIBRARY.md docs. Manual-use — not in dispatch-component-registry pipeline yet; tracked as follow-up.
  * @mode        generate
- * @pipeline    manual, post-registry -> component-registry.json -> snippets/components/INDEX.md
- * @scope       snippets/components/
+ * @pipeline    manual — invoked after component-registry regen
+ * @scope       docs-guide/config/component-registry.json → snippets/components/{group}/INDEX.md
  * @usage       node operations/scripts/generators/components/library/generate-component-index.js [--dry-run] [--check] [--category elements]
  * @policy      R-R10
  */
@@ -18,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { VALID_CATEGORIES } = require('../../../../../tools/lib/governance/component-governance-utils');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
@@ -248,7 +247,7 @@ function main() {
       console.log(`Would write: ${path.relative(REPO_ROOT, outputPath)} (${comps.length} components)`);
     } else {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-      fs.writeFileSync(outputPath, content, 'utf8');
+      atomicWrite(outputPath, content, 'utf8');
       writtenCount++;
       console.log(`Wrote: ${path.relative(REPO_ROOT, outputPath)} (${comps.length} components)`);
     }
@@ -269,7 +268,7 @@ function main() {
     } else if (args.mode === 'dry-run') {
       console.log(`Would write: ${path.relative(REPO_ROOT, rootPath)} (root index)`);
     } else {
-      fs.writeFileSync(rootPath, rootContent, 'utf8');
+      atomicWrite(rootPath, rootContent, 'utf8');
       writtenCount++;
       console.log(`Wrote: ${path.relative(REPO_ROOT, rootPath)} (root index)`);
     }

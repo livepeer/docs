@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            mdx-component-runtime-smoke.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/unit, tests/integration

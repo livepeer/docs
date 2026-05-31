@@ -3,20 +3,21 @@
  * @script      generate-component-snippets
  * @type        generator
  * @concern     maintenance
- * @niche       library
- * @purpose     tooling:dev-tools
- * @description Generate VS Code snippet definitions from component-registry.json.
+ * @niche       component-registry
+ * @purpose     Generate .vscode/components.code-snippets from docs-guide/config/component-registry.json — gives contributors VS Code IntelliSense entries for every Livepeer Mintlify component (Card, Tabs, Accordion, CustomDivider, etc.) so they can scaffold correct usage with one keystroke
+ * @description Reads the component registry, projects each entry into a VS Code snippet definition (prefix, body, description, params), writes .vscode/components.code-snippets. --check fails if the generated snippets file drifts from the registry source; --write regenerates. Tracked in operations/governance/config/generated-artifacts.json so pre-commit checks freshness on registry changes.
  * @mode        generate
- * @pipeline    manual → component-registry.json → .vscode/components.code-snippets
- * @scope       .vscode/components.code-snippets
+ * @pipeline    P3 (PR drift check via generated-artifacts.json freshness), P4 (post-merge regen)
+ * @scope       docs-guide/config/component-registry.json → .vscode/components.code-snippets
  * @usage       node operations/scripts/generators/components/library/generate-component-snippets.js [--check] [--write]
- * @policy      —
+ * @policy      D-GOV-03 (drift-check via --check; freshness enforced by generated-artifacts.json manifest)
  */
 
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
@@ -161,7 +162,7 @@ function main() {
   }
 
   if (writeMode) {
-    fs.writeFileSync(SNIPPETS_PATH, generated, 'utf8');
+    atomicWrite(SNIPPETS_PATH, generated, 'utf8');
     const count = Object.keys(snippets).length;
     console.log(`Wrote ${count} snippets to ${SNIPPETS_PATH}`);
     process.exit(0);

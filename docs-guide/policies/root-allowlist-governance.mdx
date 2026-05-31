@@ -1,7 +1,7 @@
 ---
 title: Root Allowlist Governance
 sidebarTitle: Root Allowlist Governance
-description: "Canonical policy for what belongs at repo root, how .allowlist is authored, and how root changes are reviewed safely."
+description: Canonical policy for what belongs at repo root, how .allowlist is authored, and how root changes are reviewed safely.
 keywords:
   - livepeer
   - root allowlist
@@ -15,6 +15,11 @@ keywords:
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
+lastVerified: 2026-04-08
+pageType: reference
+audience: developer
+purpose: orient
+status: current
 ---
 
 # Root Allowlist Governance
@@ -135,10 +140,10 @@ Do not hand-edit `.allowlist` as the primary source of truth.
 
 Rules:
 
-1. **Spec files only** – `api/` must contain only OpenAPI/JSON schema files (`.yaml`, `.json`). No `.mdx` page content, no `.backup` files, no partial mirrors.
-2. **No backup files** – `openapi.yaml.backup` and similar were removed as part of Phase 0 cleanup (2026-03-21). Future backups belong in `_workspace/archive/` if they exist at all.
-3. **No duplicate subdirs** – `api/worker/` was removed (2026-03-21) as it was an exact mirror of `api/` root files. If worker-specific specs diverge in the future, they get their own named spec file in `api/`, not a subdirectory mirror.
-4. **Size** – specs are schema-only; they should remain small. If a spec exceeds 500 KB, review for consolidation.
+1. **Spec files only** — `api/` must contain only OpenAPI/JSON schema files (`.yaml`, `.json`). No `.mdx` page content, no `.backup` files, no partial mirrors.
+2. **No backup files** — `openapi.yaml.backup` and similar were removed as part of Phase 0 cleanup (2026-03-21). Future backups belong in `_workspace/archive/` if they exist at all.
+3. **No duplicate subdirs** — `api/worker/` was removed (2026-03-21) as it was an exact mirror of `api/` root files. If worker-specific specs diverge in the future, they get their own named spec file in `api/`, not a subdirectory mirror.
+4. **Size** — specs are schema-only; they should remain small. If a spec exceeds 500 KB, review for consolidation.
 
 Current spec inventory:
 
@@ -162,11 +167,11 @@ Every named root folder (excluding dot-dirs, `v1/`, and `v2/`) may contain a `_w
 | Folder | `_workspace/` subdirs |
 |--------|-----------------------|
 | `ai-tools/` | `skill-research/`, `rule-drafts/`, `archive/` |
-| `api/` | (root – use for spec-related scratch only) |
+| `api/` | (root — use for spec-related scratch only) |
 | `docs-guide/` | `archive/`, `drafts/` |
-| `snippets/` | (root – use for component/asset scratch) |
-| `tools/` | (root – use for tooling scratch) |
-| `workspace/` | N/A – the folder is itself the workspace |
+| `snippets/` | (root — use for component/asset scratch) |
+| `tools/` | (root — use for tooling scratch) |
+| `workspace/` | N/A — the folder is itself the workspace |
 
 **Rules:**
 1. `_workspace/` under a root folder must not appear in `docs.json` navigation.

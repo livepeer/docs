@@ -58,8 +58,8 @@ import { BorderedBox } from "/snippets/components/wrappers/containers/Containers
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 Gateways set **price caps** that control the maximum amount paid to Orchestrators per job.
-These caps apply regardless of operational mode - both on-chain and off-chain gateways configure the same pricing flags.
-The Operational mode determines context: on-chain gateways filter Orchestrators from an open marketplace, while off-chain gateways set safety ceilings for known Orchestrators specified via `-orchAddr`.
+These caps apply regardless of operational mode - both on-chain and off-chain Gateways configure the same pricing flags.
+The Operational mode determines context: on-chain Gateways filter Orchestrators from an open marketplace, while off-chain Gateways set safety ceilings for known Orchestrators specified via `-orchAddr`.
 
 ## Pricing Mechanics
 
@@ -71,12 +71,12 @@ Any Orchestrator above the cap is skipped for that job. If no Orchestrator is wi
 <BorderedBox variant="accent">
     <Tabs>
         <Tab title="On-chain Prcing" icon="link">
-            On-chain gateways discover Orchestrators automatically via the Livepeer protocol. The price cap acts as a **marketplace filter** - it determines the range of the network the gateway can access. A higher cap means more Orchestrators available; a lower cap means fewer options but lower costs.
+            On-chain Gateways discover Orchestrators automatically via the Livepeer Protocol. The price cap acts as a **marketplace filter** - it determines the range of the network the Gateway can access. A higher cap means more Orchestrators available; a lower cap means fewer options but lower costs.
 
             Orchestrators advertise prices publicly. Query current rates via [Livepeer Explorer](https://explorer.livepeer.org) or `livepeer_cli` before setting caps.
         </Tab>
         <Tab title="Off-chain Prcing" icon="cloud">
-            Off-chain gateways specify Orchestrators directly via `-orchAddr`. The gateway already knows who it is paying. In this context, the price cap acts as a **safety ceiling** - it prevents unexpected cost spikes if an Orchestrator raises prices, but it does not filter from a marketplace.
+            Off-chain Gateways specify Orchestrators directly via `-orchAddr`. The Gateway already knows who it is paying. In this context, the price cap acts as a **safety ceiling** - it prevents unexpected cost spikes if an Orchestrator raises prices, but it does not filter from a marketplace.
 
             Set the cap based on the agreed rate with the known Orchestrators, plus a margin for price adjustments.
         </Tab>
@@ -90,7 +90,7 @@ Any Orchestrator above the cap is skipped for that job. If no Orchestrator is wi
     <Tab title = "Video Configuration">
         ### Video Pricing
 
-        Video transcoding is priced **per pixel**. The gateway calculates fees based on the resolution and length of each transcoded segment. Video transcoding requires on-chain operational mode.
+        Video transcoding is priced **per pixel**. The Gateway calculates fees based on the resolution and length of each transcoded segment. Video transcoding requires on-chain operational mode.
 
         **Key flags:**
 
@@ -141,9 +141,9 @@ Any Orchestrator above the cap is skipped for that job. If no Orchestrator is wi
         -maxPricePerUnit 0.02USD
         ```
 
-        This requires a **Chainlink ETH/USD price feed** configured via `-priceFeedAddr`. The gateway converts the USD cap to wei at runtime using the oracle price.
+        This requires a **Chainlink ETH/USD price feed** configured via `-priceFeedAddr`. The Gateway converts the USD cap to wei at runtime using the oracle price.
 <Warning>
-        A gateway configured with a fixed wei cap pays more or less in USD terms as ETH price moves. USD-denominated pricing with a Chainlink feed stabilises the effective cost but requires the oracle to be reachable and accurate.
+        A Gateway configured with a fixed wei cap pays more or less in USD terms as ETH price moves. USD-denominated pricing with a Chainlink feed stabilises the effective cost but requires the oracle to be reachable and accurate.
         </Warning>
 
     </Tab>
@@ -243,7 +243,7 @@ Any Orchestrator above the cap is skipped for that job. If no Orchestrator is wi
 
         ### Live AI intervals
 
- For the `live-video-to-video` pipeline, the gateway sends periodic payments instead of per-frame or per-request. The interval is configured with:
+ For the `live-video-to-video` pipeline, the Gateway sends periodic payments instead of per-frame or per-request. The interval is configured with:
 
         ```bash icon="terminal"
         -livePaymentInterval 5s
@@ -321,7 +321,7 @@ All pricing flags at a glance:
 
     **Orchestrator pricing behaviour:**
 
-    - Orchestrators can set **per-gateway prices** using `-pricePerGateway`, giving specific gateways custom rates based on relationships or volume.
+    - Orchestrators can set **per-Gateway prices** using `-pricePerGateway`, giving specific Gateways custom rates based on relationships or volume.
     - Some Orchestrators enable **`autoAdjustPrice`**, which shifts their advertised rate based on current gas costs. A tight cap can briefly knock all Orchestrators out of range during a gas spike.
   </Tab>
   <Tab title="Off-chain" icon="cloud">
@@ -341,7 +341,7 @@ All pricing flags at a glance:
 
 ## Pricing Setup Paths
 
-Pricing can be set at startup, in a config file, or updated at runtime without restarting the gateway.
+Pricing can be set at startup, in a config file, or updated at runtime without restarting the Gateway.
 
 <Tabs>
   <Tab title="CLI flags" icon="terminal">
@@ -374,7 +374,7 @@ Pricing can be set at startup, in a config file, or updated at runtime without r
   </Tab>
 
   <Tab title="HTTP API" icon="globe">
-    Adjust pricing without restarting the gateway via the internal HTTP API:
+    Adjust pricing without restarting the Gateway via the internal HTTP API:
 
     ```bash icon="terminal"
     # Set video pricing
@@ -398,7 +398,7 @@ Pricing can be set at startup, in a config file, or updated at runtime without r
 
 <CardGroup cols={2}>
   <Card title="Funding Guide" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
-    Deposit ETH into the TicketBroker contract. Required for on-chain gateways before setting prices.
+    Deposit ETH into the TicketBroker contract. Required for on-chain Gateways before setting prices.
   </Card>
   <Card title="Payments Guide" icon="code-branch" href="/v2/gateways/guides/payments-and-pricing/payment-guide">
     Revisit the payment architecture decision guide.
@@ -407,6 +407,6 @@ Pricing can be set at startup, in a config file, or updated at runtime without r
     Tuning transcoding profiles and AI retry behaviour.
   </Card>
   <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/guides/payments-and-pricing/remote-signers">
-    Separate key management for off-chain gateways.
+    Separate key management for off-chain Gateways.
   </Card>
 </CardGroup>

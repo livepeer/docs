@@ -41,7 +41,6 @@ Scope:
 - `content-system.mdx` — `docs-guide/frameworks/content-system.mdx`
 - `component-governance.mdx` — `docs-guide/frameworks/component-governance.mdx`
 - `feature-map.mdx` — `docs-guide/features/feature-map.mdx`
-- `architecture-map.mdx` — `docs-guide/features/architecture-map.mdx`
 - `repo-config-map.mdx` — `docs-guide/repo-ops/config/repo-config-map.mdx`
 - `enforcement-map.mdx` — `docs-guide/repo-ops/maps/enforcement-map.mdx`
 - `governance-index.mdx` — `docs-guide/policies/governance-index.mdx`

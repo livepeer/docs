@@ -4,7 +4,7 @@
 # @type        dispatch
 # @concern     governance
 # @niche       
-# @purpose     
+# @purpose     Dispatch the executes a prompt against files non-interactively with restricted tools. Use for bulk quality checks, changelog regeneration, stale reference scans, and other well-defined batch tasks.
 # @description Executes a prompt against files non-interactively with restricted tools. Use for bulk quality checks, changelog regeneration, stale reference scans, and other well-defined batch tasks.
 # @mode        dispatch
 # @pipeline    CLI → claude headless → restricted tools → output file

@@ -3,18 +3,20 @@
 /**
  * @script      generate-hero-image
  * @type        generator
- * @concern     
- * @niche       media
- * @purpose     
- * @description generate hero image
+ * @concern     brand
+ * @niche       hero-assets
+ * @purpose     Generate the hero foreground image (headline graphic, illustrations, product mockups) layered on top of the hero background — manual-use script run when brand assets or hero copy change
+ * @description Generates the hero foreground PNG/SVG used at v2/index. Reads brand assets + hero copy from config, renders via Puppeteer or Canvas, writes to snippets/assets/media/hero/. Pairs with generate-hero-background.js. Manual-use only — not wired to any dispatcher.
  * @mode        generate
- * @pipeline    manual
- * @scope       operations/scripts/generators/media
+ * @pipeline    manual — invoked on brand or hero-content changes
+ * @scope       brand assets + hero copy → snippets/assets/media/hero/
  * @usage       node operations/scripts/generators/media/generate-hero-image.js
+ * @policy      manual-only (no automated pipeline — rare regeneration)
  */
 
 const path = require('path')
 const fs = require('fs')
+const { registerCleanup } = require('../../../../tools/lib/bootstrap/safe-io')
 
 const args = process.argv.slice(2)
 
@@ -161,7 +163,9 @@ async function main() {
     }
   }
 
-  const browser = await puppeteer.launch({
+  let browser
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}) })
+  browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })

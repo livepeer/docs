@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
  * @description Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index
  * @mode        generate
  * @pipeline    manual
@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
 const { isExcludedV2ExperimentalPath } = require('../../../../../tools/lib/docs/docs-publishability');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -621,7 +622,7 @@ function writeIfChanged(absPath, nextContent) {
   if (current === nextContent) {
     return false;
   }
-  fs.writeFileSync(absPath, nextContent);
+  atomicWrite(absPath, nextContent);
   return true;
 }
 

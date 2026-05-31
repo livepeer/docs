@@ -49,13 +49,13 @@ for i in $(seq 1 5); do
 done
 ```
 
-Measure peak VRAM usage per session and multiply by expected concurrency. If peak exceeds your GPU's VRAM, either reduce per-session memory (smaller batch size, lower resolution) or limit the orchestrator's `maxSessions` configuration.
+Measure peak VRAM usage per session and multiply by expected concurrency. If peak exceeds your GPU's VRAM, either reduce per-session memory (smaller batch size, lower resolution) or limit the Orchestrator's `maxSessions` configuration.
 
 <CustomDivider />
 
 ## Graceful shutdown
 
-The orchestrator sends `SIGTERM` when stopping a container. Handle it:
+The Orchestrator sends `SIGTERM` when stopping a container. Handle it:
 
 ```python
 import signal
@@ -79,7 +79,7 @@ A container that does not handle `SIGTERM` is killed after a timeout (default 10
 
 ## Health check under load
 
-The `/health` endpoint must return `{"status": "ok"}` even under full GPU load. If health checks fail, the orchestrator stops advertising the capability and gateways route elsewhere.
+The `/health` endpoint must return `{"status": "ok"}` even under full GPU load. If health checks fail, the Orchestrator stops advertising the capability and Gateways route elsewhere.
 
 Common failure: the health check handler shares the GPU inference thread and blocks during heavy processing. Run health checks on a separate thread or async task.
 
@@ -87,7 +87,7 @@ Common failure: the health check handler shares the GPU inference thread and blo
 
 ## Monitoring
 
-Expose Prometheus metrics from your container for the orchestrator's monitoring stack:
+Expose Prometheus metrics from your container for the Orchestrator's monitoring stack:
 
 | Metric | Description |
 |---|---|
@@ -96,8 +96,8 @@ Expose Prometheus metrics from your container for the orchestrator's monitoring 
 | `byoc_gpu_memory_bytes` | Current GPU memory usage |
 | `byoc_errors_total` | Processing errors by type |
 
-The orchestrator's Prometheus scraper picks up metrics from containers on the same Docker network.
+The Orchestrator's Prometheus scraper picks up metrics from containers on the same Docker network.
 
 <CustomDivider />
 
-The [BYOC architecture](/v2/developers/build/compute/byoc/byoc-architecture) covers the container interface. The [production checklist](/v2/developers/guides/production-hardening-checklist) covers gateway-side production requirements.
+The [BYOC architecture](/v2/developers/build/compute/byoc/byoc-architecture) covers the container interface. The [production checklist](/v2/developers/guides/production-hardening-checklist) covers Gateway-side production requirements.

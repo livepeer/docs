@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            contracts-view-model.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:contracts-registry
  * @scope             tests/unit, snippets/data/contract-addresses/

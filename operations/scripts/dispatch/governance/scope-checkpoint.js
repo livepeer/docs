@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the postToolUse hook for Edit/Write. Tracks total edit count per session.
  * @description PostToolUse hook for Edit/Write. Tracks total edit count per session.
  * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → track edit count → inject scope check every 8 edits
@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 const { stdin } = process;
 
 // ---------------------------------------------------------------------------
@@ -57,7 +58,7 @@ function readState() {
 }
 
 function writeState(state) {
-  fs.writeFileSync(getStatePath(), JSON.stringify(state, null, 2) + '\n');
+  atomicWrite(getStatePath(), JSON.stringify(state, null, 2) + '\n');
 }
 
 function readOutcome() {

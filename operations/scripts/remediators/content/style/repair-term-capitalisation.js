@@ -3,19 +3,21 @@
  * @script      repair-term-capitalisation
  * @type        remediator
  * @concern     brand
- * @niche       style
- * @purpose     qa:content-quality
- * @description Enforces correct capitalisation of proper nouns (Livepeer, Orchestrator, Ethereum, etc.) in routable v2 MDX prose. Reads rules from tools/config/quality/term-capitalisation.json. Skips code, frontmatter, URLs, imports, JSX attributes.
+ * @niche       proper-nouns
+ * @purpose     Fix incorrect proper-noun capitalisation in v2 MDX prose (Livepeer, Orchestrator, Gateway, AI, Ethereum, LPT, etc.) per the canonical rule set at tools/config/quality/term-capitalisation.json — paired remediator for check-proper-nouns
+ * @description Reads rules from tools/config/quality/term-capitalisation.json. Scans content text for lowercase or wrong-case occurrences and rewrites them. Skips code blocks, frontmatter, URLs, import/export lines, JSX attribute values. --verify re-runs check-proper-nouns.js per file and reverts any regression. Pairs with dispatch-proper-nouns.js.
  * @mode        repair
- * @pipeline    manual — batch remediation utility, run with --dry-run first
+ * @pipeline    P6 (self-heal via dispatch-proper-nouns.js --mode scheduled), manual via --files
  * @scope       v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)
  * @usage       node operations/scripts/remediators/content/style/repair-term-capitalisation.js [--dry-run|--write] [--verify] [--staged] [--files path,path]
+ * @policy      D-GOV-03 (paired remediator with --verify gate)
  */
 
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
@@ -143,8 +145,11 @@ function buildZoneMap(content) {
   const zones = [];
   let m;
 
-  if (content.startsWith('---')) {
-    const close = content.indexOf('---', 3);
+  // Tolerate leading whitespace/blank lines before frontmatter (Mintlify and gray-matter do).
+  const fmOpen = content.match(/^\s*---\r?\n/);
+  if (fmOpen) {
+    const searchFrom = fmOpen[0].length;
+    const close = content.indexOf('---', searchFrom);
     if (close > 0) {
       zones.push({ start: 0, end: close + 3, type: 'frontmatter' });
     }
@@ -339,8 +344,17 @@ function run(options = {}) {
 
     if (args.mode === 'write') {
       affectedFiles.push({ fullPath, relPath, originalContent: content });
-      const updated = applyReplacements(content, replacements);
-      fs.writeFileSync(fullPath, updated, 'utf8');
+      // Iterate to stability: tier-2 multi-word rules ("Livepeer Protocol") depend on
+      // tier-1 single-word rules ("livepeer" → "Livepeer") landing first. Apply, re-scan,
+      // re-apply until processFile returns []. Cap at 8 iterations as a safety net.
+      let updated = applyReplacements(content, replacements);
+      for (let pass = 0; pass < 8; pass += 1) {
+        const more = processFile(updated, rules);
+        if (more.length === 0) break;
+        updated = applyReplacements(updated, more);
+        totalReplacements += more.length;
+      }
+      atomicWrite(fullPath, updated, 'utf8');
     }
   }
 
@@ -391,7 +405,7 @@ function run(options = {}) {
 
       for (const af of affectedFiles) {
         if (regressedFiles.has(af.relPath)) {
-          fs.writeFileSync(af.fullPath, af.originalContent, 'utf8');
+          atomicWrite(af.fullPath, af.originalContent, 'utf8');
           reverted++;
         }
       }

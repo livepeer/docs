@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            codex-task-preflight.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          utility
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/integrators/ai/codex/task-preflight.js

@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generate * @mode read-only
  * @description * @mode        read-only
  * @mode        generate
  * @pipeline    manual, ci
@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const OUTPUTS = {
@@ -362,7 +363,7 @@ function renderContentMap(records) {
 function writeFile(repoPath, content) {
   const absPath = path.join(REPO_ROOT, repoPath);
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, content, 'utf8');
+  atomicWrite(absPath, content, 'utf8');
 }
 
 function run(args) {

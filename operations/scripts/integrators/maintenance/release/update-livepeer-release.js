@@ -4,7 +4,7 @@
  * @type        integrator
  * @concern     maintenance
  * @niche       release
- * @purpose     qa:data-refresh
+ * @purpose     Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.
  * @description Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.
  * @mode        integrate
  * @pipeline    manual
@@ -16,6 +16,7 @@
 const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const GITHUB_API_URL = 'https://api.github.com/repos/livepeer/go-livepeer/releases/latest';
 const RELEASE_PAGE_BASE_URL = 'https://github.com/livepeer/go-livepeer/releases/tag';
@@ -94,7 +95,7 @@ async function fetchLatestRelease(fetcher = global.fetch) {
 function writeLatestReleaseModule({ version, outputPath = DEFAULT_OUTPUT_PATH }) {
   const content = buildLatestReleaseModule(version);
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { fs.writeFileSync(outputPath, content, 'utf8'); };
+  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { atomicWrite(outputPath, content, 'utf8'); };
   return content;
 }
 

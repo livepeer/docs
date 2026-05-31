@@ -1,0 +1,436 @@
+[
+  {
+    "path": "operations/scripts/remediators/content/style/repair-ownerless-language.js",
+    "name": "repair-ownerless-language.js",
+    "concern": "copy",
+    "type": "remediator",
+    "niche": "ownerless-language",
+    "purpose": "Remove human-owner dependency from governed GitHub and contributor surfaces — rewrites references to \"maintainers\", \"triage\", \"ownership\" into ownerless equivalents per the ownerless-repo governance model",
+    "description": "Applies a closed list of deterministic 1:1 phrase rewrites (e.g. \"Awaiting maintainer triage\" → \"Awaiting repository routing\", \"policy ownership\" → \"policy layering\") to a fixed set of governed contributor surfaces. Reads no external rules — the phrase map is hard-coded for auditability. Pairs with dispatch-ownerless-language.js.",
+    "scope": "AGENTS.md, .allowlist, .github/, .claude/, .cursor/, .windsurf/, README.md, docs-guide/ contributor surfaces",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/copy/dispatch-ownerless-language.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/governance/config/repo-governance-surfaces.json",
+      "operations/governance/config/ownerless-governance-surfaces.json",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/copy-brand.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js",
+    "name": "fetch-discord-announcements.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Fetch Discord announcement channel posts for the shared Livepeer community feed and per-solution product feeds (daydream, embody, streamplace, etc.) — keeps Community + product pages current with the latest announcements",
+    "description": "Reads channel ID + bot token from env, hits Discord API for each configured solution, transforms messages into a JSX module per solution and a shared community module. Writes outputs to snippets/data/social-feed-solutions/{product}/discordData.jsx and snippets/data/social-feeds/discordAnnouncementsData.jsx.",
+    "scope": "Discord API (read-only) → snippets/data/social-feed-solutions/{product}/, snippets/data/social-feeds/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/.env.example",
+      "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+      "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx",
+      "docs-guide/repo-ops/config/.env.example",
+      "docs-guide/repo-ops/secrets/solutions-secrets.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js",
+    "name": "fetch-forum-data.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Fetch the latest Livepeer Forum topics via Discourse API and emit sorted exports (newest, most-replied, most-viewed) used by Community pages to render the live forum feed",
+    "description": "Polls the public Livepeer Forum Discourse API, extracts topic title, slug, category, reply count, view count, and last-activity timestamp. Writes multiple sorted JSX exports to snippets/data/social-feeds/forumData.jsx. Consumed by the social-feeds composable on Community pages. Supports --dry-run.",
+    "scope": "Livepeer Forum API (read-only) → snippets/data/social-feeds/forumData.jsx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+      "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/_workspace/02_Design-Specification/04_UX-Framework-&-Taxonomy/02_07-Content-Taxonomy-Semantic-UI/index.md",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js",
+    "name": "fetch-ghost-blog-data.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Fetch Livepeer blog posts from the Ghost blog public RSS feed and emit a JSX module the Community pages render as the live blog feed",
+    "description": "Reads RSS XML from the public Livepeer Ghost blog endpoint, parses entries (title, link, pubDate, excerpt, author), writes a sorted JSX export to snippets/data/social-feeds/ghostBlogData.jsx. No auth required.",
+    "scope": "Livepeer Ghost RSS feed (read-only) → snippets/data/social-feeds/ghostBlogData.jsx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/product-social-config.json",
+      "operations/scripts/config/.env.example",
+      "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+      "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/_workspace/02_Design-Specification/04_UX-Framework-&-Taxonomy/02_07-Content-Taxonomy-Semantic-UI/index.md",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx",
+      "docs-guide/repo-ops/config/.env.example",
+      "docs-guide/repo-ops/secrets/solutions-secrets.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js",
+    "name": "fetch-github-discussions.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Fetch GitHub Discussions per Livepeer solution repo (daydream, embody, streamplace, etc.) and emit per-solution JSX modules used to render Community / Q&A feeds on the product pages",
+    "description": "Reads solution → repo mapping from config, hits GitHub GraphQL API for the Discussions feed, transforms entries (title, body excerpt, author, category, replies, upvotes) into JSX exports. Writes per-solution outputs to snippets/data/social-feed-solutions/{product}/githubDiscussionsData.jsx. Requires GITHUB_TOKEN (anonymous works for public repos but is rate-limited).",
+    "scope": "GitHub GraphQL API (read-only) → snippets/data/social-feed-solutions/{product}/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/.env.example",
+      "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+      "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx",
+      "docs-guide/repo-ops/config/.env.example",
+      "docs-guide/repo-ops/secrets/solutions-secrets.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js",
+    "name": "fetch-github-releases.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Fetch GitHub Releases per Livepeer solution repo and emit per-solution JSX modules — supplies the \"Latest releases\" feed on each product's overview page (note: distinct from dispatch-changelogs which writes long-form changelog MDX pages)",
+    "description": "Reads solution → repo mapping from config, hits GitHub REST API for the Releases endpoint, transforms entries (tag, title, body excerpt, author, published date, prerelease flag) into JSX exports. Writes per-solution outputs to snippets/data/social-feed-solutions/{product}/githubReleasesData.jsx. Requires GITHUB_TOKEN.",
+    "scope": "GitHub REST API (read-only) → snippets/data/social-feed-solutions/{product}/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/.env.example",
+      "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx",
+      "docs-guide/repo-ops/config/.env.example",
+      "docs-guide/repo-ops/secrets/solutions-secrets.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js",
+    "name": "fetch-rss-blog-data.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Fetch per-solution RSS blog feeds (daydream, embody, streamplace, etc. — each product has its own blog or Substack) and emit per-solution JSX modules used to render the product-specific blog feed on each overview page",
+    "description": "Reads solution → RSS URL mapping from config, parses each feed (title, link, pubDate, excerpt, author), transforms into JSX exports. Writes per-solution outputs to snippets/data/social-feed-solutions/{product}/blogData.jsx. Distinct from fetch-ghost-blog-data which handles only the main Livepeer Ghost blog.",
+    "scope": "Per-solution RSS feeds (read-only) → snippets/data/social-feed-solutions/{product}/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+      "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx",
+      "docs-guide/repo-ops/config/.env.example",
+      "docs-guide/repo-ops/secrets/solutions-secrets.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js",
+    "name": "fetch-youtube-data.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Fetch the Livepeer YouTube channel video metadata (title, thumbnail, publish date, view count, duration) and emit a JSX module the Community pages render as the latest-videos feed",
+    "description": "Reads channel ID + API key from env, hits YouTube Data API v3 for the channel's uploads playlist, transforms entries into a sorted JSX export. Writes to snippets/data/social-feeds/youtubeData.jsx. Requires YOUTUBE_API_KEY.",
+    "scope": "YouTube Data API v3 (read-only) → snippets/data/social-feeds/youtubeData.jsx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/.env.example",
+      "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+      "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/_workspace/02_Design-Specification/04_UX-Framework-&-Taxonomy/02_07-Content-Taxonomy-Semantic-UI/index.md",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx",
+      "docs-guide/repo-ops/config/.env.example",
+      "docs-guide/repo-ops/secrets/solutions-secrets.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/showcase/project-showcase-sync.js",
+    "name": "project-showcase-sync.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "showcase",
+    "purpose": "Sync the Project Showcase data from the submission Google Sheet to snippets/data/showcase-feed/ — supports two modes: poll (process new submissions + pending review decisions) and dispatch (process one decision from a repository_dispatch payload)",
+    "description": "Reads pending submissions and review-decision rows from the configured Google Sheet, applies decisions (approve / reject / defer), writes the approved list to snippets/data/showcase-feed/showcaseData.jsx and showcaseDataPopulated.jsx. Consumed by snippets/composables/pages/home/project-showcase.mdx and snippets/composables/pages/showcase.mdx. Pairs with dispatch-showcase.js.",
+    "scope": "Google Sheets API (read/write decision rows) → snippets/data/showcase-feed/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/.env.example",
+      "operations/scripts/dispatch/content/copy/dispatch-showcase.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/_workspace/02_Design-Specification/04_UX-Framework-&-Taxonomy/02_07-Content-Taxonomy-Semantic-UI/index.md",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/.env.example"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/copy/changelogs/generate-changelog.js",
+    "name": "generate-changelog.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "changelogs",
+    "purpose": "Generate changelog MDX pages for every Livepeer solution (daydream, embody, streamplace, livepeer-studio), the contract repo, and the resources/changelog index by fetching GitHub Releases / Git tags and rendering Mintlify-format MDX",
+    "description": "Unified changelog generator driven by config key (CHANGELOG_KEY env var). Fetches releases from GitHub/GitLab REST API, optionally enhances entries via an LLM call, optionally verifies on-chain (for the contracts changelog), renders to v2/solutions/{product}/changelog.mdx or v2/resources/changelog/{section}.mdx. Pairs with dispatch-changelogs.js.",
+    "scope": "config → GitHub/GitLab REST API → v2/solutions/{product}/changelog.mdx, v2/resources/changelog/{section}.mdx",
+    "reads": [
+      "operations/scripts/config/mdx-sanitise",
+      "operations/scripts/config/product-social-config.json"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/copy/dispatch-changelogs.js",
+      ".claude/references/pipelines/exemplars.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-canonical-sync.js",
+    "name": "dispatch-canonical-sync.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "canonical-sync",
+    "purpose": "Mintlify canonical-sync pipeline (PR check + scheduled drift + manual repair)",
+    "description": "Detects drift between archived Mintlify sources and active consumers; repairs via sync-mintlify-canonical-consumers.",
+    "scope": "Mintlify canonical archive + registered consumer files",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js",
+      "operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/mintlify-canonical-sync.js",
+      "operations/scripts/dispatch/content/copy/dispatch-copy-check.js",
+      "operations/scripts/dispatch/content/copy/dispatch-copy-repair.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-changelogs.js",
+    "name": "dispatch-changelogs.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "changelogs",
+    "purpose": "Pipeline dispatcher for changelogs (full lifecycle: detect → repair → verify → escalate)",
+    "description": "Pipeline for changelog regeneration from upstream repo releases.",
+    "scope": "snippets/data/changelogs/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+      "operations/scripts/integrators/copy/changelogs/generate-changelog.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-copy-check.js",
+    "name": "dispatch-copy-check.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "check meta dispatcher: bundles copy pipelines in --mode pr",
+    "description": "PR meta for copy concern.",
+    "scope": "all copy pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-copy.yml",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-copy-repair.js",
+    "name": "dispatch-copy-repair.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "repair meta dispatcher: bundles copy pipelines in --mode manual",
+    "description": "Manual repair meta for copy concern.",
+    "scope": "all copy pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-copy.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+    "name": "dispatch-copy-update.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "update meta dispatcher: bundles copy pipelines in --mode scheduled",
+    "description": "Scheduled meta for copy integrators.",
+    "scope": "all copy pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-copy.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-ownerless-language.js",
+    "name": "dispatch-ownerless-language.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "ownerless-language",
+    "purpose": "Pipeline for ownerless-repo language enforcement (no \"we\", \"our\", owner-dependent phrasing)",
+    "description": "Detects owner-dependent phrasing in v2 MDX; repairs via repair-ownerless-language with --verify.",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode",
+      "operations/scripts/remediators/content/style/repair-ownerless-language.js"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-check.js",
+      "operations/scripts/dispatch/content/copy/dispatch-copy-repair.js",
+      "operations/scripts/remediators/content/style/repair-ownerless-language.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-showcase.js",
+    "name": "dispatch-showcase.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "showcase",
+    "purpose": "Pipeline dispatcher for showcase (full lifecycle: detect → repair → verify → escalate)",
+    "description": "Pipeline for project showcase data sync.",
+    "scope": "snippets/data/showcase/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+      "operations/scripts/integrators/copy/showcase/project-showcase-sync.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+    "name": "dispatch-social-feeds.js",
+    "concern": "copy",
+    "type": "dispatch",
+    "niche": "social-feeds",
+    "purpose": "Pipeline dispatcher for social-feeds (full lifecycle: detect → repair → verify → escalate)",
+    "description": "Pipeline for scheduled social feed integration (Discord, Forum, Ghost, GitHub, RSS, YouTube). Matrix per-source under one dispatcher.",
+    "scope": "snippets/data/social-feeds/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/config/mdx-sanitise.js",
+    "name": "mdx-sanitise.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "social-feeds",
+    "purpose": "Shared library — sanitise raw external content (Discord messages, forum posts, RSS items, GitHub release bodies, YouTube descriptions) into safe MDX/JSX-embeddable strings, escape curly braces, strip dangerous JSX-like patterns, normalise whitespace",
+    "description": "Library used by all 6 social-feed integrators (fetch-forum-data, fetch-discord-announcements, fetch-ghost-blog-data, fetch-rss-blog-data, fetch-github-discussions, fetch-github-releases, fetch-youtube-data) to safely embed external content in the generated *.jsx data modules. Exports sanitiseForMdx, escapeForJsx, stripDangerousPatterns.",
+    "scope": "external content sources → safe MDX/JSX string output",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/frameworks/script-framework.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/config/mintlify-canonical-sync.js",
+    "name": "mintlify-canonical-sync.js",
+    "concern": "copy",
+    "type": "integrator",
+    "niche": "canonical-sync",
+    "purpose": "Shared library — validate Mintlify archived-source cleanup, list consumer references in v2/ that depend on the canonical Mintlify collation data, produce deterministic rewrite plans when canonical sources change",
+    "description": "Library imported by check-mintlify-canonical-sync.js (validator) and sync-mintlify-canonical-consumers.js (remediator). Exports listConsumers(), planRewrites(canonicalChanges), validateArchiveState(). Pairs with dispatch-canonical-sync.js as the shared logic layer.",
+    "scope": "docs-guide/canonical/collation-data/Mintlify/ → v2/ consumers",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/copy/dispatch-canonical-sync.js",
+      "operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/canonical/collation-data/Mintlify/mintlify-repo-best-practices.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/governance-compliance.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  }
+]

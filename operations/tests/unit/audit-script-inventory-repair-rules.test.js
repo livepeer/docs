@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            audit-script-inventory-repair-rules.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests/unit, operations/scripts/validators/governance

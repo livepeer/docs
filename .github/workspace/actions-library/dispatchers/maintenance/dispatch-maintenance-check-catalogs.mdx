@@ -6,7 +6,7 @@ pageType: reference
 purpose: reference
 audience: internal
 status: active
-lastVerified: '2026-04-01'
+lastVerified: '2026-05-22'
 keywords:
   - livepeer
   - github-actions
@@ -25,7 +25,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 | **New name** | `dispatch-maintenance-check-catalogs.yml` |
 | **Type** | `dispatch` |
 | **Concern** | `maintenance` |
-| **Pipeline tag** | reusable |
+| **Pipeline tag** | undefined |
 | **Status** | active |
 
 <CustomDivider />
@@ -42,7 +42,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 
 ```mermaid
 graph LR
-    TRIGGER["workflow_dispatch, workflow_call"] --> WF["dispatch-maintenance-check-catalogs"]
+    TRIGGER["workflow_dispatch"] --> WF["dispatch-maintenance-check-catalogs"]
     WF --> OUTPUT["output"]
 ```
 
@@ -53,7 +53,6 @@ graph LR
 | Trigger | Details |
 |---|---|
 | `workflow_dispatch` | See workflow file |
-| `workflow_call` | See workflow file |
 
 <CustomDivider />
 
@@ -63,11 +62,15 @@ graph LR
 - `operations/scripts/generators/components/library/generate-component-registry.js`
 - `operations/scripts/generators/components/documentation/generate-component-docs.js`
 - `operations/scripts/validators/components/library/check-component-health.js`
+- `operations/scripts/validators/components/library/validate-component-creation.js`
 - `operations/scripts/generators/components/library/generate-component-examples.js`
 - `operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js`
 - `operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js`
 - `operations/scripts/generators/content/catalogs/generate-docs-index.js`
 - `operations/tests/unit/quality.test.js`
+- `operations/scripts/remediators/components/library/repair-component-metadata.js`
+- `operations/scripts/generators/components/library/generate-component-library.js`
+- `operations/scripts/generators/components/library/generate-component-index.js`
 
 <CustomDivider />
 
@@ -84,5 +87,5 @@ None identified.
 |---|---|
 | **Permissions** | Declared |
 | **Concurrency** | No |
-| **Auto-commit** | Yes |
+| **Auto-commit** | No |
 | **Inline script** | No |

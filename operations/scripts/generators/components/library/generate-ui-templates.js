@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Generates the UI template catalog and VS Code snippets from canonical template/component sources.
  * @description Generates the UI template catalog and VS Code snippets from canonical template/component sources.
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -519,7 +520,7 @@ function writeIfChanged(repoPath, nextContent, write) {
   const changed = current !== nextContent;
   if (changed && write) {
     ensureDir(repoPath);
-    fs.writeFileSync(path.join(REPO_ROOT, repoPath), nextContent, 'utf8');
+    atomicWrite(path.join(REPO_ROOT, repoPath), nextContent, 'utf8');
   }
   return { changed, path: repoPath };
 }

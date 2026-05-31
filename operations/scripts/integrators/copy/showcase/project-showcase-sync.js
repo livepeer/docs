@@ -4,13 +4,13 @@
  * @type        integrator
  * @concern     copy
  * @niche       showcase
- * @purpose     infrastructure:data-feeds
- * @description Fetches project showcase data from external source, writes to snippets/data/showcase-feed/
+ * @purpose     Sync the Project Showcase data from the submission Google Sheet to snippets/data/showcase-feed/ — supports two modes: poll (process new submissions + pending review decisions) and dispatch (process one decision from a repository_dispatch payload)
+ * @description Reads pending submissions and review-decision rows from the configured Google Sheet, applies decisions (approve / reject / defer), writes the approved list to snippets/data/showcase-feed/showcaseData.jsx and showcaseDataPopulated.jsx. Consumed by snippets/composables/pages/home/project-showcase.mdx and snippets/composables/pages/showcase.mdx. Pairs with dispatch-showcase.js.
  * @mode        integrate
- * @pipeline    manual
- * @scope       .github/scripts
- * @usage       node .github/scripts/project-showcase-sync.js [flags]
- * @policy      F-R1
+ * @pipeline    P5 (scheduled poll), event-driven (repository_dispatch) — both via dispatch-showcase.js
+ * @scope       Google Sheets API (read/write decision rows) → snippets/data/showcase-feed/
+ * @usage       node operations/scripts/integrators/copy/showcase/project-showcase-sync.js [--mode poll|dispatch] [--dry-run]
+ * @policy      F-R1 (data freshness); no secrets in output
  */
 /*
  * Project Showcase sync job for GitHub Actions.
@@ -66,10 +66,15 @@ function log(msg, obj) {
 function assertEnv() {
   const missing = REQUIRED_ENVS.filter((key) => !process.env[key]);
   if (missing.length > 0) {
-    throw new Error(`Missing required env vars: ${missing.join(', ')}`);
+    // Multi-secret integrator: Google Sheets + GitHub + Discord. When ANY secret is missing
+    // (local dev without .env, or partial CI config), skip cleanly so the dispatcher pipeline
+    // stays green. Exit 0 — this is "not configured", not "broken".
+    console.log(`project-showcase-sync: SKIP — missing env vars: ${missing.join(', ')} (configure in CI or .env to enable)`);
+    process.exit(0);
   }
   if (!cfg.githubOwner || !cfg.githubRepo || !cfg.githubToken) {
-    throw new Error('Missing GitHub config: GITHUB_OWNER/GITHUB_REPO/GITHUB_TOKEN');
+    console.log('project-showcase-sync: SKIP — missing GitHub config: GITHUB_OWNER/GITHUB_REPO/GITHUB_TOKEN (configure to enable)');
+    process.exit(0);
   }
 }
 

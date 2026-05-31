@@ -2,14 +2,14 @@
 # @script      fetch-external-docs
 # @type        integrator
 # @concern     integrations
-# @niche       data
-# @purpose     
-# @description Fetches upstream markdown from external Livepeer repositories, sanitizes it for MDX, and writes shared page composables under snippets/composables/pages/shared/.
+# @niche       external-docs
+# @purpose     Fetch upstream markdown from external Livepeer repositories (go-livepeer, livepeer-ai-worker, etc.), sanitise for MDX safety, and write shared page composables — invoked by mint-dev.sh and the page-imports audit so v2 pages can import the latest README/CONTRIBUTING from source repos
+# @description Iterates a config-mapped list of external repos and files, downloads each via curl, runs mdx-sanitise on the output, writes to snippets/composables/pages/shared/. Pre-build dependency for the dev preview (mint-dev.sh runs it first) so external composables exist before Mintlify boots. Also referenced by page-imports-audit which validates that referenced shared composables exist.
 # @mode        integrate
-# @pipeline    manual
-# @scope       operations/scripts/integrators/content/data/fetching
+# @pipeline    P2 (pre-build via mint-dev.sh), manual
+# @scope       external Livepeer repos → snippets/composables/pages/shared/*.mdx
 # @usage       bash operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh [flags]
-# @policy      F-R1
+# @policy      F-R1 (data freshness); public repos only; no secrets in output
 # Pre-build script to fetch external markdown files
 # Run this before building the docs to ensure external content is up-to-date
 # Sanitizes markdown to be MDX-compatible

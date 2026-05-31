@@ -1,13 +1,15 @@
 #!/bin/bash
-# @script            test-scripts
-# @category          utility
-# @purpose           tooling:dev-tools
-# @scope             operations/scripts/snippets
-# @owner             docs
-# @needs             E-C6, F-C1
-# @purpose-statement Snippet test runner — runs basic validation on snippet scripts
-# @pipeline          manual — developer tool
-# @usage             bash operations/scripts/snippets/test-scripts.sh [flags]
+# @script      test-scripts
+# @type        validator
+# @concern     governance
+# @niche       testing
+# @purpose     Run basic syntax and shape validation on every executable script under operations/scripts/snippets/ — developer-tool sanity check before committing snippet-related changes
+# @description Iterates the snippet scripts directory, runs each with --help (or equivalent), checks exit code is 0, captures stderr, reports a pass/fail summary. Manual-use only; not wired to a dispatcher. Documented in docs-guide/tooling/lpd-cli.mdx as a contributor workflow.
+# @mode        check
+# @pipeline    manual — developer tool
+# @scope       operations/scripts/snippets/
+# @usage       bash operations/scripts/snippets/test-scripts.sh [flags]
+# @policy      manual contributor tool
 # Test suite for operations/scripts/snippets
 # Run this before using scripts to verify they work correctly
 #

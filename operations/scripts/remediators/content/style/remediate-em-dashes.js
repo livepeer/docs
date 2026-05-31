@@ -3,19 +3,21 @@
  * @script      remediate-em-dashes
  * @type        remediator
  * @concern     brand
- * @niche       style
- * @purpose     qa:content-quality
- * @description Replaces em-dashes (U+2014) with en-dashes (U+2013) in routable v2 MDX content text and user-facing frontmatter fields (title, sidebarTitle, description). Skips other frontmatter keys, code blocks, inline code, JSX comments, import/export lines, and JSX attribute values.
+ * @niche       em-dashes
+ * @purpose     Replace em-dashes (U+2014) with en-dashes (U+2013) in v2 MDX content and user-facing frontmatter fields per the CLAUDE.md voice rule "no em dashes" — paired remediator for the em-dashes brand pipeline
+ * @description Scans content text and user-facing frontmatter keys (title, sidebarTitle, description) for U+2014. Skips other frontmatter keys, code blocks, inline code, JSX comments, import/export lines, and JSX attribute values. --verify re-runs detection after write and reverts any file that still contains an em-dash. Pairs with dispatch-em-dashes.js.
  * @mode        repair
- * @pipeline    manual — batch remediation utility, run with --dry-run first
+ * @pipeline    P6 (self-heal via dispatch-em-dashes.js --mode scheduled), manual via --files
  * @scope       v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)
  * @usage       node operations/scripts/remediators/content/style/remediate-em-dashes.js [--dry-run|--write] [--verify] [--staged] [--files path,path]
+ * @policy      D-GOV-03 (paired remediator with --verify gate)
  */
 
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
@@ -320,7 +322,7 @@ function run(options = {}) {
     if (args.mode === 'write') {
       affectedFiles.push({ fullPath, relPath, originalContent: content });
       const updated = applyReplacements(content, replacements);
-      fs.writeFileSync(fullPath, updated, 'utf8');
+      atomicWrite(fullPath, updated, 'utf8');
     }
   }
 
@@ -367,7 +369,7 @@ function run(options = {}) {
 
       for (const af of affectedFiles) {
         if (regressedFiles.has(af.relPath)) {
-          fs.writeFileSync(af.fullPath, af.originalContent, 'utf8');
+          atomicWrite(af.fullPath, af.originalContent, 'utf8');
           reverted++;
         }
       }

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            check-component-props.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            validate-codex-task-contract.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          enforcer
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/validators/governance/compliance/validate-codex-task-contract.js

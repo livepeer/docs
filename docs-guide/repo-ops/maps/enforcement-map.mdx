@@ -2,7 +2,7 @@
 title: Enforcement Map
 sidebarTitle: Enforcement Map
 description: >-
-  Complete map of all enforcement points in the repository – pre-commit hard gates,
+  Complete map of all enforcement points in the repository — pre-commit hard gates,
   pre-push checks, and GitHub Actions CI gates.
 keywords:
   - livepeer
@@ -20,17 +20,18 @@ keywords:
 'og:image:type': image/png
 'og:image:width': 1200
 'og:image:height': 630
-audience: internal
+audience: developer
 pageType: reference
 purpose: reference
 lastVerified: 2026-03-21
+status: current
 ---
 
 # Enforcement Map
 
-> Every gate that can block or auto-fix a commit, PR, or push – what it checks, where it lives, and how to override it.
+> Every gate that can block or auto-fix a commit, PR, or push — what it checks, where it lives, and how to override it.
 
----
+<CustomDivider />
 
 ## Design Principle
 
@@ -39,11 +40,11 @@ Enforcement is split into two tiers:
 | Tier | Where | What runs |
 |------|-------|-----------|
 | **Hard gates** | Pre-commit hook + pre-push hook | Only checks that, if skipped, would cause irreversible breakage: MDX parse failures, broken redirects, unguarded deletions, protected file edits, branch isolation violations |
-| **Soft checks** | GitHub Actions (PR workflows) | Style, governance, catalog freshness, link audits, content health – everything that can be fixed in a follow-up commit |
+| **Soft checks** | GitHub Actions (PR workflows) | Style, governance, catalog freshness, link audits, content health — everything that can be fixed in a follow-up commit |
 
 This separation keeps local commit latency low while still surfacing quality issues in PR review.
 
----
+<CustomDivider />
 
 ## Pre-Commit Hook
 
@@ -51,7 +52,7 @@ This separation keeps local commit latency low while still surfacing quality iss
 **Pipeline stage:** P1 (commit entry point)
 **Install:** `bash .githooks/install.sh` or `lpd hooks install`
 
-### Gate 1 – Codex Branch Isolation
+### Gate 1 — Codex Branch Isolation
 
 Blocks Codex AI sessions from committing directly to `docs-v2`. Forces AI work onto isolated `codex/<issue-id>-<slug>` branches.
 
@@ -60,7 +61,7 @@ Blocks Codex AI sessions from committing directly to `docs-v2`. Forces AI work o
 | Bypass | `ALLOW_MAIN_COMMIT=1` + `--trailer "allow-main-commit=true"` (humans only) |
 | Also runs | Codex task contract validation + lock ownership check on `codex/*` branches |
 
-### Gate 2 – File Deletion Guard
+### Gate 2 — File Deletion Guard
 
 Blocks commits that delete files without explicit human authorisation.
 
@@ -69,7 +70,7 @@ Blocks commits that delete files without explicit human authorisation.
 | Exception | Deletions of files with a matching staged copy in `v2/x-archived/` (archive follow-up deletes) |
 | Bypass | `--trailer "allow-deletions=true"` (humans only) |
 
-### Gate 3 – .allowlist Protection
+### Gate 3 — .allowlist Protection
 
 Blocks edits to the `.allowlist` root-directory allowlist file.
 
@@ -77,14 +78,14 @@ Blocks edits to the `.allowlist` root-directory allowlist file.
 |---------|-------------------------------|
 | Bypass | `--trailer "allowlist-edit=true"` (humans only) |
 
-### Gate 4 – docs.json Redirect Integrity
+### Gate 4 — docs.json Redirect Integrity
 
 Blocks changes to `docs.json` that add or remove `/redirect` routes without matching the scoped navigation config.
 
 | Trigger | `git diff --cached -- docs.json` contains `/redirect` |
 |---------|------------------------------------------------------|
 | Validates against | `tools/config/scoped-navigation/docs-gate-orch.json` |
-| Bypass | None – redirect surfaces must stay aligned |
+| Bypass | None — redirect surfaces must stay aligned |
 
 Also enforces root directory allowlist: new root-level files or directories must be in `.allowlist`.
 
@@ -92,7 +93,7 @@ Also enforces root directory allowlist: new root-level files or directories must
 |---------|---------------------------------------------|
 | Bypass | `SKIP_STRUCTURE_CHECK=1` |
 
-### Gate 5 – v1/ Freeze
+### Gate 5 — v1/ Freeze
 
 Blocks all changes to `v1/`. The v1 content tree is immutable.
 
@@ -102,9 +103,9 @@ Blocks all changes to `v1/`. The v1 content tree is immutable.
 
 ### Global Bypass
 
-`SKIP_ALL=1` – skips all pre-commit checks. Emergency use only. Emits a warning in all cases.
+`SKIP_ALL=1` — skips all pre-commit checks. Emergency use only. Emits a warning in all cases.
 
----
+<CustomDivider />
 
 ## Pre-Push Hook
 
@@ -119,9 +120,9 @@ Validates that no AI stash artifacts, stale Codex locks, or invalid task contrac
 | Stale Codex locks | No locks that reference inactive/closed Codex sessions |
 | Task contract | `codex/*` branches must have a valid task contract before push |
 
----
+<CustomDivider />
 
-## GitHub Actions – CI Workflows
+## GitHub Actions — CI Workflows
 
 All CI workflows live in `.github/workflows/`. They are the enforcement layer for quality, governance, and catalog freshness checks that are too slow or too soft to run in pre-commit.
 
@@ -172,7 +173,7 @@ All CI workflows live in `.github/workflows/`. They are the enforcement layer fo
 | `update-github-data.yml` | Daily (02:00 UTC) | GitHub discussions + releases per product |
 | `update-forum-data.yml` | Daily | Discourse forum posts |
 
-Required secrets: see [Solutions Secrets](solutions-secrets).
+Required secrets: see [Solutions Secrets](../secrets/solutions-secrets).
 
 ### Governance and Repo Ops
 
@@ -181,7 +182,7 @@ Required secrets: see [Solutions Secrets](solutions-secrets).
 | `governance-sync.yml` | Push / PR | Syncs governance rules and policy compliance |
 | `repair-governance.yml` | Dispatch | Repairs known governance drift patterns |
 | `codex-governance.yml` | PR (codex/* branches) | Validates Codex task contracts on PR open/update |
-| `tasks-retention.yml` | Scheduled | Workspace/ retention enforcement (TTL enforcement – stub, not yet fully implemented) |
+| `tasks-retention.yml` | Scheduled | Workspace/ retention enforcement (TTL enforcement — stub, not yet fully implemented) |
 | `freshness-monitor.yml` | Scheduled | Flags pages where `lastVerified` is past threshold |
 
 ### Developer Experience
@@ -197,24 +198,24 @@ Required secrets: see [Solutions Secrets](solutions-secrets).
 | `seo-refresh.yml` | Dispatch | Batch SEO metadata refresh |
 | `sync-large-assets.yml` | Dispatch | Syncs large binary assets from external storage |
 
----
+<CustomDivider />
 
 ## Override Reference
 
 | Override | How | Who |
 |----------|-----|-----|
-| Skip all pre-commit checks | `SKIP_ALL=1 git commit` | Humans only – emergency |
+| Skip all pre-commit checks | `SKIP_ALL=1 git commit` | Humans only — emergency |
 | Skip structure checks | `SKIP_STRUCTURE_CHECK=1 git commit` | Humans only |
 | Allow file deletions | `git commit --trailer "allow-deletions=true"` | Humans only |
 | Allow .allowlist edit | `git commit --trailer "allowlist-edit=true"` | Humans only |
-| Allow AI commit to docs-v2 | `ALLOW_MAIN_COMMIT=1 git commit --trailer "allow-main-commit=true"` | Humans only – explicit chat instruction required |
+| Allow AI commit to docs-v2 | `ALLOW_MAIN_COMMIT=1 git commit --trailer "allow-main-commit=true"` | Humans only — explicit chat instruction required |
 
----
+<CustomDivider />
 
 ## Related
 
-- [Repo Config Map](repo-config-map) – configuration files read by hooks and workflows
-- [Solutions Secrets](solutions-secrets) – GitHub Actions secrets for the social data pipeline
-- `docs-guide/policies/generated-artifact-and-hook-governance.mdx` – policy governing what may run in hooks vs. CI
-- `.githooks/pre-commit` – pre-commit hook implementation
-- `.githooks/pre-push` – pre-push hook implementation
+- [Repo Config Map](../config/repo-config-map) — configuration files read by hooks and workflows
+- [Solutions Secrets](../secrets/solutions-secrets) — GitHub Actions secrets for the social data pipeline
+- `docs-guide/policies/generated-artifact-and-hook-governance.mdx` — policy governing what may run in hooks vs. CI
+- `.githooks/pre-commit` — pre-commit hook implementation
+- `.githooks/pre-push` — pre-push hook implementation

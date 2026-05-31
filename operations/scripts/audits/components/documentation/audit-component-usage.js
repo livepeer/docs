@@ -3,7 +3,7 @@
  * @type        audit
  * @concern     maintenance
  * @niche       documentation
- * @purpose     
+ * @purpose     Scans pages for component usage patterns and reports statistics
  * @description Component usage auditor — scans pages for component usage patterns and reports statistics
  * @mode        scan
  * @pipeline    manual
@@ -12,6 +12,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   REPO_ROOT,
   extractExports,
@@ -169,7 +170,7 @@ function buildReport() {
 
 function writeReport(report) {
   fs.mkdirSync(path.dirname(REPORT_PATH), { recursive: true });
-  fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2));
+  atomicWrite(REPORT_PATH, JSON.stringify(report, null, 2));
 }
 
 function run() {

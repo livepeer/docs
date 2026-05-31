@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       root
- * @purpose     
+ * @purpose     Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports.
  * @description Generates root-governance projections from the canonical manifest, including .allowlist, the generated root map, and sync reports.
  * @mode        generate
  * @pipeline    manual, P3
@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -177,9 +178,12 @@ function buildRootGovernanceMapContent(manifest = readManifest()) {
     title: MAP_TITLE,
     sidebarTitle: 'Root Governance Map',
     description: 'Generated live inventory and taxonomy map for the governed repo root.',
+    pageType: 'reference',
+    audience: 'developer',
+    purpose: 'reference',
     consumer: ['human', 'agent'],
     maintenance: 'generated',
-    status: 'active',
+    status: 'current',
     generator: SCRIPT_PATH,
     keywords: ['livepeer', 'root governance', 'allowlist', 'repo root', 'taxonomy', 'governance map'],
     keywordsStyle: 'multiline'
@@ -346,7 +350,7 @@ function ensureParentDir(repoPath) {
 function writeOutputs(outputs) {
   Object.entries(outputs).forEach(([repoPath, content]) => {
     ensureParentDir(repoPath);
-    fs.writeFileSync(path.join(REPO_ROOT, repoPath), content, 'utf8');
+    atomicWrite(path.join(REPO_ROOT, repoPath), content, 'utf8');
   });
 }
 

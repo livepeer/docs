@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       reports
- * @purpose     
+ * @purpose     Generates the top-level repo-governance map and status reports from the canonical steady-state registry.
  * @description Generates the top-level repo-governance map and status reports from the canonical steady-state registry.
  * @mode        generate
  * @pipeline    manual, pr-changed -> repo-governance registry -> governance map and status reports
@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -201,9 +202,12 @@ function buildRepoGovernanceMapContent(manifest = readManifest()) {
     title: 'Repo Governance Map',
     sidebarTitle: 'Repo Governance Map',
     description: 'Generated control-plane map for governed repo surfaces, path classes, and agent output defaults.',
+    pageType: 'reference',
+    audience: 'developer',
+    purpose: 'reference',
     consumer: ['human', 'agent'],
     maintenance: 'generated',
-    status: 'active',
+    status: 'current',
     generator: SCRIPT_PATH,
     keywords: ['livepeer', 'repo governance', 'ownerless governance', 'operations governance', 'agent write policy'],
     keywordsStyle: 'multiline'
@@ -424,7 +428,7 @@ function writeOutputs(outputs) {
   Object.entries(outputs).forEach(([repoPath, content]) => {
     const absPath = path.join(REPO_ROOT, repoPath);
     fs.mkdirSync(path.dirname(absPath), { recursive: true });
-    fs.writeFileSync(absPath, content, 'utf8');
+    atomicWrite(absPath, content, 'utf8');
   });
 }
 

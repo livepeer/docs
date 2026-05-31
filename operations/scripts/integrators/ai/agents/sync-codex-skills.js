@@ -2,19 +2,21 @@
 /**
  * @script      sync-codex-skills
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       agents
- * @purpose     
- * @description Codex skills sync — synchronises skill definition files and managed companion resources between canonical templates and local Codex installs. Supports --check mode.
+ * @purpose     Synchronise Codex-specific skill files and managed companion resources from the canonical templates into ai-tools/agent-packs/codex/ — keeps the Codex agent's local skill set in lock-step with the templates source of truth
+ * @description Reads the canonical skill templates, applies Codex-specific projections (skill manifest format, companion resource paths), writes outputs under ai-tools/agent-packs/codex/. --check fails if Codex pack is stale; --write regenerates. Different from export-portable-skills which handles all agents — this one is Codex-only with deeper Codex-specific transformations.
  * @mode        integrate
- * @pipeline    manual — not yet in pipeline
- * @scope       operations/scripts, ai-tools/ai-skills/templates operations/tests/unit/codex-skill-sync.test.js
+ * @pipeline    manual — invoked when Codex-specific templates change
+ * @scope       ai-tools/ai-skills/templates/ → ai-tools/agent-packs/codex/
  * @usage       node operations/scripts/integrators/ai/agents/sync-codex-skills.js [flags]
+ * @policy      Agent-portability standard (Codex-specific layer)
  */
 
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   RESOURCE_BUNDLES,
   collectResourceEntries,
@@ -351,7 +353,7 @@ function syncTemplate(template, options) {
     fileOps.forEach((entry) => {
       if (entry.op === 'unchanged') return;
       fs.mkdirSync(path.dirname(entry.absPath), { recursive: true });
-      fs.writeFileSync(entry.absPath, toBuffer(entry.expected));
+      atomicWrite(entry.absPath, toBuffer(entry.expected));
     });
 
     pruned.forEach((relPath) => {

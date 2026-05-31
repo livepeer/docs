@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Detect * @mode read-only
  * @description * @mode        read-only
  * @mode        check
  * @pipeline    manual, ci

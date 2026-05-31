@@ -29,7 +29,7 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>The community gateway at dream-gateway.livepeer.cloud is for development only. Production applications use a managed gateway provider or a self-hosted gateway with funded TicketBroker deposits.</Tip>
+  <Tip>The community Gateway at dream-Gateway.Livepeer.cloud is for development only. Production applications use a managed Gateway provider or a self-hosted Gateway with funded TicketBroker deposits.</Tip>
 </CenteredContainer>
 
 <CustomDivider />
@@ -42,9 +42,9 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 |---|---|---|
 | Development / testing | `dream-gateway.livepeer.cloud` | Free, no API key required, unpredictable latency, no SLA |
 | Production (managed) | Gateway provider with API key | Authenticated, rate-limited, provider-specific SLA |
-| Production (self-hosted) | go-livepeer in broadcaster mode | Full control over pricing, routing, and orchestrator selection. Requires ETH deposit on Arbitrum One. |
+| Production (self-hosted) | go-livepeer in broadcaster mode | Full control over pricing, routing, and Orchestrator selection. Requires ETH deposit on Arbitrum One. |
 
-Switch before launch. Do not ship user-facing applications on the community gateway.
+Switch before launch. Do not ship user-facing applications on the community Gateway.
 
 <CustomDivider />
 
@@ -54,7 +54,7 @@ Switch before launch. Do not ship user-facing applications on the community gate
 - [ ] Backend API key used for server-side requests; CORS-enabled key for browser-side
 - [ ] Key rotation schedule set (90-day recommended)
 - [ ] `.env` files excluded from version control via `.gitignore`
-- [ ] For self-hosted gateways: Ethereum keystore secured, TicketBroker deposit funded
+- [ ] For self-hosted Gateways: Ethereum keystore secured, TicketBroker deposit funded
 
 <CustomDivider />
 
@@ -82,7 +82,7 @@ Warm models respond immediately. Cold models take 30 seconds to 5 minutes to loa
 | image-to-text | `Salesforce/blip-image-captioning-large` |
 | LLM | `meta-llama/Meta-Llama-3.1-8B-Instruct` |
 
-Custom `model_id` values cold-start on every request until an orchestrator warms them. Test custom models under expected load before launch.
+Custom `model_id` values cold-start on every request until an Orchestrator warms them. Test custom models under expected load before launch.
 
 <CustomDivider />
 
@@ -99,23 +99,23 @@ Custom `model_id` values cold-start on every request until an orchestrator warms
 ## BYOC applications
 
 - [ ] Container `/health` endpoint returns `{"status": "ok"}` under load
-- [ ] Container registered in orchestrator's `aiModels.json` with correct `pipeline`, `model_id`, and `price_per_unit`
+- [ ] Container registered in Orchestrator's `aiModels.json` with correct `pipeline`, `model_id`, and `price_per_unit`
 - [ ] Container handles graceful shutdown on SIGTERM
-- [ ] Container tested against local orchestrator before registering on mainnet
+- [ ] Container tested against local Orchestrator before registering on mainnet
 - [ ] GPU memory usage profiled under concurrent session load
 
 <CustomDivider />
 
 ## Cost estimation
 
-AI inference pricing is orchestrator-set and denominated in wei. Indicative rate for text-to-image: approximately $0.019 per megapixel of output.
+AI inference pricing is Orchestrator-set and denominated in wei. Indicative rate for text-to-image: approximately $0.019 per megapixel of output.
 
 Illustrative example for text-to-image at 1024x1024:
 - 1024 x 1024 = 1,048,576 pixels = 1.05 megapixels
 - At $0.019/MP: approximately $0.020 per image
 - At 1,000 images/day: approximately $20/day
 
-Actual rates vary by orchestrator and pipeline. Monitor real costs after the first week of production traffic to calibrate estimates.
+Actual rates vary by Orchestrator and pipeline. Monitor real costs after the first week of production traffic to calibrate estimates.
 
 Video transcoding is priced in wei per pixel across all output renditions.
 
@@ -123,18 +123,18 @@ Video transcoding is priced in wei per pixel across all output renditions.
 
 ## Monitoring
 
-- [ ] Log HTTP status codes for all gateway requests
+- [ ] Log HTTP status codes for all Gateway requests
 - [ ] Track p50, p95, p99 latency per pipeline
 - [ ] Alert on sustained `503` rate above 5% (warm model unavailability)
 - [ ] Alert on sustained `5xx` rate above 1% (inference failures)
-- [ ] For self-hosted gateways: Prometheus metrics enabled (`-metrics` flag) and scraped
-- [ ] TicketBroker deposit balance monitored (for self-hosted gateways)
+- [ ] For self-hosted Gateways: Prometheus metrics enabled (`-metrics` flag) and scraped
+- [ ] TicketBroker deposit balance monitored (for self-hosted Gateways)
 
 <CustomDivider />
 
 ## Launch readiness
 
-- [ ] Production gateway configured (not `dream-gateway.livepeer.cloud`)
+- [ ] Production Gateway configured (not `dream-gateway.livepeer.cloud`)
 - [ ] API key in secrets manager, not in code
 - [ ] Retry policy implemented with exponential backoff
 - [ ] All error types (`401`, `422`, `503`, `429`, `500`) handled

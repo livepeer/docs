@@ -2,15 +2,13 @@
 /**
  * @script      generate-component-library
  * @type        generator
- * @concern     components
- * @niche       library
- * @purpose     governance:documentation
- * @description Generates per-grouping LIBRARY.md files and a root LIBRARY.md index from
- *              component-registry.json and component-usage-map.json. Each entry includes
- *              component name, description, props, import path, usage example, and status badge.
+ * @concern     maintenance
+ * @niche       component-registry
+ * @purpose     Generate the long-form snippets/components/{category}/LIBRARY.md docs + a root LIBRARY.md index from component-registry.json — every component entry covers description, props, import path, usage example, and status badge so contributors don't have to read source to use a component
+ * @description Reads docs-guide/config/component-registry.json + the component-usage map. Renders LIBRARY.md per top-level grouping plus a root index. Paired with generate-component-index.js (INDEX.md = short table; LIBRARY.md = full docs). Manual-use — not in dispatch-component-registry pipeline yet; tracked as follow-up.
  * @mode        generate
- * @pipeline    manual, post-registry -> component-registry.json -> snippets/components/LIBRARY.md
- * @scope       snippets/components/
+ * @pipeline    manual — invoked after component-registry regen
+ * @scope       docs-guide/config/component-registry.json → snippets/components/{group}/LIBRARY.md + root LIBRARY.md
  * @usage       node operations/scripts/generators/components/library/generate-component-library.js [--dry-run] [--check] [--category elements]
  * @policy      R-R10
  */
@@ -18,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { VALID_CATEGORIES } = require('../../../../../tools/lib/governance/component-governance-utils');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const REGISTRY_PATH = path.join(REPO_ROOT, 'docs-guide', 'config', 'component-registry.json');
@@ -309,7 +308,7 @@ function main() {
       console.log(`Would write: ${path.relative(REPO_ROOT, outputPath)} (${comps.length} components)`);
     } else {
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-      fs.writeFileSync(outputPath, content, 'utf8');
+      atomicWrite(outputPath, content, 'utf8');
       writtenCount++;
       console.log(`Wrote: ${path.relative(REPO_ROOT, outputPath)} (${comps.length} components)`);
     }
@@ -329,7 +328,7 @@ function main() {
     } else if (args.mode === 'dry-run') {
       console.log(`Would write: ${path.relative(REPO_ROOT, rootPath)} (root library)`);
     } else {
-      fs.writeFileSync(rootPath, rootContent, 'utf8');
+      atomicWrite(rootPath, rootContent, 'utf8');
       writtenCount++;
       console.log(`Wrote: ${path.relative(REPO_ROOT, rootPath)} (root library)`);
     }

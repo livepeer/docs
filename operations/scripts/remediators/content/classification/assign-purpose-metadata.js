@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       classification
- * @purpose     
+ * @purpose     Repair fills purpose and audience frontmatter for routable v2 pages
  * @description Purpose metadata assigner — fills purpose and audience frontmatter for routable v2 pages
  * @mode        repair
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines
@@ -18,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   getDocsJsonRouteKeys,
   toDocsRouteKeyFromFileV2Aware,
@@ -430,7 +431,7 @@ async function main() {
         lineWidth: 120,
         language: 'yaml'
       });
-      fs.writeFileSync(absPath, updated);
+      atomicWrite(absPath, updated);
       assigned += 1;
     } else if (changed && args.dryRun) {
       wouldAssign += 1;

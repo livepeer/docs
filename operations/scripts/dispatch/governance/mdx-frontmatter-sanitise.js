@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche
- * @purpose
+ * @purpose     Dispatch the postToolUse hook for Edit/Write on ANY .mdx file. Auto-fixes (1) duplicate frontmatter keys, (2) em-dash characters in user-facing text, and (3) single-quoted frontmatter scalars (standardises to double quotes). All fixes are applied silently to the file already on disk; the hook only emits a systemMessage when something was changed.
  * @description PostToolUse hook for Edit/Write on ANY .mdx file. Auto-fixes (1) duplicate frontmatter keys, (2) em-dash characters in user-facing text, and (3) single-quoted frontmatter scalars (standardises to double quotes). All fixes are applied silently to the file already on disk; the hook only emits a systemMessage when something was changed.
  * @mode        dispatch
  * @pipeline    PostToolUse hook → parse frontmatter → detect & repair → rewrite if changed
@@ -17,6 +17,7 @@ const { stdin } = process;
 
 // Reuse the canonical remediators so the rules stay in one place.
 const fmQuotes = require('../../remediators/content/style/remediate-frontmatter-quotes.js');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 
 const EM_DASH = '—';
 const EN_DASH = '–';
@@ -180,7 +181,7 @@ stdin.on('end', () => {
     }
 
     if (fixes.length > 0) {
-      fs.writeFileSync(fp, workingContent);
+      atomicWrite(fp, workingContent);
       console.log(JSON.stringify({
         systemMessage: `FRONTMATTER AUTO-FIX in ${path.basename(fp)}: ${fixes.join('; ')}. File rewritten.`
       }));

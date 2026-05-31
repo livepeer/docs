@@ -29,12 +29,12 @@ Once you have delegated, the work shifts from "open the position" to "manage it 
 
 ## Rewards accrue automatically
 
-If your orchestrator is active and keeps calling `reward()`, your pending earnings update automatically in protocol state. You do not need to manually "collect every round" for accrual to happen.
+If your Orchestrator is active and keeps calling `reward()`, your pending earnings update automatically in protocol state. You do not need to manually "collect every round" for accrual to happen.
 
 What you do need to manage is:
 
 - when to checkpoint those earnings with `claimEarnings()`
-- whether to stay with the same orchestrator
+- whether to stay with the same Orchestrator
 - when to redelegate or exit
 
 ## Claim your earnings
@@ -51,9 +51,9 @@ From [Livepeer Explorer](https://explorer.livepeer.org):
 <Warning>
   As of 6 April 2026, Explorer PR `#613` is still open, so do not assume the UI will warn you before a badly timed claim.
 
-  The protocol records `lastClaimRound` when `claimEarnings()` executes. If your orchestrator has not yet called `reward()` for the current round when you claim, you can skip that round's rewards and fees entirely.
+  The protocol records `lastClaimRound` when `claimEarnings()` executes. If your Orchestrator has not yet called `reward()` for the current round when you claim, you can skip that round's rewards and fees entirely.
 
-  Safe default: claim late in the round, after your orchestrator has already called `reward()` for that round.
+  Safe default: claim late in the round, after your Orchestrator has already called `reward()` for that round.
 </Warning>
 
 ## Compound your position
@@ -74,7 +74,7 @@ Use it if:
 
 - the operator starts missing reward calls
 - commission terms become unattractive
-- the operator drops out of the active set
+- the operator drops out of the Active Set
 - you want to move away from an over-concentrated operator
 
 <Warning>
@@ -110,13 +110,13 @@ At minimum, keep an eye on:
 - reward-call consistency
 - `rewardCut` changes
 - `feeShare` changes
-- governance proposals that affect delegator economics
+- governance proposals that affect Delegator economics
 
 ## Frequently asked questions
 
 <AccordionGroup>
   <Accordion title="Do I lose earnings if I redelegate?">
-    Earnings are accounted against your delegator position rather than abandoned with the old orchestrator. The operational risk is timing, not loss of ownership.
+    Earnings are accounted against your Delegator position rather than abandoned with the old Orchestrator. The operational risk is timing, not loss of ownership.
   </Accordion>
   <Accordion title="Can I partially unbond?">
     Yes. Part of the balance can enter unbonding while the rest remains bonded.

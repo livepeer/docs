@@ -37,9 +37,9 @@ Verify:
 */}
 
 
-This page answers "how does X work?" questions. If something is broken, see [Troubleshooting](/v2/gateways/guides/monitoring-and-tooling/troubleshooting) instead.
+This page answers "how does X work?" questions. If something is broken, see [Troubleshooting](/v2/Gateways/guides/monitoring-and-tooling/troubleshooting) instead.
 
-Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](#ai-gateway)
+Jump to: [General](#general) · [Video Gateway](#video-Gateway) · [AI Gateway](#ai-Gateway)
 
 <CustomDivider />
 
@@ -64,18 +64,18 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
   </Accordion>
 
   <Accordion title="Do I need ETH or LPT to run a gateway?">
-    It depends on your gateway type:
+    It depends on your Gateway type:
 
     | Gateway type | ETH needed | LPT needed |
     |-------------|-----------|-----------|
-    | Video gateway (on-chain) | Yes | No |
-    | AI gateway (off-chain) | No | No |
-    | Dual gateway | Yes | No |
+    | Video Gateway (on-chain) | Yes | No |
+    | AI Gateway (off-chain) | No | No |
+    | Dual Gateway | Yes | No |
     | Clearinghouse-backed | No | No |
 
-    ETH is required on Arbitrum One (not Ethereum mainnet) for on-chain gateways. LPT is not part of the payment flow for any gateway type - it is a staking token for orchestrators.
+    ETH is required on Arbitrum One (not Ethereum mainnet) for on-chain Gateways. LPT is not part of the payment flow for any Gateway type - it is a staking token for Orchestrators.
 
-    If you want to run an AI gateway without managing ETH, see [Payment Paths](/v2/gateways/guides/payments-and-pricing/payment-guide).
+    If you want to run an AI Gateway without managing ETH, see [Payment Paths](/v2/Gateways/guides/payments-and-pricing/payment-guide).
   </Accordion>
 
   <Accordion title="How do I keep a record of my node's logs?">
@@ -95,19 +95,19 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
   </Accordion>
 
   <Accordion title="Can I run a gateway from home?">
-    Possible for an AI gateway (off-chain, no inbound port requirements beyond your orchestrator addresses). For a video gateway, public accessibility depends on your workload:
+    Possible for an AI Gateway (off-chain, no inbound port requirements beyond your Orchestrator addresses). For a video Gateway, public accessibility depends on your workload:
 
     - If you are accepting inbound RTMP streams, port 1935 must be publicly accessible.
     - If you are only pushing streams outward (e.g. Re-encoding your own content), NAT is less of a concern.
-    - For orchestrator discovery via the Livepeer network, your gateway needs to be publicly reachable at the address it registers.
+    - For Orchestrator discovery via the Livepeer Network, your Gateway needs to be publicly reachable at the address it registers.
 
-    Home networks with NAT (standard home router) require port forwarding rules for ports 8935 and 1935 to the machine running the gateway. Running a public-facing node at home carries general server security risks - only do so if you are comfortable managing those.
+    Home networks with NAT (standard home router) require port forwarding rules for ports 8935 and 1935 to the machine running the Gateway. Running a public-facing node at home carries general server security risks - only do so if you are comfortable managing those.
   </Accordion>
 
   <Accordion title="Is there a marketplace showing all gateway offerings?">
     No canonical marketplace exists. Visibility is currently fragmented across [Livepeer Explorer](https://explorer.livepeer.org), [Livepeer Tools](https://tools.livepeer.cloud), [Livepeer Studio](https://livepeer.studio), and community forums.
 
-    This is a documented gap. Discussion on gateway marketplace aggregation is ongoing in the community.
+    This is a documented gap. Discussion on Gateway marketplace aggregation is ongoing in the community.
   </Accordion>
 
 </AccordionGroup>
@@ -119,7 +119,7 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
 <AccordionGroup>
 
   <Accordion title="What is -maxPricePerUnit and why doesn't it match what I'm paying?">
-    `-maxPricePerUnit` sets the maximum price your gateway **pays orchestrators** per pixel processed - it is not a price you charge your customers.
+    `-maxPricePerUnit` sets the maximum price your Gateway **pays Orchestrators** per pixel processed - it is not a price you charge your customers.
 
     The unit is **wei per pixel** (not ETH). Common starting values:
 
@@ -128,15 +128,15 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
     | `-maxPricePerUnit` | `300` | Maximum 300 wei per pixel |
     | `-pixelsPerUnit` | `1` | Per 1 pixel |
 
-    If you set this too high, you overpay orchestrators. If you set it too low, no orchestrators accept your jobs. The community standard starting point is `300` with `-pixelsPerUnit 1`.
+    If you set this too high, you overpay Orchestrators. If you set it too low, no Orchestrators accept your jobs. The community standard starting point is `300` with `-pixelsPerUnit 1`.
 
-    The price you charge *your* customers (if running a commercial gateway service) is entirely separate and managed by your own application layer. See [Pricing Strategy](/v2/gateways/guides/payments-and-pricing/pricing-strategy).
+    The price you charge *your* customers (if running a commercial Gateway service) is entirely separate and managed by your own application layer. See [Pricing Strategy](/v2/Gateways/guides/payments-and-pricing/pricing-strategy).
   </Accordion>
 
   <Accordion title="What ports does the video gateway use?">
     | Port | Purpose | Configurable with |
     |------|---------|------------------|
-    | `8935` | HTTP gateway API and transcoding jobs | `-httpAddr` |
+    | `8935` | HTTP Gateway API and transcoding jobs | `-httpAddr` |
     | `1935` | RTMP stream ingest | `-rtmpAddr` |
     | `5935` | CLI management API | `-cliAddr` |
 
@@ -160,7 +160,7 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
   </Accordion>
 
   <Accordion title="I bridged ETH to Arbitrum but my balance shows zero.">
-    Bridging ETH to Arbitrum One transfers it to your wallet address on Arbitrum - but it does not automatically allocate it as a gateway deposit. You must explicitly deposit and reserve via `livepeer_cli` after the bridge confirms.
+    Bridging ETH to Arbitrum One transfers it to your wallet address on Arbitrum - but it does not automatically allocate it as a Gateway deposit. You must explicitly deposit and reserve via `livepeer_cli` after the bridge confirms.
 
     ```bash icon="terminal"
     livepeer_cli -host 127.0.0.1 -http 5935
@@ -168,15 +168,15 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
     # Enter deposit amount and reserve amount
     ```
 
-    See [Fund Your Gateway](/v2/gateways/guides/payments-and-pricing/funding-guide) for the full step-by-step.
+    See [Fund Your Gateway](/v2/Gateways/guides/payments-and-pricing/funding-guide) for the full step-by-step.
   </Accordion>
 
   <Accordion title="How does transcoding pricing work? Who sets it?">
-    Orchestrators set their price per pixel (in wei) and advertise it to gateways. Your gateway's `-maxPricePerUnit` is the ceiling you are willing to pay - any orchestrator advertising below your cap is eligible to receive your jobs.
+    Orchestrators set their price per pixel (in wei) and advertise it to Gateways. Your Gateway's `-maxPricePerUnit` is the ceiling you are willing to pay - any Orchestrator advertising below your cap is eligible to receive your jobs.
 
-    Orchestrators may adjust their prices automatically based on gas costs on Arbitrum (the `autoAdjustPrice` behaviour). During high-gas periods, orchestrator prices rise - you may need to raise `-maxPricePerUnit` temporarily to keep jobs routing.
+    Orchestrators may adjust their prices automatically based on gas costs on Arbitrum (the `autoAdjustPrice` behaviour). During high-gas periods, Orchestrator prices rise - you may need to raise `-maxPricePerUnit` temporarily to keep jobs routing.
 
-    There is no protocol-fixed price. The market price emerges from supply (orchestrators) and demand (gateways) with the gateway's `maxPrice` acting as the ceiling.
+    There is no protocol-fixed price. The market price emerges from supply (Orchestrators) and demand (Gateways) with the Gateway's `maxPrice` acting as the ceiling.
   </Accordion>
 
 </AccordionGroup>
@@ -188,7 +188,7 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
 <AccordionGroup>
 
   <Accordion title="The AI gateway binary doesn't work on Windows. Why?">
-    The Livepeer AI gateway binary is **not currently available for Windows or macOS (Intel)**. The AI inference stack requires a Linux environment - the GPU/CUDA toolchain used for AI inference has only been tested and compiled for Linux.
+    The Livepeer AI Gateway binary is **not currently available for Windows or macOS (Intel)**. The AI inference stack requires a Linux environment - the GPU/CUDA toolchain used for AI inference has only been tested and compiled for Linux.
 
     **Workaround:** Use Docker on Linux (or WSL2 on Windows).
 
@@ -207,21 +207,21 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
       -httpIngest
     ```
 
-    The standard video gateway binary for Windows remains available and unchanged.
+    The standard video Gateway binary for Windows remains available and unchanged.
 
     [//]: # (REVIEW: Confirm whether a Windows AI binary is on the roadmap.)
   </Accordion>
 
   <Accordion title="Do I need ETH or LPT to run an AI gateway?">
-    No. The off-chain AI gateway requires neither ETH nor LPT. You do not need an Arbitrum connection, a wallet, or any on-chain setup.
+    No. The off-chain AI Gateway requires neither ETH nor LPT. You do not need an Arbitrum connection, a wallet, or any on-chain setup.
 
     Off-chain means:
     - No ticket-based payment system
     - No Arbitrum RPC required
     - No `-network` flag needed
-    - Orchestrator payment is managed separately (your arrangement with the orchestrator)
+    - Orchestrator payment is managed separately (your arrangement with the Orchestrator)
 
-    This is the fastest path to running a gateway. If you later want to add on-chain video transcoding alongside AI, that becomes a dual gateway and does require ETH.
+    This is the fastest path to running a Gateway. If you later want to add on-chain video transcoding alongside AI, that becomes a dual Gateway and does require ETH.
   </Accordion>
 
   <Accordion title="What ports does the AI gateway use?">
@@ -236,20 +236,20 @@ Jump to: [General](#general) · [Video Gateway](#video-gateway) · [AI Gateway](
   <Accordion title="How do I find which AI models and pipelines are available?">
     There is currently no unified registry or discovery endpoint listing all AI capabilities across the network.
 
-    Per-orchestrator query:
+    Per-Orchestrator query:
     ```bash icon="terminal"
     curl https://<orchestrator-address>:<port>/getOrchestratorInfo
     ```
 
     [//]: # (REVIEW: Confirm whether /getOrchestratorInfo is the correct stable endpoint for capability discovery.)
 
-    For finding AI-capable orchestrators to query: ask in [Discord #local-gateways](https://discord.gg/livepeer) - community operators share their endpoints there. Community discussion on a unified discovery mechanism is ongoing.
+    For finding AI-capable Orchestrators to query: ask in [Discord #local-Gateways](https://discord.gg/livepeer) - community operators share their endpoints there. Community discussion on a unified discovery mechanism is ongoing.
   </Accordion>
 
   <Accordion title="Can gateway operators add custom AI inference endpoints or pipelines?">
-    Gateway operators run AI gateways and expose the inference APIs - the gateway itself is the inference endpoint. Orchestrators running AI inference advertise their AI service URI and capability set.
+    Gateway operators run AI Gateways and expose the inference APIs - the Gateway itself is the inference endpoint. Orchestrators running AI inference advertise their AI service URI and capability set.
 
-    There is currently no formal documented flow for registering a custom pipeline type beyond what go-livepeer supports natively. Running a gateway connected to orchestrators running your custom pipeline is the current approach.
+    There is currently no formal documented flow for registering a custom pipeline type beyond what go-livepeer supports natively. Running a Gateway connected to Orchestrators running your custom pipeline is the current approach.
 
     This is a documented gap. Check the [Livepeer Forum](https://forum.livepeer.org) for community discussion on extending pipeline support.
   </Accordion>
@@ -264,8 +264,8 @@ The following external resources are useful reference points for pricing, networ
 
 | Resource | Link | What it covers |
 |----------|------|----------------|
-| Livepeer Docs - Set Pricing | [docs.livepeer.org](https://docs.livepeer.org/orchestrators/portal/guides/set-pricing) | How orchestrators set per-pixel pricing, auto-adjustment |
-| Livepeer Studio Pricing | [livepeer.studio/pricing](https://livepeer.studio/pricing) | Example commercial gateway pricing tiers |
+| Livepeer Docs - Set Pricing | [docs.livepeer.org](https://docs.livepeer.org/orchestrators/portal/guides/set-pricing) | How Orchestrators set per-pixel pricing, auto-adjustment |
+| Livepeer Studio Pricing | [Livepeer.studio/pricing](https://livepeer.studio/pricing) | Example commercial Gateway pricing tiers |
 | Livepeer Whitepaper | [GitHub Wiki](https://github.com/livepeer/wiki/blob/master/WHITEPAPER.md) | Protocol-level economic model (foundational) |
 | TokenTerminal - Livepeer Fees | [tokenterminal.com](https://tokenterminal.com/explorer/projects/livepeer/metrics/fees) | Network fees and usage-based revenue |
 | Figment - Transcoding Fees Primer | [medium.com](https://medium.com/figment/primer-on-livepeer-transcoding-fees-3658057f98c2) | Clear per-pixel pricing explanation |

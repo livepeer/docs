@@ -3,18 +3,19 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches Discord announcements for product and shared community feeds, writing per-product outputs plus the shared social feed module under snippets/data/social-feeds/.
+ * @purpose     Fetch Discord announcement channel posts for the shared Livepeer community feed and per-solution product feeds (daydream, embody, streamplace, etc.) — keeps Community + product pages current with the latest announcements
+ * @description Reads channel ID + bot token from env, hits Discord API for each configured solution, transforms messages into a JSX module per solution and a shared community module. Writes outputs to snippets/data/social-feed-solutions/{product}/discordData.jsx and snippets/data/social-feeds/discordAnnouncementsData.jsx.
  * @mode        integrate
- * @pipeline    config → Discord API → snippets/data/social-feed-solutions/{product}/discordData.jsx
- * @scope       .github/scripts, snippets/data/social-feed-solutions/, snippets/data/social-feeds/
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       Discord API (read-only) → snippets/data/social-feed-solutions/{product}/, snippets/data/social-feeds/
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness); no secrets in output
  */
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -203,16 +204,18 @@ function writeJSX(exportName, announcements, outPath) {
     console.log(jsx);
   } else {
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
-    fs.writeFileSync(outPath, jsx);
+    atomicWrite(outPath, jsx);
     console.log(`  Written to ${outPath}`);
   }
 }
 
 async function main() {
   if (!DISCORD_BOT_TOKEN) {
-    throw new Error(
-      "DISCORD_BOT_TOKEN environment variable is not set."
-    );
+    // Discord API requires a bot token (no anonymous access). When the secret is missing
+    // (local dev without .env, or a CI run where the secret isn't configured), skip cleanly
+    // so the rest of the social-feeds pipeline runs. Exits 0 — this is "not configured", not "broken".
+    console.log("fetch-discord-announcements: SKIP — DISCORD_BOT_TOKEN env var not set (configure in CI or .env to enable)");
+    process.exit(0);
   }
 
   const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            openapi-rolling-issue.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           tooling:api-spec
  * @scope             tests/unit, tests/utils, .github/workflows/openapi-reference-validation.yml

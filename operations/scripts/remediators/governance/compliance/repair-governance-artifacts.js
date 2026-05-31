@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Repair regenerates governance map, updates lastVerified dates on verified frameworks, and reports unfixable issues
  * @description Regenerates governance map, updates lastVerified dates on verified frameworks, and reports unfixable issues
  * @mode        repair
  * @pipeline    manual, post-merge -> governance markers, frameworks -> GOVERNANCE_MAP_LATEST.json, framework frontmatter
@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 const REPORT_PATH = path.join(REPO_ROOT, 'workspace/reports/repo-ops/GOVERNANCE_MAP_LATEST.json');
@@ -55,7 +56,7 @@ function updateLastVerified(filePath, dryRun) {
   if (content.includes('lastVerified:')) {
     const updated = content.replace(/lastVerified:\s*.+/, `lastVerified: ${today}`);
     if (updated !== content) {
-      if (!dryRun) fs.writeFileSync(filePath, updated);
+      if (!dryRun) atomicWrite(filePath, updated);
       return { action: 'updated', from: content.match(/lastVerified:\s*(.+)/)[1].trim(), to: today };
     }
     return { action: 'unchanged' };
@@ -64,7 +65,7 @@ function updateLastVerified(filePath, dryRun) {
   // Add lastVerified after status field if it exists
   if (content.includes('status:')) {
     const updated = content.replace(/(status:\s*.+)/, `$1\nlastVerified: ${today}`);
-    if (!dryRun) fs.writeFileSync(updated);
+    if (!dryRun) atomicWrite(updated);
     return { action: 'added', to: today };
   }
 
@@ -138,7 +139,7 @@ function main() {
       if (!dryRun) {
         if (content.includes('lastVerified:')) {
           const updated = content.replace(/lastVerified:\s*.+/, `lastVerified: ${today}`);
-          fs.writeFileSync(fwFile, updated);
+          atomicWrite(fwFile, updated);
           actions.push({ type: 'lastVerified-updated', path: relPath, from: fields.lastVerified, to: today });
           console.log(`   ✓ ${relPath} (${fields.lastVerified || 'none'} → ${today})`);
         } else {

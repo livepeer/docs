@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Validates component files against component governance styling rules.
  * @description Validates component files against component governance styling rules.
  * @mode        check
  * @pipeline    manual → component .jsx files → exit-code, stdout:violations; --fix → component .jsx files → CSS token replacements, P3
@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   getComponentFiles,
   scanStylingViolations,
@@ -180,7 +181,7 @@ function run(options = {}) {
       const original = fs.readFileSync(file.absolutePath, 'utf8');
       const next = applyKnownFixes(original);
       if (next !== original) {
-        fs.writeFileSync(file.absolutePath, next, 'utf8');
+        atomicWrite(file.absolutePath, next, 'utf8');
         changedFiles.push(file.displayPath);
       }
     });

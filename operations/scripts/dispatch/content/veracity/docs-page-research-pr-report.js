@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.
  * @description Docs page research PR report — runs the fact-check research runner on changed docs pages and emits an advisory PR artifact summarizing claim families, contradictions, unresolved factual risk, and propagation follow-up.
  * @mode        dispatch
  * @pipeline    manual — experimental advisory PR integration, non-blocking
@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync, execSync } = require('child_process');
 const crypto = require('crypto');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_REGISTRY = 'workspace/research/claims';
 
@@ -334,12 +335,12 @@ function buildMarkdown(summary) {
 
 function writeJson(filePath, value) {
   ensureDirForFile(filePath);
-  fs.writeFileSync(path.resolve(REPO_ROOT, filePath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(path.resolve(REPO_ROOT, filePath), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function writeText(filePath, value) {
   ensureDirForFile(filePath);
-  fs.writeFileSync(path.resolve(REPO_ROOT, filePath), value, 'utf8');
+  atomicWrite(path.resolve(REPO_ROOT, filePath), value, 'utf8');
 }
 
 function runResearch(args, targetFiles, reportMd, reportJson) {

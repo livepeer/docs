@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Tracks consecutive failures for circuit breaker. Fires after tool use failures.
  * @description Tracks consecutive failures for circuit breaker. Fires after tool use failures.
  * @mode        dispatch
  * @pipeline    PostToolUseFailure hook → reads stdin → tracks failures → triggers circuit breaker at 3

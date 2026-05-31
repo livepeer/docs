@@ -12,6 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../../tools/lib/bootstrap/safe-io');
 
 function toPosix(value) {
   return String(value || '').split(path.sep).join('/');
@@ -35,7 +36,7 @@ function readJson(filePath) {
 
 function writeJson(filePath, value) {
   ensureDirForFile(filePath);
-  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function writeTextIfChanged(filePath, nextContent) {
@@ -47,7 +48,7 @@ function writeTextIfChanged(filePath, nextContent) {
   }
   if (prev === nextContent) return false;
   ensureDirForFile(filePath);
-  fs.writeFileSync(filePath, nextContent, 'utf8');
+  atomicWrite(filePath, nextContent, 'utf8');
   return true;
 }
 

@@ -1,6 +1,6 @@
 # Docs Quality and Freshness Audit
 
-- Generated: 2026-05-22T06:36:28.824Z
+- Generated: 2026-05-27T10:46:28.811Z
 - Scope: full
 - Stage ID: docs-quality-and-freshness-audit
 - Files analyzed: 2496

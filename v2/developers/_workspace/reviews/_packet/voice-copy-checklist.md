@@ -1,6 +1,6 @@
 # Voice & copy checklist — fast per-page application
 
-**Source:** `v2/developers1/_workspace/canonical/checks.mdx` §2 Voice & Copy + `docs-guide/standards/voice-rules.mdx` + `.claude/CLAUDE.md` Voice section
+**Source:** `v2/developers1/_workspace/canonical/checks.mdx` §2 Voice & Copy + `docs-guide/standards/voice-and-copy.mdx` + `.claude/CLAUDE.md` Voice section
 
 Apply this checklist by running grep patterns against the page, then quoting actual hits in the per-page review.
 

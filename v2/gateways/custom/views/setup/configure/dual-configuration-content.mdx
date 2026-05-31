@@ -78,12 +78,12 @@ payment processing, and result delivery.
 The LivepeerNode struct contains fields for both traditional transcoding (Transcoder, TranscoderManager)
 and AI processing (AIWorker, AIWorkerManager) <DoubleIconLink label="livepeernode.go" href="https://github.com/livepeer/go-livepeer/blob/5691cb48/core/livepeernode.go" iconLeft="github" />
 
-The gateway determines the processing type based on the request:
+The Gateway determines the processing type based on the request:
 
 - Standard transcoding requests go through the BroadcastSessionsManager
 - AI requests go through the AISessionManager with AI-specific authentication and pipeline selection <DoubleIconLink label="ai_auth.go" href="https://github.com/livepeer/go-livepeer/blob/5691cb48/server/ai_auth.go" iconLeft="github" />
 
-The gateway initializes with two distinct session managers:
+The Gateway initializes with two distinct session managers:
 
 ```go icon="terminal"
 // Traditional transcoding session manager
@@ -136,12 +136,12 @@ AISessionManager: NewAISessionManager(lpNode, AISessionManagerTTL)
 
 ## Configuration
 
-To configure a gateway to handle both video transcoding and AI processing, you need
-to set the appropriate flags and options when starting the livepeer binary.
+To configure a Gateway to handle both video transcoding and AI processing, you need
+to set the appropriate flags and options when starting the Livepeer binary.
 
 **Essential Flags**
 
-To enable dual setup, configure the gateway with the following flags:
+To enable dual setup, configure the Gateway with the following flags:
 
 <StyledTable variant="bordered">
   <thead>
@@ -153,8 +153,8 @@ To enable dual setup, configure the gateway with the following flags:
   </thead>
   <tbody>
     <TableRow>
-      <TableCell><code>-gateway</code></TableCell>
-      <TableCell>Run as a gateway node</TableCell>
+      <TableCell><code>-Gateway</code></TableCell>
+      <TableCell>Run as a Gateway node</TableCell>
       <TableCell align="center">✓</TableCell>
     </TableRow>
     <TableRow>
@@ -168,7 +168,7 @@ To enable dual setup, configure the gateway with the following flags:
       <TableCell align="center">✓</TableCell>
     </TableRow>
     <TableRow>
-      <TableCell><code>-aiServiceRegistry</code></TableCell>
+      <TableCell><code>-AIServiceRegistry</code></TableCell>
       <TableCell>Enable AI service registry</TableCell>
       <TableCell align="center">✓</TableCell>
     </TableRow>
@@ -192,7 +192,7 @@ See: <DoubleIconLink
 
 ### Transcoding Configuration
 
-Note, if the `transcodingOptions.json` file is not provided, the gateway will use the default transcoding profiles `-transcodingOptions=P240p30fps16x9,P360p30fps16x9`.
+Note, if the `transcodingOptions.json` file is not provided, the Gateway will use the default transcoding profiles `-transcodingOptions=P240p30fps16x9,P360p30fps16x9`.
 
 ```bash Transcoding flags icon="film-canister"
 # -transcodingOptions=P240p30fps16x9,P360p30fps16x9
@@ -203,7 +203,7 @@ Note, if the `transcodingOptions.json` file is not provided, the gateway will us
 
 <Note>
  `-nvidia` and NVIDIA drivers are only required for GPU transcoding hosts. A
- gateway-only routing setup does not require NVIDIA drivers.
+ Gateway-only routing setup does not require NVIDIA drivers.
 </Note>
 
 ## Deployment
@@ -212,7 +212,7 @@ Note, if the `transcodingOptions.json` file is not provided, the gateway will us
   <Tab title="Off-Chain Developement Setup">
  For local development and testing purposes, there is no need to connect to the blockchain payments layer.
 
- <Note> You will need to run your own orchestrator node for local development. </Note>
+ <Note> You will need to run your own Orchestrator node for local development. </Note>
 
         ```bash Off-Chain Gateway Deployment with dual capabilities icon="terminal"
         livepeer -gateway \
@@ -308,7 +308,7 @@ For nodes that handle both orchestration and AI processing
 
 ## Example Setup
 
-The box setup for local development demonstrates running a gateway that handles both types of processing.
+The box setup for local development demonstrates running a Gateway that handles both types of processing.
 
 <Note>
  The embedded `box/box.md` excerpt is unavailable in this docs branch.

@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Generate produces glossary data file from terminology sources
  * @description Glossary generator — produces glossary data file from terminology sources
  * @mode        generate
  * @pipeline    manual — not yet in pipeline
@@ -36,6 +36,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // Configuration
 const REPO_ROOT = getRepoRoot();
@@ -375,7 +376,7 @@ function main() {
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
     }
 
-    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2));
+    atomicWrite(OUTPUT_FILE, JSON.stringify(output, null, 2));
     console.log(`💾 Saved glossary data to ${path.relative(REPO_ROOT, OUTPUT_FILE)}\n`);
   }
 

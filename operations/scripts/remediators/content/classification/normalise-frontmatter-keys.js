@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     governance
  * @niche       classification
- * @purpose     qa:content-quality
+ * @purpose     Normalises capitalised frontmatter YAML keys to lowercase canonical form across v2 MDX pages.
  * @description Normalises capitalised frontmatter YAML keys to lowercase canonical form across v2 MDX pages.
  * @mode        repair
  * @pipeline    manual — batch remediation utility, run with --dry-run first
@@ -16,6 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const V2_ROOT = path.join(REPO_ROOT, 'v2');
@@ -264,7 +265,7 @@ function run(options = {}) {
 
     if (args.write) {
       const newContent = fm.before + fieldsAdded + fm.after + fm.body;
-      fs.writeFileSync(fullPath, newContent, 'utf8');
+      atomicWrite(fullPath, newContent, 'utf8');
     }
   }
 

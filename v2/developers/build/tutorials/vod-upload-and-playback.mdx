@@ -39,7 +39,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 ---
 
-By the end of this tutorial you'll have a Next.js 15 app that accepts video files, uploads them via TUS (resumable, multi-gigabyte capable), tracks transcoding status, and plays back the finished asset via HLS in the `@livepeer/react` Player. The path uses the standard Livepeer Asset API; any gateway provider that exposes it works without code changes.
+By the end of this tutorial you'll have a Next.js 15 app that accepts video files, uploads them via TUS (resumable, multi-gigabyte capable), tracks transcoding status, and plays back the finished asset via HLS in the `@livepeer/react` Player. The path uses the standard Livepeer Asset API; any Gateway provider that exposes it works without code changes.
 
 This is the Persona 2 activation moment for VOD. The live streaming tutorial proved the real-time path; this one proves the persistent-asset path. Most video platforms ship both; the Asset API plus the Stream API together cover the full "Mux with AI bolted on" surface.
 
@@ -48,11 +48,11 @@ This is the Persona 2 activation moment for VOD. The live streaming tutorial pro
 ## Required Tools
 
 - Node.js 20 or later
-- A Livepeer gateway endpoint that exposes the Asset API (paid provider or self-hosted)
-- API key for the gateway provider
+- A Livepeer Gateway endpoint that exposes the Asset API (paid provider or self-hosted)
+- API key for the Gateway provider
 - A code editor
 
-The Asset API is standardised across providers. The tutorial below works against any provider that implements the Livepeer Asset API or a self-hosted gateway built on the open spec.
+The Asset API is standardised across providers. The tutorial below works against any provider that implements the Livepeer Asset API or a self-hosted Gateway built on the open spec.
 
 <CustomDivider />
 
@@ -383,7 +383,7 @@ Open `http://localhost:3000`. Pick a video file; watch the upload progress bar, 
 
 ## Production Webhooks
 
-Polling works for development. Production replaces it with webhook subscriptions. The gateway emits five events:
+Polling works for development. Production replaces it with webhook subscriptions. The Gateway emits five events:
 
 | Event | Fires when | Use for |
 |---|---|---|
@@ -391,9 +391,9 @@ Polling works for development. Production replaces it with webhook subscriptions
 | `asset.updated` | Asset metadata changed | Sync metadata to your DB |
 | `asset.ready` | Transcoding complete; playback URLs available | Mark asset as playable in your app |
 | `asset.failed` | Transcoding failed | Surface error to user, clean up |
-| `asset.deleted` | Asset deleted from the gateway | Cascade delete in your DB |
+| `asset.deleted` | Asset deleted from the Gateway | Cascade delete in your DB |
 
-Register a webhook endpoint at your gateway provider's webhook configuration page. The endpoint receives signed JSON payloads containing the asset object and event type. Verify signatures server-side before trusting the payload.
+Register a webhook endpoint at your Gateway provider's webhook configuration page. The endpoint receives signed JSON payloads containing the asset object and event type. Verify signatures server-side before trusting the payload.
 
 The polling loop in the `Uploader` component above is replaceable with a webhook listener that updates a database row, which the client subscribes to via Server-Sent Events or WebSocket.
 
@@ -409,7 +409,7 @@ Six things change between this local setup and a production deployment.
 
 **Static MP4 renditions.** Set `staticMp4: true` in `asset.create()` for assets that need fast time-to-first-frame. Short-form video benefits; long-form prefers HLS.
 
-**Encryption.** For content that must not be downloaded raw, enable encryption on asset creation. The gateway encrypts assets with AES-CBC and serves decryption keys gated by access control.
+**Encryption.** For content that must not be downloaded raw, enable encryption on asset creation. The Gateway encrypts assets with AES-CBC and serves decryption keys gated by access control.
 
 **Storage policies.** Decide which assets persist on IPFS for permanence and which stay in regional cloud storage for cost. Long-tail catalogue goes to IPFS; trending content stays in fast cache.
 
@@ -423,10 +423,10 @@ Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-har
 
 <AccordionGroup>
   <Accordion title="TUS upload returns 404 on first chunk">
-    The `tusUploadUrl` field on the asset response is empty or stale. Confirm the gateway provider exposes `tusEndpoint` (some implementations use `tusUploadUrl`; check the response shape). Adjust the `assets/route.ts` handler to match.
+    The `tusUploadUrl` field on the asset response is empty or stale. Confirm the Gateway provider exposes `tusEndpoint` (some implementations use `tusUploadUrl`; check the response shape). Adjust the `assets/route.ts` handler to match.
   </Accordion>
   <Accordion title="Upload progresses but processing never starts">
-    The TUS upload completed locally but the gateway didn't finalise. Check the asset status; if it sits at `uploading` after the file completes, the TUS endpoint may not have received the final chunk. Lower `chunkSize` to 1 MB and retry; some intermediate proxies cap large chunk sizes.
+    The TUS upload completed locally but the Gateway didn't finalise. Check the asset status; if it sits at `uploading` after the file completes, the TUS endpoint may not have received the final chunk. Lower `chunkSize` to 1 MB and retry; some intermediate proxies cap large chunk sizes.
   </Accordion>
   <Accordion title="Asset reaches `processing` then stalls">
     The transcoding queue is backed up, or the file is in an unsupported format. Most providers process common formats (MP4, MOV, WebM, MKV) without issue; exotic codecs or DRM-protected files fail at the transcode step. Check `status.errorMessage` for the specific reason.

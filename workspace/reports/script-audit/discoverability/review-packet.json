@@ -1,0 +1,284 @@
+[
+  {
+    "path": "operations/scripts/remediators/content/seo/generate-seo.js",
+    "name": "generate-seo.js",
+    "concern": "discoverability",
+    "type": "remediator",
+    "niche": "seo-metadata",
+    "purpose": "Repair v2 MDX frontmatter SEO completeness — derives title (from H1 if missing), description (from first paragraph if missing or boilerplate), and keywords (from headings + key terms) when those fields are blank, stale, or below quality threshold",
+    "description": "Content-analysis-based SEO frontmatter generator. Reads each v2 .mdx file, parses frontmatter, and for missing/low-quality title/description/keywords writes a derived value into a frontmatter patch. --dry-run shows proposed patches; --write applies them and runs --verify to re-check. Pairs with dispatch-seo-metadata.js.",
+    "scope": "v2/ MDX (frontmatter only — body content untouched)",
+    "reads": [
+      "${V2_ROOT}/pages"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/discoverability/dispatch-seo-metadata.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/adaptive-architecture.mdx",
+      "docs-guide/features/automations.mdx",
+      "docs-guide/_workspace/index.md",
+      "docs-guide/docs-library/pipelines/discoverability.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/content/seo/generate-ai-sitemap.js",
+    "name": "generate-ai-sitemap.js",
+    "concern": "discoverability",
+    "type": "generator",
+    "niche": "ai-sitemap",
+    "purpose": "Generate the sitemap-ai.xml file at repo root — an AI-crawler-optimised sitemap that lists every v2/ route with priority hints, last-modified, and content-type so AI search engines (Perplexity, ChatGPT browse, Claude search, Phind) can index docs efficiently",
+    "description": "Reads docs.json navigation tree + per-page frontmatter, emits sitemap-ai.xml at repo root. --check mode validates the committed sitemap-ai.xml matches the regenerated output (exits non-zero on drift). --write mode regenerates. Pairs with dispatch-ai-sitemap.js.",
+    "scope": "docs.json, v2/ frontmatter → sitemap-ai.xml (repo root)",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-ai-sitemap.js",
+      "operations/governance/config/repo-governance-surfaces.json",
+      "operations/governance/config/root-governance.json",
+      "operations/governance/config/generated-artifacts.json",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/policies/root-allowlist-governance.mdx",
+      "docs-guide/_workspace/index.md",
+      "docs-guide/docs-library/pipelines/discoverability.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/root-governance-map.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/content/seo/generate-og-images.js",
+    "name": "generate-og-images.js",
+    "concern": "discoverability",
+    "type": "generator",
+    "niche": "og-images",
+    "purpose": "Generate Open Graph preview images for v2 pages — per-section branded images (Gateways, Orchestrators, Developers, About, Delegators, Community) plus a fallback Livepeer-branded image — written to snippets/assets/media/og-images/ and referenced via the og-image-policy resolver",
+    "description": "Uses Puppeteer to render section-templated images at the OG canonical 1200x630 size with title/section overlay. Reads section labels and brand tokens from config, writes PNGs to snippets/assets/media/og-images/ plus a manifest JSON mapping route → image. Pairs with og-image-policy.js (the resolver consumers use) and dispatch-og-images.js.",
+    "scope": "Puppeteer + brand config → snippets/assets/media/og-images/*.png + manifest.json",
+    "reads": [
+      "snippets/assets/logos/light.svg"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-og-images.js",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/automations.mdx",
+      "docs-guide/docs-library/pipelines/discoverability.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/ai/llm/generate-llms-files.js",
+    "name": "generate-llms-files.js",
+    "concern": "discoverability",
+    "type": "generator",
+    "niche": "llms-files",
+    "purpose": "Generate the llms.txt + llms-full.txt files at repo root per the llms.txt convention — gives AI assistants a single curated entrypoint listing every v2/ page with title, URL, and one-line summary so they can answer \"what's documented?\" without crawling",
+    "description": "Reads docs.json navigation + per-page frontmatter (title, description, sidebarTitle). llms.txt = short index (one line per page). llms-full.txt = same index + first-paragraph excerpt per page. --check validates committed files match the regen output; --write regenerates. Pairs with dispatch-llms-files.js.",
+    "scope": "docs.json, v2/ frontmatter → llms.txt, llms-full.txt (repo root)",
+    "reads": [
+      "tools"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-llms-files.js",
+      "operations/scripts/script-index.md",
+      "operations/governance/config/repo-governance-surfaces.json",
+      "operations/governance/config/root-governance.json",
+      "operations/governance/config/generated-artifacts.json",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/policies/root-allowlist-governance.mdx",
+      "docs-guide/docs-library/pipelines/discoverability.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/root-governance-map.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-ai-sitemap.js",
+    "name": "dispatch-ai-sitemap.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "ai-sitemap",
+    "purpose": "Pipeline dispatcher for ai-sitemap (full lifecycle: detect → repair → verify → escalate)",
+    "description": "AI sitemap pipeline (PR drift check + post-merge regen + verify).",
+    "scope": "sitemap-ai.xml",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+      "operations/scripts/generators/content/seo/generate-ai-sitemap.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-companions.js",
+    "name": "dispatch-companions.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "companions",
+    "purpose": "Pipeline dispatcher for companions (full lifecycle: detect → repair → verify → escalate)",
+    "description": "AI companion manifest pipeline (PR drift check + post-merge regen + verify).",
+    "scope": "snippets/data/companions/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+    "name": "dispatch-discoverability-check.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "check meta dispatcher: bundles discoverability pipelines in --mode pr",
+    "description": "PR meta for discoverability concern.",
+    "scope": "all discoverability pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-discoverability.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+    "name": "dispatch-discoverability-generate.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "generate meta dispatcher: bundles discoverability pipelines in --mode post-merge",
+    "description": "Post-merge meta for discoverability generators.",
+    "scope": "all discoverability pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-discoverability.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-repair.js",
+    "name": "dispatch-discoverability-repair.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "repair meta dispatcher: bundles discoverability pipelines in --mode manual",
+    "description": "Manual repair meta for discoverability concern.",
+    "scope": "all discoverability pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-discoverability.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-llms-files.js",
+    "name": "dispatch-llms-files.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "llms-files",
+    "purpose": "Pipeline dispatcher for llms-files (full lifecycle: detect → repair → verify → escalate)",
+    "description": "llms.txt + llms-full.txt pipeline.",
+    "scope": "llms.txt, llms-full.txt",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+      "operations/scripts/generators/ai/llm/generate-llms-files.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-og-images.js",
+    "name": "dispatch-og-images.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "og-images",
+    "purpose": "Pipeline dispatcher for og-images (full lifecycle: detect → repair → verify → escalate)",
+    "description": "OG image pipeline (Puppeteer generate + verify per page).",
+    "scope": "public/og-images/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+      "operations/scripts/generators/content/seo/generate-og-images.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-seo-metadata.js",
+    "name": "dispatch-seo-metadata.js",
+    "concern": "discoverability",
+    "type": "dispatch",
+    "niche": "seo-metadata",
+    "purpose": "Pipeline dispatcher for seo-metadata (full lifecycle: detect → repair → verify → escalate)",
+    "description": "SEO metadata repair pipeline (frontmatter completeness, descriptions).",
+    "scope": "v2 MDX pages",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-repair.js",
+      "operations/scripts/remediators/content/seo/generate-seo.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/config/og-image-policy.js",
+    "name": "og-image-policy.js",
+    "concern": "discoverability",
+    "type": "integrator",
+    "niche": "og-images",
+    "purpose": "Resolve a v2 MDX route to the correct OG preview image (section-branded if the route falls under a known section, fallback otherwise) — shared library used by generate-og-images, the SEO frontmatter remediator, and any validator that checks OG completeness",
+    "description": "Library module (not a CLI). Exports resolveOgImage(route) → { src, alt, section, isFallback } given a v2/ route. Reads section → image mapping from snippets/assets/media/og-images/manifest.json. Treated as @type integrator because it's the resolver bridge between the OG generation pipeline output and the consumer surfaces.",
+    "scope": "snippets/assets/media/og-images/manifest.json + docs.json",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/generators/content/seo/generate-og-images.js",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  }
+]

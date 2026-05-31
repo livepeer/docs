@@ -1,0 +1,246 @@
+[
+  {
+    "path": "operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js",
+    "name": "convert-rss-to-mdx.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "transforms",
+    "purpose": "Convert podcast / interview RSS feed items into v2/internal/assets/transcripts MDX pages — used to ingest external content (e.g. a16z.rss, ycomb.rss already in the transcripts dir) as searchable internal-only MDX",
+    "description": "Reads .rss files from v2/internal/assets/transcripts/, parses each entry (title, pubDate, link, excerpt, audio link, transcript), emits one MDX page per entry under v2/internal/assets/transcripts/{source}/{episode-slug}.mdx with proper frontmatter. Manual-use only — run when new RSS feeds are added or existing feeds need refresh.",
+    "scope": "v2/internal/assets/transcripts/*.rss → v2/internal/assets/transcripts/{source}/*.mdx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh",
+    "name": "fetch-external-docs.sh",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "external-docs",
+    "purpose": "Fetch upstream markdown from external Livepeer repositories (go-livepeer, livepeer-ai-worker, etc.), sanitise for MDX safety, and write shared page composables — invoked by mint-dev.sh and the page-imports audit so v2 pages can import the latest README/CONTRIBUTING from source repos",
+    "description": "Iterates a config-mapped list of external repos and files, downloads each via curl, runs mdx-sanitise on the output, writes to snippets/composables/pages/shared/. Pre-build dependency for the dev preview (mint-dev.sh runs it first) so external composables exist before Mintlify boots. Also referenced by page-imports-audit which validates that referenced shared composables exist.",
+    "scope": "external Livepeer repos → snippets/composables/pages/shared/*.mdx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/audits/content/health/page-imports-audit.js",
+      "operations/scripts/script-index.md",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/fetching/fetch-lpt-exchanges.sh",
+    "name": "fetch-lpt-exchanges.sh",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "exchanges-data",
+    "purpose": "Fetch the CoinGecko exchange listings for LPT (where to buy/trade Livepeer token) and append/update snippets/data/exchanges/lpt-exchanges.mdx — manual-use script run when listings change or contributors want to refresh the LPT exchange data",
+    "description": "Hits CoinGecko's public exchanges-by-token endpoint for the LPT coin ID, transforms the response (exchange name, pair, volume, trust score) into an MDX table, appends or updates the table in snippets/data/exchanges/lpt-exchanges.mdx. Manual-use only — documented in docs-guide/tooling/lpd-cli.mdx as a contributor workflow.",
+    "scope": "CoinGecko exchanges API → snippets/data/exchanges/lpt-exchanges.mdx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/fetching/fetch-openapi-specs.sh",
+    "name": "fetch-openapi-specs.sh",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "openapi-specs",
+    "purpose": "Fetch the latest OpenAPI specs for Livepeer services (Studio API, Gateway API, etc.) and write them to api/ so Mintlify can regenerate the v2 API reference pages — note: known RFP gap, currently covers 2 of 5 target services",
+    "description": "Iterates a config-mapped list of Livepeer service OpenAPI spec URLs, downloads each via curl, validates JSON/YAML parses, writes to api/{service}-openapi.{yaml,json}. Mintlify's reference-page generator picks them up. Manual-use; not yet wired into a scheduled or post-merge pipeline (tracked as RFP gap \"OpenAPI fetcher 2/5\").",
+    "scope": "Livepeer service OpenAPI endpoints → api/*.{yaml,json}",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/gap-analysis.mdx",
+      "docs-guide/features/data-integrations.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/blockchain-page-spec.js",
+    "name": "blockchain-page-spec.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: blockchain-page-spec",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/branch-watch.js",
+    "name": "branch-watch.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: branch-watch",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/catalog-config.js",
+    "name": "catalog-config.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: catalog-config",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/constants.js",
+    "name": "constants.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: constants",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [
+      "snippets/data/contract-addresses/contractAddressesData.json",
+      "snippets/data/contract-addresses/contractAddressesData.jsx",
+      "snippets/data/contract-addresses/blockchainContractsPageData.json",
+      "snippets/data/contract-addresses/blockchainContractsPageData.jsx",
+      "snippets/data/contract-addresses/canonicalContractsPageData.json",
+      "snippets/data/contract-addresses/canonicalContractsPageData.jsx",
+      "snippets/data/contract-addresses/view-model.jsx",
+      "snippets/data/contract-addresses/_health-checks.json",
+      "snippets/data/contract-addresses/_branch-watch-state.json",
+      "workspace/reports/contracts/contract-pipeline-anomaly-report.json",
+      "workspace/reports/contracts/contract-pipeline-anomaly-report.md",
+      "workspace/reports/contracts/contract-pipeline-issue-payload.json"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/incidents.js",
+    "name": "incidents.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: incidents",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/pipeline.js",
+    "name": "pipeline.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: pipeline",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/governance/dispatch-pipelines.js",
+      "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js",
+      "operations/scripts/dispatch/governance/post-remediation-verify.js",
+      "operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js",
+      "operations/scripts/script-index.md",
+      "operations/governance/config/generated-artifacts.json",
+      "operations/governance/config/ownerless-governance-surfaces.json",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/frameworks/checks-framework.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/solidity-parser.js",
+    "name": "solidity-parser.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: solidity-parser",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/contracts/spec.js",
+    "name": "spec.js",
+    "concern": "integrations",
+    "type": "integrator",
+    "niche": "data",
+    "purpose": "content:contract-data",
+    "description": "Contract data pipeline module: spec",
+    "scope": "operations/scripts/integrators/content/data/contracts/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/data/run-solutions-social-fetch.js",
+    "name": "run-solutions-social-fetch.js",
+    "concern": "integrations",
+    "type": "dispatch",
+    "niche": "social-feeds",
+    "purpose": "Local-only dispatcher for the 7 social-feed integrators — loads .env, lets contributors fetch live forum/discord/blog/youtube/github data on their workstation with --dry-run, --mode filtering, and --skip support before pushing changes that depend on freshly-generated snippets/data/social-feeds outputs",
+    "description": "Mirrors what dispatch-social-feeds.yml does in CI but with .env support, selective --mode (e.g. only forum+youtube), and --skip flag for offline-only fetchers. Iterates the configured fetchers under operations/scripts/integrators/copy/social-feeds/, runs each, captures success/failure summary. Local-use only — not in any GitHub Actions workflow.",
+    "scope": "operations/scripts/integrators/copy/social-feeds/ → snippets/data/social-feeds/, snippets/data/social-feed-solutions/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/script-index.md",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  }
+]

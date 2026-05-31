@@ -1,5 +1,5 @@
 export const lumaEventsData = {
-  lastUpdated: "2026-02-15T05:00:29.459Z",
+  lastUpdated: "2026-05-27T10:46:05.367Z",
   upcoming: [
   ],
   past: [
@@ -106,7 +106,7 @@ export const lumaEventsData = {
       url: "https://luma.com/ettshrqa"
     },
     {
-      title: "Real-Time Video AI @GenART NYU with ComfyUI & Livepeer",
+      title: "Real-Time Video AI @GenART NYU with ComfyUI & Livepeer",
       date: "January 31, 2025",
       location: "370 Jay St 4th floor, Brooklyn, NY 11201, USA",
       url: "https://luma.com/cene9t4y"
@@ -182,6 +182,6 @@ export const lumaEventsData = {
       date: "May 23, 2024",
       location: "NEST Schank- und Speisewirtschaft, Görlitzer Str. 52, 10997 Berlin, Germany",
       url: "https://luma.com/4ochjrc3"
-    }
+    },
   ]
 };

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            v2-wcag-audit.selftest
+ *  @type validator
+ *  @concern governance
+ *  @niche integration
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/integration, v2, git index

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            docs-path-sync.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests/unit, operations/scripts/lib, operations/scripts/validators/content, operations/scripts/remediators/content, lpd

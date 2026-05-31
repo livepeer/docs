@@ -20,6 +20,7 @@ const REPO_ROOT = path.resolve(__dirname, "../../..");
 const LIBRARY_PATH = path.resolve(__dirname);
 const AUDIT_PATH = path.join(LIBRARY_PATH, "actions-audit.json");
 const DRY_RUN = process.argv.includes("--dry-run");
+const TODAY = new Date().toISOString().split("T")[0];
 
 const TYPE_FOLDERS = {
   integrator: "integrators",
@@ -67,7 +68,7 @@ pageType: reference
 purpose: reference
 audience: internal
 status: ${workflow.status}
-lastVerified: '2026-04-01'
+lastVerified: '${TODAY}'
 keywords:
   - livepeer
   - github-actions
@@ -158,7 +159,7 @@ description: 'Index of all GitHub Actions workflows with classification, naming,
 pageType: reference
 purpose: reference
 audience: internal
-lastVerified: '2026-04-01'
+lastVerified: '${TODAY}'
 ---
 
 # Actions Library Catalog

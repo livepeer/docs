@@ -26,12 +26,12 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>A BYOC container is a Docker image that implements FrameProcessor. The orchestrator loads it, routes trickle frames to it, and advertises its capabilities to gateways via the AI Service Registry.</Tip>
+  <Tip>A BYOC container is a Docker image that implements FrameProcessor. The Orchestrator loads it, routes trickle frames to it, and advertises its capabilities to Gateways via the AI Service Registry.</Tip>
 </CenteredContainer>
 
 <CustomDivider />
 
-BYOC (Bring Your Own Container) lets you deploy custom AI models on the Livepeer network. The architecture has three layers: your model code wrapped in a `FrameProcessor`, a `StreamServer` that handles trickle transport, and a Docker container that the orchestrator manages.
+BYOC (Bring Your Own Container) lets you deploy custom AI models on the Livepeer Network. The architecture has three layers: your model code wrapped in a `FrameProcessor`, a `StreamServer` that handles trickle transport, and a Docker container that the Orchestrator manages.
 
 <CustomDivider />
 
@@ -56,13 +56,13 @@ BYOC Container (Docker)
 
 **StreamServer** wraps the FrameProcessor and handles trickle transport: subscribing to input frames, calling your processor, and publishing output frames. PyTrickle provides this out of the box.
 
-**Docker container** packages the StreamServer, FrameProcessor, model weights, and dependencies. The orchestrator manages the container lifecycle via the Docker socket.
+**Docker container** packages the StreamServer, FrameProcessor, model weights, and dependencies. The Orchestrator manages the container lifecycle via the Docker socket.
 
 <CustomDivider />
 
 ## Capability registration
 
-The orchestrator advertises your container's capabilities to the network through `aiModels.json`:
+The Orchestrator advertises your container's capabilities to the network through `aiModels.json`:
 
 ```json
 {
@@ -78,13 +78,13 @@ The orchestrator advertises your container's capabilities to the network through
 | Field | Description |
 |---|---|
 | `pipeline` | Always `live-video-to-video` for BYOC containers |
-| `model_id` | Your chosen model identifier; gateways use this to route requests |
-| `price_per_unit` | Wei per compute unit (orchestrator-set) |
+| `model_id` | Your chosen model identifier; Gateways use this to route requests |
+| `price_per_unit` | Wei per compute unit (Orchestrator-set) |
 | `warm` | Whether the model is pre-loaded in GPU memory |
 | `container` | Docker image reference |
 | `url` | Local HTTP endpoint where the container listens |
 
-Gateways discover your capability through the AI Service Registry on-chain and the orchestrator's `GetOrchestratorInfo` response.
+Gateways discover your capability through the AI Service Registry on-chain and the Orchestrator's `GetOrchestratorInfo` response.
 
 <CustomDivider />
 
@@ -98,7 +98,7 @@ async def health():
     return {"status": "ok"}
 ```
 
-The orchestrator polls `/health` to determine container readiness. A container that does not return `{"status": "ok"}` is not advertised to gateways.
+The Orchestrator polls `/health` to determine container readiness. A container that does not return `{"status": "ok"}` is not advertised to Gateways.
 
 <CustomDivider />
 

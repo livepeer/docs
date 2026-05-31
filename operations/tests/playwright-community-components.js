@@ -1,5 +1,8 @@
 /**
  * @script playwright-community-components
+ *  @type validator
+ *  @concern governance
+ *  @niche playwright-community-components.js
  * @description Verifies community page components render without errors across all solution pages
  * @usage node operations/tests/playwright-community-components.js
  */

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            v2-link-audit.selftest
+ *  @type validator
+ *  @concern governance
+ *  @niche integration
  * @category          validator
  * @purpose           qa:link-integrity
  * @scope             tests/integration

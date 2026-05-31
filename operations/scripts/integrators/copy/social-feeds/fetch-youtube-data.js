@@ -3,18 +3,19 @@
  * @type        integrator
  * @concern     copy
  * @niche       social-feeds
- * @purpose     infrastructure:data-feeds
- * @description Fetches video data from YouTube Data API, writes to snippets/data/social-feeds/
+ * @purpose     Fetch the Livepeer YouTube channel video metadata (title, thumbnail, publish date, view count, duration) and emit a JSX module the Community pages render as the latest-videos feed
+ * @description Reads channel ID + API key from env, hits YouTube Data API v3 for the channel's uploads playlist, transforms entries into a sorted JSX export. Writes to snippets/data/social-feeds/youtubeData.jsx. Requires YOUTUBE_API_KEY.
  * @mode        integrate
- * @pipeline    manual
- * @scope       .github/scripts
+ * @pipeline    P5 (scheduled) via dispatch-social-feeds.js
+ * @scope       YouTube Data API v3 (read-only) → snippets/data/social-feeds/youtubeData.jsx
  * @usage       node operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js [--dry-run]
- * @policy      F-R1
+ * @policy      F-R1 (data freshness); no secrets in output
  */
 const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const { escapeForJsx } = require(path.join(process.cwd(), "operations/scripts/config/mdx-sanitise"));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -211,7 +212,7 @@ ${seriesVideos.map(formatVideo).join(",\n")}
   } else {
     const dir = path.dirname(outputPath);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(outputPath, jsxContent);
+    atomicWrite(outputPath, jsxContent);
     console.log(`Successfully wrote ${outputPath}`);
   }
 }

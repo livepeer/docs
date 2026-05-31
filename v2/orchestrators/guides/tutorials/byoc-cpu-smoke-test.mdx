@@ -31,19 +31,19 @@ import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <Tip>
-  This tutorial proves the Livepeer orchestrator pipeline works on your machine before you commit GPU hardware, ETH, or LPT. A job enters a gateway, routes to the orchestrator, executes in a CPU Docker container, and returns a response. No GPU, no wallet, no on-chain registration.
+  This tutorial proves the Livepeer Orchestrator pipeline works on your machine before you commit GPU hardware, ETH, or LPT. A job enters a Gateway, routes to the Orchestrator, executes in a CPU Docker container, and returns a response. No GPU, no wallet, no on-chain registration.
 </Tip>
 
 ---
 
-This smoke test runs a complete Livepeer gateway and orchestrator on one machine using a CPU-only Docker container as a BYOC (Bring Your Own Container) pipeline. By the end, a test job has travelled from the gateway through the orchestrator into a custom container and back. Estimated time: 20 minutes.
+This smoke test runs a complete Livepeer Gateway and Orchestrator on one machine using a CPU-only Docker container as a BYOC (Bring Your Own Container) pipeline. By the end, a test job has travelled from the Gateway through the Orchestrator into a custom container and back. Estimated time: 20 minutes.
 
 **You will verify:**
-- The orchestrator accepts and routes BYOC jobs correctly
+- The Orchestrator accepts and routes BYOC jobs correctly
 - Your BYOC container registers and serves requests
-- The gateway receives the result from the orchestrator
+- The Gateway receives the result from the Orchestrator
 
-<CustomDivider middleText="Prerequisites" />
+<CustomDivider />
 
 ## Prerequisites
 
@@ -76,7 +76,7 @@ This smoke test runs a complete Livepeer gateway and orchestrator on one machine
 
 No GPU, Ethereum wallet, Arbitrum RPC, or on-chain registration is required.
 
-<CustomDivider middleText="Part 1: BYOC Container" />
+<CustomDivider />
 
 ## Build the CPU BYOC container
 
@@ -208,9 +208,9 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
 </StyledSteps>
 
-<CustomDivider middleText="Part 2: Orchestrator" />
+<CustomDivider />
 
-## Start the orchestrator
+## Start the Orchestrator
 
 <StyledSteps>
 
@@ -232,7 +232,7 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
   <StyledStep title="Start the BYOC container">
 
-    Start the pipeline container before the orchestrator so it is ready when the orchestrator registers capabilities:
+    Start the pipeline container before the Orchestrator so it is ready when the Orchestrator registers capabilities:
 
     ```bash icon="terminal" filename="start-byoc"
     docker run -d \
@@ -257,7 +257,7 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
   <StyledStep title="Start the orchestrator (off-chain mode)">
 
-    In a new terminal, run the orchestrator. Off-chain mode requires no Ethereum wallet or RPC:
+    In a new terminal, run the Orchestrator. Off-chain mode requires no Ethereum wallet or RPC:
 
     ```bash icon="terminal" filename="start-orchestrator"
     ./livepeer \
@@ -286,15 +286,15 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
 </StyledSteps>
 
-<CustomDivider middleText="Part 3: Gateway" />
+<CustomDivider />
 
-## Start the gateway
+## Start the Gateway
 
 <StyledSteps>
 
   <StyledStep title="Start the gateway (off-chain mode with remote signer)">
 
-    In a third terminal, start the gateway. The community remote signer handles all Ethereum operations so no wallet is needed:
+    In a third terminal, start the Gateway. The community remote signer handles all Ethereum operations so no wallet is needed:
 
     ```bash icon="terminal" filename="start-gateway"
     ./livepeer \
@@ -315,14 +315,14 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
     ```
 
     <Note>
-      The remote signer at `signer.eliteencoder.net` is a community-hosted service for testing off-chain gateway setups. Confirm availability in [#local-gateways on Discord](https://discord.gg/livepeer) if you encounter connection errors.
+      The remote signer at `signer.eliteencoder.net` is a community-hosted service for testing off-chain Gateway setups. Confirm availability in [#local-Gateways on Discord](https://discord.gg/livepeer) if you encounter connection errors.
     </Note>
 
   </StyledStep>
 
   <StyledStep title="Verify both processes are reachable">
 
-    Check the gateway API responds:
+    Check the Gateway API responds:
 
     ```bash icon="terminal" filename="check-gateway"
     curl http://localhost:8936/health
@@ -330,19 +330,19 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
     Expected: `{"status":"ok"}`
 
-    Check the orchestrator is registered with the gateway:
+    Check the Orchestrator is registered with the Gateway:
 
     ```bash icon="terminal" filename="check-orch"
     curl http://localhost:7936/registeredOrchestrators
     ```
 
-    Expected: a JSON array containing your orchestrator entry at `localhost:8935`.
+    Expected: a JSON array containing your Orchestrator entry at `localhost:8935`.
 
   </StyledStep>
 
 </StyledSteps>
 
-<CustomDivider middleText="Part 4: Send Test Job" />
+<CustomDivider />
 
 ## Send a test job
 
@@ -350,7 +350,7 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
   <StyledStep title="Send a BYOC job via curl">
 
-    Send a test payload through the gateway to the orchestrator and into the BYOC container:
+    Send a test payload through the Gateway to the Orchestrator and into the BYOC container:
 
     ```bash icon="terminal" filename="test-job"
     curl -X POST http://localhost:8936/live/video-to-video \
@@ -374,7 +374,7 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
   <StyledStep title="Inspect the log trail">
 
-    Confirm payment signing occurred in the gateway terminal:
+    Confirm payment signing occurred in the Gateway terminal:
 
     ```bash icon="terminal" filename="check-logs"
     # Look for these lines in the gateway terminal output:
@@ -382,7 +382,7 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
     # Calling remote signer: signTicket
     ```
 
-    Confirm the orchestrator received and routed the job:
+    Confirm the Orchestrator received and routed the job:
 
     ```bash icon="terminal" filename="check-orch-logs"
     # Look for these in the orchestrator terminal:
@@ -394,18 +394,18 @@ The pipeline is a CPU-only Python passthrough: frames in, frames out unchanged. 
 
 </StyledSteps>
 
-<CustomDivider middleText="What Just Happened" />
+<CustomDivider />
 
 ## What happened
 
 Three processes ran on your machine and handled a complete job lifecycle:
 
 1. **Your BYOC container** registered as a pipeline called `passthrough-cpu`, exposing a health endpoint at `:8000`.
-2. **The orchestrator** started in off-chain mode, registered the BYOC container's capability, and listened for jobs at `:8935`.
-3. **The gateway** started in off-chain mode with no Ethereum wallet, connected to the community remote signer for payment operations, and pointed at your local orchestrator.
-4. **The test request** entered the gateway at `:8936`, the gateway routed it to the orchestrator (with a payment ticket signed by the remote signer), the orchestrator forwarded it to the BYOC container, the container processed and returned the payload, and the result returned through the chain to the HTTP response.
+2. **The Orchestrator** started in off-chain mode, registered the BYOC container's capability, and listened for jobs at `:8935`.
+3. **The Gateway** started in off-chain mode with no Ethereum wallet, connected to the community remote signer for payment operations, and pointed at your local Orchestrator.
+4. **The test request** entered the Gateway at `:8936`, the Gateway routed it to the Orchestrator (with a payment ticket signed by the remote signer), the Orchestrator forwarded it to the BYOC container, the container processed and returned the payload, and the result returned through the chain to the HTTP response.
 
-The off-chain path used here has no on-chain settlement. In production, an on-chain orchestrator submits winning payment tickets to the Arbitrum TicketBroker contract for ETH redemption.
+The off-chain path used here has no on-chain settlement. In production, an on-chain Orchestrator submits winning payment tickets to the Arbitrum TicketBroker contract for ETH redemption.
 
 <CustomDivider />
 

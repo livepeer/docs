@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       scaffold
- * @purpose     tooling:dev-tools',
+ * @purpose     Generate ${params.summary}`,
  * @description ${params.summary}`,
  * @mode        generate
  * @pipeline    manual — interactive developer tool, not suited for automated pipelines',
@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const args = process.argv.slice(2);
 const ROOT = process.cwd();
@@ -106,7 +107,7 @@ function main() {
   const content = createContent(normalized, domain, summary, scope);
 
   fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-  fs.writeFileSync(fullPath, content, 'utf8');
+  atomicWrite(fullPath, content, 'utf8');
 
   console.log(`✅ Created ${normalized}`);
   console.log('Fill all TODO values before committing.');

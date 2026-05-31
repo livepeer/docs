@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            v2-folder-governance-cleanup-matrix.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:repo-health
  * @scope             tests/unit, operations/scripts/audits/governance/reports/generate-v2-folder-governance-cleanup-matrix.js

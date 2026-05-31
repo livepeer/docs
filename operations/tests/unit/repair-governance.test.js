@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            repair-governance.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:repo-health
  * @scope             tests/unit, operations/scripts/orchestrators/repair-governance.js, .github/workflows/repair-governance.yml

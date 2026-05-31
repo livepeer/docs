@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates the docs-guide pages catalog
  * @description Generates the docs-guide pages catalog
  * @mode        generate
  * @pipeline    CI: generate-docs-guide-catalogs.yml (push→main), check-docs-guide-catalogs.yml (PR gate)
@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -271,7 +272,7 @@ function writeIfChanged(repoPath, nextContent, shouldWrite) {
   const changed = current !== nextContent;
   if (changed && shouldWrite) {
     fs.mkdirSync(path.dirname(path.join(REPO_ROOT, repoPath)), { recursive: true });
-    fs.writeFileSync(path.join(REPO_ROOT, repoPath), nextContent, 'utf8');
+    atomicWrite(path.join(REPO_ROOT, repoPath), nextContent, 'utf8');
   }
   return { changed, path: repoPath };
 }

@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     governance
  * @niche       repo
- * @purpose     
+ * @purpose     Checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
  * @description Tasks folder auditor — checks workspace/ structure, normalises report locations, applies recommendations with conflict-safe moves
  * @mode        scan
  * @pipeline    manual — not yet in pipeline
@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const TASKS_ROOT = path.join(REPO_ROOT, 'tasks');
@@ -217,7 +218,8 @@ function normalizeCliRepoPath(inputPath) {
 function normalizeAuditOutputDir(inputPath) {
   const repoPath = normalizeCliRepoPath(inputPath || DEFAULT_AUDIT_OUTPUT_DIR);
   if (!repoPath) return DEFAULT_AUDIT_OUTPUT_DIR;
-  if (!repoPath.startsWith('tasks')) {
+  // Reports must live under workspace/ (D-ACT-09). Legacy `tasks/` paths are no longer permitted.
+  if (!repoPath.startsWith('workspace/')) {
     throw new Error(`--audit-output-dir must resolve under workspace/: ${repoPath}`);
   }
   return repoPath;
@@ -315,7 +317,11 @@ function walkDirectory(rootAbsPath, onDir, onFile) {
 
 function scanTasksTree() {
   if (!fs.existsSync(TASKS_ROOT) || !fs.statSync(TASKS_ROOT).isDirectory()) {
-    throw new Error('tasks directory not found in current workspace');
+    // tasks/ was archived in the 2026-05-23 governance cleanup. No drift to audit when
+    // the folder doesn't exist. Return empty result instead of throwing — this audit
+    // is now effectively a "verify tasks/ stays archived" check.
+    console.log('audit-tasks-folders: tasks/ directory absent (archived 2026-05-23) — no drift to audit, skipping.');
+    return { folders: new Set(), files: [] };
   }
 
   const folders = new Set();
@@ -1628,13 +1634,13 @@ function writeRecommendationConflictReport(conflicts, generatedAt) {
     )
   );
 
-  fs.writeFileSync(absPath, `${lines.join('\n')}\n`);
+  atomicWrite(absPath, `${lines.join('\n')}\n`);
 }
 
 function writeRecommendationSummary(summary) {
   const absPath = absPathFromRepo(RECOMMENDATION_SUMMARY_PATH);
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, `${JSON.stringify(summary, null, 2)}\n`);
+  atomicWrite(absPath, `${JSON.stringify(summary, null, 2)}\n`);
 }
 
 function applyRecommendations(options, auditOutputDirRepoPath) {
@@ -1864,7 +1870,7 @@ function writeAuditReport(reportAbsPath, title, scopeRepoPath, context, tableHea
     report.push(section.body);
   }
 
-  fs.writeFileSync(reportAbsPath, `${report.join('\n')}\n`);
+  atomicWrite(reportAbsPath, `${report.join('\n')}\n`);
 }
 
 function normalizeFolderToken(token) {

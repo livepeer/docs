@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            ui-template-generator.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests, operations/scripts/generators/components/library/generate-ui-templates.js, .vscode, snippets/templates, docs-guide/config/component-registry.json, .mintignore, docs.json, v1, v2, snippets

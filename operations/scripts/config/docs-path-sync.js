@@ -1,20 +1,22 @@
 #!/usr/bin/env node
 /**
  * @script      docs-path-sync
- * @type        config
- * @concern     
- * @niche       
- * @purpose     
- * @description Shared docs path sync library — detects staged page moves, plans deterministic route rewrites, and applies governed docs.json/path reference updates.
+ * @type        integrator
+ * @concern     health
+ * @niche       page-integrity
+ * @purpose     Shared library — detect staged page moves/renames, plan deterministic route rewrites across docs.json + every linking surface (v2 MDX, snippets, catalog docs), apply the rewrite plan or report drift
+ * @description Library module imported by page-links-audit.js, precommit-staged-cache.js, and run-all.js. Exports planRewrites(stagedMoves), applyRewrites(plan), checkDrift() so page renames don't leave broken inbound links. Pairs with the page-integrity pipeline (dispatch-page-integrity.js indirectly via page-links-audit).
  * @mode        integrate
- * @pipeline    manual -- library module
- * @scope       full-repo
- * @usage       const sync = require('./docs-path-sync');
+ * @pipeline    library — imported by page-integrity pipeline atomics
+ * @scope       docs.json + v2/ MDX + snippets/ + catalogs that reference v2/ routes
+ * @usage       const sync = require('operations/scripts/config/docs-path-sync');
+ * @policy      D-GOV-08 (single source of truth for path-sync logic)
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../tools/lib/bootstrap/safe-io');
 
 const DOCS_JSON_REL = 'docs.json';
 const DOC_TEXT_SCOPES = ['v2', 'tests', 'tools', 'snippets', 'docs-guide'];
@@ -291,7 +293,6 @@ function getCanonicalMap(normalizedRoute) {
   const route = normalizeRoute(normalizedRoute);
   const map = {
     'v2/pages/03_developers/building-on-livepeer/index': ['v2/pages/03_developers/developer-portal'],
-    'v2/resources/redirect': ['v2/resources/portal'],
     'v2/pages/08_help/redirect': ['v2/pages/08_help/README', 'v2/resources/portal'],
     'v2/pages/08_help/README': ['v2/resources/portal'],
     'v2/resources/changelog/migration-guides': ['v2/resources/changelog/migration-guide'],
@@ -556,7 +557,7 @@ function readJson(repoRoot, repoPath) {
 }
 
 function writeJson(repoRoot, repoPath, value) {
-  fs.writeFileSync(path.join(repoRoot, normalizeRepoPath(repoPath)), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(path.join(repoRoot, normalizeRepoPath(repoPath)), `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function collectScopedTextFiles(repoRoot) {
@@ -722,7 +723,7 @@ function runDocsPathSync(options = {}) {
     if (!filePlan) return;
     result.fileChanges.push(...filePlan.changes);
     if (options.mode === 'write') {
-      fs.writeFileSync(path.join(repoRoot, filePlan.file), filePlan.next, 'utf8');
+      atomicWrite(path.join(repoRoot, filePlan.file), filePlan.next, 'utf8');
       result.changedFiles.push(filePlan.file);
     }
   });

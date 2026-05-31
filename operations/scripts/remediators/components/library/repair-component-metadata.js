@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   REPO_ROOT,
   buildComponentUsageSummary,
@@ -278,7 +279,7 @@ function run(options = {}) {
     }
 
     if (nextContent !== originalContent) {
-      fs.writeFileSync(file.absolutePath, nextContent, 'utf8');
+      atomicWrite(file.absolutePath, nextContent, 'utf8');
       filesModified += 1;
     }
   });

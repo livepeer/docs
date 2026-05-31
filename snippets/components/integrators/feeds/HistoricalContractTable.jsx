@@ -13,6 +13,18 @@
  */
 import { ArbitrumIcon } from '/snippets/components/elements/icons/Icons.jsx'
 
+/**
+ * @component HistoricalContractTable
+ * @category integrators
+ * @subcategory feeds
+ * @status stable
+ * @description Renders historical contract version tables from generated contract lifecycle data.
+ * @accepts contract category and source data
+ * @dataSource snippets/data/contract-addresses/contractAddressesData.json
+ * @aiDiscoverability none
+ * @param {string} category - Historical category key to render.
+ * @param {Object} sourceData - Full contract addresses data object.
+ */
 export const HistoricalContractTable = ({ category = "core", sourceData = {} }) => {
   const hp = {padding:"0.3rem 0.4rem",borderBottom:"1px solid var(--lp-color-border-default)",backgroundColor:"transparent",color:"var(--lp-color-text-secondary)",fontWeight:600,fontSize:"0.75rem"}
   const cp = {padding:"0.3rem 0.4rem",border:"none",fontSize:"0.8rem",minWidth:0}

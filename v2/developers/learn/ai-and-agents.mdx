@@ -34,9 +34,9 @@ lastVerified: 2026-05-14
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
-The Livepeer network supports three distinct categories of AI pipeline. Each category works differently at the protocol level: different connection models, different billing, different GPU requirements. Understanding which category fits your use case before building prevents rework.
+The Livepeer Network supports three distinct categories of AI pipeline. Each category works differently at the protocol level: different connection models, different billing, different GPU requirements. Understanding which category fits your use case before building prevents rework.
 
-**Constraint:** Livepeer AI pipelines run on GPU capacity contributed by independent orchestrators. Availability and latency depend on the orchestrator set at any given time. The community gateway at `dream-gateway.livepeer.cloud` routes to the best available orchestrator for development; production applications use a self-hosted gateway or a gateway provider for routing control.
+**Constraint:** Livepeer AI pipelines run on GPU capacity contributed by independent Orchestrators. Availability and latency depend on the Orchestrator set at any given time. The community Gateway at `dream-gateway.livepeer.cloud` routes to the best available Orchestrator for development; production applications use a self-hosted Gateway or a Gateway provider for routing control.
 
 <CustomDivider />
 
@@ -77,7 +77,7 @@ The Livepeer network supports three distinct categories of AI pipeline. Each cat
 
 ## Batch AI pipelines
 
-Batch AI pipelines follow a request-and-response model: your application sends a job to the network, an orchestrator processes it, and you receive the result. There is no persistent connection. The GPU is assigned to your job, completes the inference, and is released.
+Batch AI pipelines follow a request-and-response model: your application sends a job to the network, an Orchestrator processes it, and you receive the result. There is no persistent connection. The GPU is assigned to your job, completes the inference, and is released.
 
 <StyledTable variant="bordered">
   <thead>
@@ -131,7 +131,7 @@ Batch AI pipelines follow a request-and-response model: your application sends a
   </tbody>
 </StyledTable>
 
-Orchestrators keep one model per pipeline "warm" in GPU memory. Requesting a model that no orchestrator currently has warm still works, but the first response is slower while the model loads (30 seconds to 5 minutes depending on model size). Warm model availability per pipeline is listed on the [model support](/v2/developers/build/ai-and-agents/model-support) page.
+Orchestrators keep one model per pipeline "warm" in GPU memory. Requesting a model that no Orchestrator currently has warm still works, but the first response is slower while the model loads (30 seconds to 5 minutes depending on model size). Warm model availability per pipeline is listed on the [model support](/v2/developers/build/ai-and-agents/model-support) page.
 
 **Where to start:** [AI quickstart](/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart)
 
@@ -152,7 +152,7 @@ The infrastructure model differs from batch processing in four ways:
 
 Three tools serve different real-time AI use cases:
 
-**ComfyStream** (`livepeer/comfystream`) is the primary tool for building real-time AI pipelines. It turns ComfyUI's node-graph workflow editor into a real-time inference engine for live video. Supported models include StreamDiffusion, ControlNet, IPAdapter, FaceID, LoRA, Whisper (audio), Gemma (video understanding), and SuperResolution. See [ComfyStream overview](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview).
+**ComfyStream** (`livepeer/comfystream`) is the primary tool for building real-time AI pipelines. It turns ComfyUI's node-graph workflow editor into a real-time inference engine for live video. Supported models include StreamDiffusion, ControlNet, IPAdapter, FaceID, LoRA, Whisper (audio), Gemma (video understanding), and SuperResolution. See [ComfyStream overview](/v2/developers/build/ai-and-agents/realtime-ai/ComfyStream/overview).
 
 **PyTrickle** (`livepeer/pytrickle`) is the Python SDK for building custom real-time processing services outside ComfyUI. Subclass `FrameProcessor`, implement `process_frame()`, and PyTrickle handles the trickle protocol transport, session management, and frame serialisation. See [PyTrickle overview](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview).
 
@@ -165,30 +165,30 @@ VTuber avatar generation requires sub-100ms latency, face/body tracking input, a
 The **Agent SPE** (treasury-funded Special Purpose Entity, approved April 2025 with 30,000 LPT) built the first production VTuber and AI avatar pipeline on Livepeer, delivering:
 
 - A real-time agent avatar generation pipeline using ComfyStream and StreamDiffusion
-- A Livepeer model provider plugin for the [Eliza](https://github.com/elizaos/eliza) agent framework (ai16z), enabling Eliza agents to route LLM inference through the Livepeer network
+- A Livepeer model provider plugin for the [Eliza](https://github.com/elizaos/eliza) agent framework (ai16z), enabling Eliza agents to route LLM inference through the Livepeer Network
 
 **Technical path for VTuber / avatar products:**
 
 1. ComfyStream as the real-time inference engine
-2. `live-video-to-video` pipeline type via the AI gateway
+2. `live-video-to-video` pipeline type via the AI Gateway
 3. StreamDiffusion custom nodes from ComfyUI-Stream-Pack for diffusion-based avatar transformation
 4. GPU requirements: NVIDIA RTX 3090 or better; RTX 4090 recommended for 25 FPS
 
-**Where to start for real-time AI:** [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart)
+**Where to start for real-time AI:** [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/ComfyStream/ComfyStream-quickstart)
 
 **Where to start for AI agents:** [Eliza Livepeer plugin tutorial](/v2/developers/build/tutorials/eliza-livepeer-plugin)
 
 <Note>
-  Real-time AI requires a dedicated GPU for the duration of the stream. At peak network load, orchestrator availability for `live-video-to-video` is lower than for batch pipelines. Test under expected concurrency before production launch.
+  Real-time AI requires a dedicated GPU for the duration of the stream. At peak network load, Orchestrator availability for `live-video-to-video` is lower than for batch pipelines. Test under expected concurrency before production launch.
 </Note>
 
 <CustomDivider />
 
 ## LLM pipeline
 
-The LLM pipeline brings text inference to the Livepeer network using an Ollama-based runner with an OpenAI-compatible API. From a developer's perspective, it works like any OpenAI-compatible chat completions endpoint. Requests route to decentralised GPU orchestrators instead of a centralised cloud provider.
+The LLM pipeline brings text inference to the Livepeer Network using an Ollama-based runner with an OpenAI-compatible API. From a developer's perspective, it works like any OpenAI-compatible chat completions endpoint. Requests route to decentralised GPU Orchestrators instead of a centralised cloud provider.
 
-The LLM pipeline is currently in beta. It runs on a wider range of GPU hardware than diffusion-based batch pipelines: an orchestrator needs as little as 8 GB of VRAM to serve LLM workloads.
+The LLM pipeline is currently in beta. It runs on a wider range of GPU hardware than diffusion-based batch pipelines: an Orchestrator needs as little as 8 GB of VRAM to serve LLM workloads.
 
 ```bash icon="terminal"
 curl -X POST https://dream-gateway.livepeer.cloud/llm \
@@ -201,9 +201,9 @@ curl -X POST https://dream-gateway.livepeer.cloud/llm \
   }'
 ```
 
-Supported models include `meta-llama/Meta-Llama-3.1-8B-Instruct` (warm, 8 GB VRAM), `mistralai/Mistral-7B-Instruct-v0.3`, `google/gemma-2-9b-it`, and `Qwen/Qwen2.5-7B-Instruct`. Any Ollama-compatible model works; cold-start applies to models not currently loaded on any orchestrator.
+Supported models include `meta-llama/Meta-Llama-3.1-8B-Instruct` (warm, 8 GB VRAM), `mistralai/Mistral-7B-Instruct-v0.3`, `google/gemma-2-9b-it`, and `Qwen/Qwen2.5-7B-Instruct`. Any Ollama-compatible model works; cold-start applies to models not currently loaded on any Orchestrator.
 
-The **LLM SPE** built and maintains this pipeline. The **Cloud SPE** provides managed gateway access to it for production use.
+The **LLM SPE** built and maintains this pipeline. The **Cloud SPE** provides managed Gateway access to it for production use.
 
 **Where to start:** [AI quickstart](/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart) for the LLM endpoint; [Eliza Livepeer plugin tutorial](/v2/developers/build/tutorials/eliza-livepeer-plugin) for the agent integration path.
 
@@ -262,4 +262,4 @@ The **LLM SPE** built and maintains this pipeline. The **Cloud SPE** provides ma
 
 The key question: does your application transform a live stream continuously, or process one piece of media at a time? Continuous live transformation requires real-time AI. One-at-a-time processing uses batch AI. Text inference uses the LLM pipeline.
 
-The [AI quickstart](/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart) covers the batch and LLM paths. The [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart) covers the real-time path.
+The [AI quickstart](/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart) covers the batch and LLM paths. The [ComfyStream quickstart](/v2/developers/build/ai-and-agents/realtime-ai/ComfyStream/ComfyStream-quickstart) covers the real-time path.

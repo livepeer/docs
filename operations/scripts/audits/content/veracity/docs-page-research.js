@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
  * @description Docs page research runner — extracts factual claims from docs pages, checks evidence sources, detects contradictions across related pages, and emits manual-first research reports.
  * @mode        scan
  * @pipeline    manual — experimental research system
@@ -17,6 +17,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const crypto = require('crypto');
 const { loadRegistry, flattenClaimFamilies } = require('../../../validators/content/veracity/docs-fact-registry');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_REGISTRY = 'workspace/research/claims';
 const GENERIC_PATH_TOKENS = new Set([
@@ -264,12 +265,12 @@ function readFile(absPath) {
 
 function writeJson(absPath, value) {
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function writeText(absPath, value) {
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, value, 'utf8');
+  atomicWrite(absPath, value, 'utf8');
 }
 
 function fileExists(relPath) {

@@ -4,21 +4,25 @@
  * @type        validator
  * @concern     brand
  * @niche       grammar
- * @purpose     
- * @description Detects and fixes incorrect proper noun capitalisation in prose while skipping code, frontmatter, URLs, and path-like tokens.
+ * @purpose     Detect incorrect proper-noun capitalisation in v2 MDX prose (Livepeer, Orchestrator, Gateway, AI, Ethereum, etc.) while skipping code, frontmatter, URLs, and path-like tokens
+ * @description Reads canonical proper-noun rules from operations/tests/config/spell-dict.json. Scans prose for lowercase or wrong-case occurrences of governed proper nouns. Exit non-zero if any violation. Paired with repair-term-capitalisation.js for auto-fix.
  * @mode        check
- * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → edited files
- * @scope       v2, operations/scripts/validators/content, operations/tests/onfig/spell-dict.json
- * @usage       node operations/scripts/validators/content/grammar/check-proper-nouns.js [--file <path[,path...]>] [--fix]
+ * @pipeline    P3 (PR via dispatch-proper-nouns.js)
+ * @scope       v2/ MDX (excluding code blocks, frontmatter, URLs, path-like identifiers)
+ * @usage       node operations/scripts/validators/content/grammar/check-proper-nouns.js [--files <path[,path...]>] [--fix]
+ * @policy      D-GOV-03 (paired with repair-term-capitalisation remediator)
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { bootstrapRepoNodePaths } = require('../../../../../tools/lib/bootstrap/repo-node-paths');
+bootstrapRepoNodePaths(__dirname);
 const { unified } = require('unified');
 const remarkParse = require('remark-parse').default;
 const remarkMdx = require('remark-mdx').default;
 const { getAuthoredMdxFiles } = require('../../../../../operations/tests/utils/file-walker');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const PROPER_NOUNS = {
   livepeer: 'Livepeer',
@@ -152,15 +156,8 @@ function resolveTargetFiles(explicitFiles) {
 
 function splitFrontmatter(raw) {
   const normalized = String(raw || '');
-  if (!normalized.startsWith('---')) {
-    return {
-      prefix: '',
-      body: normalized,
-      bodyStartOffset: 0
-    };
-  }
-
-  const match = normalized.match(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n)?/);
+  // Tolerate leading whitespace/blank lines before frontmatter (Mintlify and gray-matter do).
+  const match = normalized.match(/^\s*---\r?\n[\s\S]*?\r?\n---(?:\r?\n)?/);
   if (!match) {
     return {
       prefix: '',
@@ -452,7 +449,7 @@ function run(argv = process.argv.slice(2)) {
       }
       const next = applyReplacements(analysis.raw, analysis.replacements);
       if (next !== analysis.raw) {
-        fs.writeFileSync(analysis.filePath, next, 'utf8');
+        atomicWrite(analysis.filePath, next, 'utf8');
         changedFiles += 1;
       }
     });

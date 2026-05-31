@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     governance
  * @niche       compliance
- * @purpose     
+ * @purpose     Validates the canonical repo-governance registry, generated outputs, and referenced ownerless steady-state paths.
  * @description Validates the canonical repo-governance registry, generated outputs, and referenced ownerless steady-state paths.
  * @mode        check
  * @pipeline    manual, pr-changed -> repo-governance registry -> exit-code, stdout:violations

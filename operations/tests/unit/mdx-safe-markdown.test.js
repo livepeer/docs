@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            mdx-safe-markdown.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/unit, operations/tests/fixtures/mdx-safe-markdown, tools/lib, operations/scripts/remediators/content, operations/scripts/validators/content

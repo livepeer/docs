@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script      codex/lock-release
+ * @script      lock-release
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex lock release utility — releases stale codex lock files
+ * @purpose     Release a Codex execution lock cleanly at end-of-session — pairs with task-preflight which acquires it; ensures the lock doesn't outlive its owning task so the next agent session can start
+ * @description Reads the current task ID from .codex/task-contract.yaml, removes .codex/locks-local/{task-id}.lock, validates the lock was held by the calling session (prevents accidental cross-session release). Called by task-finalise.js at end-of-session.
  * @mode        integrate
- * @pipeline    manual — interactive developer tool, not suited for automated pipelines
- * @scope       operations/scripts/codex, .codex/locks-local, .codex/task-contract.yaml
+ * @pipeline    manual — invoked by task-finalise.js at Codex session end
+ * @scope       operations/scripts/integrators/ai/codex, .codex/locks-local/, .codex/task-contract.yaml
  * @usage       node operations/scripts/integrators/ai/codex/lock-release.js [flags]
+ * @policy      Codex task-isolation standard
  */
 
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -17,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const LOCK_DIR_REL = '.codex/locks-local';
 const DEFAULT_CONTRACT = '.codex/task-contract.yaml';
@@ -216,7 +218,7 @@ function main() {
 
     lock.status = 'released';
     lock.released_at = new Date().toISOString();
-    if (DRY_RUN) { console.log('[dry-run] Would write:', abs); } else { fs.writeFileSync(abs, `${JSON.stringify(lock, null, 2); }}\n`, 'utf8');
+    if (DRY_RUN) { console.log('[dry-run] Would write:', abs); } else { atomicWrite(abs, `${JSON.stringify(lock, null, 2); }}\n`, 'utf8');
     releasedCount += 1;
   });
 

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            root-governance-sync.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @type              validator
  * @purpose           qa:repo-health

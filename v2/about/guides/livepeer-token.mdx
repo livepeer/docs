@@ -35,7 +35,7 @@ import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
 import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
 
 <Quote>
-LPT is the Livepeer Protocol's staking and coordination asset. It secures the network, decides which orchestrators receive work, and gives holders a vote. ETH - not LPT - pays for transcoding and AI inference. The separation is deliberate, and it shapes how the protocol scales.
+LPT is the Livepeer Protocol's staking and coordination asset. It secures the network, decides which Orchestrators receive work, and gives holders a vote. ETH - not LPT - pays for transcoding and AI inference. The separation is deliberate, and it shapes how the protocol scales.
 </Quote>
 
 <CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
@@ -44,9 +44,9 @@ LPT is the Livepeer Protocol's staking and coordination asset. It secures the ne
 
 The protocol could have charged for video and AI work in the same asset that secured the network. Most early protocol designs do exactly that. Livepeer chose payment separation - ETH for work, LPT for stake - because the two roles have different demands.
 
-Service buyers want to pay for a service, not invest in a network. A gateway operator running an AI video application should not have to acquire, custody, and price-hedge a protocol-specific token to call inference. ETH is the natural unit of payment on Ethereum and on Arbitrum.
+Service buyers want to pay for a service, not invest in a network. A Gateway operator running an AI video application should not have to acquire, custody, and price-hedge a protocol-specific token to call inference. ETH is the natural unit of payment on Ethereum and on Arbitrum.
 
-Operators want skin in the game proportional to their stake in the network. An orchestrator earning fees from production traffic should be exposed to the protocol's economic security, not just to the spot price of compute. LPT is the staking unit. It sits between operator and network, mediating selection, governance, and slashing risk.
+Operators want skin in the game proportional to their stake in the network. An Orchestrator earning fees from production traffic should be exposed to the protocol's economic security, not just to the spot price of compute. LPT is the staking unit. It sits between operator and network, mediating selection, governance, and slashing risk.
 
 ETH satisfies the first requirement. LPT satisfies the second. Neither token does both.
 
@@ -58,16 +58,16 @@ Every function LPT performs is enforced on-chain through the Arbitrum-deployed p
 
 <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
   <StyledStep title="Stakes operators into the network" icon="lock">
-    Orchestrators bond LPT to themselves to be eligible for work. The active set of orchestrators that receive video and AI jobs is sorted by total bonded stake - own stake plus delegated stake - from highest to lowest.
+    Orchestrators bond LPT to themselves to be eligible for work. The Active Set of Orchestrators that receive video and AI jobs is sorted by total bonded stake - own stake plus delegated stake - from highest to lowest.
   </StyledStep>
   <StyledStep title="Provides economic security" icon="shield-halved">
-    Bonded LPT is the protocol's collateral against operator misbehaviour. Slashing rules can burn an orchestrator's stake - and the stake of those who delegated to it - for protocol violations, giving every participant a financial reason to behave honestly.
+    Bonded LPT is the protocol's collateral against operator misbehaviour. Slashing rules can burn an Orchestrator's stake - and the stake of those who delegated to it - for protocol violations, giving every participant a financial reason to behave honestly.
   </StyledStep>
   <StyledStep title="Routes work in proportion to stake" icon="arrows-split-up-and-left">
-    Stake weight is the coordination signal that tells gateways which orchestrators to prefer. Higher-staked orchestrators sit higher in the active set and are more likely to be selected for jobs.
+    Stake weight is the coordination signal that tells Gateways which Orchestrators to prefer. Higher-staked Orchestrators sit higher in the Active Set and are more likely to be selected for jobs.
   </StyledStep>
   <StyledStep title="Grants governance rights" icon="building-columns">
-    Bonded LPT confers stake-weighted voting power over Livepeer Improvement Proposals (LIPs) and treasury allocations. Delegators vote through their orchestrator by default, and can override that vote on any specific proposal.
+    Bonded LPT confers stake-weighted voting power over Livepeer Improvement Proposals (LIPs) and treasury allocations. Delegators vote through their Orchestrator by default, and can override that vote on any specific proposal.
   </StyledStep>
 </StyledSteps>
 
@@ -79,7 +79,7 @@ Every function LPT performs is enforced on-chain through the Arbitrum-deployed p
 
 ## Payment separation in practice
 
-The protocol creates two parallel value flows: ETH for compute, LPT for stake. Both flows settle on Arbitrum One. They meet at the orchestrator.
+The protocol creates two parallel value flows: ETH for compute, LPT for stake. Both flows settle on Arbitrum One. They meet at the Orchestrator.
 
 <DynamicTableV2
   headerList={["Asset", "Who pays / receives", "What it pays for", "When it settles"]}
@@ -92,17 +92,17 @@ The protocol creates two parallel value flows: ETH for compute, LPT for stake. B
     },
     {
       "Asset": <Subtitle variant="changelog">**LPT**</Subtitle>,
-      "Who pays / receives": "Bonded by orchestrators and delegators. Earned by both.",
+      "Who pays / receives": "Bonded by Orchestrators and Delegators. Earned by both.",
       "What it pays for": "Network security and coordination",
       "When it settles": "Each round (~24 hours on Arbitrum). Distributed by Minter to bonded participants who called reward().",
     },
   ]}
 />
 
-A gateway operator never has to acquire LPT. A delegator never has to pay for video work. An orchestrator participates in both flows: they are paid in ETH for compute, and they earn LPT inflation for the stake they have bonded.
+A Gateway operator never has to acquire LPT. A Delegator never has to pay for video work. An Orchestrator participates in both flows: they are paid in ETH for compute, and they earn LPT inflation for the stake they have bonded.
 
 <Tip>
-The orchestrator's `feeShare` parameter controls how much ETH passes through to delegators. The orchestrator's `rewardCut` controls how much LPT inflation the orchestrator keeps as commission. Both are public, set by the orchestrator, and visible on the Explorer.
+The Orchestrator's `feeShare` parameter controls how much ETH passes through to Delegators. The Orchestrator's `rewardCut` controls how much LPT inflation the Orchestrator keeps as commission. Both are public, set by the Orchestrator, and visible on the Explorer.
 </Tip>
 
 <CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
@@ -123,7 +123,7 @@ LPT supply grows each round. Newly minted tokens go only to bonded stake. Unbond
   </StyledStep>
 </StyledSteps>
 
-The dilution is not theoretical. Every round of inflation that an unbonded holder sits through reduces their share of the total supply. The mechanism intends for stakeholders to either bond directly, delegate to an orchestrator they trust, or accept the dilution as the cost of liquidity.
+The dilution is not theoretical. Every round of inflation that an unbonded holder sits through reduces their share of the total supply. The mechanism intends for stakeholders to either bond directly, delegate to an Orchestrator they trust, or accept the dilution as the cost of liquidity.
 
 A treasury cut, set by [LIP-92](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0092.md), routes 10% of each round's inflation into the on-chain treasury for ecosystem funding. The remaining 90% is distributed to bonded participants in proportion to their stake.
 
@@ -169,9 +169,9 @@ Three actions are available to anyone holding LPT. Each one has a different oper
     How LPT-weighted voting works and how to use your voice.
   </Card>
   <Card title={<CustomCardTitle icon="hand-holding-dollar" title="Obtain LPT" />} href="https://www.livepeer.org/lpt" horizontal arrow>
-    Where to acquire LPT to delegate, bond, or run an orchestrator.
+    Where to acquire LPT to delegate, bond, or run an Orchestrator.
   </Card>
   <Card title={<CustomCardTitle icon="chart-line" title="Livepeer Explorer" />} href="https://explorer.livepeer.org/" horizontal arrow>
-    Live network data: inflation rate, bonded supply, orchestrators, and rewards.
+    Live network data: inflation rate, bonded supply, Orchestrators, and rewards.
   </Card>
 </Columns>

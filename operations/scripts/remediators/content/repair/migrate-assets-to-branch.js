@@ -4,7 +4,7 @@
  * @type        remediator
  * @concern     health
  * @niche       repair
- * @purpose     
+ * @purpose     Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.
  * @description Reads the media-audit manifest, migrates flagged assets to docs-v2-assets, and rewrites MDX/JSX references to raw GitHub URLs.
  * @mode        repair
  * @pipeline    manual
@@ -20,6 +20,7 @@ const https = require('https');
 const { spawnSync } = require('child_process');
 
 const auditMediaAssets = require('../../../audits/content/quality/audit-media-assets');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO_ROOT = process.cwd();
 const DEFAULT_TARGETS = ['migrate_r2', 'migrate_cloudinary'];
@@ -183,12 +184,12 @@ function readJson(repoPath) {
 
 function writeJson(repoPath, value) {
   ensureDirForFile(repoPath);
-  fs.writeFileSync(absoluteRepoPath(repoPath), `${JSON.stringify(value, null, 2)}\n`);
+  atomicWrite(absoluteRepoPath(repoPath), `${JSON.stringify(value, null, 2)}\n`);
 }
 
 function writeText(repoPath, value) {
   ensureDirForFile(repoPath);
-  fs.writeFileSync(absoluteRepoPath(repoPath), value);
+  atomicWrite(absoluteRepoPath(repoPath), value);
 }
 
 function runCommand(command, args, options = {}) {
@@ -785,7 +786,9 @@ async function verifyRewrittenAssets(statusEntries, sourceContents, options, log
       }
 
       if (puppeteer) {
-        const browser = await puppeteer.launch({ headless: true });
+        let browser;
+        registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+        browser = await puppeteer.launch({ headless: true });
         try {
           for (const route of routes) {
             const url = `${options.devServer}${route}`;

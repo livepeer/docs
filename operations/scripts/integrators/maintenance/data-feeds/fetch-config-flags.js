@@ -1,21 +1,22 @@
 #!/usr/bin/env node
 /**
- * @script            fetch-config-flags
- * @type              integrator
- * @concern           maintenance
- * @niche             data-feeds
- * @scope             operations/scripts/integrators/maintenance/data-feeds
- * @owner             docs
- * @needs             F-R1
- * @purpose-statement Fetches go-livepeer CLI flags from source code on GitHub, parses flag definitions, writes structured JSX data for SearchTable consumption.
- * @pipeline          P5-auto (scheduled, weekly)
- * @dualmode          --dry-run (fetch + preview, no write) | default (fetch + write)
- * @usage             node operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js [--dry-run]
+ * @script      fetch-config-flags
+ * @type        integrator
+ * @concern     maintenance
+ * @niche       config-flags
+ * @purpose     Fetch go-livepeer CLI flag definitions from GitHub source, parse each flag (name, type, default, description, env-var), emit structured JSX data the v2 config-flags reference page renders via SearchTable
+ * @description Scheduled-weekly integrator. Hits GitHub raw URL for go-livepeer's flag-defining Go source files, parses flag definitions, normalises into a JSX export at snippets/data/config-flags/. Pairs with dispatch-config-flags.js. Required for the v2 config-flags reference page to stay current with go-livepeer releases.
+ * @mode        integrate
+ * @pipeline    P5-auto (scheduled, weekly via dispatch-config-flags.js)
+ * @scope       go-livepeer source on GitHub → snippets/data/config-flags/
+ * @usage       node operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js [--dry-run]
+ * @policy      F-R1 (data freshness); public repos only; no secrets in output
  */
 
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const REPO = process.env.GO_LIVEPEER_REPO || 'livepeer/go-livepeer';
 const BRANCH = process.env.GO_LIVEPEER_BRANCH || 'master';
@@ -240,7 +241,7 @@ async function main() {
   } else {
     const dir = path.dirname(OUTPUT_PATH);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(OUTPUT_PATH, jsxContent);
+    atomicWrite(OUTPUT_PATH, jsxContent);
     console.log(`Wrote ${categorised.length} flags to ${OUTPUT_PATH}`);
   }
 }

@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # @script      check-no-ai-stash
 # @type        validator
-# @concern     discoverability
+# @concern     governance
 # @niche       codex
-# @purpose     
-# @description AI stash enforcer — blocks push if AI temporary/stash files are present in working tree
+# @purpose     Block push if AI agent stash/temporary files (.ai-stash, .codex-tmp, .claude-tmp, *.bak from agent edits) are present in the working tree — prevents leaked working state from landing on the remote
+# @description Scans the working tree (excluding .gitignore'd paths) for known AI agent temporary file patterns. Exits non-zero if any found, listing the offenders. Called by .githooks/pre-commit and .githooks/pre-push.
 # @mode        check
-# @pipeline    manual
-# @scope       operations/scripts/validators/ai/codex, .githooks/pre-commit
+# @pipeline    P1 (pre-commit), P2 (pre-push)
+# @scope       working tree (excludes node_modules, x-archive, gitignored paths)
 # @usage       bash operations/scripts/validators/ai/codex/check-no-ai-stash.sh [flags]
+# @policy      Codex task-isolation standard; D-GOV-08 (prevention layer)
 set -euo pipefail
 
 branch=""

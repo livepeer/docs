@@ -3,18 +3,20 @@
  * @script      convert-rss-to-mdx
  * @type        integrator
  * @concern     integrations
- * @niche       data
- * @purpose     
- * @description RSS-to-MDX converter — imports RSS feed items and converts to MDX page format
+ * @niche       transforms
+ * @purpose     Convert podcast / interview RSS feed items into v2/internal/assets/transcripts MDX pages — used to ingest external content (e.g. a16z.rss, ycomb.rss already in the transcripts dir) as searchable internal-only MDX
+ * @description Reads .rss files from v2/internal/assets/transcripts/, parses each entry (title, pubDate, link, excerpt, audio link, transcript), emits one MDX page per entry under v2/internal/assets/transcripts/{source}/{episode-slug}.mdx with proper frontmatter. Manual-use only — run when new RSS feeds are added or existing feeds need refresh.
  * @mode        integrate
- * @pipeline    manual — not yet in pipeline
- * @scope       operations/scripts, v2/internal/assets/transcripts
- * @usage       node operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js [flags]
+ * @pipeline    manual — invoked when new podcast/interview RSS sources are added
+ * @scope       v2/internal/assets/transcripts/*.rss → v2/internal/assets/transcripts/{source}/*.mdx
+ * @usage       node operations/scripts/integrators/content/data/transforms/convert-rss-to-mdx.js [--dry-run] [--source <name>]
+ * @policy      manual-only (no automated pipeline)
  */
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs')
 const path = require('path')
+const { atomicWrite } = require('../../../../../../tools/lib/bootstrap/safe-io');
 
 function parseArgs(argv) {
   const args = {}
@@ -210,7 +212,7 @@ function main() {
   const mdx = buildMdx(feed)
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true })
-  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { fs.writeFileSync(outputPath, mdx, 'utf8'); }
+  if (DRY_RUN) { console.log('[dry-run] Would write:', outputPath); } else { atomicWrite(outputPath, mdx, 'utf8'); }
 
   console.log(`✓ Converted RSS to MDX`)
   console.log(`  Input:  ${inputPath}`)

@@ -1,0 +1,1081 @@
+[
+  {
+    "path": "operations/scripts/validators/components/library/check-component-css.js",
+    "name": "check-component-css.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "library",
+    "purpose": "Validates component files against component governance styling rules.",
+    "description": "Validates component files against component governance styling rules.",
+    "scope": "single-domain",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js",
+      "docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/component-infrastructure-state.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/components/library/check-component-health.js",
+    "name": "check-component-health.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "library",
+    "purpose": "governance:quality-gate",
+    "description": "Checks component library health: imports, exports, registry sync, and usage patterns",
+    "scope": "snippets/components/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/components/library/check-component-props.js",
+    "name": "check-component-props.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "component-registry",
+    "purpose": "Validate v2 MDX usage of Mintlify components — Tab/Accordion icon props, code block metadata, Card CustomCardTitle pattern, inline-style anti-patterns, CustomDivider placement, Mermaid colour governance, import-order convention — so component usage stays consistent across all docs",
+    "description": "Enforces the prop-governance checks documented as 5.18-5.20, 5.22, 5.26-5.28, 5.34 in the canonical-data deps files. Reads v2/ MDX, applies the prop-pattern rules, emits violations with file:line evidence. JSON or Markdown report. Wired into dispatch-component-registry.js PR detect list.",
+    "scope": "v2/ MDX (all routable pages, excluding _workspace, x-archived, x-deprecated, locales)",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/components/library/check-mdx-component-scope.js",
+    "name": "check-mdx-component-scope.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "library",
+    "purpose": "Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.",
+    "description": "Validates MDX-facing component modules do not depend on private file-scope helper bindings from exported components.",
+    "scope": "operations/scripts/validators/components, operations/tests/un-all.js, operations/tests/un-pr-checks.js, snippets/components, operations/tests/tils",
+    "reads": [
+      "tools/node_modules/@babel/parser"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/components/library/check-naming-conventions.js",
+    "name": "check-naming-conventions.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "library",
+    "purpose": "Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.",
+    "description": "Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.",
+    "scope": "operations/scripts/validators/components, operations/tests/un-all.js, operations/tests/un-pr-checks.js, snippets/components",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js",
+      "docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/component-infrastructure-state.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/docs-library/pipelines/content-quality.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/components/library/component-layout-governance.js",
+    "name": "component-layout-governance.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "library",
+    "purpose": "Checks v2 page layouts against approved component contracts",
+    "description": "Component layout governance validator — checks v2 page layouts against approved component contracts",
+    "scope": "operations/scripts, v2, tools/config/quality/component-layout-profile.json",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/remediators/content/repair/quarantine-manager.js",
+      "operations/scripts/validators/components/library/check-component-props.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/ui-system.mdx",
+      "docs-guide/policies/component-layout-decisions.mdx",
+      "docs-guide/policies/skill-pipeline-map.mdx",
+      "docs-guide/_workspace/02_Design-Specification/07_Implementation-Considerations/02_14.-Brand-&-Copy/index.md",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/frameworks/checks-framework.mdx",
+      "docs-guide/frameworks/content-writing.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/components/library/validate-component-creation.js",
+    "name": "validate-component-creation.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "component-registry",
+    "purpose": "Gate every new/modified .jsx file in snippets/components/ at pre-commit and PR time — enforces the 7-tag JSDoc, PascalCase name, correct folder placement (must be under a known grouping), self-remediates missing tags where inferable, blocks commit only on non-remediable violations",
+    "description": "Write-time governance for component creation (layer-2 of D-GOV-08 chain). Reads each staged .jsx under snippets/components/, parses or infers the 7-tag JSDoc (script/type/concern/niche/purpose/description/usage), checks naming + folder convention, applies --fix where unambiguous, --verify re-runs the check after fix. Used by repair-component-metadata.js as the gating step.",
+    "scope": "snippets/components/*.jsx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/remediators/components/library/repair-component-metadata.js"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/validators/components/documentation/check-component-docs.js",
+    "name": "check-component-docs.js",
+    "concern": "maintenance",
+    "type": "validator",
+    "niche": "documentation",
+    "purpose": "Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata.",
+    "description": "Validates component JSDoc coverage, prop documentation, docs-entry coverage, and governance metadata.",
+    "scope": "single-domain",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/governance/config/ownerless-governance-surfaces.json",
+      "docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/component-infrastructure-state.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/components/library/repair-ai-discoverability.js",
+    "name": "repair-ai-discoverability.js",
+    "concern": "maintenance",
+    "type": "remediator",
+    "niche": "library",
+    "purpose": "qa:component-quality",
+    "description": "Repair AI discoverability compliance: add missing @aiDiscoverability tags to hook-using components, create placeholder companion JSON files.",
+    "scope": "snippets/components, snippets/data/snapshots",
+    "reads": [
+      "snippets/components",
+      "snippets/data/snapshots"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/components/library/repair-component-metadata.js",
+    "name": "repair-component-metadata.js",
+    "concern": "maintenance",
+    "type": "remediator",
+    "niche": "library",
+    "purpose": "governance:repo-health",
+    "description": "Auto-repairs derived JSDoc metadata fields from repo state. Safe fields only. Mirrors AUDIT-00 --fix pattern for components.",
+    "scope": "single-domain",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/governance/mdx-render-gate.js",
+      "operations/scripts/validators/components/library/validate-component-creation.js",
+      "operations/governance/config/ownerless-governance-surfaces.json",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/adaptive-architecture.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/remediators/components/library/repair-component-styles.js",
+    "name": "repair-component-styles.js",
+    "concern": "maintenance",
+    "type": "remediator",
+    "niche": "library",
+    "purpose": "qa:component-quality",
+    "description": "Repair JSX component style violations: extract inline styles to named const, move top-level constants inside function body.",
+    "scope": "snippets/components",
+    "reads": [
+      "snippets/components"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/config/remediation-verify-registry.json",
+      "operations/scripts/dispatch/content/brand/dispatch-style-tokens.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/maintenance/release/update-livepeer-release.js",
+    "name": "update-livepeer-release.js",
+    "concern": "maintenance",
+    "type": "integrator",
+    "niche": "release",
+    "purpose": "Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.",
+    "description": "Fetches or accepts the latest go-livepeer release tag and writes the canonical release data module.",
+    "scope": ".github/workflows, snippets/data/globals",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-release-version.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js",
+    "name": "fetch-config-flags.js",
+    "concern": "maintenance",
+    "type": "integrator",
+    "niche": "config-flags",
+    "purpose": "Fetch go-livepeer CLI flag definitions from GitHub source, parse each flag (name, type, default, description, env-var), emit structured JSX data the v2 config-flags reference page renders via SearchTable",
+    "description": "Scheduled-weekly integrator. Hits GitHub raw URL for go-livepeer's flag-defining Go source files, parses flag definitions, normalises into a JSX export at snippets/data/config-flags/. Pairs with dispatch-config-flags.js. Required for the v2 config-flags reference page to stay current with go-livepeer releases.",
+    "scope": "go-livepeer source on GitHub → snippets/data/config-flags/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-config-flags.js",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/frameworks/styles-engineering-guide.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js",
+    "name": "fetch-exchanges-data.js",
+    "concern": "maintenance",
+    "type": "integrator",
+    "niche": "exchanges-data",
+    "purpose": "Fetch LPT exchange tickers from the CoinGecko API, classify each as CEX or DEX, emit structured JSX data the v2 exchanges reference page renders via SearchTable — note: distinct from fetch-lpt-exchanges.sh which writes MDX directly",
+    "description": "Scheduled-weekly integrator. Hits CoinGecko's tickers-by-coin endpoint for LPT, classifies each ticker by exchange type (centralised vs decentralised) using a known-exchange config, writes snippets/data/exchanges/exchangesData.jsx. Pairs with dispatch-exchanges-data.js.",
+    "scope": "CoinGecko API → snippets/data/exchanges/exchangesData.jsx",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-exchanges-data.js",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/frameworks/styles-engineering-guide.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js",
+    "name": "fetch-contract-addresses.js",
+    "concern": "maintenance",
+    "type": "integrator",
+    "niche": "contracts",
+    "purpose": "infrastructure:data-feeds",
+    "description": "Thin CLI entrypoint for the chain-first contracts pipeline.",
+    "scope": ".github/scripts, operations/scripts/integrators/content/data/contracts/, snippets/data/contract-addresses/, snippets/composables/pages/canonical/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-contract-addresses.js",
+      "operations/scripts/integrators/content/data/test/fetch-contract-addresses.test.js",
+      "operations/scripts/integrators/content/data/contracts/constants.js",
+      "operations/scripts/integrators/content/data/contracts/solidity-parser.js",
+      "operations/scripts/integrators/content/data/contracts/catalog-config.js",
+      "operations/scripts/integrators/content/data/contracts/spec.js",
+      "operations/scripts/integrators/content/data/contracts/blockchain-page-spec.js",
+      "operations/scripts/integrators/content/data/contracts/branch-watch.js",
+      "operations/scripts/integrators/content/data/contracts/incidents.js",
+      "operations/scripts/integrators/content/data/contracts/pipeline.js",
+      "docs-guide/config/ai-companion-manifest.json",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/gap-analysis.mdx",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/features/automations.mdx",
+      "docs-guide/docs-library/pipelines/data-integration.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/standards/naming-conventions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/test/contract-address-routes.test.js",
+    "name": "contract-address-routes.test.js",
+    "concern": "maintenance",
+    "type": "integrator",
+    "niche": "",
+    "purpose": "",
+    "description": "",
+    "scope": "",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": [
+      "lib-module (internal — imported by other scripts, not a standalone pipeline entry)"
+    ]
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/test/contract-verifier.test.js",
+    "name": "contract-verifier.test.js",
+    "concern": "maintenance",
+    "type": "integrator",
+    "niche": "",
+    "purpose": "",
+    "description": "",
+    "scope": "",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": [
+      "lib-module (internal — imported by other scripts, not a standalone pipeline entry)"
+    ]
+  },
+  {
+    "path": "operations/scripts/integrators/content/data/test/fetch-contract-addresses.test.js",
+    "name": "fetch-contract-addresses.test.js",
+    "concern": "maintenance",
+    "type": "integrator",
+    "niche": "",
+    "purpose": "",
+    "description": "",
+    "scope": "",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx"
+    ],
+    "flags": [
+      "lib-module (internal — imported by other scripts, not a standalone pipeline entry)"
+    ]
+  },
+  {
+    "path": "operations/scripts/generators/content/reference/generate-api-docs.sh",
+    "name": "generate-api-docs.sh",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "reference",
+    "purpose": "Generates API reference pages from OpenAPI specs",
+    "description": "API docs generator — generates API reference pages from OpenAPI specs",
+    "scope": "operations/scripts/generators/content/reference",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/remediators/content/health/repair-openapi-reference.js",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/content/reference/generate-glossary-companions.js",
+    "name": "generate-glossary-companions.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "reference",
+    "purpose": "Extracts SearchTable itemsList data from glossary MDX pages",
+    "description": "Companion JSON generator — extracts SearchTable itemsList data from glossary MDX pages",
+    "scope": "operations/scripts/generators/content/reference",
+    "reads": [
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/audits/content/reference/audit-glossary-gaps.js",
+      "operations/scripts/dispatch/content/discoverability/dispatch-companions.js",
+      "operations/governance/config/generated-artifacts.json",
+      "docs-guide/config/ai-companion-schema.json",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/docs-library/pipelines/discoverability.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/content/reference/generate-glossary.js",
+    "name": "generate-glossary.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "reference",
+    "purpose": "Generate produces glossary data file from terminology sources",
+    "description": "Glossary generator — produces glossary data file from terminology sources",
+    "scope": "operations/scripts",
+    "reads": [
+      "v1",
+      "operations/scripts/generators/content/data",
+      "v2/resources/glossary.mdx",
+      "v2/resources/livepeer-glossary.mdx"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/decisions/glossary-boundary.md",
+      "docs-guide/_workspace/index.md"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/content/catalogs/generate-docs-index.js",
+    "name": "generate-docs-index.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "catalogs",
+    "purpose": "Generate produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.",
+    "description": "Docs index generator — produces docs-index.json from v2 frontmatter and docs.json. Dual-mode: --check (enforcer) / --write (generator). Most-called script in the repo.",
+    "scope": "operations/scripts, tools/lib, v2, docs.json, root",
+    "reads": [
+      "workspace/reports/docs-index/missing-frontmatter.md"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-docs-index.js",
+      "operations/governance/config/repo-governance-surfaces.json",
+      "operations/governance/config/root-governance.json",
+      "operations/governance/config/generated-artifacts.json",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/component-infrastructure-state.md",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/policies/root-allowlist-governance.mdx",
+      "docs-guide/_workspace/index.md",
+      "docs-guide/docs-library/pipelines/discoverability.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/root-governance-map.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/content/catalogs/generate-pages-index.js",
+    "name": "generate-pages-index.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "catalogs",
+    "purpose": "Generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index",
+    "description": "Pages index generator — generates and verifies section-style index.mdx files for v2 docs folders plus root aggregate index",
+    "scope": "operations/scripts, v2",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/governance/pipelines/sync-generated-files.js",
+      "operations/governance/config/generated-artifacts.json",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/component-infrastructure-state.md",
+      "docs-guide/canonical/collation-data/Mintlify/index.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/docs-library/pipelines/discoverability.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/components/library/generate-component-examples.js",
+    "name": "generate-component-examples.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "library",
+    "purpose": "governance:index-management",
+    "description": "Keeps per-file example MDX files in sync with the component registry",
+    "scope": "snippets/components/",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/scripts/validators/components/library/check-component-health.js",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/components/library/generate-component-index.js",
+    "name": "generate-component-index.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "component-registry",
+    "purpose": "Generate per-grouping snippets/components/{category}/INDEX.md quick-reference tables from component-registry.json + component-usage-map.json — gives contributors a one-page lookup of every component with name, file, status, description, and import count per category",
+    "description": "Reads docs-guide/config/component-registry.json (all components) + the component-usage map (where each is imported). For each top-level grouping (wrappers, config, scaffolding, displays, elements, etc.) emits an INDEX.md with the components in that group. Distinct from generate-component-library.js which emits the longer LIBRARY.md docs. Manual-use — not in dispatch-component-registry pipeline yet; tracked as follow-up.",
+    "scope": "docs-guide/config/component-registry.json → snippets/components/{group}/INDEX.md",
+    "reads": [
+      "docs-guide/config/component-registry.json",
+      "docs-guide/config/component-usage-map.json",
+      "snippets/components"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/generators/components/library/generate-component-library.js"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/components/library/generate-component-library.js",
+    "name": "generate-component-library.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "component-registry",
+    "purpose": "Generate the long-form snippets/components/{category}/LIBRARY.md docs + a root LIBRARY.md index from component-registry.json — every component entry covers description, props, import path, usage example, and status badge so contributors don't have to read source to use a component",
+    "description": "Reads docs-guide/config/component-registry.json + the component-usage map. Renders LIBRARY.md per top-level grouping plus a root index. Paired with generate-component-index.js (INDEX.md = short table; LIBRARY.md = full docs). Manual-use — not in dispatch-component-registry pipeline yet; tracked as follow-up.",
+    "scope": "docs-guide/config/component-registry.json → snippets/components/{group}/LIBRARY.md + root LIBRARY.md",
+    "reads": [
+      "docs-guide/config/component-registry.json",
+      "docs-guide/config/component-usage-map.json",
+      "snippets/components"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/generators/components/library/generate-component-index.js"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/components/library/generate-component-registry.js",
+    "name": "generate-component-registry.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "library",
+    "purpose": "Parses JSDoc from all component exports and produces component-registry.json.",
+    "description": "Parses JSDoc from all component exports and produces component-registry.json.",
+    "scope": "single-domain",
+    "reads": [
+      "docs-guide/config/component-registry.json",
+      "docs-guide/config/component-registry-schema.json"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js",
+      "operations/scripts/generators/components/library/generate-component-snippets.js",
+      "operations/governance/config/ownerless-governance-surfaces.json",
+      "docs-guide/config/component-registry.json",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/_workspace/03_Component-Governance-Framework/04_References/01_Governance-Document/index.md",
+      "docs-guide/_workspace/03_Component-Governance-Framework/03_Component-Framework/02_Component-Repo-Structure/index.md",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/frameworks/component-governance.mdx",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/components/library/generate-component-snippets.js",
+    "name": "generate-component-snippets.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "component-registry",
+    "purpose": "Generate .vscode/components.code-snippets from docs-guide/config/component-registry.json — gives contributors VS Code IntelliSense entries for every Livepeer Mintlify component (Card, Tabs, Accordion, CustomDivider, etc.) so they can scaffold correct usage with one keystroke",
+    "description": "Reads the component registry, projects each entry into a VS Code snippet definition (prefix, body, description, params), writes .vscode/components.code-snippets. --check fails if the generated snippets file drifts from the registry source; --write regenerates. Tracked in operations/governance/config/generated-artifacts.json so pre-commit checks freshness on registry changes.",
+    "scope": "docs-guide/config/component-registry.json → .vscode/components.code-snippets",
+    "reads": [
+      "docs-guide/config/component-registry.json",
+      ".vscode/components.code-snippets"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/governance/config/generated-artifacts.json",
+      ".claude/CLAUDE.md"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/components/library/generate-ui-templates.js",
+    "name": "generate-ui-templates.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "library",
+    "purpose": "Generates the UI template catalog and VS Code snippets from canonical template/component sources.",
+    "description": "Generates the UI template catalog and VS Code snippets from canonical template/component sources.",
+    "scope": "operations/scripts, docs-guide/catalog, docs-guide/features, snippets/templates, .vscode",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "operations/governance/config/ownerless-governance-surfaces.json",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/index.mdx",
+      "docs-guide/catalog/ui-templates.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/contributor-tools.mdx",
+      "docs-guide/features/ui-system.mdx",
+      "docs-guide/source-of-truth-guide.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/generators/components/documentation/generate-component-docs.js",
+    "name": "generate-component-docs.js",
+    "concern": "maintenance",
+    "type": "generator",
+    "niche": "documentation",
+    "purpose": "Generates published component library MDX pages from the registry. Replaces update-component-library.sh.",
+    "description": "Generates published component library MDX pages from the registry. Replaces update-component-library.sh.",
+    "scope": "generated-output",
+    "reads": [
+      "docs-guide/config/component-registry.json",
+      "docs-guide/.editorial-cache.json",
+      "v2/resources/documentation-guide/component-library",
+      "v2/es/resources/documentation-guide/component-library",
+      "v2/fr/resources/documentation-guide/component-library",
+      "v2/cn/resources/documentation-guide/component-library",
+      "tools/scripts/snippets/update-component-library.sh",
+      "tools/scripts/archive/deprecated/update-component-library.sh"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/archive/deprecated/update-component-library.sh",
+      "operations/scripts/dispatch/governance/pipelines/sync-generated-files.js",
+      "operations/governance/config/generated-artifacts.json",
+      "operations/governance/config/ownerless-governance-surfaces.json",
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/features/ui-system.mdx",
+      "docs-guide/_workspace/03_Component-Governance-Framework/04_References/01_Governance-Document/index.md",
+      "docs-guide/_workspace/03_Component-Governance-Framework/03_Component-Framework/05_Documentation-Standard/index.md",
+      "docs-guide/_workspace/03_Component-Governance-Framework/03_Component-Framework/06_Component-Lifecycle/index.md",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/frameworks/component-governance.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-catalogs.js",
+    "name": "dispatch-catalogs.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "catalogs",
+    "purpose": "Pipeline dispatcher for catalogs (full lifecycle: detect → repair → verify → escalate)",
+    "description": "docs-guide catalog pipeline (PR check + post-merge regen).",
+    "scope": "docs-guide/catalog/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js",
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js",
+    "name": "dispatch-component-registry.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "component-registry",
+    "purpose": "Pipeline dispatcher for component-registry (full lifecycle: detect → repair → verify → escalate)",
+    "description": "Component registry pipeline (PR drift check + post-merge regen + component validators).",
+    "scope": "snippets/components/, component-registry.json",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js",
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+      "operations/scripts/validators/components/library/check-component-props.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-config-flags.js",
+    "name": "dispatch-config-flags.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "config-flags",
+    "purpose": "Pipeline dispatcher for config-flags (full lifecycle: detect → repair → verify → escalate)",
+    "description": "go-livepeer config flags fetcher.",
+    "scope": "snippets/data/config-flags/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-contract-addresses.js",
+    "name": "dispatch-contract-addresses.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "contract-addresses",
+    "purpose": "Pipeline dispatcher for contract-addresses (full lifecycle: detect → repair → verify → escalate)",
+    "description": "Contract addresses fetch from on-chain.",
+    "scope": "snippets/data/contract-addresses/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-contract-shadow.js",
+    "name": "dispatch-contract-shadow.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "contract-shadow",
+    "purpose": "Pipeline dispatcher for contract-shadow (full lifecycle: detect → repair → verify → escalate)",
+    "description": "Shadow contract pipeline (verify production matches shadow).",
+    "scope": "snippets/data/contract-addresses/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-docs-index.js",
+    "name": "dispatch-docs-index.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "docs-index",
+    "purpose": "Pipeline dispatcher for docs-index (full lifecycle: detect → repair → verify → escalate)",
+    "description": "docs-index.json pipeline (PR drift check + post-merge regen).",
+    "scope": "docs-index.json",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js",
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-exchanges-data.js",
+    "name": "dispatch-exchanges-data.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "exchanges-data",
+    "purpose": "Pipeline dispatcher for exchanges-data (full lifecycle: detect → repair → verify → escalate)",
+    "description": "CoinGecko exchanges data fetcher.",
+    "scope": "snippets/data/exchanges/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-large-assets.js",
+    "name": "dispatch-large-assets.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "large-assets",
+    "purpose": "Pipeline dispatcher for large-assets (full lifecycle: detect → repair → verify → escalate)",
+    "description": "Large asset sync to docs-v2-assets branch.",
+    "scope": "public/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+    "name": "dispatch-maintenance-check.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "check meta dispatcher: bundles maintenance pipelines in --mode pr",
+    "description": "PR meta for maintenance concern.",
+    "scope": "all maintenance pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-maintenance.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js",
+    "name": "dispatch-maintenance-generate.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "generate meta dispatcher: bundles maintenance pipelines in --mode post-merge",
+    "description": "Post-merge meta for maintenance generators.",
+    "scope": "all maintenance pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-maintenance.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+    "name": "dispatch-maintenance-update.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "meta",
+    "purpose": "update meta dispatcher: bundles maintenance pipelines in --mode scheduled",
+    "description": "Scheduled meta for maintenance integrators.",
+    "scope": "all maintenance pipelines",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      ".github/workflows/dispatch-maintenance.yml",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-release-version.js",
+    "name": "dispatch-release-version.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "release-version",
+    "purpose": "Pipeline dispatcher for release-version (full lifecycle: detect → repair → verify → escalate)",
+    "description": "go-livepeer release version fetcher.",
+    "scope": "snippets/data/releases/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-sdk-clients.js",
+    "name": "dispatch-sdk-clients.js",
+    "concern": "maintenance",
+    "type": "dispatch",
+    "niche": "sdk-clients",
+    "purpose": "Pipeline dispatcher for sdk-clients (full lifecycle: detect → repair → verify → escalate)",
+    "description": "SDK client generation (Speakeasy wrapper).",
+    "scope": "snippets/sdks/",
+    "reads": [
+      "tools/lib/governance/pipeline-mode"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/reference/audit-glossary-gaps.js",
+    "name": "audit-glossary-gaps.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "reference",
+    "purpose": "Scans v2 MDX pages for terminology candidates not",
+    "description": "Glossary gap auditor — scans v2 MDX pages for terminology candidates not",
+    "scope": "operations/scripts/audits/content/reference",
+    "reads": [
+      "workspace/reports/_local/glossary-gap-report.json",
+      "v2"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": [
+      "reads-non-canonical:workspace/reports/_local/glossary-gap-report.json"
+    ]
+  },
+  {
+    "path": "operations/scripts/audits/content/reference/audit-icon-usage.js",
+    "name": "audit-icon-usage.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "reference",
+    "purpose": "Scans v2 and docs-guide MDX pages for icon prop",
+    "description": "Icon usage auditor — scans v2 and docs-guide MDX pages for icon prop",
+    "scope": "operations/scripts/audits/content/reference",
+    "reads": [
+      "workspace/reports/_local/icon-usage-report.json",
+      "snippets/data/reference-maps/icon-map.jsx",
+      "v2",
+      "docs-guide"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/tooling/reference-maps/icon-map.mdx",
+      "docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/thread-outputs/research/styles-gap-analysis.md",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": [
+      "reads-non-canonical:workspace/reports/_local/icon-usage-report.json"
+    ]
+  },
+  {
+    "path": "operations/scripts/audits/content/reference/terminology-search.js",
+    "name": "terminology-search.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "reference",
+    "purpose": "Audit searches glossary/terminology data for definitions",
+    "description": "Terminology search — searches glossary/terminology data for definitions",
+    "scope": "operations/scripts",
+    "reads": [
+      "v1",
+      "operations/scripts/audits/content/data"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/tooling/lpd-cli.mdx",
+      "docs-guide/catalog/scripts-catalog.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/content/reconciliation/generate-content-gap-reconciliation.js",
+    "name": "generate-content-gap-reconciliation.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "reconciliation",
+    "purpose": "Audit content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts",
+    "description": "Content-gap reconciliation generator — compares blueprint coverage against v2 MDX and writes reconciliation artefacts",
+    "scope": "operations/scripts, tools/config, tools/lib, v2, workspace/reports/content-gap",
+    "reads": [],
+    "writes": [],
+    "callers": [
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/components/library/audit-ai-discoverability.js",
+    "name": "audit-ai-discoverability.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "component-registry",
+    "purpose": "Audit snippets/components/ JSX files for AI-discoverability compliance — every hook-using component must declare AI tags and ship a companion JSON snapshot so the AI tooling can introspect props/usage without re-parsing source",
+    "description": "Scans .jsx files for React hook usage (useState, useEffect, useMemo, custom hooks). For each hook-using component, checks the JSDoc declares the AI-discoverability tags + a matching snapshot exists at snippets/data/snapshots/{Component}.json. Emits JSON (--json) or markdown (--md) report. Currently orphaned — not wired into dispatch-component-registry; tracked as follow-up.",
+    "scope": "snippets/components/*.jsx, snippets/data/snapshots/*.json",
+    "reads": [
+      "snippets/components",
+      "snippets/data/snapshots"
+    ],
+    "writes": [],
+    "callers": [],
+    "flags": [
+      "orphan-no-caller"
+    ]
+  },
+  {
+    "path": "operations/scripts/audits/components/library/audit-component-styles.js",
+    "name": "audit-component-styles.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "library",
+    "purpose": "qa:component-quality",
+    "description": "Audit JSX components for style pattern violations: inline styles, top-level constants, missing named style objects.",
+    "scope": "snippets/components",
+    "reads": [
+      "snippets/components"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/dispatch/content/brand/dispatch-style-tokens.js",
+      "docs-guide/frameworks/github-actions.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/components/library/scan-component-imports.js",
+    "name": "scan-component-imports.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "library",
+    "purpose": "Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.",
+    "description": "Scans MDX imports to produce component-usage-map.json and detect @usedIn drift.",
+    "scope": "generated-output",
+    "reads": [
+      "docs-guide/config/component-usage-map.json"
+    ],
+    "writes": [],
+    "callers": [
+      "docs-guide/config/component-usage-map.json",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx",
+      "docs-guide/frameworks/component-framework-canonical.mdx"
+    ],
+    "flags": []
+  },
+  {
+    "path": "operations/scripts/audits/components/documentation/audit-component-usage.js",
+    "name": "audit-component-usage.js",
+    "concern": "maintenance",
+    "type": "audit",
+    "niche": "documentation",
+    "purpose": "Scans pages for component usage patterns and reports statistics",
+    "description": "Component usage auditor — scans pages for component usage patterns and reports statistics",
+    "scope": "operations/scripts",
+    "reads": [
+      "workspace/reports/repo-ops/component-usage-audit.json"
+    ],
+    "writes": [],
+    "callers": [
+      "operations/scripts/audits/governance/repo/audit-tasks-folders.js",
+      "docs-guide/canonical/collation-data/Mintlify/dep-files/workspace/reports/component-infrastructure-state.md",
+      "docs-guide/catalog/scripts-catalog.mdx",
+      "docs-guide/docs-library/pipelines/component-health.mdx"
+    ],
+    "flags": []
+  }
+]

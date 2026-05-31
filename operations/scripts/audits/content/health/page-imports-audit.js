@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       health
- * @purpose     
+ * @purpose     Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
  * @description Audit page-reachable import health from canonical operations scripts, with stable outputs under operations/reports/health/page-imports.
  * @mode        scan
  * @pipeline    manual
@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync, spawnSync } = require('child_process');
 const { validateSnippetImports } = require('../../../../../tools/editor-extensions/authoring-tools/lib/authoring-core');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   getDocsJsonGroupFiles,
   getDocsJsonTabFiles,
@@ -349,14 +350,48 @@ function ensureExternalDocs(findings, warnings) {
   }
 }
 
+function maskFencedCode(content) {
+  const lines = String(content || '').split(/(\n)/);
+  let inFence = false;
+  let fenceToken = '';
+  let fenceLength = 0;
+
+  return lines
+    .map((segment) => {
+      if (segment === '\n') return segment;
+
+      const fenceMatch = segment.match(/^\s*(`{3,}|~{3,})/);
+      if (fenceMatch) {
+        const token = fenceMatch[1][0];
+        const length = fenceMatch[1].length;
+        if (!inFence) {
+          inFence = true;
+          fenceToken = token;
+          fenceLength = length;
+          return ' '.repeat(segment.length);
+        }
+        if (token === fenceToken && length >= fenceLength) {
+          inFence = false;
+          fenceToken = '';
+          fenceLength = 0;
+          return ' '.repeat(segment.length);
+        }
+      }
+
+      return inFence ? ' '.repeat(segment.length) : segment;
+    })
+    .join('');
+}
+
 function extractImports(content) {
   const imports = [];
+  const scanContent = maskFencedCode(content);
 
   function collect(regex, kind, mapper) {
     let match;
     regex.lastIndex = 0;
-    while ((match = regex.exec(content)) !== null) {
-      const position = positionForIndex(content, match.index);
+    while ((match = regex.exec(scanContent)) !== null) {
+      const position = positionForIndex(scanContent, match.index);
       imports.push({
         kind,
         line: position.line,
@@ -613,9 +648,9 @@ function runAudit(options = {}) {
 
   if (!options.skipWriteReports) {
     ensureDir(path.dirname(args.report));
-    fs.writeFileSync(args.report, markdownReport, 'utf8');
+    atomicWrite(args.report, markdownReport, 'utf8');
     ensureDir(path.dirname(args.reportJson));
-    fs.writeFileSync(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
+    atomicWrite(args.reportJson, `${JSON.stringify(jsonReport, null, 2)}\n`, 'utf8');
   }
 
   const exitCode = args.strict && findings.length > 0 ? 1 : 0;

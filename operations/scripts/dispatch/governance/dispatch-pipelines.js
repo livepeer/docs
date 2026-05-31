@@ -41,13 +41,18 @@ function main() {
   if (args.help) { printPipelineHelp('dispatch-pipelines.js', 'pipelines'); process.exit(0); }
   const scope = scopeFlags(args);
   let code = 0;
-  // Detect
+  // Detect — the underlying governance-pipeline.js requires either an explicit scope (--staged/--files/--full)
+  // OR --report-only to allow full-repo audit (--dry-run requires bounded scope and is mutually
+  // exclusive with --report-only). Detect step is read-only by definition, so --report-only fits.
+  const detectFlags = scope.length === 0 ? ['--report-only'] : [...scope, '--dry-run'];
   for (const p of (ATOMICS.detect || [])) {
-    code = Math.max(code, runIfExists(p, scope));
+    code = Math.max(code, runIfExists(p, detectFlags));
   }
   // Repair (only in scheduled+write or manual)
   if ((args.mode === 'scheduled' && args.write) || args.mode === 'manual') {
-    const repairFlags = args.write ? ['--write', '--verify', ...scope] : ['--dry-run', ...scope];
+    // Repair mode REQUIRES bounded scope (--staged or --files). If neither provided, default to --staged.
+    const repairScope = scope.length === 0 ? ['--staged'] : scope;
+    const repairFlags = args.write ? ['--write', '--verify', ...repairScope] : ['--dry-run', ...repairScope];
     for (const p of (ATOMICS.repair || [])) {
       code = Math.max(code, runIfExists(p, repairFlags));
     }

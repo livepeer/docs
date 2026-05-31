@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            copy-lint.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests/unit, operations/tests/copy-lint-fixtures, tools/scripts

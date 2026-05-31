@@ -31,12 +31,12 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>A gateway must hold a sender deposit in TicketBroker before sending jobs. Orchestrators check deposit levels before accepting tickets. A deposit below the ticket face value causes job rejection.</Tip>
+  <Tip>A Gateway must hold a sender deposit in TicketBroker before sending jobs. Orchestrators check deposit levels before accepting tickets. A deposit below the ticket face value causes job rejection.</Tip>
 </CenteredContainer>
 
 ---
 
-Gateways fund two accounts in the `TicketBroker` contract on Arbitrum One before sending jobs: a sender deposit and a penalty escrow (reserve). These ETH balances back the probabilistic micropayment tickets the gateway sends to orchestrators.
+Gateways fund two accounts in the `TicketBroker` contract on Arbitrum One before sending jobs: a sender deposit and a penalty escrow (reserve). These ETH balances back the probabilistic micropayment tickets the Gateway sends to Orchestrators.
 
 <CustomDivider />
 
@@ -64,7 +64,7 @@ Gateways fund two accounts in the `TicketBroker` contract on Arbitrum One before
   </tbody>
 </StyledTable>
 
-Orchestrators query the gateway's deposit before accepting a ticket. If `deposit < faceVal`, the ticket is invalid and the job is rejected. Most orchestrators also apply a minimum deposit threshold above `faceVal` to account for concurrent sessions.
+Orchestrators query the Gateway's deposit before accepting a ticket. If `deposit < faceVal`, the ticket is invalid and the job is rejected. Most Orchestrators also apply a minimum deposit threshold above `faceVal` to account for concurrent sessions.
 
 <CustomDivider />
 
@@ -105,7 +105,7 @@ Replace `<TICKET_BROKER_ADDRESS>` with the address from the <LinkArrow href="/v2
 
 ## Withdrawing Deposits
 
-Withdrawals from `TicketBroker` require an unlock period. The gateway initiates an unlock, waits for the unlock period to expire, then withdraws:
+Withdrawals from `TicketBroker` require an unlock period. The Gateway initiates an unlock, waits for the unlock period to expire, then withdraws:
 
 ```bash
 livepeer_cli -unlock-deposit
@@ -113,7 +113,7 @@ livepeer_cli -unlock-deposit
 livepeer_cli -withdraw-deposit
 ```
 
-The unlock period prevents gateways from withdrawing funds that have already been committed to in-flight tickets. Orchestrators can still redeem outstanding winning tickets during the unlock period.
+The unlock period prevents Gateways from withdrawing funds that have already been committed to in-flight tickets. Orchestrators can still redeem outstanding winning tickets during the unlock period.
 
 <CustomDivider />
 
@@ -125,7 +125,7 @@ Query current deposit levels:
 livepeer_cli -status
 ```
 
-The output includes the sender deposit and reserve balances for the gateway's Ethereum address.
+The output includes the sender deposit and reserve balances for the Gateway's Ethereum address.
 
 For programmatic monitoring, call `getSenderInfo(address)` on `TicketBroker`:
 
@@ -142,7 +142,7 @@ console.log('reserve:', ethers.formatEther(info.reserve.funds));
 ```
 
 <Note>
-  The Livepeer network runs on Arbitrum One, not Ethereum mainnet. Ensure your RPC URL points to an Arbitrum One endpoint and that your gateway holds ETH on Arbitrum One, not Ethereum L1.
+  The Livepeer Network runs on Arbitrum One, not Ethereum mainnet. Ensure your RPC URL points to an Arbitrum One endpoint and that your Gateway holds ETH on Arbitrum One, not Ethereum L1.
 </Note>
 
 <CustomDivider />
@@ -154,7 +154,7 @@ console.log('reserve:', ethers.formatEther(info.reserve.funds));
     How tickets draw on the sender deposit and what makes a ticket valid.
   </Card>
   <Card title="Payments Overview" icon="grid" href="/v2/developers/guides/payments/overview" arrow horizontal>
-    Payment modes and gateway deposit flow overview.
+    Payment modes and Gateway deposit flow overview.
   </Card>
   <Card title="Contract Addresses" icon="file-code" href="/v2/about/resources/reference/livepeer-contract-addresses" arrow horizontal>
     TicketBroker address on Arbitrum One.

@@ -3,7 +3,7 @@
  * @type        generator
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Reads GOVERNANCE.md markers from every root folder and produces a governance map report
  * @description Reads GOVERNANCE.md markers from every root folder and produces a governance map report
  * @mode        generate
  * @pipeline    manual -> GOVERNANCE.md markers, docs-guide/frameworks/*.mdx -> GOVERNANCE_MAP_LATEST.json, repo-governance-map.mdx
@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 
 const ROOT = path.resolve(__dirname, '../../../..');
 const FRAMEWORKS_DIR = path.join(ROOT, 'docs-guide', 'frameworks');
@@ -219,8 +220,8 @@ if (writeMode) {
   if (!fs.existsSync(jsonDir)) fs.mkdirSync(jsonDir, { recursive: true });
   if (!fs.existsSync(mdxDir)) fs.mkdirSync(mdxDir, { recursive: true });
 
-  fs.writeFileSync(OUTPUT_JSON, JSON.stringify(report, null, 2));
-  fs.writeFileSync(OUTPUT_MDX, generateMdx(report));
+  atomicWrite(OUTPUT_JSON, JSON.stringify(report, null, 2));
+  atomicWrite(OUTPUT_MDX, generateMdx(report));
   console.log(`Written: ${OUTPUT_JSON}`);
   console.log(`Written: ${OUTPUT_MDX}`);
 } else {

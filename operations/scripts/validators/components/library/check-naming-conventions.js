@@ -4,12 +4,12 @@
  * @type        validator
  * @concern     maintenance
  * @niche       library
- * @purpose     
+ * @purpose     Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
  * @description Validates active component filenames against directory-aware file naming and PascalCase exports under snippets/components.
  * @mode        check
  * @pipeline    manual
  * @scope       operations/scripts/validators/components, operations/tests/un-all.js, operations/tests/un-pr-checks.js, snippets/components
- * @usage       node operations/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--mode migration|strict-camel|strict-pascal]
+ * @usage       node operations/scripts/validators/components/library/check-naming-conventions.js [--path snippets/components] [--files path[,path...]] [--staged] [--mode migration|strict-camel|strict-pascal]
  */
 
 const fs = require('fs');
@@ -53,6 +53,7 @@ function parseArgs(argv) {
   const args = {
     targetPath: DEFAULT_TARGET,
     files: [],
+    staged: false,
     mode: DEFAULT_MODE,
     help: false
   };
@@ -109,6 +110,11 @@ function parseArgs(argv) {
       continue;
     }
 
+    if (token === '--staged') {
+      args.staged = true;
+      continue;
+    }
+
     if (token === '--mode') {
       args.mode = String(argv[index + 1] || '').trim() || DEFAULT_MODE;
       index += 1;
@@ -128,6 +134,22 @@ function parseArgs(argv) {
     throw new Error(`Invalid mode: ${args.mode}`);
   }
   return args;
+}
+
+function stagedComponentFiles() {
+  const result = spawnSync('git', ['diff', '--name-only', '--cached', '--diff-filter=ACMR'], {
+    cwd: REPO_ROOT,
+    encoding: 'utf8'
+  });
+
+  if (result.status !== 0) {
+    return [];
+  }
+
+  return String(result.stdout || '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith(`${DEFAULT_TARGET}/`) && line.endsWith('.jsx'));
 }
 
 function resolveRepoPath(inputPath) {
@@ -551,9 +573,12 @@ function run(options = {}) {
     throw new Error(`Invalid mode: ${mode}`);
   }
 
-  const files = collectTargetFiles(options.targetPath || DEFAULT_TARGET, {
-    files: options.files
-  });
+  const scopedFiles = options.staged ? stagedComponentFiles() : options.files;
+  const files = options.staged && scopedFiles.length === 0
+    ? []
+    : collectTargetFiles(options.targetPath || DEFAULT_TARGET, {
+        files: scopedFiles
+      });
   const findings = [];
 
   files.forEach((file) => {
@@ -590,6 +615,7 @@ if (require.main === module) {
     result = run({
       targetPath: args.targetPath,
       files: args.files,
+      staged: args.staged,
       mode: args.mode
     });
   } catch (error) {

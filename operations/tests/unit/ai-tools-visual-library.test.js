@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            ai-tools-visual-library.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           governance:ai-tools-visual-library
  * @scope             operations/tests/unit, operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js, .github/workflows, ai-tools/registry/workflows, ai-tools/registry/dispatchers, workspace/plan/active/AI-TOOLS-GOVERNANCE/AI-TOOLS

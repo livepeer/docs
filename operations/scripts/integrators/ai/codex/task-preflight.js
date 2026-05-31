@@ -1,21 +1,23 @@
 #!/usr/bin/env node
 /**
- * @script      codex/task-preflight
+ * @script      task-preflight
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       codex
- * @purpose     
- * @description Codex task preflight — generates task setup files and validates preconditions
+ * @purpose     Set up a fresh Codex agent session — generates .codex/task-contract.yaml scaffold, acquires the local execution lock, validates preconditions (branch, repo state, prior locks), so the session starts from a clean known state
+ * @description Run before the Codex agent starts work. Creates the task-contract YAML with task ID, scope, acceptance criteria fields. Acquires a local execution lock at .codex/locks-local/{task-id}.lock to prevent parallel-session conflicts. Verifies branch is on codex/* prefix, no stash markers present, no other locks held.
  * @mode        integrate
- * @pipeline    manual — codex setup tool referenced by .githooks/pre-commit guidance, not auto-executed
- * @scope       operations/scripts/codex, .codex/task-contract.yaml, .codex/locks-local
+ * @pipeline    manual — invoked at Codex session start
+ * @scope       operations/scripts/integrators/ai/codex, .codex/task-contract.yaml, .codex/locks-local/
  * @usage       node operations/scripts/integrators/ai/codex/task-preflight.js [flags]
+ * @policy      Codex task-isolation standard
  */
 
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_BASE = 'docs-v2-dev';
 const DEFAULT_CONTRACT = '.codex/task-contract.yaml';
@@ -224,13 +226,13 @@ function writeYamlContract(contractAbs, data) {
   ].join('\n');
 
   fs.mkdirSync(path.dirname(contractAbs), { recursive: true });
-  fs.writeFileSync(contractAbs, content, 'utf8');
+  atomicWrite(contractAbs, content, 'utf8');
 }
 
 function writeLock(lockDirAbs, lock) {
   fs.mkdirSync(lockDirAbs, { recursive: true });
   const lockPath = path.join(lockDirAbs, `${lock.lock_id}.json`);
-  fs.writeFileSync(lockPath, `${JSON.stringify(lock, null, 2)}\n`, 'utf8');
+  atomicWrite(lockPath, `${JSON.stringify(lock, null, 2)}\n`, 'utf8');
   return lockPath;
 }
 
@@ -246,7 +248,7 @@ function releasePriorBranchLocks(lockDirAbs, branch, releasedAt) {
       if (String(parsed.status || '').trim() !== 'active') return;
       parsed.status = 'released';
       parsed.released_at = releasedAt;
-      fs.writeFileSync(abs, `${JSON.stringify(parsed, null, 2)}\n`, 'utf8');
+      atomicWrite(abs, `${JSON.stringify(parsed, null, 2)}\n`, 'utf8');
     } catch (_error) {
       // Leave malformed lock files untouched; validate-locks will surface them.
     }

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            create-codex-pr.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          generator
  * @purpose           governance:agent-governance
  * @scope             tests/unit, operations/scripts/dispatch/ai/codex/create-codex-pr.js

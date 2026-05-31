@@ -72,19 +72,19 @@ This is on the same port as the go-livepeer CLI (`7935` by default). The `-monit
   </TableRow>
   <TableRow>
     <TableCell>`-metricsClientIP`</TableCell>
-    <TableCell>Includes the client IP address in metrics labels. Useful for identifying which gateway is routing work to you.</TableCell>
+    <TableCell>Includes the client IP address in metrics labels. Useful for identifying which Gateway is routing work to you.</TableCell>
   </TableRow>
 </StyledTable>
 
 <Note>
-  Split orchestrator and transcoder setups should pass `-monitor` on both processes when both sides need to be scraped. Each process exposes its own `/metrics` endpoint on its respective CLI port.
+  Split Orchestrator and transcoder setups should pass `-monitor` on both processes when both sides need to be scraped. Each process exposes its own `/metrics` endpoint on its respective CLI port.
 </Note>
 
 <CustomDivider />
 
 ## What metrics are exposed
 
-go-livepeer exposes metrics across multiple categories. The full reference is at [Prometheus Metrics Reference](/v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
+go-livepeer exposes metrics across multiple categories. The full reference is at [Prometheus Metrics Reference](/v2/Orchestrators/guides/monitoring-and-tooling/metrics-and-alerting).
 
 **The metrics you will actually act on:**
 
@@ -103,7 +103,7 @@ go-livepeer exposes metrics across multiple categories. The full reference is at
 </Card>
 
 <Card title="Latency metrics" icon="gauge-high">
-  Processing time per segment. High latency means your GPU is saturated or a pipeline is slow – both affect gateway scoring.
+  Processing time per segment. High latency means your GPU is saturated or a pipeline is slow – both affect Gateway scoring.
 </Card>
 
 </CardGroup>
@@ -184,7 +184,7 @@ docker run --net=host \
 For Kubernetes deployments, pods with the `prometheus.io/scrape` label are discovered automatically without specifying `LP_NODES`.
 
 <Card title="livepeer/livepeer-monitoring" icon="github" href="https://github.com/livepeer/livepeer-monitoring">
-  Source, Dockerfile, prometheus.yml, and Grafana dashboard templates.
+  Source, Dockerfile, Prometheus.yml, and Grafana dashboard templates.
 </Card>
 
 <CustomDivider />
@@ -239,7 +239,7 @@ Reload Prometheus after editing: `kill -HUP <prometheus-pid>` or use the reload 
 
 <CustomDivider />
 
-## Monitoring AI runner containers
+## Monitoring AI Runner containers
 
 AI inference workloads run in the `ai-runner` Docker container alongside go-livepeer. Monitoring the container separately from the node gives you a faster signal for AI-specific issues.
 
@@ -291,14 +291,14 @@ docker stats livepeer-ai-runner
 
 **Verify AI pipelines are registered on the network:**
 
-After starting your AI runner and go-livepeer, check that your pipelines appear to the network:
+After starting your AI Runner and go-livepeer, check that your pipelines appear to the network:
 
 ```bash icon="terminal" title="Query registered capabilities"
 # Query your node's registered capabilities
 curl http://localhost:7935/getNetworkCapabilities | jq
 ```
 
-Also check the community tool at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) – this shows which AI-capable orchestrators are visible network-wide and which models are warm.
+Also check the community tool at [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities) – this shows which AI-capable Orchestrators are visible network-wide and which models are warm.
 
 <CustomDivider />
 
@@ -402,7 +402,7 @@ groups:
     When metrics reveal a problem – how to diagnose and fix it.
   </Card>
   <Card title="AI Configuration" icon="robot" href="/v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations">
-    Setting up aiModels.json and the AI runner container.
+    Setting up aiModels.json and the AI Runner container.
   </Card>
   <Card title="Session Limits" icon="gauge" href="/v2/orchestrators/guides/config-and-optimisation/capacity-planning">
     Configuring -maxSessions to match your hardware capacity.

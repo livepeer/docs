@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            style-guide.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:content-quality
  * @scope             tests
@@ -727,7 +730,7 @@ function checkImportPaths(files, stagedOnly = false) {
       }
       
       // Check for relative imports to snippets
-      if (importPath.includes('snippets') && !importPath.startsWith('/snippets')) {
+      if ((importPath === 'snippets' || importPath.includes('/snippets/')) && !importPath.startsWith('/snippets')) {
         errors.push({
           file,
           rule: 'Absolute import paths',

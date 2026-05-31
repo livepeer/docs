@@ -1,95 +1,324 @@
 ---
-title: Adaptive Architecture
-sidebarTitle: Adaptive Architecture
-description: "Self-remediation architecture for ownerless governance, validation, generated artifacts, and repair workflows."
+title: "Adaptive Architecture"
+sidebarTitle: "Adaptive Architecture"
+description: >-
+  The repo's self-remediation model. Five-stage control loop (detect, explain,
+  repair, verify, record), four-part ownerless contract per surface, 4 of 5
+  unified surfaces formally ownerless-ready post-D-ACT-10, 49 validators + 37
+  remediators + 31 generators + 25 audits. Verified 2026-05-25.
 audience: developer
-pageType: overview
-purpose: overview
+pageType: concept
+purpose: orient
 status: current
-lastVerified: 2026-05-14
+lastVerified: 2026-05-25
 keywords:
   - livepeer
   - adaptive architecture
-  - self remediation
+  - self-remediation
   - ownerless governance
   - repair workflows
-'og:image': /snippets/assets/media/og-images/fallback.png
-'og:image:alt': Livepeer Docs social preview image
-'og:image:type': image/png
-'og:image:width': 1200
-'og:image:height': 630
+  - control loop
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+sourceDocs:
+  - docs-guide/policies/ownerless-governance.mdx
+  - docs-guide/policies/source-of-truth-policy.mdx
+  - docs-guide/policies/infrastructure-principles.mdx
+  - docs-guide/policies/generated-artifact-and-hook-governance.mdx
+  - docs-guide/policies/agent-governance-framework.mdx
+  - operations/governance/config/ownerless-governance-surfaces.json
+  - operations/governance/config/repo-governance-surfaces.json
+  - operations/governance/config/generated-artifacts.json
+  - workspace/thread-outputs/repo-consolidation-deep/SLICE-03-operations-governance-tests-hooks.md
 ---
 
 # Adaptive Architecture
 
-Adaptive architecture is the repo's self-remediation model. The repo should detect drift, explain the failing contract, point to the canonical source, provide an exact repair path, and re-check the result. Human maintainers make policy decisions; routine drift should be repairable by contributors or agents.
+The repo's self-remediation model. **Every governed surface declares a four-part contract – canonical source · deterministic validator · exact repair command · single gate layer.** When any of those four is missing, the surface stays in `advisory` state until the contract is complete. Once complete, an OSS contributor (or an AI agent acting on their behalf) can correct routine drift without privileged context or staff approval.
 
-## Control Loop
+**The novelty is not validators or hooks individually** – most large repos have those. The novelty is the manifest-driven five-stage control loop and the explicit retirement of "human-only context" as a dependency. Post-[D-ACT-10](./automations.mdx#locked-decisions-18): **4 of 5 unified surfaces are formally ownerless-ready** in the canonical `repo-governance-surfaces.json` (bridge_mode `"retired"`); 1 advisory (`github-workspace-governance`). Legacy 8-entry `ownerless-governance-surfaces.json` superseded but kept on disk for reference.
+
+**Honest framing:** the model is **"ownerless for routine drift" – not "ownerless for policy authorship or destructive operations."** Policy decisions stay human. Routine drift becomes contract.
+
+---
+
+## The four-part contract
+
+Every governed surface must declare:
+
+| Part | What it is | Where it lives |
+| --- | --- | --- |
+| **Canonical source** | The single file or files the repo treats as authoritative for this surface | `surface_globs` + `canonical_sources` fields in `ownerless-governance-surfaces.json` |
+| **Deterministic validator** | A script that exits non-zero on drift, with path + rule + severity in the failure output | `validators` field; usually a script under `operations/scripts/validators/` |
+| **Exact repair command** | A single command that fixes the deterministic part of the drift, touching only the owned surface | `repair_commands` field; usually `lpd repair --surface <id>` |
+| **Single gate layer** | One of `pre-commit`, `pr-changed`, `scheduled`, `manual` – never multiple | `gate_layer` field |
+
+Until all four are declared, the surface stays in `rollout_state: advisory` (reports but does not block). After all four are declared and exercised:
+
+- `autofix` – the remediator runs deterministically and writes
+- `migrating` – transitional state during rollout
+- `blocking` – full enforcement; PR cannot merge on failure
+
+---
+
+## The five-stage control loop
 
 | Stage | Repo implementation | Good output |
 | --- | --- | --- |
-| Detect | validators, audits, hooks, CI workflows | A precise failure with path, rule, and severity. |
-| Explain | policies, frameworks, generated maps, reports | The canonical source and reason for the rule. |
-| Repair | remediators, generators, `lpd repair`, workflow dispatch | An exact command that changes only the owned surface. |
-| Verify | rerun the validator or staged test suite | A clean check or a smaller next failure. |
-| Record | generated reports, catalogs, decision registry, PR evidence | Reviewable evidence without stale report bloat. |
+| **Detect** | Validators, audits, hooks, CI workflows | Precise failure with path, rule, severity, and re-check command |
+| **Explain** | Policies, frameworks, generated maps, reports, printed remediation messages | Canonical source named + reason for the rule + link to the framework |
+| **Repair** | Remediators, generators, `lpd repair`, workflow dispatch | Exact command that touches only the owned surface |
+| **Verify** | Rerun the validator (`--verify` mode) or staged test suite | Clean check OR a smaller next failure |
+| **Record** | Generated reports, catalogs, decision registry, PR evidence labels | Reviewable evidence without stale report bloat |
 
-## Core Mechanisms
+### The loop in practice – concrete walkthrough
+
+A contributor edits `snippets/components/elements/Badge/Badge.jsx` and forgets to update the `@usedIn` JSDoc tag.
+
+1. **Detect.** Pre-commit runs the component metadata validator (`operations/scripts/validators/components/library/...`). It reports: file path; missing tag; severity P2; exact validator command.
+2. **Explain.** The hook prints a link to [`docs-guide/frameworks/component-framework-canonical.mdx`](../frameworks/component-framework-canonical.mdx) (canonical source for the 7-tag JSDoc contract) + notes the surface is declared in `ownerless-governance-surfaces.json` under id `component-governance`, gate layer `pr-changed`, rollout state `autofix`.
+3. **Repair.** The hook prints: `lpd repair --surface component-governance --write --staged`. That command runs `operations/scripts/remediators/components/library/repair-component-metadata.js` against only the staged file set. The remediator derives the missing `@usedIn` field from `tools/lib/governance/component-governance-utils.js::buildComponentUsageSummary()` – a live scan of MDX imports.
+4. **Verify.** The remediator's `--verify` mode re-runs the validator after writing. If the validator still fails, the loop hands back control instead of escalating.
+5. **Record.** The repaired file is staged for commit alongside the source change. The catalog at [`docs-guide/catalog/components-catalog.mdx`](../catalog/components-catalog.mdx) is regenerated because `generated-artifacts.json` lists it as a `committed_derived_scoped` artefact whose source set includes `snippets/components/**`. The PR body picks up the change set. The governance approval policy decides whether the `approval:governance-schema` label is required based on the surface touched.
+
+### A live example of the loop self-detecting
+
+Running `node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check` on 2026-05-23 prints:
+
+```
+docs-guide/repo-ops/config/repo-governance-map.mdx is stale.
+```
+
+**The system reliably flags itself.** Nothing yet auto-runs the repair. That gap is named below.
+
+---
+
+## Surface inventory (live, 2026-05-25)
+
+| Manifest | Path | Entries | Purpose |
+| --- | --- | --- | --- |
+| **Repo governance surfaces** (canonical post-[D-ACT-10](./automations.mdx#locked-decisions-18)) | `operations/governance/config/repo-governance-surfaces.json` | **5 unified surfaces** (4 ownerless-ready + 1 advisory: `github-workspace-governance`) | Single canonical registry; `bridge_mode: "retired"`, `legacy_bridge_inventory` empty (migration complete) |
+| **Ownerless surfaces** (legacy / superseded) | `operations/governance/config/ownerless-governance-surfaces.json` | **8** | Pre-D-ACT-10 inventory; kept on disk for reference. Authoritative reads should use `repo-governance-surfaces.json` |
+| **Generated artefacts** | `operations/governance/config/generated-artifacts.json` | **29** | Every committed-derived file with class + commit-policy + hook-policy + ci-policy + delta-strategy |
+| **Root governance** | `operations/governance/config/root-governance.json` | 35 root entries | Prevents root sprawl; generates `.allowlist` |
+| **Approval policy** | `operations/governance/config/governance-approval-policy.json` | per-surface label rules | Defines PR evidence labels + approval sections for governance-sensitive changes |
+| **Agent-write governance** | `operations/governance/config/agent-write-governance.json` | per-path rules | What agents may write where; currently `bridge_mode: "staged"` (transition incomplete – see [Known gaps](#known-gaps)) |
+
+---
+
+## Core mechanisms
 
 | Mechanism | Path | Purpose |
 | --- | --- | --- |
-| Ownerless surface manifest | `operations/governance/config/ownerless-governance-surfaces.json` | Machine-readable list of governed surfaces, validators, repair commands, gate layer, and rollout state. |
-| Root governance | `operations/governance/config/root-governance.json`, `.allowlist` | Prevents root sprawl and records approved root contracts. |
-| Generated artifact governance | `operations/governance/config/generated-artifacts.json` | Identifies generated files and how they should be regenerated. |
-| Approval policy | `operations/governance/config/governance-approval-policy.json` | Defines PR evidence labels and approval sections for governance-sensitive changes. |
-| Hooks | `.githooks/` | Local enforcement for staged safety, root allowlist, v1 frozen content, and generated artifact drift. |
-| Repair entrypoint | `lpd repair --surface <id>` | Standard command surface for ownerless repairs. |
+| Unified governance registry (canonical post-D-ACT-10) | `operations/governance/config/repo-governance-surfaces.json` | Machine-readable contract per surface: validators, repair commands, gate layer, rollout state. Legacy `ownerless-governance-surfaces.json` superseded |
+| Root governance | `operations/governance/config/root-governance.json` + `.allowlist` (generated) | Prevents root sprawl; pre-commit reads `.allowlist` to refuse new root entries |
+| Generated artefact governance | `operations/governance/config/generated-artifacts.json` | Three classes (`committed_authoritative`, `committed_derived_scoped`, `ephemeral_local`), three commit policies, three hook policies, three CI policies, four delta strategies |
+| Approval policy | `operations/governance/config/governance-approval-policy.json` | PR evidence labels (`approval:governance-schema`, `approval:cleanup`, etc.) |
+| Hooks | `.githooks/` | Local enforcement: pre-commit (staged safety, MDX syntax, docs.json integrity, root allowlist, v1 frozen, no-deletion, Codex branch isolation); pre-push (Codex task contract, lock overlap, stash policy) |
+| Repair entrypoint | `lpd repair --surface <id>` | Standard command surface for ownerless repairs |
+| Pipeline tests | `operations/tests/integration/pipeline-smoke-test.js` + `pipeline-functional-tests.js` | 66/66 dispatcher smoke test + synthetic violation cycles per D-GOV-03 |
 
-## Remediation Script Families
+---
 
-| Family | Examples | Drift repaired |
+## Script corpus (live counts, 2026-05-23)
+
+The remediation backbone. All 321 active scripts follow the 11-tag JSDoc contract per [`docs-guide/frameworks/script-framework.mdx`](../frameworks/script-framework.mdx).
+
+| Type | Count | Where | What each does |
+| --- | ---: | --- | --- |
+| **Validators** | 55 | `operations/scripts/validators/` | Detect drift; exit-code 0/1/2 with precise failure output |
+| **Remediators** | 37 | `operations/scripts/remediators/` | Repair detected drift; support `--write` / `--verify` / `--staged` / `--files` modes |
+| **Generators** | 31 | `operations/scripts/generators/` | Rebuild derived artefacts from canonical sources; every output declared in `generated-artifacts.json` |
+| **Audits** | 25 | `operations/scripts/audits/` | Read-only scans; emit JSON + MD reports under `workspace/reports/repo-ops/` |
+| **Dispatchers** | 102 | `operations/scripts/dispatch/` | Per-concern meta-dispatchers (`-check`, `-update`, `-scan`, `-generate`, `-repair`, `-sync`) called by the 6 `dispatch-{concern}.yml` workflows |
+| **Integrators** | 58 | `operations/scripts/integrators/` | Pull/transform external + internal data into repo |
+| **Interfaces** | 8 | `operations/scripts/interfaces/` | Issue/PR/Discord event handlers |
+
+### Remediator families
+
+| Family | Path | Drift repaired |
 | --- | --- | --- |
-| Component remediation | `operations/scripts/remediators/components/library/*` | Component metadata, component styles, AI discoverability. |
-| Content repair | `operations/scripts/remediators/content/repair/*` | Links, imports, MDX-safe markdown, spelling, docs path sync. |
-| Content style | `operations/scripts/remediators/content/style/*` | Em dashes, spelling variants, term capitalization, ownerless language. |
-| SEO and metadata | `operations/scripts/remediators/content/seo/generate-seo.js` | SEO frontmatter drift. |
-| Governance compliance | `operations/scripts/remediators/governance/compliance/*` | Governance artifacts and workflow headers. |
-| Script governance | `operations/scripts/remediators/governance/scripts/repair-script-inventory.js` | Script inventory and metadata drift. |
+| Component remediation | `operations/scripts/remediators/components/library/*` | Component metadata, styles, AI discoverability, registry parity |
+| Content repair | `operations/scripts/remediators/content/repair/*` | Links, imports, MDX-safe markdown, docs-path sync |
+| Content style | `operations/scripts/remediators/content/style/*` | Em-dashes (zone-aware frontmatter handling), US→UK spelling, term capitalisation, ownerless language |
+| Content classification | `operations/scripts/remediators/content/classification/*` | Page taxonomy + frontmatter classification |
+| Content copy | `operations/scripts/remediators/content/copy/*` | Banned-word + banned-phrase replacement |
+| SEO + metadata | `operations/scripts/remediators/content/seo/generate-seo.js` | SEO frontmatter drift |
+| Governance compliance | `operations/scripts/remediators/governance/compliance/*` | Governance artefacts, workflow headers, JSDoc compliance |
+| Script governance | `operations/scripts/remediators/governance/scripts/repair-script-inventory.js` | Script inventory + metadata drift |
+| Governance scaffold | `operations/scripts/remediators/governance/scaffold/*` | New-surface scaffolding |
 
-## Generated Artifact Rule
+**Mode standardisation:** every remediator supports `--dry-run` / `--write` / `--verify` / `--staged` / `--files`. **The `--verify` mode is partially adopted** – some remediators only repair without re-running the validator after writing. The contract says repair-then-recheck.
 
-Generated files are outputs, not authoring surfaces. When a generated artifact is stale:
+---
 
-1. Identify the generator in `operations/governance/config/generated-artifacts.json` or the relevant catalog.
-2. Run the generator in `--check` mode if available.
-3. Run the generator in write mode.
-4. Re-run the check.
-5. Include both source and output changes in the same review unit.
+## Generated artefact governance
 
-## Current Adaptive Gaps
+Generated files are outputs, not authoring surfaces. When a generated artefact is stale:
 
-| Gap | Evidence | Required implementation |
+1. **Identify the generator** in `operations/governance/config/generated-artifacts.json` (each entry names path + generator + sources + class).
+2. **Run the generator in `--check` mode** if available.
+3. **Run the generator in `--write` mode.**
+4. **Re-run the check.**
+5. **Include both source and output changes** in the same review unit.
+
+### The 3 artefact classes
+
+| Class | What it is | Example |
 | --- | --- | --- |
-| Governance map drift | `generate-repo-governance-status.js --check` reports `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` | Regenerate governance map and verify the generated artifact contract. |
-| V2 non-publishable lanes are not fully normalized | V2 folder cleanup matrix reports 307 rows: 235 `_workspace` targets and 72 `x-deprecated` targets. | Execute approved move waves, update `.mintignore` and file-selection helpers, then rerun matrix. |
-| Report retention is not enforced strongly enough | Script footprint audit reports 24 findings, mostly large tracked reports. | Apply report retention policy and keep concise summaries instead of full large artifacts. |
-| Some stale docs still describe old paths | Feature docs had TODOs and legacy path references before this update. | Add a docs-guide freshness check for feature pages that reference moved script or workflow names. |
-| Template compliance debt | Script footprint audit cites 218 script template non-compliance findings from the baseline. | Backfill script headers and enforce compliance in a staged rollout. |
+| `committed_authoritative` | Hand-authored canonical files | `docs-guide/policies/ownerless-governance.mdx` |
+| `committed_derived_scoped` | Generated from canonical sources; committed because consumers depend on them | `docs-guide/catalog/components-catalog.mdx`, `snippets/data/contract-addresses/contractAddressesData.jsx`, `docs-index.json` |
+| `ephemeral_local` | Generated for local use only; gitignored or never committed | `workspace/reports/_local/**`, test fixtures |
 
-## Acceptance Criteria For New Adaptive Features
+Hook policies + commit policies + CI policies per class are defined in [`generated-artifact-and-hook-governance.mdx`](../policies/generated-artifact-and-hook-governance.mdx).
 
-- The feature has a machine-readable source or manifest.
-- The feature has an exact validator command.
-- The feature has an exact repair command or a documented reason repair is manual.
-- The feature declares one primary gate layer.
-- Reports are bounded by retention policy.
-- Generated outputs carry banners or are otherwise listed in generated artifact governance.
-- The final check can be run by a contributor with only repo-local instructions.
+---
+
+## Locked decisions
+
+Three registries cover this surface:
+
+- **`docs-guide/decisions/registry.md`** – unified cross-reference index
+- **`.github/workspace/decisions-log.mdx`** – **18 locked decisions** (D-ACT-01..10 + D-GOV-01..08) covering workflow architecture, taxonomy, pipeline tags, dispatcher model
+- **`docs-guide/decisions/docs-guide-structure.md`** – D-DG-01..13 covering docs-guide IA migration
+
+The 18 D-ACT + D-GOV decisions establish the 4-tier composable architecture (workflow YAML = dispatcher only; typed work in scripts; D-GOV-08), the 7-prefix workflow naming convention (D-ACT-04), the 7-type × 7-concern taxonomy (D-ACT-05), the 8-tag pipeline taxonomy (D-ACT-02), the issue/PR interface as a 7th type (D-ACT-01).
+
+---
+
+## Pre-commit hooks (the local enforcement layer)
+
+5 hard gates run on every commit, scoped to 60-second runtime budget:
+
+| Gate | What it enforces |
+| --- | --- |
+| MDX syntax | Pages parse cleanly; frontmatter valid |
+| `docs.json` integrity | Redirect block valid; no broken nav routes |
+| No-deletion | Tracked file deletion requires `allow-deletions=true` trailer |
+| `.allowlist` + `v1/` protection | Root sprawl blocked; v1 frozen content unchanged |
+| Codex branch isolation | `codex/*` branches comply with task contract |
+
+**Bypass policy** in `.githooks/BYPASS.md`. Pre-commit has an undocumented carve-out allowing deletion without the trailer if the blob hash matches a `v2/x-archived/` follow-up.
+
+---
+
+## Acceptance criteria for new adaptive features
+
+A new surface graduates from `advisory` to `autofix` (or `blocking`) when:
+
+- The surface has a machine-readable manifest entry in `ownerless-governance-surfaces.json` or `repo-governance-surfaces.json`
+- The surface has an exact validator command (exits non-zero on drift)
+- The surface has an exact repair command (or a documented reason repair is manual)
+- The surface declares one primary gate layer (not multiple)
+- Reports are bounded by retention policy
+- Generated outputs carry banners or are listed in `generated-artifacts.json`
+- The final check can be run by a contributor with only repo-local instructions
+- The remediator supports `--verify` mode (re-runs the validator after writing)
+- The validator failure output prints the `lpd repair` command (the [Error Reporting and Issue-Creation Hooks](#error-reporting-and-issue-creation-hooks) contract below)
+
+---
+
+## Error reporting and issue-creation hooks
+
+The standardised failure-output contract: every blocking failure prints (a) why it failed, (b) the re-check command, (c) the repair command. Repair commands are repo-backed commands an OSS contributor or AI agent can run directly.
+
+**Adoption is uneven.** Most newer scripts comply. Older validators (especially under `governance/pr/`) sometimes print failure reasons without the explicit `lpd repair` command. Cleanup queue.
+
+---
+
+## Known gaps
+
+### "Ownerless" is currently 4 of 5 unified surfaces (P1, honest framing)
+
+The four-part contract is real and enforced for the 8 surfaces in `ownerless-governance-surfaces.json`. The wider `repo-governance-surfaces.json` lists 28 surfaces, of which 20 are still advisory. Manifests still use `owner: docs` everywhere in `root-governance.json`. The agent-governance taxonomy references `@livepeer/docs-team`. Several policies say "human review" or "review owner". **The model is "ownerless for routine drift" – not "ownerless for policy authorship or destructive operations."** This is consistent with the design intent but should be surfaced in product narrative (and on `docs-guide/index.mdx`).
+
+### The stale governance map is self-detected but not auto-repaired (P1)
+
+`generate-repo-governance-status.js --check` on 2026-05-23 prints `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` The map last regenerated 2026-04-07T13:18:37.118Z – about 6 weeks behind. **The system flags itself; nothing auto-runs the repair.** The check runs at the right cadence; the publish gate doesn't. Same root cause as the contracts pipeline 19-day staleness – the [cron-is-dry-run bug](./automations.mdx#cron-is-dry-run-by-default-bug-fixed-2026-05-25) (fix shipped 2026-05-25 in commit `e42946cdf` on `docs-v2-dev-draft`; pending merge to `docs-v2` after which the next scheduled run should regenerate the map).
+
+### 307-row v2 cleanup matrix is recommendation-only (P1)
+
+The v2 folder governance audit reports 307 rows (235 `_workspace` candidates + 72 `x-deprecated` candidates). 41 internal-scope rows. Largest section (`gateways`) carries 199 of the 307 rows alone.
+
+**The pipeline is mature** (policy, lane definitions, matrix generator). **Execution is the gap.** No automated move-waves have run. Humans approve each batch. Per [Workspace Lifecycle Policy](../policies/workspace-lifecycle-policy.mdx), 30/90-day TTL is documented; `tasks-retention.yml` is a stub (not implemented).
+
+### Script JSDoc compliance is much better than the documented gap (live data, 2026-05-23)
+
+Documented in `docs-guide/features/gap-analysis.mdx` (last verified 2026-05-14): "218 scripts marked template non-compliant."
+
+**Live data 2026-05-23:**
+- 327 of 321 active scripts have canonical `@purpose` (essentially 100%)
+- 81% have `@type` (sampled 100)
+- 81% have `@concern` (sampled)
+- **Only 45 scripts repo-wide use retired `@category`**
+- **Only 4 use retired `@domain`**
+
+The "218 non-compliant" figure is 9 days stale. Actual compliance gap is ~45-50 scripts max – a 4× improvement.
+
+**Backfill these 45–50 scripts** with `repair-script-inventory.js` to close the gap entirely.
+
+### `--verify` mode adoption is partial
+
+Not every remediator implements `--verify` (the re-check after write). The contract says repair-then-recheck. Audit the corpus, add `--verify` to the ones missing it.
+
+### Hook scripts violate their own JSDoc spec (P2)
+
+Per SLICE-03: `.githooks/pre-commit` and `pre-push` use retired JSDoc tags (`@category`, `@domain`, `@needs`, `@purpose-statement`) that `docs-guide/policies/script-governance.mdx` lines 195-205 explicitly bans. The hooks that enforce JSDoc compliance violate the JSDoc spec.
+
+### `.githooks/verify.sh` is dead enforcement (P2)
+
+Per SLICE-03: `verify.sh` defines 7 internal checks (MDX, JSON, JS, shell, mintlify, snippets-import, browser) but **is not invoked by the active pre-commit hook.** Dead enforcement code. Either wire it back in OR retire.
+
+### `.githooks/pre-commit-no-deletions` is unwired (P2)
+
+Per SLICE-03: declares `@pipeline manual – not yet in pipeline` in its own header. Not referenced by `install.sh`, not invoked by pre-commit, no test. Pure safety-net cruft.
+
+### `.githooks/script-index.md` only catalogues 3 of 7 hook scripts
+
+Generator filter is broken – only catches `pre-commit*` and `pre-push`. Misses `install.sh`, `verify.sh`, `verify-browser.js`, `server-manager.js`.
+
+### `agent-write-governance.json` `bridge_mode: "staged"` migration incomplete
+
+Per SLICE-03: `repo-governance-surfaces.json` already flipped to `"retired"` for the corresponding surface but `agent-write-governance.json` is still in transitional `staged` mode. Complete the migration.
+
+### No automated decision-registry enforcement
+
+`docs-guide/decisions/registry.md` says "decisions made in chat that aren't written here don't exist" – enforced by convention only. No script checks PRs for chat-decisions that should be in the registry but aren't. Three separate registries (D-NAV, D-ACT+D-GOV, D-DG) + per-plan registries with no automated cross-index check.
+
+### Audit→issue automation is partial (Pattern D "Act" stage)
+
+The Pattern D framework doctrine says "every finding gets a response – no headless scans." Health-scheduled-scan and brand-scheduled-scan open PRs on manual repair. But the daily scheduled runs write findings nowhere except workflow step-summary output (the cron-is-dry-run bug). The "Act" stage of the scan-report-act pattern is mostly missing for cron-driven scans.
+
+### Surfaces without canonical claim yet (gaps from the gap analysis)
+
+Surfaces that exist in the repo but have not been promoted into the ownerless model:
+
+- ~50 scripts with retired JSDoc tags (above)
+- 24 archived JSX components with no removal schedule
+- Duplicate developer trees (`v2/developers/`, `v2/developers1/`, `v2/developers2/`)
+- Large historical reports under `workspace/reports/**/files/`
+- `.vscode/livepeer-legacy.code-snippets.bak` (35 KB tracked backup)
+
+Inventoried in [`docs-guide/features/gap-analysis.mdx`](./gap-analysis.mdx) but not yet under contract.
+
+---
 
 ## Related
 
-- `docs-guide/policies/ownerless-governance.mdx`
-- `docs-guide/policies/infrastructure-principles.mdx`
-- `docs-guide/policies/generated-artifact-and-hook-governance.mdx`
-- `operations/governance/config/ownerless-governance-surfaces.json`
-- `tools/lpd`
+- **[Ownerless Governance Policy](../policies/ownerless-governance.mdx)** – full text of the four-part contract; promotion ladder
+- **[Source-of-Truth Policy](../policies/source-of-truth-policy.mdx)** – canonical boundaries per surface
+- **[Infrastructure Principles](../policies/infrastructure-principles.mdx)** – gate-layer rule ownership
+- **[Generated-Artifact + Hook Governance](../policies/generated-artifact-and-hook-governance.mdx)** – 3 artefact classes; commit / hook / CI policies
+- **[Agent Governance Framework](../policies/agent-governance-framework.mdx)** – adapter rules per D-DG-11
+- **[Quality Gates Policy](../policies/quality-gates.mdx)** – gate-layer map with named tools per tier
+- **[Cleanup + Quarantine Policy](../policies/cleanup-quarantine-policy.mdx)** – conservative deletion-discipline
+- **[Audit System Overview](../policies/audit-system-overview.mdx)** – static-first audit doctrine
+- **[Governance Index](../policies/governance-index.mdx)** – entry point for all governed surfaces
+- **[Automations](./automations.mdx)** – the 4-tier composable workflow architecture + cron-dry-run bug
+- **[Gap Analysis](./gap-analysis.mdx)** – actionable backlog with file paths + acceptance criteria
+- **`operations/governance/config/`** – the machine-readable manifests this page documents
+- **`tools/lpd`** – the `lpd repair` entrypoint
+- **`workspace/thread-outputs/repo-consolidation-deep/SLICE-03-operations-governance-tests-hooks.md`** – full operations/governance + tests + hooks inventory (362 lines)

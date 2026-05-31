@@ -16,6 +16,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 const { execFileSync } = require("node:child_process");
 const { keccak256 } = require("js-sha3");
+const { atomicWrite } = require('../../../../../../tools/lib/bootstrap/safe-io');
 
 const {
   ACTIVE_LIFECYCLES,
@@ -2069,7 +2070,7 @@ function summarizeVerification(chainPayload) {
 function writeHealthChecks(checks, dryRun = false) {
   if (dryRun) return;
   fs.mkdirSync(path.dirname(HEALTH_CHECK_PATH), { recursive: true });
-  fs.writeFileSync(HEALTH_CHECK_PATH, JSON.stringify({
+  atomicWrite(HEALTH_CHECK_PATH, JSON.stringify({
     timestamp: new Date().toISOString(),
     checks,
   }, null, 2));
@@ -2325,18 +2326,18 @@ function writeDataFiles(data, blockchainPageData, governorSha, catalog, options 
   fs.mkdirSync(path.dirname(BLOCKCHAIN_PAGE_DATA_JSX_PATH), { recursive: true });
   fs.mkdirSync(path.dirname(CANONICAL_PAGE_DATA_JSON_PATH), { recursive: true });
   fs.mkdirSync(path.dirname(CANONICAL_PAGE_DATA_JSX_PATH), { recursive: true });
-  fs.writeFileSync(OUTPUT_JSON_PATH, JSON.stringify(artifacts.files[OUTPUT_JSON_PATH].value, null, 2));
-  fs.writeFileSync(OUTPUT_JSX_PATH, artifacts.files[OUTPUT_JSX_PATH].value);
-  fs.writeFileSync(
+  atomicWrite(OUTPUT_JSON_PATH, JSON.stringify(artifacts.files[OUTPUT_JSON_PATH].value, null, 2));
+  atomicWrite(OUTPUT_JSX_PATH, artifacts.files[OUTPUT_JSX_PATH].value);
+  atomicWrite(
     BLOCKCHAIN_PAGE_DATA_JSON_PATH,
     JSON.stringify(artifacts.files[BLOCKCHAIN_PAGE_DATA_JSON_PATH].value, null, 2),
   );
-  fs.writeFileSync(BLOCKCHAIN_PAGE_DATA_JSX_PATH, artifacts.files[BLOCKCHAIN_PAGE_DATA_JSX_PATH].value);
-  fs.writeFileSync(
+  atomicWrite(BLOCKCHAIN_PAGE_DATA_JSX_PATH, artifacts.files[BLOCKCHAIN_PAGE_DATA_JSX_PATH].value);
+  atomicWrite(
     CANONICAL_PAGE_DATA_JSON_PATH,
     JSON.stringify(artifacts.files[CANONICAL_PAGE_DATA_JSON_PATH].value, null, 2),
   );
-  fs.writeFileSync(CANONICAL_PAGE_DATA_JSX_PATH, artifacts.files[CANONICAL_PAGE_DATA_JSX_PATH].value);
+  atomicWrite(CANONICAL_PAGE_DATA_JSX_PATH, artifacts.files[CANONICAL_PAGE_DATA_JSX_PATH].value);
 
   return {
     contractAddresses: artifacts.contractAddresses,

@@ -32,20 +32,20 @@ import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx
 import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>Every AI pipeline on the Livepeer network, with the warm model, minimum VRAM, and architecture support for each.</Tip>
+  <Tip>Every AI pipeline on the Livepeer Network, with the warm model, minimum VRAM, and architecture support for each.</Tip>
 </CenteredContainer>
 
 ---
 
-The Livepeer network supports three pipeline categories: batch AI (request-response), real-time AI (live video transformation), and BYOC (any Python model in a container). The native pipelines run inside `livepeer/ai-runner`; real-time pipelines run on ComfyStream; BYOC runs whatever you ship.
+The Livepeer Network supports three pipeline categories: batch AI (request-response), real-time AI (live video transformation), and BYOC (any Python model in a container). The native pipelines run inside `livepeer/ai-runner`; real-time pipelines run on ComfyStream; BYOC runs whatever you ship.
 
-This page lists the architectures each pipeline accepts, the warm model orchestrators keep loaded, and minimum VRAM. Status reflects the state of the network at the page's `lastVerified` date. For the live pipeline catalogue and recent additions, see the `livepeer/ai-runner` release notes.
+This page lists the architectures each pipeline accepts, the warm model Orchestrators keep loaded, and minimum VRAM. Status reflects the state of the network at the page's `lastVerified` date. For the live pipeline catalogue and recent additions, see the `livepeer/ai-runner` release notes.
 
 <CustomDivider />
 
 ## Batch AI Pipelines
 
-Batch pipelines accept a request, process it, and return a result. They use the AI Jobs API via a gateway endpoint. The activation path is in the <LinkArrow href="/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart" label="AI quickstart" newline={false} />.
+Batch pipelines accept a request, process it, and return a result. They use the AI Jobs API via a Gateway endpoint. The activation path is in the <LinkArrow href="/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart" label="AI quickstart" newline={false} />.
 
 | Pipeline | Endpoint | Supported architectures | Warm model | Min VRAM | Status |
 |---|---|---|---|---|---|
@@ -59,7 +59,7 @@ Batch pipelines accept a request, process it, and return a result. They use the 
 | Segment Anything 2 | `POST /segment-anything-2` | SAM 2 (Meta AI) | `facebook/sam2-hiera-large` | 6 GB | Beta |
 | LLM | `POST /llm` | Any Ollama-compatible model (Llama, Mistral, Gemma, Qwen) | `meta-llama/Meta-Llama-3.1-8B-Instruct` | 8 GB | Beta |
 
-**Warm model.** During the Beta phase, orchestrators keep one model per pipeline in GPU memory at all times. A warm model processes the request immediately. Cold models incur a load time between 30 seconds and a few minutes depending on model size and GPU. See <LinkArrow href="/v2/developers/guides/observability-and-debugging/job-debugging" label="job debugging" newline={false} />.
+**Warm model.** During the Beta phase, Orchestrators keep one model per pipeline in GPU memory at all times. A warm model processes the request immediately. Cold models incur a load time between 30 seconds and a few minutes depending on model size and GPU. See <LinkArrow href="/v2/developers/guides/observability-and-debugging/job-debugging" label="job debugging" newline={false} />.
 
 <CustomDivider />
 
@@ -73,7 +73,7 @@ Batch pipelines accept a request, process it, and return a result. They use the 
 
 **Audio to text.** Returns a full transcript with per-chunk timestamps. Supported file types: `mp4`, `webm`, `mp3`, `flac`, `wav`, `m4a`. Maximum request size: 50 MB. Uses `openai/whisper-large-v3` as the default warm model.
 
-**Text to speech.** Uses `parler-tts/parler-tts-large-v1`. Voice characteristics are customised via the `description` parameter (speaker identity, speaking style, audio quality). Maximum input text length around 600 characters per the Parler-TTS training default; longer text needs chunking. Requires a pipeline-specific AI Runner container; orchestrators must opt in by pulling `livepeer/ai-runner:text-to-speech`.
+**Text to speech.** Uses `parler-tts/parler-tts-large-v1`. Voice characteristics are customised via the `description` parameter (speaker identity, speaking style, audio quality). Maximum input text length around 600 characters per the Parler-TTS training default; longer text needs chunking. Requires a pipeline-specific AI Runner container; Orchestrators must opt in by pulling `livepeer/ai-runner:text-to-speech`.
 
 **Segment Anything 2.** Image segmentation in the current version. Returns masks, scores, and logits.
 
@@ -91,7 +91,7 @@ Real-time pipelines process live video streams frame-by-frame. They use the tric
 
 VRAM source: the <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview" label="ComfyStream overview" newline={false} />. Headroom matters: a workflow that runs at 12 GB may stutter under load that 16 GB absorbs cleanly. StreamDiffusion with SD 1.5 one-step runs in the 8-12 GB range per community testing; SDXL with TensorRT pushes 16-24 GB.
 
-The live-video-to-video pipeline is served by ComfyStream. The pipeline type in go-livepeer is `live-video-to-video`. It is not accessible via the standard AI Jobs API; it requires a real-time connection to a gateway that has the pipeline enabled.
+The live-video-to-video pipeline is served by ComfyStream. The pipeline type in go-livepeer is `live-video-to-video`. It is not accessible via the standard AI Jobs API; it requires a real-time connection to a Gateway that has the pipeline enabled.
 
 For supported ComfyStream nodes, pipeline modes, and performance tuning, see <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview" label="ComfyStream overview" newline={false} />.
 
@@ -105,7 +105,7 @@ BYOC is a container onboarding mechanism, not a pipeline type. Any model that ru
 |---|---|---|---|---|
 | BYOC via PyTrickle | Any Python model | Trickle streaming | Determined by the model | Beta |
 
-With BYOC, model support is bounded by the container, not the network. Implement a `FrameProcessor` in Python, wrap it with PyTrickle's `StreamServer`, and register it with an orchestrator. The network routes live-video-to-video jobs (or any capability you register) to the container. See <LinkArrow href="/v2/developers/build/compute/byoc/overview" label="BYOC overview" newline={false} />.
+With BYOC, model support is bounded by the container, not the network. Implement a `FrameProcessor` in Python, wrap it with PyTrickle's `StreamServer`, and register it with an Orchestrator. The network routes live-video-to-video jobs (or any capability you register) to the container. See <LinkArrow href="/v2/developers/build/compute/byoc/overview" label="BYOC overview" newline={false} />.
 
 <CustomDivider />
 
@@ -113,15 +113,15 @@ With BYOC, model support is bounded by the container, not the network. Implement
 
 **Warm model.** A model already loaded in GPU VRAM. Requests process immediately.
 
-**Cold model.** A model not currently in VRAM. The orchestrator downloads and loads it before processing. Load times range from 30 seconds (small models on fast storage) to a few minutes (large diffusion models on slower disks).
+**Cold model.** A model not currently in VRAM. The Orchestrator downloads and loads it before processing. Load times range from 30 seconds (small models on fast storage) to a few minutes (large diffusion models on slower disks).
 
 Minimising cold-start latency:
 
 - Use the published warm model for each pipeline when latency matters
-- Request a specific model via `model_id` and coordinate with the orchestrator to keep it warm
-- For production workloads needing consistent latency, run your own gateway and orchestrator with the target model pre-loaded
+- Request a specific model via `model_id` and coordinate with the Orchestrator to keep it warm
+- For production workloads needing consistent latency, run your own Gateway and Orchestrator with the target model pre-loaded
 
-Orchestrators advertise their warm models to the gateway. When a `model_id` is requested, the gateway routes to an orchestrator that has the model warm. If none does, the request holds until a cold-start completes or times out.
+Orchestrators advertise their warm models to the Gateway. When a `model_id` is requested, the Gateway routes to an Orchestrator that has the model warm. If none does, the request holds until a cold-start completes or times out.
 
 <CustomDivider />
 
@@ -140,7 +140,7 @@ curl -X POST "https://<GATEWAY_URL>/text-to-image" \
   }'
 ```
 
-If `model_id` is omitted, the gateway uses whatever warm model the selected orchestrator has loaded. For a specific model not in the verified list, submit a feature request to add it.
+If `model_id` is omitted, the Gateway uses whatever warm model the selected Orchestrator has loaded. For a specific model not in the verified list, submit a feature request to add it.
 
 The LLM pipeline uses Hugging Face model paths (e.g. `meta-llama/Meta-Llama-3.1-8B-Instruct`). The Ollama runner maps the path internally to the Ollama model name (e.g. `llama3.1:8b`); the developer never touches the mapping.
 

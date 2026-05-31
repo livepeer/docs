@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     governance
  * @niche       catalogs
- * @purpose     
+ * @purpose     Generates the snippets root registry from the live snippets filesystem plus structured folder metadata embedded in snippets/guide.mdx.
  * @description Generates the snippets root registry from the live snippets filesystem plus structured folder metadata embedded in snippets/guide.mdx.
  * @mode        generate
  * @pipeline    manual, P3
@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   buildGeneratedFrontmatterLines,
   buildGeneratedHiddenBannerLines,
@@ -352,7 +353,7 @@ function buildRegistryContent() {
 function writeOutput(content) {
   const fullPath = path.join(REPO_ROOT, OUTPUT_PATH);
   fs.mkdirSync(path.dirname(fullPath), { recursive: true });
-  fs.writeFileSync(fullPath, content);
+  atomicWrite(fullPath, content);
 }
 
 function run(argv = process.argv.slice(2)) {

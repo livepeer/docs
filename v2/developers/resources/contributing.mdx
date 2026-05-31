@@ -30,7 +30,7 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 
 <CustomDivider />
 
-The Livepeer protocol node is `go-livepeer`. It is the entry point for all protocol contributions: video transcoding, AI pipeline integration, payment mechanics, and on-chain interactions. The local testnet simulates the full network on your machine.
+The Livepeer Protocol node is `go-livepeer`. It is the entry point for all protocol contributions: video transcoding, AI pipeline integration, payment mechanics, and on-chain interactions. The local testnet simulates the full network on your machine.
 
 <CustomDivider />
 
@@ -38,12 +38,12 @@ The Livepeer protocol node is `go-livepeer`. It is the entry point for all proto
 
 - **Go 1.21 or later** -- `go version`
 - **Docker** -- required for AI worker development
-- **ffmpeg** -- for generating test video streams
+- **FFmpeg** -- for generating test video streams
 - **git**
 
 Optional: NVIDIA GPU with CUDA 12+ for AI pipeline testing.
 
-Install ffmpeg:
+Install FFmpeg:
 
 ```bash
 # macOS
@@ -100,7 +100,7 @@ sudo apt-get install ffmpeg
   </StyledStep>
 
   <StyledStep title="Deploy testnet contracts" icon="file-contract">
-    Deploy the Livepeer protocol contracts to your local Ethereum node:
+    Deploy the Livepeer Protocol contracts to your local Ethereum node:
 
     ```bash
     cd docker
@@ -114,7 +114,7 @@ sudo apt-get install ffmpeg
   </StyledStep>
 
   <StyledStep title="Start an orchestrator" icon="server">
-    Open a new terminal. Start `go-livepeer` in orchestrator mode pointing at your local Ethereum node:
+    Open a new terminal. Start `go-livepeer` in Orchestrator mode pointing at your local Ethereum node:
 
     ```bash
     ./livepeer \
@@ -126,7 +126,7 @@ sudo apt-get install ffmpeg
       -serviceAddr 127.0.0.1:8935
     ```
 
-    The orchestrator starts on `127.0.0.1:8935` and registers with the local network. You should see:
+    The Orchestrator starts on `127.0.0.1:8935` and registers with the local network. You should see:
 
     ```
     [INFO] Orchestrator registered: 127.0.0.1:8935
@@ -135,7 +135,7 @@ sudo apt-get install ffmpeg
   </StyledStep>
 
   <StyledStep title="Start a gateway" icon="gateway">
-    Open a third terminal. Start `go-livepeer` in gateway mode:
+    Open a third terminal. Start `go-livepeer` in Gateway mode:
 
     ```bash
     ./livepeer \
@@ -146,11 +146,11 @@ sudo apt-get install ffmpeg
       -orchAddr 127.0.0.1:8935
     ```
 
-    The gateway connects to the local orchestrator and is ready to accept jobs on `http://127.0.0.1:8935`.
+    The Gateway connects to the local Orchestrator and is ready to accept jobs on `http://127.0.0.1:8935`.
   </StyledStep>
 
   <StyledStep title="Submit a test job" icon="flask">
-    Send a test transcoding job to the gateway using ffmpeg:
+    Send a test transcoding job to the Gateway using FFmpeg:
 
     ```bash
     # Generate a 10-second test stream
@@ -161,7 +161,7 @@ sudo apt-get install ffmpeg
     # The gateway transcodes it and outputs to a local HLS segment
     ```
 
-    Check the orchestrator terminal -- you should see job processing logs. Check the gateway terminal for segment delivery confirmation.
+    Check the Orchestrator terminal -- you should see job processing logs. Check the Gateway terminal for segment delivery confirmation.
   </StyledStep>
 
 </StyledSteps>

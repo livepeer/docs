@@ -3,14 +3,14 @@
  * @script      generate-llms-files
  * @type        generator
  * @concern     discoverability
- * @niche       llm
- * @purpose     
- * @description * @mode        read-only
+ * @niche       llms-files
+ * @purpose     Generate the llms.txt + llms-full.txt files at repo root per the llms.txt convention — gives AI assistants a single curated entrypoint listing every v2/ page with title, URL, and one-line summary so they can answer "what's documented?" without crawling
+ * @description Reads docs.json navigation + per-page frontmatter (title, description, sidebarTitle). llms.txt = short index (one line per page). llms-full.txt = same index + first-paragraph excerpt per page. --check validates committed files match the regen output; --write regenerates. Pairs with dispatch-llms-files.js.
  * @mode        generate
- * @pipeline    manual, P6
- * @scope       operations/scripts, docs.json, v2
- * @usage       node operations/scripts/generators/ai/llm/generate-llms-files.js [flags]
- * @policy      * @purpose-statement
+ * @pipeline    P3 (PR drift check), P4 (post-merge regen) via dispatch-llms-files.js
+ * @scope       docs.json, v2/ frontmatter → llms.txt, llms-full.txt (repo root)
+ * @usage       node operations/scripts/generators/ai/llm/generate-llms-files.js [--check|--write]
+ * @policy      D-GOV-03 (drift-check via --check); llms.txt convention (https://llmstxt.org)
  */
 
 const fs = require('fs');
@@ -18,6 +18,7 @@ const path = require('path');
 const { pathToFileURL } = require('url');
 const { execSync } = require('child_process');
 const yaml = require('../../../../../tools/lib/bootstrap/load-js-yaml');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const BASE_URL = 'https://docs.livepeer.org/';
 const DOCS_JSON = 'docs.json';
@@ -480,7 +481,7 @@ async function getPageData(route, cache, missingRoutes) {
 
 function writeFile(fileName, contents) {
   const targetPath = path.join(REPO_ROOT, fileName);
-  fs.writeFileSync(targetPath, contents);
+  atomicWrite(targetPath, contents);
 }
 
 function readFile(fileName) {

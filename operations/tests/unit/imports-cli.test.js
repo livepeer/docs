@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            imports-cli.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @type              validator
  * @purpose           qa:import-integrity
@@ -99,6 +102,37 @@ function runTests() {
       );
 
       const result = subject.runTests({ files: [markdownPath], scope: 'repo', dryRun: true });
+      assert.strictEqual(result.passed, true);
+      assert.strictEqual(result.errors.length, 0);
+    } finally {
+      cleanupFixtureDir(fixtureDir);
+    }
+  });
+
+  runCase('Ignores imports inside indented MDX code fences', () => {
+    const fixtureDir = createFixtureDir();
+    try {
+      const pagePath = writeFixture(
+        fixtureDir,
+        'docs/page.mdx',
+        [
+          '---',
+          'title: Code sample',
+          '---',
+          '',
+          'import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"',
+          '',
+          '<Step title="Example">',
+          '  ```tsx',
+          "  import { useState } from 'react';",
+          "  import App from './App';",
+          '  ```',
+          '</Step>',
+          ''
+        ].join('\n')
+      );
+
+      const result = subject.runTests({ files: [pagePath], dryRun: true });
       assert.strictEqual(result.passed, true);
       assert.strictEqual(result.errors.length, 0);
     } finally {

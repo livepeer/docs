@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script            audit-styles
- * @category          validator
- * @purpose           qa:style-governance
- * @scope             v2-content,snippets-components
- * @owner             docs
- * @needs             R-STYLE-GOV
- * @purpose-statement Scans MDX pages and JSX components for style governance violations. Reports inline styles, legacy tokens, hardcoded hex, literal spacing, mermaid hardcoded inits, and focus removal.
- * @pipeline          P1 (pre-commit, staged), P3 (PR checks), P5 (weekly audit)
- * @dualmode          --dry-run (report only) | --json (structured output)
- * @usage             node tools/scripts/validators/styles/audit-styles.js --dry-run
+ * @script      audit-styles
+ * @type        validator
+ * @concern     brand
+ * @niche       style-tokens
+ * @purpose     Scan v2 MDX and snippets/components JSX for style-governance violations (inline styles, hardcoded hex/spacing, legacy tokens, mermaid hardcoded inits, focus removal) — broader coverage than the canonical components-only audit
+ * @description Single audit covering both content (v2 MDX) and components (snippets/components/*.jsx). Reports six violation categories with file/line evidence and JSON output. Pairs with tools/scripts/remediators/styles/remediate-styles.js. Not yet in the dispatch-style-tokens.js canonical pipeline — see workspace/reports/script-audit/brand/review-packet.md for migration plan.
+ * @mode        scan
+ * @pipeline    P1 (pre-commit), P3 (PR), P5 (weekly) — currently invoked via styles-engineering-guide.mdx, not the canonical pipeline
+ * @scope       v2/ MDX, snippets/components/*.jsx
+ * @usage       node tools/scripts/validators/styles/audit-styles.js [--dry-run] [--json]
+ * @policy      D-GOV-03 (detect-repair-verify); D-ACT-06 (note: currently outside operations/ — migration tracked)
  */
 
 const fs = require('fs');

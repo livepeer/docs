@@ -38,14 +38,14 @@ import { CardTitleTextWithArrow, CustomCardTitle, Subtitle } from '/snippets/com
 import { ValueResponseField } from '/snippets/components/displays/response-fields/ResponseField.jsx'
 
 <CenteredContainer style={{ width: '90%' }}>
-  <Tip>The protocol coordinates work and secures the network through five mechanisms: rounds, staking and delegation, rewards, probabilistic micropayments, and upgradeability. Video and AI workloads share the same payment rail but follow different incentive paths.</Tip>
+  <Tip>The protocol coordinates work and secures the network through five mechanisms: rounds, staking and delegation, rewards, Probabilistic Micropayments, and upgradeability. Video and AI workloads share the same payment rail but follow different incentive paths.</Tip>
 </CenteredContainer>
 
-The Livepeer protocol secures a decentralised marketplace for video and AI compute through a tightly coupled set of smart contracts on Arbitrum One. These contracts encode five mechanisms that together turn LPT into work, ETH into operator revenue, and stake into a security guarantee.
+The Livepeer Protocol secures a decentralised marketplace for video and AI compute through a tightly coupled set of smart contracts on Arbitrum One. These contracts encode five mechanisms that together turn LPT into work, ETH into operator revenue, and stake into a security guarantee.
 
 This page explains each mechanism, names the contract that implements it, and surfaces the one architectural choice that catches most readers off guard: video and AI pipelines have the same network footprint but a different relationship with the protocol.
 
-<CustomDivider middleText="Objectives" />
+<CustomDivider />
 
 ## What the mechanisms do
 
@@ -64,7 +64,7 @@ Each mechanism exists to solve a specific coordination problem. Naming the probl
 
 The four economic mechanisms (rounds, staking, rewards, payments) coordinate how operators are selected, paid, and held accountable. The fifth (upgradeability) makes the first four governable. For the contracts behind each mechanism, see <LinkArrow href="/v2/about/protocol/blockchain-contracts" label="Blockchain Contracts" newline={false} />.
 
-<CustomDivider middleText="Video vs AI" />
+<CustomDivider />
 
 ## Video and AI take different paths
 
@@ -74,7 +74,7 @@ The single most important architectural fact about the protocol is that video tr
 The video transcoding system and AI system are architecturally separate and operate independently.
 </FrameQuote>
 
-Video Orchestrators stake LPT, compete for the active set, call `reward()` to mint inflationary LPT, and distribute earnings to delegators. AI services are a directory of capability endpoints. They use the same Gateway-to-Orchestrator routing and the same TicketBroker payment flow, but they do not participate in the staking pool, the active set, or the inflation rewards. This is by design: the AI subnet was launched without imposing the staking gate, so that AI capacity could grow on the network's economic merit before being absorbed into the full economic security model.
+Video Orchestrators stake LPT, compete for the Active Set, call `reward()` to mint inflationary LPT, and distribute earnings to Delegators. AI services are a directory of capability endpoints. They use the same Gateway-to-Orchestrator routing and the same TicketBroker payment flow, but they do not participate in the staking pool, the Active Set, or the inflation rewards. This is by design: the AI subnet was launched without imposing the staking gate, so that AI capacity could grow on the network's economic merit before being absorbed into the full economic security model.
 
 <ScrollableDiagram title="Video vs AI mechanism paths" maxHeight="700px">
 
@@ -117,7 +117,7 @@ flowchart TB
 
 </ScrollableDiagram>
 
-The settlement asset (ETH via probabilistic tickets) and the orchestrator software are common to both pipelines. The staking, active set election, and inflation rewards are video-only.
+The settlement asset (ETH via probabilistic tickets) and the Orchestrator software are common to both pipelines. The staking, Active Set election, and inflation rewards are video-only.
 
 <DynamicTableV2
   tableTitle="Mechanism comparison: video vs AI"
@@ -132,9 +132,9 @@ The settlement asset (ETH via probabilistic tickets) and the orchestrator softwa
   ]}
 />
 
-The asymmetry is intentional. Forcing AI orchestrators to acquire and stake LPT before serving inference would have throttled the supply side of a market that did not yet have demand-side product-market fit. Once AI demand stabilises, the question of whether and how to bring AI services under the same staking model is itself a governance question and would be settled by a future LIP.
+The asymmetry is intentional. Forcing AI Orchestrators to acquire and stake LPT before serving inference would have throttled the supply side of a market that did not yet have demand-side product-market fit. Once AI demand stabilises, the question of whether and how to bring AI services under the same staking model is itself a governance question and would be settled by a future LIP.
 
-<CustomDivider middleText="The five mechanisms" />
+<CustomDivider />
 
 ## Mechanism details
 
@@ -147,7 +147,7 @@ Each mechanism is described in three layers: what it coordinates, the contract f
 
 ### Rounds and timing
 
-Rounds are the protocol's clock. Every reward distribution, parameter update, and active set election is gated to round boundaries. Without a round boundary, every contract would need its own time accounting; with one, the protocol can synchronise state changes across actors who never communicate directly.
+Rounds are the protocol's clock. Every reward distribution, parameter update, and Active Set election is gated to round boundaries. Without a round boundary, every contract would need its own time accounting; with one, the protocol can synchronise state changes across actors who never communicate directly.
 
 A round is a fixed number of Arbitrum blocks. The current round must be initialised by an on-chain transaction before reward calls and parameter changes for that round can proceed. {/* REVIEW: confirm current Arbitrum round duration. LIP-83 adjusted roundLength for Ethereum Merge; the post-Confluence value on Arbitrum One is approximately one day. */}
 
@@ -155,9 +155,9 @@ A round is a fixed number of Arbitrum blocks. The current round must be initiali
 
 - Bonding and unbonding state changes take effect in the next round, not the current one
 - Reward distribution is calculated per round based on active stake snapshotted at round start
-- Parameter updates by orchestrators are blocked during the round-end lock period to prevent gambling timing
+- Parameter updates by Orchestrators are blocked during the round-end lock period to prevent gambling timing
 - Earnings can only be claimed for rounds that have been initialised
-- A given orchestrator can call `reward()` at most once per round
+- A given Orchestrator can call `reward()` at most once per round
 
 **Implementation**
 
@@ -168,14 +168,14 @@ The `RoundsManager` contract holds round length, current round number, initialis
     The `roundLength` state variable stores the round length in Arbitrum blocks. It is updated via `setRoundLength()`, callable only by the Controller owner (the Governor).
 
     <ValueResponseField name="initializeRound" label="function" post={["initializeRound()"]}>
-      - Public function callable by any address; typically triggered by orchestrators at the start of each round
+      - Public function callable by any address; typically triggered by Orchestrators at the start of each round
       - Stores the round's block hash, snapshots active stake, unlocks mintable rewards
       - Reverts if the system is paused or the previous round has not yet completed
       - Idempotent: callable only once per round
     </ValueResponseField>
   </Accordion>
   <Accordion title="Round lock period" icon="lock">
-    The lock period is a configurable percentage of the round length. During the lock period, orchestrator parameter updates (`rewardCut`, `feeShare`) are blocked. This prevents an orchestrator from changing its commission rates between the moment delegators choose to bond and the moment rewards are calculated.
+    The lock period is a configurable percentage of the round length. During the lock period, Orchestrator parameter updates (`rewardCut`, `feeShare`) are blocked. This prevents an Orchestrator from changing its commission rates between the moment Delegators choose to bond and the moment rewards are calculated.
   </Accordion>
 </AccordionGroup>
 
@@ -185,15 +185,15 @@ The `RoundsManager` contract holds round length, current round number, initialis
 
 ### Staking and delegation
 
-Staking is how the protocol turns LPT into the right to perform work. An orchestrator without staked LPT cannot enter the active set; an orchestrator without delegated LPT typically cannot stay in it. Bonding is the same operation for both: the difference is whether you bond to your own address (self-stake) or to someone else's (delegation).
+Staking is how the protocol turns LPT into the right to perform work. An Orchestrator without staked LPT cannot enter the Active Set; an Orchestrator without delegated LPT typically cannot stay in it. Bonding is the same operation for both: the difference is whether you bond to your own address (self-stake) or to someone else's (delegation).
 
-The active set is a fixed-size, stake-sorted pool of orchestrators eligible to receive video jobs and call `reward()` each round. Position in the pool is the price-discovery mechanism: capital flows toward operators who attract delegations, which attracts more work, which attracts more delegations.
+The Active Set is a fixed-size, stake-sorted pool of Orchestrators eligible to receive video jobs and call `reward()` each round. Position in the pool is the price-discovery mechanism: capital flows toward operators who attract delegations, which attracts more work, which attracts more delegations.
 
 **Mechanism summary**
 
-- Orchestrators bond LPT to their own address to register; total bonded stake (self plus delegated) determines active set position
-- Delegators bond LPT to an orchestrator of their choice and share in that orchestrator's rewards and fees, less the orchestrator's commission
-- Both delegators and orchestrators inherit voting power on the LivepeerGovernor in proportion to bonded stake; delegators may override their orchestrator's vote on any individual proposal
+- Orchestrators bond LPT to their own address to register; total bonded stake (self plus delegated) determines Active Set position
+- Delegators bond LPT to an Orchestrator of their choice and share in that Orchestrator's rewards and fees, less the Orchestrator's commission
+- Both Delegators and Orchestrators inherit voting power on the LivepeerGovernor in proportion to bonded stake; Delegators may override their Orchestrator's vote on any individual proposal
 - Unbonding triggers a waiting period (`unbondingPeriod` rounds) before stake can be withdrawn, preventing instantaneous flight from a slashed or failing operator
 
 **Key functions** (BondingManager)
@@ -210,10 +210,10 @@ The active set is a fixed-size, stake-sorted pool of orchestrators eligible to r
 />
 
 <Info>
-**Slashing exists in the contract but is not currently active.** `slashTranscoder()` is implemented in BondingManager, but the Verifier role required to call it is set to the null address. Misbehaviour is currently disciplined economically through delegator flight rather than through automated stake forfeiture. Re-enabling slashing would require a governance proposal to configure a Verifier and update compatibility paths. AI services do not have a slashing mechanism at the protocol layer and would be governed under any future video re-enablement separately. {/* REVIEW: confirm slashing remains disabled and that the Verifier role is still set to 0x000. SME: Rick. */}
+**Slashing exists in the contract but is not currently active.** `slashTranscoder()` is implemented in BondingManager, but the Verifier role required to call it is set to the null address. Misbehaviour is currently disciplined economically through Delegator flight rather than through automated stake forfeiture. Re-enabling slashing would require a governance proposal to configure a Verifier and update compatibility paths. AI services do not have a slashing mechanism at the protocol layer and would be governed under any future video re-enablement separately. {/* REVIEW: confirm slashing remains disabled and that the Verifier role is still set to 0x000. SME: Rick. */}
 </Info>
 
-<Tip>**AI services do not stake.** The AIServiceRegistry is a discovery contract, not a bonding pool. AI orchestrators advertise capabilities and serve jobs; they do not enter the active set or earn inflationary LPT.</Tip>
+<Tip>**AI services do not stake.** The AIServiceRegistry is a discovery contract, not a bonding pool. AI Orchestrators advertise capabilities and serve jobs; they do not enter the Active Set or earn inflationary LPT.</Tip>
 
 </Tab>
 
@@ -221,7 +221,7 @@ The active set is a fixed-size, stake-sorted pool of orchestrators eligible to r
 
 ### Rewards and inflation
 
-The reward system answers two questions in one mechanism: how much new LPT enters circulation each round, and how that LPT is divided between operators, delegators, and the treasury. The answers are coupled, because dilution is the cost of paying the security budget.
+The reward system answers two questions in one mechanism: how much new LPT enters circulation each round, and how that LPT is divided between operators, Delegators, and the treasury. The answers are coupled, because dilution is the cost of paying the security budget.
 
 **Dynamic inflation**
 
@@ -235,7 +235,7 @@ The mechanic is a feedback loop: the protocol pays exactly enough LPT inflation 
 
 **Reward distribution flow**
 
-Each round, every active orchestrator can call `reward()` exactly once. The function performs four operations atomically.
+Each round, every active Orchestrator can call `reward()` exactly once. The function performs four operations atomically.
 
 <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
   <StyledStep title="Mint" icon="circle-plus">
@@ -245,55 +245,55 @@ Each round, every active orchestrator can call `reward()` exactly once. The func
     `treasuryRewardCutRate` of the new LPT is routed to the Treasury contract before any operator distribution. {/* REVIEW: confirm current treasuryRewardCutRate (LIP-92 initial value: 10%; halts at 750,000 LPT balance ceiling). SME: Rick. */}
   </StyledStep>
   <StyledStep title="Orchestrator commission" icon="user-shield">
-    The remaining LPT is allocated proportional to the orchestrator's stake share of the active set. The orchestrator retains its `rewardCut` percentage as commission.
+    The remaining LPT is allocated proportional to the Orchestrator's stake share of the Active Set. The Orchestrator retains its `rewardCut` percentage as commission.
   </StyledStep>
   <StyledStep title="Delegator pool" icon="users">
-    The remainder accrues to delegators in proportion to their bonded stake. Delegators must call `claimEarnings()` to crystallise the accrued LPT into withdrawable balance.
+    The remainder accrues to Delegators in proportion to their bonded stake. Delegators must call `claimEarnings()` to crystallise the accrued LPT into withdrawable balance.
   </StyledStep>
 </StyledSteps>
 
-The reward call is the orchestrator's primary recurring on-chain obligation. An orchestrator that misses a `reward()` call loses that round's inflation share for itself and its delegators, which is the operator-side incentive for high uptime in the absence of slashing.
+The reward call is the Orchestrator's primary recurring on-chain obligation. An Orchestrator that misses a `reward()` call loses that round's inflation share for itself and its Delegators, which is the operator-side incentive for high uptime in the absence of slashing.
 
 **ETH fee distribution**
 
-ETH fees from redeemed winning tickets follow a parallel path. Fees accumulate in the orchestrator's earnings pool, the orchestrator retains its configured `feeShare` portion (the share passed to delegators), and the remainder is delegator-claimable in the same `claimEarnings()` flow.
+ETH fees from redeemed winning tickets follow a parallel path. Fees accumulate in the Orchestrator's earnings pool, the Orchestrator retains its configured `feeShare` portion (the share passed to Delegators), and the remainder is Delegator-claimable in the same `claimEarnings()` flow.
 
-<Note>The naming is a known source of confusion. `feeShare` in the BondingManager is defined as **the percentage of fees paid to delegators by the orchestrator**, not the gateway's cut and not the orchestrator's retained portion. Source: `BondingManager.sol` struct comment.</Note>
+<Note>The naming is a known source of confusion. `feeShare` in the BondingManager is defined as **the percentage of fees paid to Delegators by the Orchestrator**, not the Gateway's cut and not the Orchestrator's retained portion. Source: `BondingManager.sol` struct comment.</Note>
 
 </Tab>
 
 <Tab title="Payments" icon="money-bill-transfer">
 
-### Probabilistic micropayments
+### Probabilistic Micropayments
 
-Probabilistic micropayments are the mechanism that makes streaming-rate compute economically viable on a public chain. Without them, gas cost per job would dwarf the price of the job. With them, settlement cost is amortised across thousands of off-chain tickets per on-chain redemption.
+Probabilistic Micropayments are the mechanism that makes streaming-rate compute economically viable on a public chain. Without them, gas cost per job would dwarf the price of the job. With them, settlement cost is amortised across thousands of off-chain tickets per on-chain redemption.
 
 **Mechanism**
 
-Each ticket is a signed off-chain message with a face value (the payout if the ticket wins) and a win probability (typically a small fraction). Expected value of a ticket equals face value multiplied by win probability, which the gateway sets to match the contracted price of the work performed. Most tickets do not win and never touch the chain. The few that do are redeemed on-chain by the orchestrator, which transfers the face value from the gateway's reserve to the orchestrator's fee pool.
+Each ticket is a signed off-chain message with a face value (the payout if the ticket wins) and a win probability (typically a small fraction). Expected value of a ticket equals face value multiplied by win probability, which the Gateway sets to match the contracted price of the work performed. Most tickets do not win and never touch the chain. The few that do are redeemed on-chain by the Orchestrator, which transfers the face value from the Gateway's reserve to the Orchestrator's fee pool.
 
 <StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
   <StyledStep title="Gateway funds deposit and reserve" icon="wallet">
     Gateway calls `fundDepositAndReserve()` on TicketBroker to lock ETH. Deposit covers active session liquidity; reserve covers redemptions if deposit is exhausted.
   </StyledStep>
   <StyledStep title="Off-chain ticket creation" icon="file-signature">
-    For each unit of work, the gateway signs a ticket with face value, win probability, and recipient parameters. The ticket is sent to the orchestrator over HTTP, never on-chain.
+    For each unit of work, the Gateway signs a ticket with face value, win probability, and recipient parameters. The ticket is sent to the Orchestrator over HTTP, never on-chain.
   </StyledStep>
   <StyledStep title="Ticket validation" icon="shield-check">
     Orchestrator verifies the signature, computes whether the ticket wins using the recipient randomness and the round's stored block hash, and queues winners locally.
   </StyledStep>
   <StyledStep title="On-chain redemption" icon="arrow-up-right-from-square">
-    Orchestrator calls `redeemWinningTicket()` on TicketBroker. The contract validates the ticket against on-chain state, transfers ETH to the orchestrator's fee pool via BondingManager, and emits `WinningTicketRedeemed` and `WinningTicketTransfer` events.
+    Orchestrator calls `redeemWinningTicket()` on TicketBroker. The contract validates the ticket against on-chain state, transfers ETH to the Orchestrator's fee pool via BondingManager, and emits `WinningTicketRedeemed` and `WinningTicketTransfer` events.
   </StyledStep>
 </StyledSteps>
 
 **Why this design**
 
-The probabilistic structure trades away per-payment certainty for amortised settlement cost. Both sides accept the variance because expected value matches the contracted price and the variance reduces with sample size. At streaming volumes, the orchestrator's realised earnings converge to expected earnings within minutes of work, and the gateway's realised cost converges to its budgeted cost within the same window.
+The probabilistic structure trades away per-payment certainty for amortised settlement cost. Both sides accept the variance because expected value matches the contracted price and the variance reduces with sample size. At streaming volumes, the Orchestrator's realised earnings converge to expected earnings within minutes of work, and the Gateway's realised cost converges to its budgeted cost within the same window.
 
 **Withdrawal flow**
 
-A gateway exiting the network calls `unlock()` on TicketBroker, waits the unlock period, then calls `withdraw()` to recover any unredeemed deposit and reserve. This is the gateway-side equivalent of the orchestrator unbonding period: it gives the protocol time to settle outstanding tickets before funds leave.
+A Gateway exiting the network calls `unlock()` on TicketBroker, waits the unlock period, then calls `withdraw()` to recover any unredeemed deposit and reserve. This is the Gateway-side equivalent of the Orchestrator unbonding period: it gives the protocol time to settle outstanding tickets before funds leave.
 
 </Tab>
 
@@ -301,7 +301,7 @@ A gateway exiting the network calls `unlock()` on TicketBroker, waits the unlock
 
 ### Upgradeability
 
-The protocol is designed to evolve. New LIPs alter contract code without forcing operators, gateways, or delegators to migrate to new addresses. The mechanism is a standard proxy pattern coordinated through the Controller registry.
+The protocol is designed to evolve. New LIPs alter contract code without forcing operators, Gateways, or Delegators to migrate to new addresses. The mechanism is a standard proxy pattern coordinated through the Controller registry.
 
 **How upgrades work**
 
@@ -359,7 +359,7 @@ For current parameter values and contract addresses, see <LinkArrow href="/v2/ab
 </Tabs>
 </BorderedBox>
 
-<CustomDivider middleText="How it composes" />
+<CustomDivider />
 
 ## How the mechanisms compose
 
@@ -396,7 +396,7 @@ The composition is the point. A unified set of parameters running in lockstep ac
     LPT supply, bonding maths, and the dual-asset economics that connect the mechanisms above to value flow.
   </Card>
   <Card title="Network Architecture" icon="circle-nodes" href="/v2/about/network/architecture" arrow horizontal>
-    How orchestrator and gateway nodes implement these mechanisms off-chain.
+    How Orchestrator and Gateway nodes implement these mechanisms off-chain.
   </Card>
   <Card title="LIPs Repository" icon="github" href="https://github.com/livepeer/LIPs" arrow horizontal>
     Every parameter on this page is set by a passed LIP. The repository is the canonical record.

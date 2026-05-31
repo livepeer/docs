@@ -1,0 +1,1735 @@
+[
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-banned-words.js",
+    "name": "dispatch-banned-words.js",
+    "tier": "pipeline",
+    "concern": "brand",
+    "niche": "banned-words",
+    "pipelineTag": "P3 (PR), P5 (scheduled)",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for banned-word and banned-phrase detection",
+    "atomics": [
+      "operations/scripts/validators/content/copy/lint-copy.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/validators/content/copy/lint-copy.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+    "name": "dispatch-brand-check.js",
+    "tier": "meta",
+    "concern": "brand",
+    "niche": "meta",
+    "pipelineTag": "P3 (PR)",
+    "mode": "dispatch",
+    "purpose": "PR-time meta dispatcher: bundles all brand pipelines in --mode pr",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-brand.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+    "name": "dispatch-brand-repair.js",
+    "tier": "meta",
+    "concern": "brand",
+    "niche": "meta",
+    "pipelineTag": "manual",
+    "mode": "dispatch",
+    "purpose": "Manual meta dispatcher: brand pipelines in --mode manual (repair only)",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-brand.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+    "name": "dispatch-brand-scan.js",
+    "tier": "meta",
+    "concern": "brand",
+    "niche": "meta",
+    "pipelineTag": "P5/P6",
+    "mode": "dispatch",
+    "purpose": "Scheduled meta dispatcher: brand pipelines in --mode scheduled",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-brand.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-em-dashes.js",
+    "name": "dispatch-em-dashes.js",
+    "tier": "pipeline",
+    "concern": "brand",
+    "niche": "em-dashes",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for em-dash detection and removal in v2 docs",
+    "atomics": [
+      "operations/scripts/remediators/content/style/remediate-em-dashes.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/remediators/content/style/remediate-em-dashes.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-grammar-en-gb.js",
+    "name": "dispatch-grammar-en-gb.js",
+    "tier": "pipeline",
+    "concern": "brand",
+    "niche": "grammar-en-gb",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for UK English grammar enforcement on v2 docs (full lifecycle)",
+    "atomics": [
+      "operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js",
+      "operations/scripts/validators/content/grammar/check-grammar-en-gb.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/validators/content/grammar/check-grammar-en-gb.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-proper-nouns.js",
+    "name": "dispatch-proper-nouns.js",
+    "tier": "pipeline",
+    "concern": "brand",
+    "niche": "proper-nouns",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for proper-noun capitalisation (Livepeer, AI, Gateway, Orchestrator, etc.)",
+    "atomics": [
+      "operations/scripts/remediators/content/style/repair-term-capitalisation.js",
+      "operations/scripts/validators/content/grammar/check-proper-nouns.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/remediators/content/style/repair-term-capitalisation.js",
+      "operations/scripts/validators/content/grammar/check-proper-nouns.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-spelling.js",
+    "name": "dispatch-spelling.js",
+    "tier": "pipeline",
+    "concern": "brand",
+    "niche": "spelling",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for UK spelling enforcement on v2 docs",
+    "atomics": [
+      "operations/scripts/remediators/content/repair/repair-spelling.js",
+      "operations/scripts/remediators/content/style/remediate-us-spelling.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/remediators/content/style/remediate-us-spelling.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-style-tokens.js",
+    "name": "dispatch-style-tokens.js",
+    "tier": "pipeline",
+    "concern": "brand",
+    "niche": "style-tokens",
+    "pipelineTag": "P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for component style-token consistency (no hardcoded colours/spacing)",
+    "atomics": [
+      "operations/scripts/audits/components/library/audit-component-styles.js",
+      "operations/scripts/remediators/components/library/repair-component-styles.js"
+    ],
+    "outputs": [
+      "snippets/components/**"
+    ],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-repair.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/brand/dispatch-voice-register.js",
+    "name": "dispatch-voice-register.js",
+    "tier": "pipeline",
+    "concern": "brand",
+    "niche": "voice-register",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for voice register: assertive voice, no hedging, per-audience phrasing",
+    "atomics": [
+      "operations/scripts/remediators/content/style/remediate-voice-violations.js",
+      "operations/scripts/validators/content/copy/check-voice-register.js",
+      "operations/scripts/validators/content/copy/lint-patterns.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/brand/dispatch-brand-check.js",
+      "operations/scripts/dispatch/content/brand/dispatch-brand-scan.js",
+      "operations/scripts/remediators/content/style/remediate-voice-violations.js",
+      "operations/scripts/validators/content/copy/lint-patterns.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-canonical-sync.js",
+    "name": "dispatch-canonical-sync.js",
+    "tier": "pipeline",
+    "concern": "copy",
+    "niche": "canonical-sync",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Mintlify canonical-sync pipeline (PR check + scheduled drift + manual repair)",
+    "atomics": [
+      "operations/scripts/remediators/content/repair/sync-mintlify-canonical-consumers.js",
+      "operations/scripts/validators/governance/compliance/check-mintlify-canonical-sync.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/config/mintlify-canonical-sync.js",
+      "operations/scripts/dispatch/content/copy/dispatch-copy-check.js",
+      "operations/scripts/dispatch/content/copy/dispatch-copy-repair.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-changelogs.js",
+    "name": "dispatch-changelogs.js",
+    "tier": "pipeline",
+    "concern": "copy",
+    "niche": "changelogs",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for changelogs (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/copy/changelogs/generate-changelog.js"
+    ],
+    "outputs": [
+      "snippets/data/changelogs"
+    ],
+    "consumers": [
+      "snippets/guide.mdx",
+      "snippets/snippets-registry.mdx",
+      "snippets/_workspace/reports/automations-data-audit-2026-04-05.md",
+      "docs-guide/contributing/community-help.mdx",
+      "docs-guide/features/gap-analysis.mdx",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/docs-library/pipelines/data-integration.mdx"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+      "operations/scripts/integrators/copy/changelogs/generate-changelog.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-copy-check.js",
+    "name": "dispatch-copy-check.js",
+    "tier": "meta",
+    "concern": "copy",
+    "niche": "meta",
+    "pipelineTag": "P3",
+    "mode": "dispatch",
+    "purpose": "check meta dispatcher: bundles copy pipelines in --mode pr",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-copy.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-copy-repair.js",
+    "name": "dispatch-copy-repair.js",
+    "tier": "meta",
+    "concern": "copy",
+    "niche": "meta",
+    "pipelineTag": "manual",
+    "mode": "dispatch",
+    "purpose": "repair meta dispatcher: bundles copy pipelines in --mode manual",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-copy.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+    "name": "dispatch-copy-update.js",
+    "tier": "meta",
+    "concern": "copy",
+    "niche": "meta",
+    "pipelineTag": "P5-auto",
+    "mode": "dispatch",
+    "purpose": "update meta dispatcher: bundles copy pipelines in --mode scheduled",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-copy.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-ownerless-language.js",
+    "name": "dispatch-ownerless-language.js",
+    "tier": "pipeline",
+    "concern": "copy",
+    "niche": "ownerless-language",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline for ownerless-repo language enforcement (no \"we\", \"our\", owner-dependent phrasing)",
+    "atomics": [
+      "operations/scripts/remediators/content/style/repair-ownerless-language.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-check.js",
+      "operations/scripts/dispatch/content/copy/dispatch-copy-repair.js",
+      "operations/scripts/remediators/content/style/repair-ownerless-language.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-showcase.js",
+    "name": "dispatch-showcase.js",
+    "tier": "pipeline",
+    "concern": "copy",
+    "niche": "showcase",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for showcase (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/copy/showcase/project-showcase-sync.js"
+    ],
+    "outputs": [
+      "snippets/data/showcase"
+    ],
+    "consumers": [
+      "v2/home/_workspace/archived/showcase-populated.mdx",
+      "v2/resources/documentation-guide/tooling/snippets-inventory.mdx",
+      "v2/internal/rfp/reports/livepeer-docs-v2-report.md",
+      "snippets/composables/pages/home/project-showcase.mdx",
+      "snippets/composables/pages/showcase.mdx",
+      "snippets/guide.mdx",
+      "snippets/snippets-registry.mdx",
+      "snippets/assets/data/n8n/Showcase_Project_Pipeline.json"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+      "operations/scripts/integrators/copy/showcase/project-showcase-sync.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/copy/dispatch-social-feeds.js",
+    "name": "dispatch-social-feeds.js",
+    "tier": "pipeline",
+    "concern": "copy",
+    "niche": "social-feeds",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for social-feeds (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-luma-events.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js"
+    ],
+    "outputs": [
+      "snippets/data/social-feeds"
+    ],
+    "consumers": [
+      "v2/home/solutions/trending.mdx",
+      "v2/resources/documentation-guide/ai-automations/automations-workflows.mdx",
+      "v2/resources/documentation-guide/tooling/snippets-inventory.mdx",
+      "v2/internal/rfp/reports/livepeer-docs-v2-report.md",
+      "v2/solutions/livepeer-studio/community.mdx",
+      "v2/solutions/_workspace/x-deprecated/studio/dep-community.mdx",
+      "v2/solutions/daydream/community.mdx",
+      "v2/community/ecosystem/governance.mdx"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/copy/dispatch-copy-update.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-discord-announcements.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-forum-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-ghost-blog-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-github-discussions.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-github-releases.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-luma-events.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-rss-blog-data.js",
+      "operations/scripts/integrators/copy/social-feeds/fetch-youtube-data.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-ai-sitemap.js",
+    "name": "dispatch-ai-sitemap.js",
+    "tier": "pipeline",
+    "concern": "discoverability",
+    "niche": "ai-sitemap",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for ai-sitemap (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/content/seo/generate-ai-sitemap.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+      "operations/scripts/generators/content/seo/generate-ai-sitemap.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-companions.js",
+    "name": "dispatch-companions.js",
+    "tier": "pipeline",
+    "concern": "discoverability",
+    "niche": "companions",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for companions (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/content/reference/generate-glossary-companions.js",
+      "operations/scripts/validators/governance/ai/check-companion-manifest.js"
+    ],
+    "outputs": [
+      "snippets/data/companions"
+    ],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+    "name": "dispatch-discoverability-check.js",
+    "tier": "meta",
+    "concern": "discoverability",
+    "niche": "meta",
+    "pipelineTag": "P3",
+    "mode": "dispatch",
+    "purpose": "check meta dispatcher: bundles discoverability pipelines in --mode pr",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-discoverability.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+    "name": "dispatch-discoverability-generate.js",
+    "tier": "meta",
+    "concern": "discoverability",
+    "niche": "meta",
+    "pipelineTag": "P4",
+    "mode": "dispatch",
+    "purpose": "generate meta dispatcher: bundles discoverability pipelines in --mode post-merge",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-discoverability.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-repair.js",
+    "name": "dispatch-discoverability-repair.js",
+    "tier": "meta",
+    "concern": "discoverability",
+    "niche": "meta",
+    "pipelineTag": "manual",
+    "mode": "dispatch",
+    "purpose": "repair meta dispatcher: bundles discoverability pipelines in --mode manual",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-discoverability.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": false,
+      "functional": false,
+      "smokeExcluded": true
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-llms-files.js",
+    "name": "dispatch-llms-files.js",
+    "tier": "pipeline",
+    "concern": "discoverability",
+    "niche": "llms-files",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for llms-files (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/ai/llm/generate-llms-files.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-check.js",
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+      "operations/scripts/generators/ai/llm/generate-llms-files.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-og-images.js",
+    "name": "dispatch-og-images.js",
+    "tier": "pipeline",
+    "concern": "discoverability",
+    "niche": "og-images",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for og-images (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/content/seo/generate-og-images.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-generate.js",
+      "operations/scripts/generators/content/seo/generate-og-images.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/discoverability/dispatch-seo-metadata.js",
+    "name": "dispatch-seo-metadata.js",
+    "tier": "pipeline",
+    "concern": "discoverability",
+    "niche": "seo-metadata",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for seo-metadata (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/remediators/content/seo/generate-seo.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/discoverability/dispatch-discoverability-repair.js",
+      "operations/scripts/remediators/content/seo/generate-seo.js"
+    ],
+    "coverage": {
+      "smoke": false,
+      "functional": false,
+      "smokeExcluded": true
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-content-quality.js",
+    "name": "dispatch-content-quality.js",
+    "tier": "pipeline",
+    "concern": "health",
+    "niche": "content-quality",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for content quality (TODO/TBD markers, thin pages, stale content) — full lifecycle",
+    "atomics": [
+      "operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js",
+      "operations/scripts/remediators/content/quality/repair-content-quality.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+      "operations/scripts/remediators/content/quality/repair-content-quality.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+    "name": "dispatch-health-check.js",
+    "tier": "meta",
+    "concern": "health",
+    "niche": "meta",
+    "pipelineTag": "P3 (PR)",
+    "mode": "dispatch",
+    "purpose": "PR-time meta dispatcher: bundles all health pipelines in --mode pr",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-health.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+    "name": "dispatch-health-repair.js",
+    "tier": "meta",
+    "concern": "health",
+    "niche": "meta",
+    "pipelineTag": "manual",
+    "mode": "dispatch",
+    "purpose": "Manual meta dispatcher: bundles health pipelines in --mode manual (repair only)",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-health.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+    "name": "dispatch-health-scan.js",
+    "tier": "meta",
+    "concern": "health",
+    "niche": "meta",
+    "pipelineTag": "P5/P6 (scheduled)",
+    "mode": "dispatch",
+    "purpose": "Scheduled meta dispatcher: bundles all health pipelines in --mode scheduled",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-health.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": false,
+      "functional": false,
+      "smokeExcluded": true
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-openapi-reference.js",
+    "name": "dispatch-openapi-reference.js",
+    "tier": "pipeline",
+    "concern": "health",
+    "niche": "openapi-reference",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for OpenAPI reference drift (full lifecycle)",
+    "atomics": [
+      "operations/scripts/remediators/content/health/repair-openapi-reference.js"
+    ],
+    "outputs": [
+      "v2/api-reference"
+    ],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js",
+      "operations/scripts/remediators/content/health/repair-openapi-reference.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-page-integrity.js",
+    "name": "dispatch-page-integrity.js",
+    "tier": "pipeline",
+    "concern": "health",
+    "niche": "page-integrity",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for page-integrity (links + imports + MDX safety) — full lifecycle",
+    "atomics": [
+      "operations/scripts/audits/content/health/page-imports-audit.js",
+      "operations/scripts/audits/content/health/page-links-audit.js",
+      "operations/scripts/dispatch/content/health/page-integrity-dispatch.js",
+      "operations/scripts/remediators/content/repair/repair-mdx-safe-markdown.js",
+      "operations/scripts/remediators/content/repair/repair-page-imports.js",
+      "operations/scripts/remediators/content/repair/repair-page-links.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/config/docs-path-sync.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-page-rendering.js",
+    "name": "dispatch-page-rendering.js",
+    "tier": "pipeline",
+    "concern": "health",
+    "niche": "page-rendering",
+    "pipelineTag": "P3 (PR), P5 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for page rendering (Puppeteer sweep + broken-link check) — full lifecycle",
+    "atomics": [
+      "operations/scripts/remediators/content/health/repair-broken-links.js",
+      "operations/scripts/validators/content/health/check-broken-links.js",
+      "operations/scripts/validators/content/structure/test-v2-pages.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/remediators/content/health/repair-broken-links.js",
+      "operations/scripts/validators/content/health/check-broken-links.js",
+      "operations/scripts/validators/content/structure/test-v2-pages.js"
+    ],
+    "coverage": {
+      "smoke": false,
+      "functional": false,
+      "smokeExcluded": true
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-page-structure.js",
+    "name": "dispatch-page-structure.js",
+    "tier": "pipeline",
+    "concern": "health",
+    "niche": "page-structure",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for page structure (headers, anchors, descriptions, endings, MDX safety) — full lifecycle",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/remediators/content/structure/repair-anchor-usage.js",
+      "operations/scripts/remediators/content/structure/repair-description-quality.js",
+      "operations/scripts/remediators/content/structure/repair-lint-structure.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": true,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/health/dispatch-wcag.js",
+    "name": "dispatch-wcag.js",
+    "tier": "pipeline",
+    "concern": "health",
+    "niche": "wcag",
+    "pipelineTag": "P3 (PR via --mode pr), P5/P6 (scheduled via --mode scheduled), manual (via --mode manual)",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for WCAG accessibility (full lifecycle)",
+    "atomics": [
+      "operations/scripts/audits/content/health/audit-wcag.js",
+      "operations/scripts/remediators/content/health/repair-wcag.js",
+      "operations/scripts/validators/content/health/check-wcag.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/health/dispatch-health-check.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-repair.js",
+      "operations/scripts/dispatch/content/health/dispatch-health-scan.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-catalogs.js",
+    "name": "dispatch-catalogs.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "catalogs",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for catalogs (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js",
+      "operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js",
+      "operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js"
+    ],
+    "outputs": [
+      "docs-guide/catalog"
+    ],
+    "consumers": [
+      "v2/resources/documentation-guide/catalog/components-catalog.mdx",
+      "v2/resources/documentation-guide/catalog/pages-catalog.mdx",
+      "v2/resources/documentation-guide/catalog/workflows-catalog.mdx",
+      "v2/resources/documentation-guide/catalog/templates-catalog.mdx",
+      "v2/resources/documentation-guide/catalog/ui-templates.mdx",
+      "v2/resources/documentation-guide/catalog/scripts-catalog.mdx",
+      "v2/resources/documentation-guide/component-library/overview.mdx",
+      "v2/resources/documentation-guide/frameworks/component-governance.mdx"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js",
+    "name": "dispatch-component-registry.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "component-registry",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for component-registry (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/audits/components/library/audit-ai-discoverability.js",
+      "operations/scripts/generators/components/library/generate-component-registry.js",
+      "operations/scripts/validators/components/library/check-component-css.js",
+      "operations/scripts/validators/components/library/check-component-health.js",
+      "operations/scripts/validators/components/library/check-component-props.js",
+      "operations/scripts/validators/components/library/check-naming-conventions.js"
+    ],
+    "outputs": [
+      "snippets/components"
+    ],
+    "consumers": [
+      "v2/home/primer.mdx",
+      "v2/home/resources/glossary.mdx",
+      "v2/home/solutions/landscape.mdx",
+      "v2/home/solutions/verticals.mdx",
+      "v2/home/solutions/applications.mdx",
+      "v2/home/about/vision.mdx",
+      "v2/home/about/evolution.mdx",
+      "v2/home/about/benefits.mdx"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/audits/components/library/audit-ai-discoverability.js",
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js",
+      "operations/scripts/validators/components/library/check-component-props.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-config-flags.js",
+    "name": "dispatch-config-flags.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "config-flags",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for config-flags (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js"
+    ],
+    "outputs": [
+      "snippets/data/config-flags"
+    ],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "operations/scripts/integrators/maintenance/data-feeds/fetch-config-flags.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-contract-addresses.js",
+    "name": "dispatch-contract-addresses.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "contract-addresses",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for contract-addresses (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses.js"
+    ],
+    "outputs": [
+      "snippets/data/contract-addresses"
+    ],
+    "consumers": [
+      "v2/delegators/resources/reference/contracts.mdx",
+      "v2/delegators/delegation/bridge-lpt-to-arbitrum.mdx",
+      "v2/about/protocol2/blockchain-contracts.mdx",
+      "v2/about/protocol2/data/blockchain-contracts-links.js",
+      "v2/about/protocol2/data/blockchain-contracts-addresses.js",
+      "v2/about/protocol/blockchain-contracts.mdx",
+      "v2/about/protocol/data/blockchain-contracts-links.js",
+      "v2/about/protocol/data/blockchain-contracts-addresses.js"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js"
+    ],
+    "coverage": {
+      "smoke": false,
+      "functional": false,
+      "smokeExcluded": true
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-contract-shadow.js",
+    "name": "dispatch-contract-shadow.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "contract-shadow",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for contract-shadow (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/maintenance/contracts/fetch-contract-addresses-shadow.js"
+    ],
+    "outputs": [
+      "snippets/data/contract-addresses"
+    ],
+    "consumers": [
+      "v2/delegators/resources/reference/contracts.mdx",
+      "v2/delegators/delegation/bridge-lpt-to-arbitrum.mdx",
+      "v2/about/protocol2/blockchain-contracts.mdx",
+      "v2/about/protocol2/data/blockchain-contracts-links.js",
+      "v2/about/protocol2/data/blockchain-contracts-addresses.js",
+      "v2/about/protocol/blockchain-contracts.mdx",
+      "v2/about/protocol/data/blockchain-contracts-links.js",
+      "v2/about/protocol/data/blockchain-contracts-addresses.js"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-docs-index.js",
+    "name": "dispatch-docs-index.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "docs-index",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for docs-index (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/content/catalogs/generate-docs-index.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-exchanges-data.js",
+    "name": "dispatch-exchanges-data.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "exchanges-data",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for exchanges-data (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js"
+    ],
+    "outputs": [
+      "snippets/data/exchanges"
+    ],
+    "consumers": [
+      "v2/delegators/resources/compendium/exchanges.mdx",
+      "v2/community/_workspace/context-data/community-index.md",
+      "docs-guide/features/data-integrations.mdx",
+      "docs-guide/frameworks/styles-engineering-guide.mdx"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+      "operations/scripts/integrators/maintenance/data-feeds/fetch-exchanges-data.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-large-assets.js",
+    "name": "dispatch-large-assets.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "large-assets",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for large-assets (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/maintenance/assets/sync-large-assets-to-branch.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-check.js",
+    "name": "dispatch-maintenance-check.js",
+    "tier": "meta",
+    "concern": "maintenance",
+    "niche": "meta",
+    "pipelineTag": "P3",
+    "mode": "dispatch",
+    "purpose": "check meta dispatcher: bundles maintenance pipelines in --mode pr",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-maintenance.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js",
+    "name": "dispatch-maintenance-generate.js",
+    "tier": "meta",
+    "concern": "maintenance",
+    "niche": "meta",
+    "pipelineTag": "P4",
+    "mode": "dispatch",
+    "purpose": "generate meta dispatcher: bundles maintenance pipelines in --mode post-merge",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-maintenance.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js",
+    "name": "dispatch-maintenance-update.js",
+    "tier": "meta",
+    "concern": "maintenance",
+    "niche": "meta",
+    "pipelineTag": "P5-auto",
+    "mode": "dispatch",
+    "purpose": "update meta dispatcher: bundles maintenance pipelines in --mode scheduled",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-maintenance.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": false,
+      "functional": false,
+      "smokeExcluded": true
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-release-version.js",
+    "name": "dispatch-release-version.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "release-version",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for release-version (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/integrators/maintenance/release/update-livepeer-release.js"
+    ],
+    "outputs": [
+      "snippets/data/releases"
+    ],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-update.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/content/maintenance/dispatch-sdk-clients.js",
+    "name": "dispatch-sdk-clients.js",
+    "tier": "pipeline",
+    "concern": "maintenance",
+    "niche": "sdk-clients",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for sdk-clients (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/content/sdk/generate-sdk-clients.sh"
+    ],
+    "outputs": [
+      "snippets/sdks"
+    ],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/content/maintenance/dispatch-maintenance-generate.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-action-docs.js",
+    "name": "dispatch-action-docs.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "action-docs",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for action-docs (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [],
+    "outputs": [
+      "workspace/actions-library"
+    ],
+    "consumers": [
+      "docs-guide/features/automations.mdx",
+      "docs-guide/policies/governance-index.mdx",
+      "docs-guide/frameworks/dispatch-pipelines.mdx",
+      "docs-guide/frameworks/github-actions.mdx",
+      "docs-guide/repo-ops/config/repo-config-map.mdx",
+      "ai-tools/ai-skills/create-action/SKILL.md"
+    ],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-generate.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-codex-compliance.js",
+    "name": "dispatch-codex-compliance.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "codex-compliance",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for codex-compliance (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/validators/governance/compliance/validate-codex-task-contract.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-folder-allowlist.js",
+    "name": "dispatch-folder-allowlist.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "folder-allowlist",
+    "pipelineTag": "P2/P3 (PR via --mode pr), P5/P6 (scheduled via --mode scheduled), manual (via --mode manual)",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for D-GOV-08 folder-allowlist enforcement (full lifecycle)",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/audits/governance/repo/audit-folder-allowlist.js",
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js",
+      "operations/scripts/dispatch/governance/dispatch-governance-scan.js",
+      "operations/scripts/dispatch/governance/dispatch-governance-sync.js",
+      "operations/scripts/remediators/governance/repo/repair-folder-allowlist.js",
+      "operations/scripts/validators/governance/repo/check-folder-allowlist.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-governance-check.js",
+    "name": "dispatch-governance-check.js",
+    "tier": "meta",
+    "concern": "governance",
+    "niche": "meta",
+    "pipelineTag": "P3",
+    "mode": "dispatch",
+    "purpose": "check meta dispatcher: bundles governance pipelines in --mode pr",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-governance.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-governance-generate.js",
+    "name": "dispatch-governance-generate.js",
+    "tier": "meta",
+    "concern": "governance",
+    "niche": "meta",
+    "pipelineTag": "P4",
+    "mode": "dispatch",
+    "purpose": "generate meta dispatcher: bundles governance pipelines in --mode post-merge",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-governance-map.js",
+    "name": "dispatch-governance-map.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "governance-map",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for governance-map (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/remediators/governance/compliance/repair-governance-artifacts.js",
+      "operations/scripts/validators/governance/compliance/check-governance-markers.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js",
+      "operations/scripts/dispatch/governance/dispatch-governance-scan.js",
+      "operations/scripts/dispatch/governance/dispatch-governance-sync.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-governance-scan.js",
+    "name": "dispatch-governance-scan.js",
+    "tier": "meta",
+    "concern": "governance",
+    "niche": "meta",
+    "pipelineTag": "P5/P6",
+    "mode": "dispatch",
+    "purpose": "scan meta dispatcher: bundles governance pipelines in --mode scheduled",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-governance.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-governance-sync.js",
+    "name": "dispatch-governance-sync.js",
+    "tier": "meta",
+    "concern": "governance",
+    "niche": "meta",
+    "pipelineTag": "manual",
+    "mode": "dispatch",
+    "purpose": "sync meta dispatcher: bundles governance pipelines in --mode post-merge",
+    "atomics": [],
+    "outputs": [],
+    "consumers": [],
+    "callers": [
+      "dispatch-governance.yml"
+    ],
+    "scriptCallers": [],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-jsdoc-headers.js",
+    "name": "dispatch-jsdoc-headers.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "jsdoc-headers",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for jsdoc-headers (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/remediators/content/classification/add-framework-headers.js",
+      "operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js",
+      "operations/scripts/validators/governance/compliance/check-jsdoc-headers.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js",
+      "operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-new-file-governance.js",
+    "name": "dispatch-new-file-governance.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "new-file-governance",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for new-file-governance (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/remediators/content/classification/add-pagetype-mechanical.js",
+      "operations/scripts/remediators/content/classification/assign-purpose-metadata.js",
+      "operations/scripts/remediators/content/classification/normalise-frontmatter-keys.js",
+      "operations/scripts/validators/governance/compliance/check-new-file-governance.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-pipelines.js",
+    "name": "dispatch-pipelines.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "pipelines",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for pipelines (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/dispatch/governance/pipelines/governance-pipeline.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-scan.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-root-governance.js",
+    "name": "dispatch-root-governance.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "root-governance",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for root-governance (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/governance/reports/generate-repo-governance-status.js",
+      "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+      "operations/scripts/validators/governance/compliance/check-root-governance-sync.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-sync.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-script-inventory.js",
+    "name": "dispatch-script-inventory.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "script-inventory",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for script-inventory (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/remediators/governance/scripts/repair-script-inventory.js",
+      "operations/scripts/validators/governance/pr/audit-script-inventory.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js",
+      "operations/scripts/dispatch/governance/dispatch-governance-scan.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-script-locations.js",
+    "name": "dispatch-script-locations.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "script-locations",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for script-locations (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/validators/governance/compliance/check-script-locations.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-script-registry.js",
+    "name": "dispatch-script-registry.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "script-registry",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for script-registry (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/generators/governance/catalogs/generate-script-registry.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-generate.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-workflow-governance.js",
+    "name": "dispatch-workflow-governance.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "workflow-governance",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for workflow-governance (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/remediators/governance/compliance/add-workflow-governance-headers.js",
+      "operations/scripts/validators/governance/pr/check-workflow-governance.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-check.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  },
+  {
+    "path": "operations/scripts/dispatch/governance/dispatch-workspace-retention.js",
+    "name": "dispatch-workspace-retention.js",
+    "tier": "pipeline",
+    "concern": "governance",
+    "niche": "workspace-retention",
+    "pipelineTag": "P3 (PR), P5/P6 (scheduled), manual",
+    "mode": "dispatch",
+    "purpose": "Pipeline dispatcher for workspace-retention (full lifecycle: detect → repair → verify → escalate)",
+    "atomics": [
+      "operations/scripts/audits/governance/repo/audit-tasks-folders.js"
+    ],
+    "outputs": [],
+    "consumers": [],
+    "callers": [],
+    "scriptCallers": [
+      "operations/scripts/dispatch/governance/dispatch-governance-scan.js"
+    ],
+    "coverage": {
+      "smoke": true,
+      "functional": false,
+      "smokeExcluded": false
+    }
+  }
+]

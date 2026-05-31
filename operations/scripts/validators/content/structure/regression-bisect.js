@@ -4,7 +4,7 @@
  * @type        validator
  * @concern     health
  * @niche       structure
- * @purpose     
+ * @purpose     Uses git bisect with an automated Puppeteer test to binary-search
  * @description Uses git bisect with an automated Puppeteer test to binary-search
  * @mode        check
  * @pipeline    manual diagnostic tool
@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { execSync, spawnSync } = require('child_process');
+const { atomicWrite, registerCleanup } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 let puppeteer;
 try {
@@ -93,7 +94,9 @@ async function ensureServer() {
 }
 
 async function checkRouteForError(route, errorPattern, baseUrl) {
-  const browser = await puppeteer.launch({
+  let browser;
+  registerCleanup(async () => { if (browser) await browser.close().catch(() => {}); });
+  browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
@@ -230,7 +233,7 @@ async function test() {
 test().catch(() => process.exit(125));
 `;
 
-  fs.writeFileSync(testScript, testContent);
+  atomicWrite(testScript, testContent);
   fs.chmodSync(testScript, '755');
 
   console.log('\nStarting git bisect...');

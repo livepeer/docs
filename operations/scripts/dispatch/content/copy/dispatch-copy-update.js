@@ -18,7 +18,9 @@ const REPO_ROOT = process.cwd();
 const { parsePipelineArgs, runAtomic, passThroughFlags } = require(path.join(REPO_ROOT, 'tools/lib/governance/pipeline-mode'));
 
 const MODE = 'scheduled';
-const PIPELINES = ["dispatch-social-feeds.js","dispatch-changelogs.js","dispatch-translations.js","dispatch-showcase.js"].map((f) => path.join(REPO_ROOT, 'operations/scripts/dispatch/content/copy', f));
+// dispatch-translations.js was archived 2026-05-23 (no live v2/cn,es,fr targets). Removed from the
+// update pipeline. Restore from operations/scripts/dispatch/content/copy/x-archive/ if translations work resumes.
+const PIPELINES = ["dispatch-social-feeds.js","dispatch-changelogs.js","dispatch-showcase.js"].map((f) => path.join(REPO_ROOT, 'operations/scripts/dispatch/content/copy', f));
 
 function main() {
   let args; try { args = parsePipelineArgs(process.argv.slice(2)); } catch (e) { console.error(e.message); process.exit(2); }

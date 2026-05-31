@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            repo-audit-pipeline.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             tests/unit, tools/scripts, ai-tools/ai-skills/catalog, ai-tools/agent-packs

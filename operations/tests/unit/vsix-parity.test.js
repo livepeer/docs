@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            vsix-parity.test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           tooling:dev-tools
  * @scope             tests/unit, tools/editor-extensions

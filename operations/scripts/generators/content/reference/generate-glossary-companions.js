@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       reference
- * @purpose     
+ * @purpose     Extracts SearchTable itemsList data from glossary MDX pages
  * @description Companion JSON generator — extracts SearchTable itemsList data from glossary MDX pages
  * @mode        generate
  * @pipeline    CI: generate-ai-companions.yml (push→main), check-ai-companions.yml (PR gate) | manual
@@ -14,6 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 // --- Config ------------------------------------------------------------------
 
@@ -278,7 +279,7 @@ function main() {
       continue;
     }
 
-    fs.writeFileSync(companion, output, 'utf8');
+    atomicWrite(companion, output, 'utf8');
     console.log(`  [WROTE] ${terms.length} terms → ${companionRel}`);
     written++;
   }

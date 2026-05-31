@@ -4,7 +4,7 @@
  * @type        generator
  * @concern     maintenance
  * @niche       documentation
- * @purpose     
+ * @purpose     Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
  * @description Generates published component library MDX pages from the registry. Replaces update-component-library.sh.
  * @mode        generate
  * @pipeline    manual
@@ -15,6 +15,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   VALID_CATEGORIES,
   compactWhitespace,
@@ -181,7 +182,7 @@ function loadEditorialCache() {
 
 function saveEditorialCache(cache) {
   fs.mkdirSync(path.dirname(EDITORIAL_CACHE_PATH), { recursive: true });
-  fs.writeFileSync(EDITORIAL_CACHE_PATH, `${JSON.stringify(cache, null, 2)}\n`, 'utf8');
+  atomicWrite(EDITORIAL_CACHE_PATH, `${JSON.stringify(cache, null, 2)}\n`, 'utf8');
 }
 
 function sha256(value) {
@@ -698,7 +699,7 @@ function buildOutputPaths(args) {
 
 function writeTextFile(filePath, content) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, content, 'utf8');
+  atomicWrite(filePath, content, 'utf8');
 }
 
 function archiveLegacyScript(writeMode) {
@@ -719,7 +720,7 @@ function archiveLegacyScript(writeMode) {
 
   if (writeMode) {
     fs.mkdirSync(path.dirname(ARCHIVE_TARGET_PATH), { recursive: true });
-    fs.writeFileSync(ARCHIVE_TARGET_PATH, archivedContent, 'utf8');
+    atomicWrite(ARCHIVE_TARGET_PATH, archivedContent, 'utf8');
     fs.unlinkSync(ARCHIVE_SOURCE_PATH);
   }
 

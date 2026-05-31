@@ -31,12 +31,12 @@ import { CenteredContainer } from '/snippets/components/wrappers/containers/Cont
 import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
 
 <CenteredContainer preset="readable90">
-  <Tip>Livepeer AI pipelines work as drop-in inference backends for agent frameworks. Agents send standard HTTP requests to a gateway endpoint and receive results without managing GPU infrastructure.</Tip>
+  <Tip>Livepeer AI pipelines work as drop-in inference backends for agent frameworks. Agents send standard HTTP requests to a Gateway endpoint and receive results without managing GPU infrastructure.</Tip>
 </CenteredContainer>
 
 ---
 
-AI agents running on frameworks like elizaOS need inference compute for image generation, audio transcription, vision tasks, and LLM completions. Livepeer provides that compute through its decentralised GPU network. Agents interact with a gateway endpoint using the same request shape as any other client.
+AI agents running on frameworks like elizaOS need inference compute for image generation, audio transcription, vision tasks, and LLM completions. Livepeer provides that compute through its decentralised GPU network. Agents interact with a Gateway endpoint using the same request shape as any other client.
 
 The Agent SPE (Special Purpose Entity), funded by the Livepeer treasury, focuses on integrating Livepeer inference into leading agent frameworks and building tooling for autonomous video agents.
 
@@ -46,7 +46,7 @@ The Agent SPE (Special Purpose Entity), funded by the Livepeer treasury, focuses
 
 Livepeer is integrated into elizaOS as an image generation provider and an LLM provider. Both integrations ship in the elizaOS core repository.
 
-**Image generation provider**: merged in elizaOS v0.1.7-alpha.2 (PR #1525, contributed by the Agent SPE). Agents configured with the Livepeer provider route `GENERATE_IMAGE` actions to a Livepeer gateway endpoint. The provider uses the `text-to-image` pipeline and returns image URLs that the agent can post, embed, or pass to downstream actions.
+**Image generation provider**: merged in elizaOS v0.1.7-alpha.2 (PR #1525, contributed by the Agent SPE). Agents configured with the Livepeer provider route `GENERATE_IMAGE` actions to a Livepeer Gateway endpoint. The provider uses the `text-to-image` pipeline and returns image URLs that the agent can post, embed, or pass to downstream actions.
 
 Configuration in an Eliza character file:
 
@@ -63,9 +63,9 @@ Configuration in an Eliza character file:
 }
 ```
 
-Set `LIVEPEER_GATEWAY_URL` in your environment to point to a gateway. The community gateway at `dream-gateway.livepeer.cloud` works for development.
+Set `LIVEPEER_GATEWAY_URL` in your environment to point to a Gateway. The community Gateway at `dream-gateway.livepeer.cloud` works for development.
 
-**LLM provider**: Livepeer is also available as an LLM provider in elizaOS (PR #2154). This routes the agent's language model calls through the Livepeer `llm` pipeline, which exposes an OpenAI-compatible completions endpoint backed by network orchestrators.
+**LLM provider**: Livepeer is also available as an LLM provider in elizaOS (PR #2154). This routes the agent's language model calls through the Livepeer `llm` pipeline, which exposes an OpenAI-compatible completions endpoint backed by network Orchestrators.
 
 See <LinkArrow href="/v2/developers/build/tutorials/eliza-livepeer-plugin" label="Eliza Livepeer Plugin tutorial" newline={false} /> for a full walkthrough of both integrations.
 
@@ -73,7 +73,7 @@ See <LinkArrow href="/v2/developers/build/tutorials/eliza-livepeer-plugin" label
 
 ## Using AI Pipelines from Agents
 
-Any agent that can make HTTP requests can call Livepeer AI pipelines directly. The access model is the same as for any other developer: POST to a gateway endpoint, receive a result.
+Any agent that can make HTTP requests can call Livepeer AI pipelines directly. The access model is the same as for any other developer: POST to a Gateway endpoint, receive a result.
 
 The nine batch pipelines cover the inference tasks most agents need:
 
@@ -122,7 +122,7 @@ See <LinkArrow href="/v2/developers/build/ai-and-agents/ai-pipelines" label="AI 
 
 ## BYOC Containers for Agents
 
-Agents that need custom inference logic (fine-tuned models, proprietary pipelines, or non-standard modalities) can run as BYOC (Bring Your Own Compute) containers registered with a Livepeer orchestrator. The orchestrator handles capability advertisement, job routing, and probabilistic micropayment settlement. The BYOC container only needs to expose an HTTP endpoint matching the pipeline contract.
+Agents that need custom inference logic (fine-tuned models, proprietary pipelines, or non-standard modalities) can run as BYOC (Bring Your Own Compute) containers registered with a Livepeer Orchestrator. The Orchestrator handles capability advertisement, job routing, and probabilistic micropayment settlement. The BYOC container only needs to expose an HTTP endpoint matching the pipeline contract.
 
 This pattern suits autonomous agents that process jobs continuously instead of on demand: an agent running a persistent embedding pipeline, a custom vision model, or a specialised audio processor registers once and receives routed jobs as demand arrives on the network.
 
@@ -134,7 +134,7 @@ See <LinkArrow href="/v2/developers/build/compute/byoc/overview" label="BYOC Ove
 
 The Agent SPE Phase 2 (funded March 2025, 30,000 LPT) is developing autonomous VTuber agents: AI-driven 3D avatars built on Unreal Engine's MetaHuman technology that stream live to platforms using Livepeer infrastructure. These agents use Livepeer AI pipelines for real-time video transformation, LLM-driven dialogue, and audio synthesis.
 
-The architecture combines the `live-video-to-video` pipeline for real-time avatar rendering with the `llm` pipeline for autonomous response generation and the `text-to-speech` pipeline for voice output. The Livepeer gateway handles stream routing; the orchestrator network provides the inference compute.
+The architecture combines the `live-video-to-video` pipeline for real-time avatar rendering with the `llm` pipeline for autonomous response generation and the `text-to-speech` pipeline for voice output. The Livepeer Gateway handles stream routing; the Orchestrator network provides the inference compute.
 
 This is the primary production use case for agent-driven `live-video-to-video` traffic on the network as of 2025.
 
@@ -178,7 +178,7 @@ The [Eliza Livepeer plugin tutorial](/v2/developers/build/tutorials/eliza-livepe
     arrow
     horizontal
   >
-    Run custom inference containers registered with a Livepeer orchestrator.
+    Run custom inference containers registered with a Livepeer Orchestrator.
   </Card>
   <Card
     title="Real-Time AI"

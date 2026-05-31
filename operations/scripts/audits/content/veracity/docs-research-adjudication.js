@@ -4,7 +4,7 @@
  * @type        audit
  * @concern     health
  * @niche       veracity
- * @purpose     
+ * @purpose     Validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
  * @description Docs research adjudication ledger — validates, records, and summarizes measured review outcomes for the page-content research workflow so trust decisions are based on real usage rather than intuition.
  * @mode        scan
  * @pipeline    manual — experimental research system
@@ -15,6 +15,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const DEFAULT_LEDGER = 'workspace/research/adjudication/page-content-research-outcomes.json';
 const VALID_OUTCOME_CLASSES = new Set([
@@ -346,7 +347,7 @@ function readJson(absPath, fallback = null) {
 
 function writeJson(absPath, value) {
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
-  fs.writeFileSync(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  atomicWrite(absPath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
 function normalizeEntry(entry, index) {
@@ -812,7 +813,7 @@ function main() {
       }
       if (args.reportMd) {
         fs.mkdirSync(path.dirname(path.resolve(repoRoot(), args.reportMd)), { recursive: true });
-        fs.writeFileSync(path.resolve(repoRoot(), args.reportMd), buildMarkdown(summary), 'utf8');
+        atomicWrite(path.resolve(repoRoot(), args.reportMd), buildMarkdown(summary), 'utf8');
       }
       if (!args.quiet) {
         console.log(

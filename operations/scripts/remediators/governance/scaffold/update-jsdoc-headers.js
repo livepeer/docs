@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /**
- * @script      ${scriptName}`,
+ * @script      update-jsdoc-headers
  * @type        remediator
  * @concern     governance
- * @niche       scaffold
- * @purpose     ${purpose}`,
- * @description ${desc}`,
+ * @niche       jsdoc-headers
+ * @purpose     Auto-generate or update the 11-tag JSDoc header on scripts that lack one — derives @script from filename, @type/@concern/@niche from path, @purpose from existing description (or placeholder), so every script meets the JSDoc governance bar
+ * @description Paired remediator for check-jsdoc-headers validator. Iterates scripts under operations/scripts/ and tools/scripts/, infers missing tags from path + existing content, applies a template-string scaffold. --check reports what would change; --write applies. Note: the inline template strings below this header use `${var}` literals — they are template-literal source, not part of this script's own JSDoc.
  * @mode        repair
- * @pipeline    ${pipeline}`,
- * @scope       ${scope}`,
- * @usage       ${usage}`,
- * @policy      ${policy}`);
+ * @pipeline    P6 (scheduled JSDoc backfill via dispatch-jsdoc-headers.js), manual via --files
+ * @scope       operations/scripts/**, tools/scripts/**
+ * @usage       node operations/scripts/remediators/governance/scaffold/update-jsdoc-headers.js [--check|--write] [--files <paths>]
+ * @policy      D-GOV-03 (paired with check-jsdoc-headers)
  */
 
 // Post-remediation verification support (D-GOV-03)
@@ -18,6 +18,7 @@ const VERIFY_MODE = process.argv.includes('--verify');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 
 const WRITE = process.argv.includes('--write');
 const REPO = process.cwd();
@@ -288,7 +289,7 @@ for (const filePath of scripts) {
     }
 
     if (WRITE) {
-      fs.writeFileSync(filePath, newContent, 'utf8');
+      atomicWrite(filePath, newContent, 'utf8');
       console.log(`  ✓ ${rel}`);
     } else {
       console.log(`  [dry-run] ${rel}`);

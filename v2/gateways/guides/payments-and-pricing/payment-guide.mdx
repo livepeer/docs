@@ -57,35 +57,35 @@ import { BorderedBox } from "/snippets/components/wrappers/containers/Containers
 <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
 
 ## Payments Guide
-After initial gateway setup, the next step is configuring how the gateway pays Orchestrators for compute. The right payment path depends on the gateway's operational mode and node type.
+After initial Gateway setup, the next step is configuring how the Gateway pays Orchestrators for compute. The right payment path depends on the Gateway's operational mode and node type.
 
 <AccordionGroup>
-  <Accordion title={<span><Badge color="purple">AI</Badge> Off-chain AI gateway</span>} icon="cloud">
-    The gateway holds no ETH and no Ethereum key. Payments are handled by a connected remote signer or clearinghouse. For testing, use the community signer at `signer.eliteencoder.net`. Once a public clearinghouse reaches GA, this becomes a pure API key sign-up.
+  <Accordion title={<span><Badge color="purple">AI</Badge> Off-chain AI Gateway</span>} icon="cloud">
+    The Gateway holds no ETH and no Ethereum key. Payments are handled by a connected remote signer or clearinghouse. For testing, use the community signer at `signer.eliteencoder.net`. Once a public clearinghouse reaches GA, this becomes a pure API key sign-up.
 
     Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide" label="Clearinghouses" newline={false} />
   </Accordion>
 
-  <Accordion title={<span><Badge color="blue">Video</Badge> On-chain video gateway</span>} icon="link">
-    Video transcoding requires the on-chain self-managed path. The gateway holds an Ethereum keystore, signs PM tickets directly, and needs a funded deposit and reserve on Arbitrum. Remote signing is not supported for video workloads.
+  <Accordion title={<span><Badge color="blue">Video</Badge> On-chain video Gateway</span>} icon="link">
+    Video transcoding requires the on-chain self-managed path. The Gateway holds an Ethereum keystore, signs PM tickets directly, and needs a funded deposit and reserve on Arbitrum. Remote signing is not supported for video workloads.
 
     Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
   </Accordion>
 
-  <Accordion title={<span><Badge color="purple">AI</Badge> On-chain AI gateway</span>} icon="link">
-    AI gateways can also run on-chain, using `-aiServiceRegistry` for automatic orchestrator discovery and self-managed PM tickets. The gateway holds an Ethereum keystore and a funded account, same as a video gateway.
+  <Accordion title={<span><Badge color="purple">AI</Badge> On-chain AI Gateway</span>} icon="link">
+    AI Gateways can also run on-chain, using `-aiServiceRegistry` for automatic Orchestrator discovery and self-managed PM tickets. The Gateway holds an Ethereum keystore and a funded account, same as a video Gateway.
 
     Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
   </Accordion>
 
-  <Accordion title={<span><Badge color="green">Dual</Badge> On-chain dual gateway</span>} icon="link">
-    Because the video component requires on-chain payments, a dual gateway follows the on-chain self-managed path. The AI component uses the same funded account. Fund the gateway, then configure pricing for both video (per-pixel) and AI (per-pipeline).
+  <Accordion title={<span><Badge color="green">Dual</Badge> On-chain dual Gateway</span>} icon="link">
+    Because the video component requires on-chain payments, a dual Gateway follows the on-chain self-managed path. The AI component uses the same funded account. Fund the Gateway, then configure pricing for both video (per-pixel) and AI (per-pipeline).
 
     Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
   </Accordion>
 
-  <Accordion title={<span><Badge color="purple">AI</Badge> SDK or non-Go gateway</span>} icon="code">
-    Non-Go gateways (Python, mobile, browser) use the remote signer path via the Livepeer SDK. The SDK handles PM signing interaction with the remote signer. The gateway holds no Ethereum dependency.
+  <Accordion title={<span><Badge color="purple">AI</Badge> SDK or non-Go Gateway</span>} icon="code">
+    Non-Go Gateways (Python, mobile, browser) use the remote signer path via the Livepeer SDK. The SDK handles PM signing interaction with the remote signer. The Gateway holds no Ethereum dependency.
 
     Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} />
   </Accordion>
@@ -101,7 +101,7 @@ After initial gateway setup, the next step is configuring how the gateway pays O
 
 ## Operational Modes
 
-The gateway's operational mode determines whether the gateway process itself handles Ethereum interactions or delegates them to a remote signer or clearinghouse.
+The Gateway's operational mode determines whether the Gateway process itself handles Ethereum interactions or delegates them to a remote signer or clearinghouse.
 
 <StyledTable variant="accent">
   <TableRow header>
@@ -111,8 +111,8 @@ The gateway's operational mode determines whether the gateway process itself han
   </TableRow>
   <TableRow>
     <TableCell>**Protocol integration**</TableCell>
-    <TableCell>Connects to Livepeer protocol on Arbitrum</TableCell>
-    <TableCell>None - no blockchain interaction at the gateway</TableCell>
+    <TableCell>Connects to Livepeer Protocol on Arbitrum</TableCell>
+    <TableCell>None - no blockchain interaction at the Gateway</TableCell>
   </TableRow>
   <TableRow>
     <TableCell>**Orchestrator discovery**</TableCell>
@@ -125,12 +125,12 @@ The gateway's operational mode determines whether the gateway process itself han
     <TableCell>Remote signer or clearinghouse signs tickets</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**ETH required in gateway**</TableCell>
+    <TableCell>**ETH required in Gateway**</TableCell>
     <TableCell>Yes - deposit + reserve on Arbitrum</TableCell>
     <TableCell>No - held by signer or clearinghouse</TableCell>
   </TableRow>
   <TableRow>
-    <TableCell>**Private key in gateway**</TableCell>
+    <TableCell>**Private key in Gateway**</TableCell>
     <TableCell>Yes</TableCell>
     <TableCell>No</TableCell>
   </TableRow>
@@ -146,7 +146,7 @@ The gateway's operational mode determines whether the gateway process itself han
   </TableRow>
 </StyledTable>
 <Note>
- **Off-chain does not mean free.** Off-chain gateways still pay Orchestrators via PM tickets - the signing and ETH custody are handled by a remote signer or clearinghouse instead of the gateway process itself.
+ **Off-chain does not mean free.** Off-chain Gateways still pay Orchestrators via PM tickets - the signing and ETH custody are handled by a remote signer or clearinghouse instead of the Gateway process itself.
 </Note>
 
 <CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
@@ -158,19 +158,19 @@ Three payment architectures exist. Each downstream page covers setup in full.
 <BorderedBox variant="accent">
     <Tabs>
     <Tab title="Self-managed" icon="key">
-        The gateway holds an Ethereum keystore with a funded account on Arbitrum. It signs PM tickets directly. Required for video transcoding and dual gateways.
+        The Gateway holds an Ethereum keystore with a funded account on Arbitrum. It signs PM tickets directly. Required for video transcoding and dual Gateways.
 
         Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/funding-guide" label="Funding Guide" newline={false} />
     </Tab>
 
     <Tab title="Remote signer" icon="shield-check">
-        A separate `go-livepeer` service holds the key and signs tickets. The gateway is keyless. Supported for Live AI workloads and SDK-based gateways. Not supported for video transcoding.
+        A separate `go-livepeer` service holds the key and signs tickets. The Gateway is keyless. Supported for Live AI workloads and SDK-based Gateways. Not supported for video transcoding.
 
         Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/remote-signers" label="Remote Signers" newline={false} />
     </Tab>
 
     <Tab title="Clearinghouse" icon="building-columns">
-        A third-party service manages ETH custody, PM signing, and orchestrator settlement. The gateway gets an API key. No public clearinghouse is at general availability as of early 2026.
+        A third-party service manages ETH custody, PM signing, and Orchestrator settlement. The Gateway gets an API key. No public clearinghouse is at general availability as of early 2026.
 
         Next step: <LinkArrow href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide" label="Clearinghouses" newline={false} />
     </Tab>
@@ -183,13 +183,13 @@ Three payment architectures exist. Each downstream page covers setup in full.
 
 <CardGroup cols={2}>
   <Card title="Funding Guide" icon="coins" href="/v2/gateways/guides/payments-and-pricing/funding-guide">
-    Deposit ETH into the TicketBroker contract and set the reserve. Required for on-chain gateways.
+    Deposit ETH into the TicketBroker contract and set the reserve. Required for on-chain Gateways.
   </Card>
   <Card title="Pricing Strategy" icon="chart-line" href="/v2/gateways/guides/payments-and-pricing/pricing-strategy">
-    Set maximum prices per pipeline and model. Controls which Orchestrators the gateway can access.
+    Set maximum prices per pipeline and model. Controls which Orchestrators the Gateway can access.
   </Card>
   <Card title="Remote Signers" icon="shield-check" href="/v2/gateways/guides/payments-and-pricing/remote-signers">
-    Isolate the Ethereum key into a separate signing service. Required for keyless Live AI gateways.
+    Isolate the Ethereum key into a separate signing service. Required for keyless Live AI Gateways.
   </Card>
   <Card title="Clearinghouses" icon="building-columns" href="/v2/gateways/guides/payments-and-pricing/clearinghouse-guide">
     Delegate all ETH management to a third-party clearinghouse.

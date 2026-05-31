@@ -55,6 +55,10 @@ jobs:
           node-version: "20"
       - name: Install dependencies
         run: cd tools && npm ci
+      - name: Stage PR files for scoped checks
+        run: |
+          git diff --name-only -z --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" |
+            xargs -0 -r git add --
       - name: Run health PR meta dispatcher
         env:
           NODE_PATH: tools/node_modules
@@ -84,8 +88,11 @@ jobs:
         env:
           NODE_PATH: tools/node_modules
         run: |
-          FLAGS=""
-          if [[ "${{ inputs.dry_run }}" == "false" ]]; then FLAGS="--write --verify"; fi
+          # Cron defaults to write; manual dispatch can opt into dry-run via inputs.dry_run=true.
+          # Cron triggers leave inputs.dry_run empty, so the previous default-to-dry-run pattern
+          # silently broke scheduled writes. See docs-guide/features/automations.mdx § cron-is-dry-run.
+          FLAGS="--write --verify"
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then FLAGS=""; fi
           node operations/scripts/dispatch/content/health/dispatch-health-scan.js $FLAGS
 
   manual-repair:
@@ -113,7 +120,9 @@ jobs:
           node operations/scripts/dispatch/content/health/dispatch-health-repair.js $FLAGS
       - name: Create PR if files changed
         if: ${{ inputs.dry_run == false }}
-        uses: peter-evans/create-pull-request@v7
+        # peter-evans/create-pull-request v7.0.8 — SHA-pinned (D-GOV-08, supply-chain hardening 2026-05-27)
+        # To bump: look up the SHA for the new tag via `gh api repos/peter-evans/create-pull-request/git/refs/tags/<tag>`
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e
         with:
           title: "chore(health): manual repair sweep"
           commit-message: "chore(health): apply manual repair sweep [skip ci]"

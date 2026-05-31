@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * @script            script-docs-test
+ *  @type validator
+ *  @concern governance
+ *  @niche unit
  * @category          validator
  * @purpose           qa:repo-health
  * @scope             .githooks, .github/scripts, tests, tools/scripts, workspace/scripts, docs-guide/catalog/scripts-catalog.mdx
@@ -111,22 +114,27 @@ const AGGREGATE_DETAILS = {
 // Markers read by this generator:
 //   @catalog-layout  — expected: 'grouped-tables'
 //   @diagram         — expected: 'pipeline-flow' (renders Mermaid chart before tables)
-const TYPE_ORDER = ['audit', 'automation', 'generator', 'validator', 'remediator', 'dispatch'];
+// D-ACT-07 canonical 7 types. Order matches the canonical pipeline flow:
+// audit (scan + report) → generator (produce) → validator (check) → remediator (fix) →
+// integrator (fetch external) → dispatch (orchestrate) → interface (event-driven respond).
+const TYPE_ORDER = ['audit', 'generator', 'validator', 'remediator', 'integrator', 'dispatch', 'interface'];
 const TYPE_ICONS = {
   audit: '🔍',
-  automation: '⚙️',
   generator: '🏭',
   validator: '✅',
   remediator: '🔧',
-  dispatch: '🚦'
+  integrator: '🔌',
+  dispatch: '🚦',
+  interface: '💬'
 };
 const TYPE_LABELS = {
   audit: 'Audits',
-  automation: 'Automations',
   generator: 'Generators',
   validator: 'Validators',
   remediator: 'Remediators',
-  dispatch: 'Dispatch'
+  integrator: 'Integrators',
+  dispatch: 'Dispatch',
+  interface: 'Interfaces'
 };
 
 // Canonical pipeline tiers — normalised from freeform JSDoc @pipeline strings.
@@ -881,10 +889,12 @@ function buildAggregateMarkdown() {
   lines.push(`**Type key:** ${typeKeyParts.join(' · ')}`, '');
 
   // Grouped tables — one ## section per type
+  const renderedTypes = [];
   for (const type of TYPE_ORDER) {
     const section = buildTypeGroupSection(type, registry);
     if (section) {
       lines.push(section, '');
+      renderedTypes.push(type);
     }
   }
 
@@ -895,6 +905,22 @@ function buildAggregateMarkdown() {
   // Unclassified audit accordion
   const unclassifiedSection = buildUnclassifiedAccordion(registry);
   if (unclassifiedSection) lines.push(unclassifiedSection, '');
+
+  // Drift assertion: the May 2026 catalog regression silently dropped 2 of 7
+  // types when the generator was hard-coded to 5. Guard against the next
+  // instance of that bug class — if a canonical type renders zero rows, warn
+  // loudly and (under --strict-catalog or CATALOG_STRICT=1) fail the build.
+  const missingTypes = TYPE_ORDER.filter((t) => !renderedTypes.includes(t));
+  if (missingTypes.length > 0) {
+    const strict = process.argv.includes('--strict-catalog') || process.env.CATALOG_STRICT === '1';
+    const labels = missingTypes.map((t) => `${TYPE_ICONS[t] || ''} ${t}`).join(', ');
+    process.stderr.write(`\n⚠️  CATALOG DRIFT: ${missingTypes.length} canonical type(s) absent from catalog: ${labels}\n`);
+    process.stderr.write(`Either retire the type from TYPE_ORDER (governance decision) or add/reclassify scripts.\n`);
+    if (strict) {
+      process.stderr.write(`[--strict-catalog] failing build.\n`);
+      process.exit(1);
+    }
+  }
 
   return lines.join('\n');
 }

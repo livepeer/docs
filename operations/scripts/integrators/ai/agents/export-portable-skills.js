@@ -2,19 +2,21 @@
 /**
  * @script      export-portable-skills
  * @type        integrator
- * @concern     discoverability
+ * @concern     governance
  * @niche       agents
- * @purpose     
- * @description Portable skills exporter — copies canonical template skills into cross-agent pack folders and validates drift.
+ * @purpose     Copy canonical template skills from ai-tools/ai-skills/templates/ into per-agent pack folders (claude, codex, cursor, windsurf) so every agent ships with the same canonical skill set — detects drift via --check
+ * @description Reads the template-skill catalog, projects each into the per-agent pack format (e.g. CLAUDE.md fragment, codex skill manifest entry, cursor rules entry). --check validates the per-agent packs match the templates; --write regenerates them. Used by cross-agent-packager and runnable standalone.
  * @mode        integrate
- * @pipeline    manual — not yet in pipeline
- * @scope       operations/scripts, ai-tools/ai-skills/templates, ai-tools/agent-packs, too../../../../lib/codex-skill-templates.js operations/tests/unit/export-portable-skills.test.js
+ * @pipeline    manual — invoked when canonical skill templates change
+ * @scope       ai-tools/ai-skills/templates/ → ai-tools/agent-packs/{agent}/
  * @usage       node operations/scripts/integrators/ai/agents/export-portable-skills.js --write|--check [--skills name[,name...]]
+ * @policy      Agent-portability standard
  */
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   RESOURCE_BUNDLES,
   collectResourceEntries,
@@ -376,7 +378,7 @@ function writeOutputs(skillPlans, manifestPlan, staleDirs) {
     plan.fileOps.forEach((entry) => {
       if (entry.op === 'unchanged') return;
       fs.mkdirSync(path.dirname(entry.absPath), { recursive: true });
-      if (DRY_RUN) { console.log('[dry-run] Would write:', entry.absPath); } else { fs.writeFileSync(entry.absPath, entry.expected); };
+      if (DRY_RUN) { console.log('[dry-run] Would write:', entry.absPath); } else { atomicWrite(entry.absPath, entry.expected); };
     });
     plan.staleFiles.forEach((relPath) => {
       removeFileAndEmptyParents(path.join(plan.dirPath, relPath), plan.dirPath);
@@ -384,7 +386,7 @@ function writeOutputs(skillPlans, manifestPlan, staleDirs) {
   });
 
   if (manifestPlan.op !== 'unchanged') {
-    if (DRY_RUN) { console.log('[dry-run] Would write:', manifestPlan.path); } else { fs.writeFileSync(manifestPlan.path, manifestPlan.expected, 'utf8'); };
+    if (DRY_RUN) { console.log('[dry-run] Would write:', manifestPlan.path); } else { atomicWrite(manifestPlan.path, manifestPlan.expected, 'utf8'); };
   }
 
   staleDirs.forEach((entry) => {

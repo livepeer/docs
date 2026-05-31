@@ -3,7 +3,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       
- * @purpose     
+ * @purpose     Dispatch the postToolUse hook for Edit/Write. Tracks per-file edit counts within a session.
  * @description PostToolUse hook for Edit/Write. Tracks per-file edit counts within a session.
  * @mode        dispatch
  * @pipeline    PostToolUse hook → parse stdin → track per-file edits → warn at 3 → flag block at 5
@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { atomicWrite } = require('../../../../tools/lib/bootstrap/safe-io');
 const { stdin } = process;
 
 // ---------------------------------------------------------------------------
@@ -63,7 +64,7 @@ function readState() {
 }
 
 function writeState(state) {
-  fs.writeFileSync(getStatePath(), JSON.stringify(state, null, 2) + '\n');
+  atomicWrite(getStatePath(), JSON.stringify(state, null, 2) + '\n');
 }
 
 function isExempt(filePath) {
@@ -144,7 +145,7 @@ stdin.on('end', () => {
     // Threshold: 5+ edits — write block flag
     if (count >= BLOCK_THRESHOLD) {
       // Write block flag for pre-tool-guard.js to enforce
-      fs.writeFileSync(getBlockPath(), JSON.stringify({
+      atomicWrite(getBlockPath(), JSON.stringify({
         file: fp,
         count,
         timestamp: now

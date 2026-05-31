@@ -4,7 +4,7 @@
  * @type        dispatch
  * @concern     governance
  * @niche       pipelines
- * @purpose     
+ * @purpose     Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports.
  * @description Run the bounded governance repair pipeline and regenerate the active repo-ops governance reports.
  * @mode        dispatch
  * @pipeline    manual, P6, manual, manual
@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { createNodeProcessEnv } = require('../../../../../tools/lib/bootstrap/repo-node-paths');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const {
   CLASSIFICATION_DATA_PATH
 } = require('../../../../../tools/lib/governance/script-governance-config');
@@ -149,7 +150,7 @@ function readJson(repoRoot, repoPath) {
 function writeText(repoRoot, repoPath, content) {
   const absPath = path.join(repoRoot, repoPath);
   ensureDirectory(path.dirname(absPath));
-  fs.writeFileSync(absPath, content, 'utf8');
+  atomicWrite(absPath, content, 'utf8');
 }
 
 function snapshotFiles(repoRoot, repoPaths) {
@@ -175,7 +176,7 @@ function restoreSnapshots(repoRoot, snapshot) {
       return;
     }
     ensureDirectory(path.dirname(absPath));
-    fs.writeFileSync(absPath, content);
+    atomicWrite(absPath, content);
   });
 }
 

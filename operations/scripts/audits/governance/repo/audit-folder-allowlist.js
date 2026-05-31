@@ -20,6 +20,7 @@ const path = require('path');
 
 const REPO_ROOT = process.cwd();
 const { computeDrift, findGovernedFolders } = require(path.join(REPO_ROOT, 'tools/lib/governance/folder-allowlist'));
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
 const REPORT_DIR = path.join(REPO_ROOT, 'workspace', 'reports', 'governance', 'folder-allowlist');
 const REPORT_MD = path.join(REPORT_DIR, 'audit.md');
 const REPORT_JSON = path.join(REPORT_DIR, 'audit.json');
@@ -74,8 +75,8 @@ function main() {
   const results = folders.map(({ rel, abs }) => ({ folder: rel, ...computeDrift(abs) }));
   const totalDrift = results.reduce((sum, r) => sum + r.drift.length, 0);
 
-  fs.writeFileSync(REPORT_MD, renderMarkdown(results, totalDrift));
-  fs.writeFileSync(REPORT_JSON, JSON.stringify({ generated: new Date().toISOString(), totalDrift, results }, null, 2));
+  atomicWrite(REPORT_MD, renderMarkdown(results, totalDrift));
+  atomicWrite(REPORT_JSON, JSON.stringify({ generated: new Date().toISOString(), totalDrift, results }, null, 2));
 
   if (args.json) {
     console.log(JSON.stringify({ ok: totalDrift === 0, totalDrift, report_md: path.relative(REPO_ROOT, REPORT_MD), report_json: path.relative(REPO_ROOT, REPORT_JSON), results }, null, 2));
