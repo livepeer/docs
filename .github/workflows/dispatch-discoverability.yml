@@ -1,6 +1,6 @@
 # type: dispatch
 # concern: discoverability
-# pipeline: composite (P3 + P5/P6 + manual + P4 post-merge)
+# pipeline: composite
 # dispatch-discoverability.yml — Action workflow for discoverability concern.
 name: Discoverability Pipeline
 
@@ -52,10 +52,6 @@ jobs:
         with:
           node-version: "20"
       - run: cd tools && npm ci
-      - name: Stage PR files for scoped checks
-        run: |
-          git diff --name-only -z --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" |
-            xargs -0 -r git add --
       - name: discoverability PR meta
         env:
           NODE_PATH: tools/node_modules

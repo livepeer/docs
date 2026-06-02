@@ -31,7 +31,7 @@ status: current
 
 > Every gate that can block or auto-fix a commit, PR, or push — what it checks, where it lives, and how to override it.
 
-<CustomDivider />
+---
 
 ## Design Principle
 
@@ -44,7 +44,7 @@ Enforcement is split into two tiers:
 
 This separation keeps local commit latency low while still surfacing quality issues in PR review.
 
-<CustomDivider />
+---
 
 ## Pre-Commit Hook
 
@@ -105,7 +105,7 @@ Blocks all changes to `v1/`. The v1 content tree is immutable.
 
 `SKIP_ALL=1` — skips all pre-commit checks. Emergency use only. Emits a warning in all cases.
 
-<CustomDivider />
+---
 
 ## Pre-Push Hook
 
@@ -120,7 +120,7 @@ Validates that no AI stash artifacts, stale Codex locks, or invalid task contrac
 | Stale Codex locks | No locks that reference inactive/closed Codex sessions |
 | Task contract | `codex/*` branches must have a valid task contract before push |
 
-<CustomDivider />
+---
 
 ## GitHub Actions — CI Workflows
 
@@ -173,7 +173,7 @@ All CI workflows live in `.github/workflows/`. They are the enforcement layer fo
 | `update-github-data.yml` | Daily (02:00 UTC) | GitHub discussions + releases per product |
 | `update-forum-data.yml` | Daily | Discourse forum posts |
 
-Required secrets: see [Solutions Secrets](../secrets/solutions-secrets).
+Required secrets: see [Solutions Secrets](/docs-guide/repo-ops/secrets/solutions-secrets).
 
 ### Governance and Repo Ops
 
@@ -198,7 +198,7 @@ Required secrets: see [Solutions Secrets](../secrets/solutions-secrets).
 | `seo-refresh.yml` | Dispatch | Batch SEO metadata refresh |
 | `sync-large-assets.yml` | Dispatch | Syncs large binary assets from external storage |
 
-<CustomDivider />
+---
 
 ## Override Reference
 
@@ -210,12 +210,12 @@ Required secrets: see [Solutions Secrets](../secrets/solutions-secrets).
 | Allow .allowlist edit | `git commit --trailer "allowlist-edit=true"` | Humans only |
 | Allow AI commit to docs-v2 | `ALLOW_MAIN_COMMIT=1 git commit --trailer "allow-main-commit=true"` | Humans only — explicit chat instruction required |
 
-<CustomDivider />
+---
 
 ## Related
 
-- [Repo Config Map](../config/repo-config-map) — configuration files read by hooks and workflows
-- [Solutions Secrets](../secrets/solutions-secrets) — GitHub Actions secrets for the social data pipeline
+- [Repo Config Map](/docs-guide/repo-ops/config/repo-config-map) — configuration files read by hooks and workflows
+- [Solutions Secrets](/docs-guide/repo-ops/secrets/solutions-secrets) — GitHub Actions secrets for the social data pipeline
 - `docs-guide/policies/generated-artifact-and-hook-governance.mdx` — policy governing what may run in hooks vs. CI
 - `.githooks/pre-commit` — pre-commit hook implementation
 - `.githooks/pre-push` — pre-push hook implementation

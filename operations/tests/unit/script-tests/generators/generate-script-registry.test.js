@@ -17,6 +17,7 @@
 
 const { runScript, assertExit, suite } = require('../../../../../tools/lib/bootstrap/test-helpers');
 const assert = require('assert');
+const fs = require('fs');
 
 const SCRIPT = 'operations/scripts/generators/governance/catalogs/generate-script-registry.js';
 const s = suite('generate-script-registry');
@@ -26,12 +27,12 @@ s.test('--dry-run exits 0 (report-only default)', () => {
   assertExit(r, 0, 'default must be report-only');
 });
 
-s.test('--dry-run --strict exits non-zero if pollution exists', () => {
-  // After Sprint 1 sweep, 72 polluted entries remain (45 indirect libraries +
-  // 27 legacy-utility-typed dev tools). --strict must surface them as a failure
-  // until the backfill thread closes.
+s.test('--dry-run --strict exits 0 (registry is clean — regression guard)', () => {
+  // The deriveFromPath() path-pattern enhancement closed all 159 polluted
+  // entries (159 → 0). This guard fails the moment anyone reintroduces an
+  // off-taxonomy @type/@concern on an active script.
   const r = runScript(SCRIPT, ['--dry-run', '--strict']);
-  assert.notStrictEqual(r.exitCode, 0, 'strict mode must fail while pollution exists');
+  assertExit(r, 0, 'strict mode must pass while the registry is clean');
 });
 
 s.test('REGISTRY_STRICT=1 env behaves identically to --strict', () => {
@@ -40,10 +41,13 @@ s.test('REGISTRY_STRICT=1 env behaves identically to --strict', () => {
   assert.strictEqual(a.exitCode, b.exitCode, 'env and flag must match');
 });
 
-s.test('pollution warning lists canonical taxonomy in stderr', () => {
-  const r = runScript(SCRIPT, ['--dry-run']);
-  assert.ok(r.stderr.includes('Canonical types'), 'must list canonical types in pollution warning');
-  assert.ok(r.stderr.includes('Canonical concerns'), 'must list canonical concerns in pollution warning');
+s.test('written registry has zero off-taxonomy active entries', () => {
+  const { VALID_CONCERNS } = require('../../../../../tools/lib/governance/script-governance-config');
+  const validTypes = new Set(['audit', 'generator', 'validator', 'remediator', 'dispatch', 'integrator', 'interface']);
+  const validConcerns = new Set(VALID_CONCERNS);
+  const reg = JSON.parse(fs.readFileSync('tools/config/registry/script-registry.json', 'utf8'));
+  const polluted = reg.filter((e) => e.status === 'active' && (!validTypes.has(e.type) || !validConcerns.has(e.concern)));
+  assert.strictEqual(polluted.length, 0, `expected 0 polluted active entries, found ${polluted.length}: ${polluted.slice(0, 5).map((e) => e.path).join(', ')}`);
 });
 
 s.done();

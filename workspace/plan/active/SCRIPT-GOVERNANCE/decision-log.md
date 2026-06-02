@@ -104,3 +104,35 @@ Named, dated, with rationale. Source of truth across context resets and handoffs
 **Date**: 2026-03-23
 **Decision**: `operations/node_modules` is a symlink to `../tools/node_modules`. This is how shared dependencies (including `gray-matter`) resolve for scripts in `operations/` without duplicating the install.
 **Rationale**: Noted during Task 10 investigation of gray-matter MODULE_NOT_FOUND report from another thread. Confirmed not an issue — symlink provides correct resolution.
+
+---
+
+## D14 — Narrow `prop-divider-missing-opening` rule (single-mount + partial + post-callout exemptions)
+**Date**: 2026-05-28
+**Decision**: The opening-divider rule in `check-component-props.js` was over-broad (623 flagged pages, ~350+ false positives). Narrowed to flag only when a page reaches a markdown heading with no `<CustomDivider>` before it AND is not a single-component mount (`<XxxSource/Canonical/Changelog/Page/Catalog>`, `<OpenAPI>`, `<IndexSource>`) AND is not an imported partial (`custom/views/`, `composables/`, `groups/`, `stubs/`, `components/`). Pages with no markdown heading at all (hero/landing/iframe) are also exempt. Accepts the established "intro callout → `<CustomDivider />` → heading" house pattern (e.g. trickle-protocol.mdx).
+**Rationale**: Of 623 flags, ~150 were single-component pages where a leading divider is meaningless and ~200 were intro-callout pages that follow the documented house pattern. Bulk-inserting dividers on those would mangle 350+ correctly-structured pages. The narrowed rule produces 126 genuine cases (prose-first / heading-first with no divider near top) for the paired remediator. SME-confirmed via plan-prop-remediators.md Q1.
+**Reference**: `operations/scripts/validators/components/library/check-component-props.js` (SINGLE_MOUNT_RE, PARTIAL_PATH_RE); commits 1b3021aa4 + 08298f83b.
+
+---
+
+## D15 — Bless `#2d9a67` as the de-facto mermaid stroke colour
+**Date**: 2026-05-28
+**Decision**: Added `#2d9a67` to the governed Mermaid palette (under the `diagram.green` family in `MermaidColours.jsx`) rather than rewriting 1604 occurrences across v2 mermaid blocks to the brand `#2b9a66`.
+**Rationale**: `#2d9a67` is a near-miss of the governed dark-accent `#2b9a66` (visually near-identical), used consistently as the stroke colour in nearly every mermaid diagram. The choice was a 1-line palette addition (clears 80 flags instantly, zero content churn) vs. a 1604-line mechanical rewrite. SME-confirmed via plan-prop-remediators.md Q2.
+**Reference**: `snippets/components/config/MermaidColours.jsx` (`diagram.green`); commit 1b3021aa4.
+
+---
+
+## D16 — Expand `MermaidColours.jsx` with a sanctioned multi-colour diagram palette
+**Date**: 2026-05-28
+**Decision**: Added a `diagram` palette object to `MermaidColours.jsx` covering 10 semantic colour families (green/blue/indigo/purple/amber/olive/pink/rust/teal/neutral), legitimising the 38 distinct ungoverned hexes (249 occurrences) used to colour-code semantic node categories in v2 flowcharts. Hexes are grouped by family with light-fill / dark-stroke / text pairs as observed in real diagrams. Future additions land here, NOT in a separate `mermaid-colour-tokens.json`.
+**Rationale**: The 247 `prop-mermaid-ungoverned-colour` flags split into one auto-fixable typo (D15) and ~167 intentional multi-colour palettes that cannot be collapsed to the single accent-green theme without destroying semantic node colour-coding. Restricting diagrams to accent-greens would prevent legitimate authoring; a governed multi-colour palette acknowledges the real need while keeping the rule enforceable. The validator's `loadMermaidGovHexes()` already greps every hex in this file — no new wiring needed. SME-confirmed via plan-prop-remediators.md Q3.
+**Reference**: `snippets/components/config/MermaidColours.jsx` (`diagram` palette); commit 1b3021aa4.
+
+---
+
+## D17 — Add `composite` to the workflow pipeline-tag enum
+**Date**: 2026-06-03
+**Decision**: Extended `VALID_PIPELINES` in `check-workflow-governance.js` from 9 to 10 values by adding `composite`. The 6 `dispatch-{concern}.yml` meta-dispatchers (brand, copy, discoverability, governance, health, maintenance) genuinely span multiple pipeline tiers in a single YAML (PR + scheduled + manual + sometimes post-merge jobs sharing one file). Tagging them with a single primary phase (e.g. `P3`) would misrepresent the workflow.
+**Rationale**: D-ACT-02 locked 8 pipeline tags for the single-mode case; meta-dispatchers were unaccounted for and forced into invalid `composite (P3 + P5/P6 + manual)` strings that the validator rejected. The 10th value `composite` documents the meta-dispatcher pattern that has been operational for months. The workflow's own mode-keyed jobs document the specifics; the tag captures the architecture. Also resolves `interface-governance-secret-scan.yml` which fires on both pull_request and push.
+**Reference**: `operations/scripts/validators/governance/pr/check-workflow-governance.js` (VALID_PIPELINES); the 6 dispatch-{concern}.yml; `interface-governance-secret-scan.yml`.

@@ -28,13 +28,13 @@ the process for adding a new script.
 
 The full script inventory lives in the auto-generated catalog: [Scripts Catalog](/docs-guide/catalog/scripts-catalog).
 
-<CustomDivider />
+---
 
 ## Taxonomy — the three-tier model
 
 Every script in `operations/scripts/` is placed at a path following this structure:
 
-``` icon="terminal"
+```
 operations/scripts/<type>/<concern>/<niche>/script-name.js
 ```
 
@@ -75,11 +75,11 @@ What **domain** the script operates on. The same four concerns appear under ever
 
 The specific sub-concern within the domain. Examples: `quality`, `veracity`, `structure`, `copy`, `grammar`, `catalogs`, `compliance`, `pr`, `codex`, `repair`, `style`, `scaffold`, `llm`.
 
-Full niche reference: see [script-framework.md](../../workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md) section 2.
+Full niche reference: see [script-framework.md](/docs-guide/frameworks/script-framework) section 2.
 
 ### Classification decision tree
 
-``` icon="terminal"
+```
 1. Does the script SPAWN other scripts or coordinate a multi-script pipeline?
    YES → dispatch/
    NO  → continue
@@ -103,14 +103,14 @@ Full niche reference: see [script-framework.md](../../workspace/plan/active/SCRI
 ```
 
 For concern:
-``` icon="terminal"
+```
 - Operates on docs pages, MDX, copy, SEO, frontmatter? → content/
 - Operates on components, registry, CSS, naming?        → components/
 - Operates on scripts, repo structure, agent docs?      → governance/
 - Operates on LLM files, agent packs, skills, Codex?   → ai/
 ```
 
-<CustomDivider />
+---
 
 ## JSDoc Header Standard
 
@@ -150,12 +150,12 @@ The required minimum validated by `--strict` is tags 1–10. `@policy` is expect
 
 Single-line flow declaration using arrow notation:
 
-``` icon="terminal"
+```
 @pipeline   trigger → inputs → outputs [→ dependants]
 ```
 
 Examples:
-``` icon="terminal"
+```
 @pipeline   pre-commit → staged .mdx files → stdout:report
 @pipeline   manual → docs.json, v2 frontmatter → docs-index.json → scripts-catalog
 @pipeline   cron:weekly → full v2 tree → governance-repair PR
@@ -164,7 +164,7 @@ Examples:
 
 ### Example header — JavaScript
 
-```js icon="terminal"
+```js
 /**
  * @script      lint-copy
  * @type        validator
@@ -182,7 +182,7 @@ Examples:
 
 ### Example header — shell / Python (hash-comment style)
 
-```bash icon="terminal"
+```bash
 # @script            pre-commit
 # @type              dispatch
 # @concern           governance
@@ -209,7 +209,7 @@ These tags were used in earlier versions and must not appear in new scripts:
 | `@needs` | `@policy` |
 | `@domain` | `@concern` |
 
-<CustomDivider />
+---
 
 ## Enforcement Tiers
 
@@ -221,13 +221,13 @@ Scripts are assigned to one of three tiers. Tier assignment belongs in `@pipelin
 | **Soft gate** | Warns in PR, does not block merge | GitHub Actions check (non-required) | Violations surface in PR UI but do not prevent merge. |
 | **Self-heal** | No gate — auto-fixes on schedule | Cron workflow with auto-PR | Runs periodically and opens a PR with corrections. |
 
-<CustomDivider />
+---
 
 ## File Structure Standard
 
 Every script MUST follow this section order:
 
-``` icon="terminal"
+```
 1. Shebang line          #!/usr/bin/env node  (or bash, python3)
 2. JSDoc header block    All 11 tags in declared order
 3. 'use strict'          JS only — recommended
@@ -240,7 +240,7 @@ Every script MUST follow this section order:
 
 ### REPO_ROOT pattern
 
-```js icon="terminal"
+```js
 // Correct — repo root from process.cwd()
 const REPO_ROOT = process.cwd();
 
@@ -250,7 +250,7 @@ const REPO_ROOT = path.resolve(__dirname, '../../../../..');
 
 `__dirname`-relative paths are acceptable only for reaching sibling files or shared libraries within the scripts tree (e.g., `require('../../../../lib/docs-index-utils')`).
 
-<CustomDivider />
+---
 
 ## How to Write a New Script
 
@@ -280,7 +280,7 @@ const REPO_ROOT = path.resolve(__dirname, '../../../../..');
   </Step>
 </Steps>
 
-<CustomDivider />
+---
 
 ## Source of Truth
 

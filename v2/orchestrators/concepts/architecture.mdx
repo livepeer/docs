@@ -94,7 +94,7 @@ graph TB
     D -->|Results| C
     C -->|Results| B
     B -->|Responses| A
-    C <-->|Staking, rewards, registration| E
+    C <-->|Staking, rewards, registration| PROTO
 
     classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
     style APP fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
@@ -233,8 +233,8 @@ flowchart TB
         ORCHCORE["Session Manager\n- Verify payment ticket\n- Authenticate request\n- Route to worker"]
     end
 
-    SEG --> ORCHCORE
-    AIREQ --> ORCHCORE
+    SEG --> ORC
+    AIREQ --> ORC
 
     subgraph VIDEO["Video Pipeline"]
         direction TB
@@ -347,7 +347,7 @@ sequenceDiagram
     WORKER->>ORC: Result
     ORC->>GW: Processed result
     ORC->>ORC: Accumulate payment ticket
-    ORC-->>PROTO: Redeem winning ticket (probabilistic, not every ticket)
+    ORC-->>PROTO: Redeem winning ticket (probabilistic; not every ticket)
     PROTO-->>ORC: ETH (service fee)
 ```
 
@@ -461,7 +461,7 @@ A command-line tool that connects to a running Orchestrator node. Used for:
 
 ### Arbitrum Contracts
 
-See <LinkArrow href="/v2/orchestrators/resources/technical/contract-addresses" label="Contract Addresses" newline={false} /> for deployed addresses on Arbitrum Mainnet and Arbitrum Sepolia (testnet).
+See <LinkArrow href="/v2/orchestrators/resources/reference/technical/contract-addresses" label="Contract Addresses" newline={false} /> for deployed addresses on Arbitrum Mainnet and Arbitrum Sepolia (testnet).
 
 <CustomDivider style={{margin: "0 0 -1rem 0"}} />
 
@@ -477,7 +477,7 @@ See <LinkArrow href="/v2/orchestrators/resources/technical/contract-addresses" l
   <Card title="Incentive Model" icon="coins" href="/v2/orchestrators/concepts/incentive-model" arrow horizontal>
     Revenue streams, cost structure, and why operating an Orchestrator earns.
   </Card>
-  <Card title="Payment Flow" icon="credit-card" href="/v2/orchestrators/guides/payments-and-pricing/payment-flow" arrow horizontal>
+  <Card title="Payment Flow" icon="credit-card" href="/v2/orchestrators/guides/payments-and-pricing/payments" arrow horizontal>
     How probabilistic micropayment tickets work from the Orchestrator's side.
   </Card>
 </CardGroup>

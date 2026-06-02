@@ -16,18 +16,6 @@ import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
 import { HistoricalContractTable } from '/snippets/components/integrators/feeds/HistoricalContractTable.jsx'
 import { LivepeerIcon } from '/snippets/components/elements/icons/Icons.jsx'
 
-/**
- * @component NonActiveContractsAccordion
- * @category integrators
- * @subcategory feeds
- * @status stable
- * @description Renders grouped non-active contract accordions from the contract addresses pipeline data.
- * @accepts contract group arrays
- * @dataSource snippets/data/contract-addresses/contractAddressesData.json
- * @aiDiscoverability none
- * @param {Array<{key,title,description,icon,items}>} groups - Pre-grouped non-active lifecycle entries.
- * @param {Function} renderRows - Row builder for each contract group.
- */
 export const NonActiveContractsAccordion = ({ groups = [], renderRows = (items) => items }) => (
   <AccordionGroup>
     {groups.map((group) => (
@@ -52,19 +40,6 @@ export const NonActiveContractsAccordion = ({ groups = [], renderRows = (items) 
   </AccordionGroup>
 )
 
-/**
- * @component HistoricalContractsAccordion
- * @category integrators
- * @subcategory feeds
- * @status stable
- * @description Renders historical contract accordions from generated contract lifecycle data.
- * @accepts contract category arrays
- * @dataSource snippets/data/contract-addresses/contractAddressesData.json
- * @aiDiscoverability none
- * @param {Array<{key,meta}>} categories - Historical contract category descriptors.
- * @param {Object} sourceData - Full contract addresses data object.
- * @param {Function} getIcon - Icon resolver for category metadata.
- */
 export const HistoricalContractsAccordion = ({
   categories = [],
   sourceData = {},

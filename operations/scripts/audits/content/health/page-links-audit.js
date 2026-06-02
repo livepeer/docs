@@ -917,10 +917,7 @@ function findMissingPathCandidates(missingAbs, repoFiles) {
 
 function extractRefs(content) {
   const refs = [];
-  const contentForExtraction = String(content || '')
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/\{\/\*[\s\S]*?\*\/\}/g, '')
-    .replace(/<!--[\s\S]*?-->/g, '');
+  const contentForExtraction = String(content || '').replace(/```[\s\S]*?```/g, '');
 
   const markdownRegex = /!?\[([^\]]*)\]\(([^)]+)\)/g;
   let m;
@@ -976,16 +973,6 @@ function shouldValidateExternalRef(ref, externalLinkTypes) {
 
 function analyzeRef(ref, currentFileAbs, repoFiles, routeSet, args, docsConfig, knownPublishedRoutes) {
   const normalizedRaw = normalizeRawPath(ref.rawPath);
-  if (/[{}$]/.test(normalizedRaw)) {
-    return {
-      ...ref,
-      linkType: 'dynamic',
-      resolvedPath: null,
-      exists: null,
-      status: 'skipped',
-      movedCandidates: []
-    };
-  }
   const linkType = classifyPath(normalizedRaw);
 
   if (linkType === 'external-http' || linkType === 'external-https') {
@@ -1119,17 +1106,6 @@ function analyzeRef(ref, currentFileAbs, repoFiles, routeSet, args, docsConfig, 
       resolvedPath: relFromRoot(targetAbs),
       exists: false,
       status: 'skipped-allowlisted',
-      movedCandidates: []
-    };
-  }
-
-  if (/\/rss\.xml$/i.test(stripQueryHash(normalizedRaw))) {
-    return {
-      ...ref,
-      linkType,
-      resolvedPath: relFromRoot(targetAbs),
-      exists: false,
-      status: 'skipped-generated-feed',
       movedCandidates: []
     };
   }

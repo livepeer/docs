@@ -1,6 +1,6 @@
 /**
  * @script            frontmatter
- * @type              utility
+ * @type              integrator
  * @concern           copy
  * @niche             translation
  * @purpose           feature:translation

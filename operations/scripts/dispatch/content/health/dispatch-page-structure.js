@@ -26,12 +26,12 @@ const { parsePipelineArgs, runAtomic, printPipelineHelp } = require(path.join(RE
 // validator scans its default scope"). When `null`, the dispatcher invokes the validator with no
 // scope arg and the validator handles scope internally (e.g. via git diff-cached).
 const VALIDATORS = [
-  { script: 'check-anchor-usage.js',           staged: ['--staged'], files: ['--files'], full: ['--scope', 'v2/**/*.mdx'] },
-  { script: 'check-description-quality.js',    staged: ['--staged'], files: ['--files'], full: ['--path', 'v2'] },
+  { script: 'check-anchor-usage.js',           staged: null, files: ['--scope', 'v2/**/*.mdx'], full: ['--scope', 'v2/**/*.mdx'] },
+  { script: 'check-description-quality.js',    staged: null, files: ['--path', 'v2'], full: ['--path', 'v2'] },
   { script: 'check-docs-path-sync.js',         staged: ['--staged'], files: ['--staged'], full: [] },
   { script: 'check-double-headers.js',         staged: ['--staged'], files: ['--files'], full: [] },
   { script: 'check-mdx-safe-markdown.js',      staged: ['--staged'], files: ['--files'], full: [] },
-  { script: 'check-page-endings.js',           staged: ['--staged'], files: ['--files'], full: null },
+  { script: 'check-page-endings.js',           staged: null, files: null, full: null }, // uses git diff-cached internally
   { script: 'enforce-generated-file-banners.js', staged: ['--check', '--staged'], files: ['--check', '--staged'], full: ['--check'] },
   { script: 'lint-structure.js',               staged: null, files: null, full: ['--full'] }, // uses git internally for staged/changed
 ].map((v) => ({ ...v, abs: path.join(REPO_ROOT, 'operations/scripts/validators/content/structure', v.script) }));

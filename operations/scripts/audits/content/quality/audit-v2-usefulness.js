@@ -772,6 +772,7 @@ async function main() {
     },
     missing_routes: missingRoutes,
     known_missing_routes: [
+      'v2/resources/redirect',
       'v2/gateways/guides-and-tools/gateway-job-pipelines/overview'
     ],
     baseline: baselineComparison

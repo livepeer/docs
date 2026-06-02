@@ -16,19 +16,6 @@
 import { CopyText } from '/snippets/components/elements/text/Text.jsx'
 import { ArbitrumIcon } from '/snippets/components/elements/icons/Icons.jsx'
 
-/**
- * @component        ContractVerifier
- * @category         integrators
- * @subcategory      feeds
- * @status           experimental
- * @description      Interactive widget to verify Livepeer contract addresses on-chain using generated contract data and chain RPC lookups.
- * @accepts          contract address data
- * @dataSource       snippets/data/contract-addresses/contractAddressesData.json, Arbitrum One RPC, Blockscout API
- * @aiDiscoverability props-extracted
- * @param {Object} data - Pipeline contract addresses data object.
- * @param {string} [className=''] - Optional CSS class override.
- * @param {Object} [style={}] - Optional inline style override.
- */
 export const ContractVerifier = ({
   data,
   className = '',
