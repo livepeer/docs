@@ -3600,6 +3600,21 @@
     "status": "active"
   },
   {
+    "path": "operations/scripts/remediators/components/library/repair-divider-opening.js",
+    "name": "repair-divider-opening.js",
+    "type": "remediator",
+    "concern": "maintenance",
+    "niche": "library",
+    "purpose": "Insert an opening <CustomDivider /> on v2 pages whose first content element is a markdown heading — pairs with check-component-props.js rule prop-divider-missing-opening",
+    "description": "Targets ONLY heading-first pages (the first non-empty, non-import content line after frontmatter is a # / ## / ### heading) with no preceding divider. Inserts <CustomDivider /> directly above that heading. Deliberately skips prose-first / intro-callout-first pages: the divider placement there is a judgement call (top vs. after a multi-line intro) and is left for manual review. Skips single-component mounts. Per D-GOV-03 supports --dry-run / --write / --verify.",
+    "mode": "repair",
+    "pipeline": "P3 (PR preview), P5/P6 (scheduled write), manual",
+    "scope": "v2 MDX pages whose first content element is a markdown heading",
+    "usage": "node operations/scripts/remediators/components/library/repair-divider-opening.js [--dry-run|--write] [--verify] [--files <paths>|--staged|--full]",
+    "policy": "D-GOV-03 (paired remediator for prop-divider-missing-opening)",
+    "status": "active"
+  },
+  {
     "path": "operations/scripts/remediators/components/library/repair-hardcoded-hex.js",
     "name": "repair-hardcoded-hex.js",
     "type": "remediator",
@@ -6480,6 +6495,21 @@
     "status": "active"
   },
   {
+    "path": "operations/tests/unit/script-tests/libraries/pipeline-mode.test.js",
+    "name": "pipeline-mode.test.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "unit",
+    "purpose": "qa:repo-health",
+    "description": "Unit tests for parsePipelineArgs/passThroughFlags — the arg contract every one of the 65 dispatch scripts shares. Guards default-mode, dry-run-default, invalid-mode rejection, and flag pass-through.",
+    "mode": "",
+    "pipeline": "P1, P3",
+    "scope": "tools/lib/governance/pipeline-mode.js",
+    "usage": "node operations/tests/unit/script-tests/libraries/pipeline-mode.test.js",
+    "policy": "R-R14",
+    "status": "active"
+  },
+  {
     "path": "operations/tests/unit/script-tests/libraries/safe-io.test.js",
     "name": "safe-io.test.js",
     "type": "validator",
@@ -6492,6 +6522,51 @@
     "scope": "tools/lib/bootstrap/safe-io.js",
     "usage": "node operations/tests/unit/script-tests/libraries/safe-io.test.js",
     "policy": "D-GOV-08",
+    "status": "active"
+  },
+  {
+    "path": "operations/tests/unit/script-tests/libraries/script-governance-config.test.js",
+    "name": "script-governance-config.test.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "unit",
+    "purpose": "qa:repo-health",
+    "description": "Unit tests for the path predicates that decide what counts as a governed script, what is excluded, and what is a hook. These gate discovery for the registry, catalog, and every governance validator.",
+    "mode": "",
+    "pipeline": "P1, P3",
+    "scope": "tools/lib/governance/script-governance-config.js",
+    "usage": "node operations/tests/unit/script-tests/libraries/script-governance-config.test.js",
+    "policy": "R-R14",
+    "status": "active"
+  },
+  {
+    "path": "operations/tests/unit/script-tests/libraries/script-header-utils.test.js",
+    "name": "script-header-utils.test.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "unit",
+    "purpose": "qa:repo-health",
+    "description": "Unit tests for script-header-utils — the JSDoc-header parser every classifier and the catalog generator depend on. A regression here silently mis-classifies scripts across the whole governance pipeline.",
+    "mode": "",
+    "pipeline": "P1, P3",
+    "scope": "tools/lib/governance/script-header-utils.js",
+    "usage": "node operations/tests/unit/script-tests/libraries/script-header-utils.test.js",
+    "policy": "R-R14",
+    "status": "active"
+  },
+  {
+    "path": "operations/tests/unit/script-tests/remediators/remediate-us-spelling.test.js",
+    "name": "remediate-us-spelling.test.js",
+    "type": "validator",
+    "concern": "governance",
+    "niche": "unit",
+    "purpose": "qa:repo-health",
+    "description": "Guards the dry-run data-safety contract flagged by the Principal Engineer audit (M7): a default (dry-run) remediator invocation must never mutate files on disk. Snapshots a real v2 file's bytes before/after and asserts identity.",
+    "mode": "",
+    "pipeline": "P1, P3",
+    "scope": "operations/scripts/remediators/content/style/remediate-us-spelling.js",
+    "usage": "node operations/tests/unit/script-tests/remediators/remediate-us-spelling.test.js",
+    "policy": "R-R14",
     "status": "active"
   },
   {

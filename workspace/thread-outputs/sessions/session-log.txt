@@ -1628,3 +1628,26 @@ Final audit state — ALL 4 High findings closed with CI enforcement:
   H4 (zero unit tests): script-tests scaffold + 5 files/26 assertions, wired into CI
 
 Audit thread fully closed. Registry pollution 0/518. All strict gates green.
+
+--- 2026-05-29 — Audit polish: script-tests expansion ---
+Thread: Principal Engineer Audit — Sprint 1 polish (H4 coverage growth). Health checks running in a separate thread.
+Outcome: Expanded the script-tests suite from 5 files / 26 assertions → 9 files / ~54 assertions, all green in 1.7s (well under the 2-min budget). Focus: highest-leverage load-bearing code, not racing to a shallow 50-test count.
+
+New test files (4):
+  libraries/script-header-utils.test.js (10 assertions) — extractLeadingScriptHeader (star + hash + no-header + use-strict skip), getTagValue (+ @type↔@category alias), hasFrameworkHeaderTags, getSectionLines. This parser backs every classification decision + the catalog generator.
+  libraries/script-governance-config.test.js (8) — normalizeRepoPath, shouldExcludeScriptPath (node_modules/.git/archive/.bak/.disabled/empty), isWithinRoots (prefix-with-slash only), isHookScriptPath (extensionless .githooks only). Path predicates that gate all script discovery.
+  libraries/pipeline-mode.test.js (9) — parsePipelineArgs (mode=pr default, dry-run-default safety, --mode/--files parsing, invalid-mode throw, 4 valid modes), passThroughFlags round-trip. The arg contract all 65 dispatchers share.
+  remediators/remediate-us-spelling.test.js (3) — guards the M7 dry-run data-safety contract: default (dry-run) run leaves the targeted v2 file byte-identical (sha256 before/after).
+
+Two assertions caught real issues during authoring (test-driven value):
+  - normalizeRepoPath: my initial test assumed Windows backslash conversion; the function splits on path.sep (='/' on macOS) so backslashes pass through. Fixed assertion to the true cross-platform contract.
+  - (prior session) generate-script-registry stale assertions rewritten after pollution reached 0.
+
+Verification: full suite 9/9 green (1.7s). Registry 523 entries / 0 polluted. REGISTRY_STRICT + CATALOG_STRICT + pipeline-orphans + write-safety all pass. New test files classify as validator/governance, no registry pollution introduced. Runner already wired into dispatch-governance.yml so the 4 new files run in CI automatically.
+
+Remaining audit polish (lower priority, deferred):
+  - Grow per-type coverage further (audit/integrator/interface types still have only indirect coverage)
+  - M8 non-portable env paths (/opt/homebrew/bin/node, BSD etime) blocking Linux CI
+  - M1/M2 dispatch scalability (sequential spawnSync, full-registry-in-memory) — only bites at 10x
+  - M9 worked-example onboarding doc; M10 hook-failure recovery doc
+  - L3 duplicate spelling remediators; L4 archive/x-archive consolidation; L6 Puppeteer+Playwright dedup
