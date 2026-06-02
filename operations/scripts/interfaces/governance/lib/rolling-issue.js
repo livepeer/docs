@@ -1,6 +1,6 @@
 /**
  * @script            rolling-issue
- * @type              utility
+ * @type              interface
  * @concern           governance
  * @niche             issue-lifecycle
  * @purpose           Shared helper for rolling issue create/update/close pattern

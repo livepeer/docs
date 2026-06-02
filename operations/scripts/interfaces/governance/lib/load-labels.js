@@ -1,6 +1,6 @@
 /**
  * @script            load-labels
- * @type              utility
+ * @type              interface
  * @concern           governance
  * @niche             issue-lifecycle
  * @purpose           Loads the canonical label taxonomy from .github/config/labels.json

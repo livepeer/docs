@@ -368,3 +368,4 @@
 | low | Thin content page detected | v2/_workspace/archive/language-pages/fr/developers/technical-references/awesome-livepeer.mdx | Estimated content length is 38 words. | Expand page scope with prerequisites, actionable steps, and troubleshooting context. |
 | low | Thin content page detected | v2/_workspace/archive/language-pages/fr/developers/technical-references/deepwiki.mdx | Estimated content length is 109 words. | Expand page scope with prerequisites, actionable steps, and troubleshooting context. |
 | low | Thin content page detected | v2/_workspace/archive/language-pages/fr/developers/technical-references/sdks.mdx | Estimated content length is 89 words. | Expand page scope with prerequisites, actionable steps, and troubleshooting context. |
+

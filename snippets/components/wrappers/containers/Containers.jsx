@@ -11,7 +11,6 @@
  * @param {any} children - children prop.
  * @param {string} [variant="default"] - variant prop.
  * @param {string} [padding="var(--lp-spacing-4)"] - padding prop.
- * @param {string} [margin=""] - Optional margin override.
  * @param {string} [borderRadius="var(--lp-spacing-px-8)"] - border Radius prop.
  * @param {string} [accentBar=""] - Optional accent border token applied to the left edge.
  * @param {object} [style={}] - style prop.
@@ -22,7 +21,6 @@ export const BorderedBox = ({
   variant = "default",
   padding = "var(--lp-spacing-4)",
   borderRadius = "var(--lp-spacing-px-8)",
-  margin = "",
   accentBar = "",
   style = {},
   className = "",
@@ -56,7 +54,6 @@ export const BorderedBox = ({
         ...variants[variant],
         padding: padding,
         borderRadius: borderRadius,
-        ...(margin ? { margin } : {}),
         ...(accentBarColors[accentBar]
           ? { position: "relative", '--accent-bar-color': accentBarColors[accentBar] }
           : {}),
@@ -87,8 +84,6 @@ export const BorderedBox = ({
  * @param {string} [minWidth=""] - Explicit min-width override.
  * @param {string} [marginRight=""] - Optional right margin override.
  * @param {string} [marginBottom=""] - Optional bottom margin override.
- * @param {string} [margin=""] - Optional margin override.
- * @param {string} [padding=""] - Optional padding override.
  * @param {string} [textAlign=""] - Optional text alignment override.
  * @param {object} [style={}] - style prop.
   * @param {string} [className=''] - Optional CSS class override.
@@ -224,8 +219,6 @@ export const FlexContainer = ({
   wrap = false,
   marginTop = "",
   marginBottom = "",
-  margin = "",
-  padding = "",
   style = {},
   className = "",
   ...rest
@@ -240,8 +233,6 @@ export const FlexContainer = ({
         alignItems: align,
         justifyContent: justify,
         flexWrap: wrap ? "wrap" : "nowrap",
-        ...(margin ? { margin } : {}),
-        ...(padding ? { padding } : {}),
         ...(marginTop ? { marginTop } : {}),
         ...(marginBottom ? { marginBottom } : {}),
         ...style,
@@ -364,3 +355,4 @@ export const CalloutWrapper = ({
     </Component>
   );
 };
+

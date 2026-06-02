@@ -115,7 +115,7 @@ Gateways discover Orchestrators through the `OrchestratorInfo` structure, which 
 
 Before setting prices in `aiModels.json`, check what prices the major Gateways are using. See [Models and VRAM Reference](/v2/Orchestrators/guides/ai-and-job-workloads/model-demand-reference) for a pricing reference table and [Gateway Orchestrator Offerings](/v2/Gateways/resources/reference/technical/Orchestrator-offerings) for the full capability discovery protocol documentation.
 
-For the complete list of supported pipelines and their model architectures, see [AI Model Support](/v2/developers/concepts/ai-on-Livepeer) in the Developers section.
+For the complete list of supported pipelines and their model architectures, see [AI Model Support](/v2/developers/build/ai-and-agents/model-support) in the Developers section.
 
 <CustomDivider />
 
@@ -190,7 +190,7 @@ Livepeer's AI worker supports ten pipeline types. Each pipeline handles a specif
 
 <AccordionGroup>
 
-<Accordion  title="text-to-image  -  Generate images from text prompts" icon="circle-question">
+<Accordion  title="text-to-image — Generate images from text prompts" icon="circle-question">
 The most widely used batch AI pipeline on the network. Takes a text prompt and sampling parameters, returns a generated image.
 
 **Minimum VRAM:** 24 GB
@@ -203,7 +203,7 @@ Diffusion models (Stable Diffusion, SDXL variants) run natively on the managed `
 **Source:** [SG161222/RealVisXL_V4.0_Lightning on HuggingFace](https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning)
 </Accordion>
 
-<Accordion  title="image-to-image  -  Style transfer and transformation" icon="circle-question">
+<Accordion  title="image-to-image — Style transfer and transformation" icon="circle-question">
 Takes an input image and applies diffusion-based transformation, style transfer, or enhancement. Used for artistic style application, image enhancement, and controlled generation.
 
 **Minimum VRAM:** 24 GB
@@ -212,7 +212,7 @@ Takes an input image and applies diffusion-based transformation, style transfer,
 **Typical hardware:** RTX 3090, RTX 4090
 </Accordion>
 
-<Accordion  title="image-to-video  -  Animate a still image" icon="video">
+<Accordion  title="image-to-video — Animate a still image" icon="video">
 Generates a short video clip from a single input image. Significantly more VRAM and compute-intensive than image-to-image.
 
 **Minimum VRAM:** 24 GB
@@ -220,7 +220,7 @@ Generates a short video clip from a single input image. Significantly more VRAM 
 **Typical hardware:** RTX 4090, A100
 </Accordion>
 
-<Accordion  title="image-to-text  -  Vision-language captioning" icon="circle-question">
+<Accordion  title="image-to-text — Vision-language captioning" icon="circle-question">
 Takes an image and returns a text description. Lower VRAM floor makes this accessible to operators with older consumer cards.
 
 **Minimum VRAM:** 4 GB
@@ -229,7 +229,7 @@ Takes an image and returns a text description. Lower VRAM floor makes this acces
 **Typical hardware:** RTX 2060, GTX 1080 (as secondary pipeline)
 </Accordion>
 
-<Accordion  title="audio-to-text  -  Speech recognition and transcription" icon="circle-question">
+<Accordion  title="audio-to-text — Speech recognition and transcription" icon="circle-question">
 Runs Whisper-class speech recognition with timestamps. Widely used for transcription, captioning, and audio search.
 
 **Minimum VRAM:** 12 GB
@@ -240,27 +240,27 @@ Runs Whisper-class speech recognition with timestamps. Widely used for transcrip
 **Source:** [openai/whisper-large-v3 on HuggingFace](https://huggingface.co/openai/whisper-large-v3)
 </Accordion>
 
-<Accordion  title="segment-anything-2  -  Promptable segmentation" icon="circle-question">
+<Accordion  title="segment-anything-2 — Promptable segmentation" icon="circle-question">
 Pixel-level object segmentation using SAM2. Takes a prompt (point, box, or mask) and returns a segmentation mask over the input image or video frame.
 
 **Recommended model:** SAM2 variants
 **Source:** [facebookresearch/segment-anything-2 on GitHub](https://github.com/facebookresearch/segment-anything-2)
 </Accordion>
 
-<Accordion  title="text-to-speech  -  Natural speech synthesis" icon="circle-question">
+<Accordion  title="text-to-speech — Natural speech synthesis" icon="circle-question">
 Converts text to natural speech audio. Growing use case for AI-generated video narration and interactive media.
 
 **Pricing unit:** Per character / per millisecond of output audio
 </Accordion>
 
-<Accordion  title="upscale  -  Resolution enhancement" icon="circle-question">
+<Accordion  title="upscale — Resolution enhancement" icon="circle-question">
 Upscales low-resolution input to high resolution using diffusion-based super-resolution.
 
 **Recommended model:** `stabilityai/stable-diffusion-x4-upscaler`
 **Pricing unit:** Per input pixel
 </Accordion>
 
-<Accordion  title="llm  -  Large language model inference" icon="microchip">
+<Accordion  title="llm — Large language model inference" icon="microchip">
 OpenAI-compatible text completion endpoint backed by an Ollama-based runner. Runs quantised LLMs with as little as 8 GB VRAM, making it accessible to operators with older consumer GPUs that are unsuitable for diffusion pipelines.
 
 **Minimum VRAM:** 8 GB
@@ -273,7 +273,7 @@ The LLM pipeline uses a separate runner architecture from the standard `livepeer
 **Source:** [Cloud SPE Ollama runner blog post](https://www.livepeer.cloud/self-hosting-livepeers-llm-pipeline-deploying-an-ollama-based-gpu-runner-for-ai-orchestrators/)
 </Accordion>
 
-<Accordion  title="live-video-to-video  -  Cascade streaming AI" icon="microchip">
+<Accordion  title="live-video-to-video — Cascade streaming AI" icon="microchip">
 Continuous frame-by-frame transformation of live video streams. This pipeline takes a WebRTC stream as input and returns a transformed WebRTC stream with sub-100ms per-frame latency.
 
 **Minimum VRAM:** 24 GB recommended

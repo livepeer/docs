@@ -19,12 +19,6 @@ export const Subtitle = ({
   text,
   children,
   variant = 'default',
-  fontSize = '',
-  fontWeight = '',
-  fontStyle = '',
-  marginTop = '',
-  marginBottom = '',
-  color = '',
   className = '',
   ...rest
 }) => {
@@ -89,12 +83,6 @@ export const Subtitle = ({
       className={className}
       style={{
         ...base,
-        ...(fontSize ? { fontSize } : {}),
-        ...(fontWeight ? { fontWeight } : {}),
-        ...(fontStyle ? { fontStyle } : {}),
-        ...(marginTop ? { marginTop } : {}),
-        ...(marginBottom ? { marginBottom } : {}),
-        ...(color ? { color } : {}),
         ...style,
       }}
       {...rest}

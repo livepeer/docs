@@ -40,7 +40,7 @@ To check compliance: `node operations/scripts/audits/content/reference/audit-ico
 ## Scope
 
 - Scan scope: {iconMapMethodology.scope}
-- Exclusions: {Array.isArray(iconMapMethodology.exclusions) ? iconMapMethodology.exclusions.join(', ') : ''}
+- Exclusions: {iconMapMethodology.exclusions.join(', ')}
 - Updated: {iconMapMethodology.generatedOn}
 - Coverage: 78 icons mapped out of 365 unique icons in the corpus. All icons with 10+ occurrences are mapped.
 
@@ -113,11 +113,11 @@ When a component icon (Card, Accordion, Tab) is linking to a page and no specifi
           </TableCell>
           <TableCell>{entry.useFor}</TableCell>
           <TableCell>{entry.avoid}</TableCell>
-          <TableCell>{Array.isArray(entry.components) ? entry.components.join(', ') : ''}</TableCell>
+          <TableCell>{entry.components.join(', ')}</TableCell>
           <TableCell>{entry.scanCount}</TableCell>
           <TableCell>
             <ul>
-              {(Array.isArray(entry.examples) ? entry.examples : []).map((example) => (
+              {entry.examples.map((example) => (
                 <li key={example}>
                   <code>{example}</code>
                 </li>

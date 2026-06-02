@@ -9,7 +9,7 @@
  * @mode        check
  * @pipeline    manual → staged .mdx files → exit-code, stdout:violations; --fix → staged .mdx files → TODO comment appended, ci
  * @scope       operations/scripts/validators/content, v2
- * @usage       node operations/scripts/validators/content/structure/check-page-endings.js [--staged|--files a,b] [--fix] [--json]
+ * @usage       node operations/scripts/validators/content/structure/check-page-endings.js [--fix] [--json]
  */
 
 const fs = require('fs');
@@ -36,15 +36,13 @@ function toPosix(value) {
 }
 
 function usage() {
-  console.log('Usage: node operations/scripts/validators/content/check-page-endings.js [--staged|--files a,b] [--fix] [--json]');
+  console.log('Usage: node operations/scripts/validators/content/check-page-endings.js [--fix] [--json]');
 }
 
 function parseArgs(argv) {
   const args = {
     fix: false,
-    json: false,
-    staged: false,
-    files: []
+    json: false
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -60,26 +58,6 @@ function parseArgs(argv) {
       continue;
     }
 
-    if (token === '--staged') {
-      args.staged = true;
-      continue;
-    }
-
-    if (token === '--files') {
-      const value = String(argv[index + 1] || '').trim();
-      if (!value) throw new Error('Missing value for --files');
-      parseCsvFiles(value).forEach((filePath) => args.files.push(filePath));
-      index += 1;
-      continue;
-    }
-
-    if (token.startsWith('--files=')) {
-      const value = token.slice('--files='.length).trim();
-      if (!value) throw new Error('Missing value for --files');
-      parseCsvFiles(value).forEach((filePath) => args.files.push(filePath));
-      continue;
-    }
-
     if (token === '--help' || token === '-h') {
       args.help = true;
       continue;
@@ -88,28 +66,7 @@ function parseArgs(argv) {
     throw new Error(`Unknown argument: ${token}`);
   }
 
-  if (args.staged && args.files.length > 0) {
-    throw new Error('Use either --staged or --files, not both');
-  }
-
-  args.files = dedupe(args.files.map(resolveInputPath));
   return args;
-}
-
-function parseCsvFiles(value) {
-  return String(value || '')
-    .split(',')
-    .map((entry) => entry.trim())
-    .filter(Boolean);
-}
-
-function resolveInputPath(filePath) {
-  if (!filePath) return '';
-  return path.isAbsolute(filePath) ? path.normalize(filePath) : path.resolve(REPO_ROOT, filePath);
-}
-
-function dedupe(values) {
-  return [...new Set(values.filter(Boolean))];
 }
 
 function shouldExclude(repoPath) {
@@ -146,41 +103,6 @@ function walkFiles(dirPath, out = []) {
   });
 
   return out;
-}
-
-function stagedFiles() {
-  const result = spawnSync(
-    'git',
-    ['diff', '--name-only', '--cached', '--diff-filter=ACMR'],
-    { cwd: REPO_ROOT, encoding: 'utf8' }
-  );
-
-  if (result.status !== 0) {
-    throw new Error(String(result.stderr || 'Unable to read staged files').trim());
-  }
-
-  return String(result.stdout || '')
-    .split(/\r?\n/)
-    .map((entry) => entry.trim())
-    .filter(Boolean)
-    .map((relPath) => path.resolve(REPO_ROOT, relPath));
-}
-
-function scopedFiles(args) {
-  const candidates = args.staged
-    ? stagedFiles()
-    : args.files.length > 0
-      ? args.files
-      : walkFiles(V2_ROOT).map((file) => file.absPath);
-
-  return dedupe(candidates)
-    .map((absPath) => ({
-      absPath,
-      relPath: toPosix(path.relative(REPO_ROOT, absPath))
-    }))
-    .filter((file) => fs.existsSync(file.absPath))
-    .filter((file) => !shouldExclude(file.relPath))
-    .filter((file) => !isGeneratedDocsPageFile(file.absPath));
 }
 
 function maskComments(content) {
@@ -405,7 +327,7 @@ function main() {
       process.exit(0);
     }
 
-    const results = scopedFiles(args)
+    const results = walkFiles(V2_ROOT)
       .sort((left, right) => left.relPath.localeCompare(right.relPath))
       .map((file) => analyzeFile(file, args));
     const summary = summarize(results);

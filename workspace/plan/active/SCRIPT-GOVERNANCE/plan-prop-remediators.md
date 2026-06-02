@@ -37,18 +37,34 @@ Live counts via `check-component-props.js --scope=full` (2026-05-27):
 
 ## Phasing
 
-**Phase 1 — Low-risk, deterministic categories (build first).**
-These can be applied without human judgement once the rule is locked.
+**Phase 1 — Low-risk, deterministic categories. ALL DONE 2026-05-28 / 2026-06-03.**
 
-1. `prop-divider-missing-before-related` (22) — pure structural regex, no JSX edit
-2. `prop-divider-missing-opening` (645) — structural, needs first-heading + first-paragraph detection
-3. `prop-mermaid-ungoverned-colour` (296) — token-mapping inside mermaid fences only
-4. `prop-hardcoded-hex` (76) — same mapping, outside mermaid (smaller scope)
+| # | Rule | Was | Now | Remediator | Notes |
+|---|---|---:|---:|---|---|
+| 1 | `prop-divider-missing-before-related` | 22 | **0** | `repair-divider-before-related.js` (commit 1b3021aa4 + depth-2 alignment 08298f83b) | Depth-2 non-empty-line lookback, JSX-comment aware (validator + remediator agree). |
+| 2 | `prop-divider-missing-opening` | 623 | **126 genuine** | `repair-divider-opening.js` (commit 1b3021aa4) | Rule narrowed: exempts single-component mounts, imported partials, and pages without a markdown heading. Accepts the "intro callout → divider → heading" house pattern. Remediator auto-fixed 6 standalone heading-first routes; safely skipped 50 (missing CustomDivider import or partial). 126 remaining are prose/callout-first pages whose divider placement is a manual judgement call. |
+| 3 | `prop-mermaid-ungoverned-colour` | 247 | **0** | _no per-page remediator — palette expansion_ (commits 1b3021aa4 + 08298f83b) | Decision Q2: blessed `#2d9a67` as the de-facto dark-accent stroke. Decision Q3: added a 10-family multi-colour diagram palette (green/blue/indigo/purple/amber/olive/pink/rust/teal/neutral) to `snippets/components/config/MermaidColours.jsx`. The validator's `loadMermaidGovHexes()` already greps all hexes in that file, so all 38 distinct ungoverned hexes (249 occurrences) are now governed. No content edits required. |
+| 4 | `prop-hardcoded-hex` | 68 | **50** (intentional palette docs + off-palette status) | `repair-hardcoded-hex.js` (commit 1b3021aa4) | Sourced hex→CSS-var map from **`style.css`** (the "Component governance source of truth"), NOT MermaidColours.jsx. Fixed the `#2d9a67` typo across 8 dev pages → `var(--accent)`. Skips ambiguous hexes (`#ffffff` maps to both `--background` and `--on-accent`). 50 remaining are allowlisted (`style-guide.mdx` palette doc) or off-palette status colours awaiting a brand decision. |
 
-Deliverables per category: one `repair-<category>.js` under
+**Validator narrowings shipped alongside Phase 1** (`check-component-props.js`):
+- `prop-hardcoded-hex` strips `<Mermaid chart={\`...\`}>` JSX blocks (not just ` ```mermaid ` fences) so governed mermaid colours in JSX wrappers aren't false-flagged.
+- `prop-divider-missing-before-related` lookback counts the 2 nearest **non-empty** lines (was a fixed 4-physical-line window). Accepts the divider→closing-paragraph→Related pattern; ignores blanked JSX-commented dividers.
+- `prop-divider-missing-opening` exempts single-component mounts (`<XxxSource/Canonical/Changelog/Page/Catalog>`, `<OpenAPI>`, `<IndexSource>`), imported partials (`custom/views/`, `composables/`, `groups/`, `stubs/`, `components/`), and pages with no markdown heading.
+- All exemption patterns are captured in named regexes (`SINGLE_MOUNT_RE`, `PARTIAL_PATH_RE`) at the top of `checkCustomDividerPlacement`.
+
+**Dispatcher wired:** both repair atomics are in `ATOMICS.repair` of `dispatch-component-registry.js` — PR mode previews via `--dry-run`; scheduled+write / manual applies with `--verify`.
+
+**Unit tests added** (`operations/tests/unit/script-tests/remediators/`):
+- `repair-divider-before-related.test.js` — 5 tests (default scope, dry-run safety, idempotent write, depth-2 acceptance of divider→prose→heading, JSX-commented divider is ignored).
+- `repair-hardcoded-hex.test.js` — 6 tests (default scope, dry-run safety, `#2d9a67 → var(--accent)` regression guard for the `var(--theme-accent)` wrong-token miss, mermaid fence skipped, `<Mermaid chart={\`...\`}>` JSX wrapper skipped, ambiguous + unmapped hexes skipped).
+- `repair-divider-opening.test.js` — 6 tests (default scope, heading-first insertion + idempotency, no-import safety guard, callout-first not in scope, already-correct pages untouched, partial-path safety).
+
+All 17 tests run via `node operations/tests/unit/script-tests/run-all.js`.
+
+Deliverables per remaining category (Phase 2/3): one `repair-<category>.js` under
 `operations/scripts/remediators/components/library/`, with `--dry-run`/`--write`/
 `--verify`/`--files`/`--staged`/`--full`, 11-tag JSDoc header, and a unit test under
-`operations/tests/unit/`. Pairs into the existing `dispatch-component-registry.js`.
+`operations/tests/unit/script-tests/remediators/`. Pairs into `dispatch-component-registry.js`.
 
 **Phase 2 — Icon/title derivation categories.**
 Need a small derivation library shared across remediators.
@@ -69,17 +85,20 @@ shared by accordion, tab, and code-block remediators. Title derivation
    design doc (which classnames to allow, where the registry lives). Some matches
    will be irreducible (computed expressions) and stay flagged.
 
-## Brand-token mapping (Phase 1.3 + 1.4 input)
+## Brand-token mapping — RESOLVED 2026-06-03
 
-Required before Phase 1.3 and 1.4 can ship. Owner: design / brand. Output:
-`tools/config/quality/mermaid-colour-tokens.json` mapping hex → token name.
+The originally proposed `tools/config/quality/mermaid-colour-tokens.json` is no longer
+needed. The same governance is now expressed directly in `snippets/components/config/
+MermaidColours.jsx`: the `diagram` palette object groups the sanctioned hexes by colour
+family (decision Q3), and the validator's `loadMermaidGovHexes()` greps every hex from
+that file into the allowed set. Future additions: edit `MermaidColours.jsx`'s `diagram`
+section, not a separate JSON.
 
-## Dispatcher wire-up
+## Dispatcher wire-up — RESOLVED
 
-Once any phase-1 remediator lands, add it to `ATOMICS.repair` in
-[`dispatch-component-registry.js`](../../../operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js)
-and re-enable the `mode === 'pr'` dry-run preview branch. PR mode should preview
-the diff; scheduled+write or manual should apply with `--verify`.
+Both Phase-1 remediators are wired into `ATOMICS.repair` of
+[`dispatch-component-registry.js`](../../../operations/scripts/dispatch/content/maintenance/dispatch-component-registry.js).
+PR mode previews via `--dry-run`; scheduled+write / manual applies with `--verify`.
 
 ## Open questions
 

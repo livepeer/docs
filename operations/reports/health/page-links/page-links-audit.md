@@ -3,7 +3,7 @@
 Operator note: external HTTP/HTTPS links are classified only and marked as `🟡 untested-external` in this phase.
 
 ## Run Metadata
-- Timestamp: 2026-05-27T10:46:32.042Z
+- Timestamp: 2026-05-29T06:41:58.562Z
 - Mode: full
 - Strict: false (internal refs only)
 - Files analyzed: 821
@@ -17,16 +17,16 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---:|
 | empty | 100 |
 | external-https | 2863 |
-| internal-relative | 450 |
-| internal-rooted | 2193 |
+| internal-relative | 402 |
+| internal-rooted | 2241 |
 | mailto | 1 |
 
 ### By Status
 | status | count |
 |---|---:|
 | 🟡 untested-external | 2863 |
-| missing | 295 |
-| ok | 2344 |
+| missing | 40 |
+| ok | 2599 |
 | ok-folder-route | 4 |
 | skipped | 101 |
 
@@ -1393,7 +1393,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | internal-relative | ./git-hooks | docs-guide/contributing/git-hooks.mdx | true | ok |  |  |  |
-| internal-relative | ../../v2/resources/documentation-guide/style-guide.mdx | v2/resources/documentation-guide/style-guide.mdx | false | missing | /v2/resources/documentation-guide/copy-style/style-guide (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.825) | /v2/resources/documentation-guide/docs-library (high path similarity, 0.75) |
+| internal-rooted | /v2/resources/documentation-guide/copy-style/style-guide | v2/resources/documentation-guide/copy-style/style-guide.mdx | true | ok |  |  |  |
 | internal-relative | ../../v2/resources/documentation-guide/component-library/overview.mdx | v2/resources/documentation-guide/component-library/overview.mdx | true | ok |  |  |  |
 | internal-relative | ../policies/root-allowlist-governance.mdx | docs-guide/policies/root-allowlist-governance.mdx | true | ok |  |  |  |
 | internal-relative | ../policies/agent-governance-framework.mdx | docs-guide/policies/agent-governance-framework.mdx | true | ok |  |  |  |
@@ -1770,7 +1770,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### docs-guide/frameworks/styles-engineering-guide.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/resources/documentation-guide/style-guide | v2/resources/documentation-guide/style-guide | false | missing | /v2/resources/documentation-guide/copy-style/style-guide (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.825) | /v2/resources/documentation-guide/docs-library (high path similarity, 0.75) |
+| internal-rooted | /v2/resources/documentation-guide/copy-style/style-guide | v2/resources/documentation-guide/copy-style/style-guide.mdx | true | ok |  |  |  |
 
 ### docs-guide/policies/agent-governance-framework.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -1883,7 +1883,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /docs-guide/catalog/scripts-catalog | docs-guide/catalog/scripts-catalog.mdx | true | ok |  |  |  |
-| internal-relative | ../../../workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md | ../workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md | false | missing | workspace/plan/active/SCRIPT-GOVERNANCE/script-framework.md | v2/resources/documentation-guide/frameworks/script-framework.mdx | .github/x-archive/docs-guide1/frameworks/script-framework.mdx |
+| internal-rooted | /docs-guide/frameworks/script-framework | docs-guide/frameworks/script-framework.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/catalog/scripts-catalog | docs-guide/catalog/scripts-catalog.mdx | true | ok |  |  |  |
 
 ### docs-guide/policies/skill-pipeline-map.mdx
@@ -1921,9 +1921,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /docs-guide/repo-ops/config/root-governance-map | docs-guide/repo-ops/config/root-governance-map.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/repo-ops/config/repo-governance-map | docs-guide/repo-ops/config/repo-governance-map.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/repo-ops/config/repo-governance-map | docs-guide/repo-ops/config/repo-governance-map.mdx | true | ok |  |  |  |
-| internal-relative | solutions-secrets | docs-guide/repo-ops/config/solutions-secrets | false | missing | .github/x-archive/docs-guide1/repo-ops/secrets/solutions-secrets.mdx | docs-guide/repo-ops/secrets/solutions-secrets.mdx |  |
-| internal-relative | solutions-secrets | docs-guide/repo-ops/config/solutions-secrets | false | missing | .github/x-archive/docs-guide1/repo-ops/secrets/solutions-secrets.mdx | docs-guide/repo-ops/secrets/solutions-secrets.mdx |  |
-| internal-relative | enforcement-map | docs-guide/repo-ops/config/enforcement-map | false | missing | v2/resources/documentation-guide/repo-ops/maps/enforcement-map.mdx | .github/x-archive/docs-guide1/repo-ops/maps/enforcement-map.mdx | docs-guide/repo-ops/maps/enforcement-map.mdx |
+| internal-rooted | /docs-guide/repo-ops/secrets/solutions-secrets | docs-guide/repo-ops/secrets/solutions-secrets.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/repo-ops/secrets/solutions-secrets | docs-guide/repo-ops/secrets/solutions-secrets.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/repo-ops/maps/enforcement-map | docs-guide/repo-ops/maps/enforcement-map.mdx | true | ok |  |  |  |
 
 ### docs-guide/repo-ops/config/repo-governance-map.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -1938,9 +1938,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### docs-guide/repo-ops/maps/enforcement-map.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-relative | solutions-secrets | docs-guide/repo-ops/maps/solutions-secrets | false | missing | .github/x-archive/docs-guide1/repo-ops/secrets/solutions-secrets.mdx | docs-guide/repo-ops/secrets/solutions-secrets.mdx |  |
-| internal-relative | repo-config-map | docs-guide/repo-ops/maps/repo-config-map | false | missing | v2/resources/documentation-guide/repo-ops/config/repo-config-map.mdx | .github/x-archive/docs-guide1/repo-ops/config/repo-config-map.mdx | docs-guide/repo-ops/config/repo-config-map.mdx |
-| internal-relative | solutions-secrets | docs-guide/repo-ops/maps/solutions-secrets | false | missing | .github/x-archive/docs-guide1/repo-ops/secrets/solutions-secrets.mdx | docs-guide/repo-ops/secrets/solutions-secrets.mdx |  |
+| internal-rooted | /docs-guide/repo-ops/secrets/solutions-secrets | docs-guide/repo-ops/secrets/solutions-secrets.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/repo-ops/config/repo-config-map | docs-guide/repo-ops/config/repo-config-map.mdx | true | ok |  |  |  |
+| internal-rooted | /docs-guide/repo-ops/secrets/solutions-secrets | docs-guide/repo-ops/secrets/solutions-secrets.mdx | true | ok |  |  |  |
 
 ### docs-guide/source-of-truth-guide.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -2023,7 +2023,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /docs-guide/features/ai-features | docs-guide/features/ai-features.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/policies/agent-governance-framework | docs-guide/policies/agent-governance-framework.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/frameworks/research-skill-workflow | docs-guide/frameworks/research-skill-workflow.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/resources/documentation-guide/research-and-fact-checking | v2/resources/documentation-guide/research-and-fact-checking | false | missing | /v2/resources/documentation-guide/ai-automations/research-and-fact-checking (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.825) | /v2/resources/documentation-guide/docs-library (high path similarity, 0.75) |
+| internal-rooted | /v2/resources/documentation-guide/ai-automations/research-and-fact-checking | v2/resources/documentation-guide/ai-automations/research-and-fact-checking.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/features/ai-features | docs-guide/features/ai-features.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/policies/agent-governance-framework | docs-guide/policies/agent-governance-framework.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/policies/root-allowlist-governance | docs-guide/policies/root-allowlist-governance.mdx | true | ok |  |  |  |
@@ -2162,8 +2162,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://docs.openzeppelin.com/contracts/5.x/api/proxy#TransparentUpgradeableProxy |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/protocol/livepeer-token | v2/about/protocol/livepeer-token.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/protocol/governance-model | v2/about/protocol/governance-model | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/treasury | v2/about/protocol/treasury | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/docs/blob/main/.github/workflows/update-contract-addresses.yml |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/protocol |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/arbitrum-lpt-bridge |  | null | 🟡 untested-external |  |  |  |
@@ -2402,8 +2402,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---|---|---|---|---|---|---|
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
-| internal-relative | ../documentation-guide/contribute-to-the-docs | snippets/composables/pages/documentation-guide/contribute-to-the-docs | false | missing | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx |  |  |
-| internal-relative | ../../internal/overview/governance | snippets/composables/internal/overview/governance | false | missing | v2/community/ecosystem/governance.mdx | v2/internal/overview/governance.mdx | .github/workspace/x-archive/phase2/pipeline-design/governance.md |
+| internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/internal/overview/governance | v2/internal/overview/governance.mdx | true | ok |  |  |  |
 | external-https | https://roadmap.livepeer.org/roadmap |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer/releases |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
@@ -2455,12 +2455,12 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/gateways/guides/payments-and-pricing/remote-signers | v2/gateways/guides/payments-and-pricing/remote-signers.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/concepts/capabilities | v2/gateways/concepts/capabilities.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline | v2/gateways/guides/tutorials/tutorial-2-byoc-cpu-pipeline.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/concepts/ai-on-livepeer | v2/developers/concepts/ai-on-livepeer | false | missing | /v2/developers/concepts/infra-stack (high path similarity, 0.75) | /v2/developers/concepts/landscape (high path similarity, 0.75) | /v2/developers/concepts/repo-map (high path similarity, 0.75) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/changelog/protocol/go-livepeer/rss.xml | v2/resources/changelog/protocol/go-livepeer/rss.xml | false | missing | v2/internal/assets/transcripts/a16z.rss | v2/internal/assets/transcripts/ycomb.rss | .github/workflows/x-archive/integrator-copy-update-rss-blog-data.yml.archived |
 | external-https | https://github.com/livepeer/go-livepeer/releases |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/gateways/guides/payments-and-pricing/remote-signers | v2/gateways/guides/payments-and-pricing/remote-signers.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/concepts/capabilities | v2/gateways/concepts/capabilities.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/concepts/ai-on-livepeer | v2/developers/concepts/ai-on-livepeer | false | missing | /v2/developers/concepts/infra-stack (high path similarity, 0.75) | /v2/developers/concepts/landscape (high path similarity, 0.75) | /v2/developers/concepts/repo-map (high path similarity, 0.75) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
 
 ### snippets/composables/pages/changelogs/protocol/lips.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -2841,7 +2841,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/about/protocol/blockchain-contracts | v2/about/protocol/blockchain-contracts.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/network/actors | v2/about/network/actors.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/network/marketplace | v2/about/network/marketplace | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
 
 ### v2/about/concepts/actors-and-capabilities.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -2907,7 +2907,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
 | internal-rooted | /wiki/livepeer/protocol#1.1 | v2/pages/wiki/livepeer/protocol | false | missing | v2/about/concepts/composables/protocol.mdx | snippets/composables/pages/about/concepts/protocol.mdx | v2/about/concepts/unclassified/protocol-and-network.mdx |
-| internal-rooted | /v2/about/concepts/mental-model | v2/about/concepts/mental-model | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
 
 ### v2/about/concepts/composables/protocol.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -2953,9 +2953,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /v2/about/protocol/architecture | v2/about/protocol/architecture.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/network/architecture | v2/network/architecture | false | missing | /v2/about/network/architecture (same leaf segment match, 0.65) | /v2/about/protocol/architecture (same leaf segment match, 0.65) | /v2/gateways/concepts/architecture (same leaf segment match, 0.65) |
-| internal-rooted | /v2/network/marketplace | v2/network/marketplace | false | missing | v2/about/network/marketplace-model.mdx |  |  |
-| internal-rooted | /v2/network/capabilities | v2/network/capabilities | false | missing | /v2/gateways/concepts/capabilities (same leaf segment match, 0.65) | /v2/orchestrators/concepts/capabilities (same leaf segment match, 0.65) |  |
+| internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/job-pipelines | v2/about/network/job-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/solutions | v2/solutions/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/ | v2/developers/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
@@ -2965,7 +2965,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/developers/ | v2/developers/index.mdx | true | ok |  |  |  |
 | internal-rooted | /snippets/assets/media/diagrams/livepeer_network_protocol_layperson.svg | snippets/assets/media/diagrams/livepeer_network_protocol_layperson.svg | true | ok |  |  |  |
 | internal-rooted | /snippets/assets/media/diagrams/livepeer_network_protocol_technical.svg | snippets/assets/media/diagrams/livepeer_network_protocol_technical.svg | true | ok |  |  |  |
-| internal-rooted | /v2/developers/protocol/architecture | v2/developers/protocol/architecture | false | missing | /v2/about/network/architecture (same leaf segment match, 0.65) | /v2/about/protocol/architecture (same leaf segment match, 0.65) | /v2/gateways/concepts/architecture (same leaf segment match, 0.65) |
+| internal-rooted | /v2/about/protocol/architecture | v2/about/protocol/architecture.mdx | true | ok |  |  |  |
 
 ### v2/about/concepts/unclassified/about-livepeer-all.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -3021,7 +3021,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/naap |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/ai-worker |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/comfystream |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/protocol/token-economics | v2/about/protocol/token-economics | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/livepeer-token | v2/about/protocol/livepeer-token.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/actors | v2/about/network/actors.mdx | true | ok |  |  |  |
 | external-https | https://arbitrum.io |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/protocol/mechanisms | v2/about/protocol/mechanisms.mdx | true | ok |  |  |  |
@@ -3037,9 +3037,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/ai-runner |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.youtube.com/watch?v=ouTvdJr9dSU |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/concepts/livepeer-protocol-and-network | v2/about/concepts/livepeer-protocol-and-network | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/concepts/livepeer-architecture | v2/about/concepts/livepeer-architecture | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/concepts/core-concepts | v2/about/concepts/core-concepts | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
+| internal-rooted | /v2/about/concepts/unclassified/protocol-and-network | v2/about/concepts/unclassified/protocol-and-network.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/about-livepeer | v2/about/concepts/about-livepeer.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/guides/technical-roadmap | v2/about/guides/technical-roadmap.mdx | true | ok |  |  |  |
 
 ### v2/about/concepts/unclassified/protocol-and-network.mdx
@@ -3066,7 +3066,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/about/protocol/blockchain-contracts | v2/about/protocol/blockchain-contracts.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/network/actors | v2/about/network/actors.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/network/marketplace | v2/about/network/marketplace | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers | v2/developers/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways | v2/gateways/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators | v2/orchestrators/index.mdx | true | ok |  |  |  |
@@ -3099,22 +3099,22 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/about/guides/contributor-orientation.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/about/concepts/mental-model | v2/about/concepts/mental-model | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/network/technical-architecture | v2/about/network/technical-architecture | false | missing | /v2/gateways/resources/reference/technical/technical-architecture (same leaf segment match, 0.65) | /v2/resources/references/go-livepeer/technical-architecture (same leaf segment match, 0.65) | /v2/about/network/actors (high path similarity, 0.75) |
-| internal-rooted | /v2/about/network/job-lifecycle | v2/about/network/job-lifecycle | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/job-pipelines | v2/about/network/job-pipelines.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/blockchain-contracts | v2/about/protocol/blockchain-contracts.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/protocol/design-philosophy | v2/about/protocol/design-philosophy | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
 
 ### v2/about/guides/evaluating-livepeer.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/concepts/mental-model | v2/about/concepts/mental-model | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/network/overview | v2/about/network/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/network/marketplace | v2/about/network/marketplace | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/protocol/economics | v2/about/protocol/economics | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/governance-and-economics | v2/about/concepts/governance-and-economics.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/network-metrics | v2/about/resources/reference/network-metrics.mdx | true | ok |  |  |  |
 | external-https | https://messari.io/report/state-of-livepeer-q1-2026 |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/guides/messari2026.pdf | v2/about/guides/messari2026.pdf | true | ok |  |  |  |
@@ -3240,22 +3240,22 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/about/navigator.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/network/overview | v2/about/network/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/faq | v2/about/resources/faq.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/protocol/core-mechanisms | v2/about/protocol/core-mechanisms | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/mechanisms | v2/about/protocol/mechanisms.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/livepeer-token | v2/about/protocol/livepeer-token.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/protocol/governance-model | v2/about/protocol/governance-model | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/treasury | v2/about/protocol/treasury | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/economics | v2/about/protocol/economics | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/technical-architecture | v2/about/protocol/technical-architecture | false | missing | /v2/gateways/resources/reference/technical/technical-architecture (same leaf segment match, 0.65) | /v2/resources/references/go-livepeer/technical-architecture (same leaf segment match, 0.65) | /v2/about/protocol/actors (high path similarity, 0.75) |
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/concepts/mental-model | v2/about/concepts/mental-model | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/protocol/design-philosophy | v2/about/protocol/design-philosophy | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
-| internal-rooted | /v2/about/network/overview | v2/about/network/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/network/job-lifecycle | v2/about/network/job-lifecycle | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/governance-and-economics | v2/about/concepts/governance-and-economics.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/architecture | v2/about/protocol/architecture.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/job-pipelines | v2/about/network/job-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/knowledge-hub/evaluating-livepeer | v2/about/resources/knowledge-hub/evaluating-livepeer.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/network-metrics | v2/about/resources/reference/network-metrics.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/knowledge-hub/contributor-orientation | v2/about/resources/knowledge-hub/contributor-orientation.mdx | true | ok |  |  |  |
@@ -3294,23 +3294,23 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /v2/about/resources/knowledge-hub/livepeer-whitepaper | v2/about/resources/knowledge-hub/livepeer-whitepaper.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/network/marketplace | v2/about/network/marketplace | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/portal | v2/orchestrators/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/portal | v2/gateways/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/delegators/portal | v2/delegators/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/portal | v2/developers/portal.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/network/core-mechanisms | v2/about/network/core-mechanisms | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
+| internal-rooted | /v2/about/network/mechanisms | v2/about/network/mechanisms.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/network/marketplace | v2/about/network/marketplace | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
 
 ### v2/about/network/interfaces.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /v2/developers/portal | v2/developers/portal.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/resources/reference/pytrickle | v2/developers/resources/reference/pytrickle | false | missing | /v2/resources/changelog/ai-compute/pytrickle (same leaf segment match, 0.65) | /v2/developers/resources/reference/apis (high path similarity, 0.8) | /v2/developers/resources/reference/pricing-rate-limits (high path similarity, 0.8) |
+| internal-rooted | /v2/developers/resources/reference/pytrickle-reference | v2/developers/resources/reference/pytrickle-reference.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/job-pipelines | v2/about/network/job-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/portal | v2/developers/portal.mdx | true | ok |  |  |  |
@@ -3319,7 +3319,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/about/network/job-pipelines.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/interfaces | v2/about/network/interfaces.mdx | true | ok |  |  |  |
@@ -3339,7 +3339,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/about/network/job-pipelines | v2/about/network/job-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/mechanisms | v2/about/protocol/mechanisms.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/network/marketplace | v2/about/network/marketplace | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/network/job-pipelines | v2/about/network/job-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/mechanisms | v2/about/protocol/mechanisms.mdx | true | ok |  |  |  |
 
@@ -3397,10 +3397,10 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://github.com/livepeer/protocol |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/concepts/mental-model | v2/about/concepts/mental-model | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/network/overview | v2/about/network/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/glossary | v2/about/resources/glossary.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/knowledge-hub/livepeer-whitepaper | v2/about/resources/knowledge-hub/livepeer-whitepaper.mdx | true | ok |  |  |  |
 
@@ -3442,7 +3442,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://docs.openzeppelin.com/contracts/5.x/api/token/erc20 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-89.md |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-91.md |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/protocol/treasury | v2/about/protocol/treasury | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
 | external-https | https://docs.openzeppelin.com/contracts/5.x/api/governance |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.openzeppelin.com/contracts/5.x/api/governance#TimelockController |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.openzeppelin.com/contracts/5.x/api/governance#TimelockController |  | null | 🟡 untested-external |  |  |  |
@@ -3456,9 +3456,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/protocol |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://arbiscan.io/accounts/label/livepeer |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/protocol/livepeer-token | v2/about/protocol/livepeer-token.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/protocol/treasury | v2/about/protocol/treasury | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/governance-model | v2/about/protocol/governance-model | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/economics | v2/about/protocol/economics | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/governance-and-economics | v2/about/concepts/governance-and-economics.mdx | true | ok |  |  |  |
 
 ### v2/about/protocol/design.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -3488,7 +3488,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://eips.ethereum.org/EIPS/eip-1 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0089.md |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0092.md |  | null | 🟡 untested-external |  |  |  |
-| internal-relative | ./treasury | v2/about/protocol/treasury | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/delegators/guides/treasury/overview | v2/delegators/guides/treasury/overview.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0073.md |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0034.md |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0035.md |  | null | 🟡 untested-external |  |  |  |
@@ -3526,7 +3526,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0052.md |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.openzeppelin.com/contracts/4.x/api/governance#governor |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.openzeppelin.com/contracts/4.x/api/governance#governorsettings |  | null | 🟡 untested-external |  |  |  |
-| internal-relative | ./treasury | v2/about/protocol/treasury | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/delegators/guides/treasury/overview | v2/delegators/guides/treasury/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/home/about/ecosystem#livepeer-foundation | v2/home/about/ecosystem.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/home/about/ecosystem#special-purpose-entities | v2/home/about/ecosystem.mdx | true | ok |  |  |  |
 | external-https | https://discord.com/channels/423160867534929930/686685097935503397 |  | null | 🟡 untested-external |  |  |  |
@@ -3537,7 +3537,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/c/lips/18 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://explorer.livepeer.org/voting |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/protocol/governance-model | v2/about/protocol/governance-model | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/governance-and-treasury | v2/about/protocol/governance-and-treasury.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
 
 ### v2/about/protocol/livepeer-token.mdx
@@ -3576,11 +3576,11 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/about/resources/faq.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/network/overview | v2/about/network/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/livepeer-token | v2/about/protocol/livepeer-token.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/protocol/economics | v2/about/protocol/economics | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/concepts/governance-and-economics | v2/about/concepts/governance-and-economics.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/blockchain-contracts | v2/about/protocol/blockchain-contracts.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/navigator | v2/about/navigator.mdx | true | ok |  |  |  |
@@ -3624,22 +3624,22 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/about/resources/knowledge-hub/contributor-orientation.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/about/concepts/mental-model | v2/about/concepts/mental-model | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/network/technical-architecture | v2/about/network/technical-architecture | false | missing | /v2/gateways/resources/reference/technical/technical-architecture (same leaf segment match, 0.65) | /v2/resources/references/go-livepeer/technical-architecture (same leaf segment match, 0.65) | /v2/about/network/actors (high path similarity, 0.75) |
-| internal-rooted | /v2/about/network/job-lifecycle | v2/about/network/job-lifecycle | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/architecture | v2/about/network/architecture.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/job-pipelines | v2/about/network/job-pipelines.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/blockchain-contracts | v2/about/protocol/blockchain-contracts.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/protocol/design-philosophy | v2/about/protocol/design-philosophy | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
 
 ### v2/about/resources/knowledge-hub/evaluating-livepeer.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/concepts/mental-model | v2/about/concepts/mental-model | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/network/overview | v2/about/network/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/network/marketplace | v2/about/network/marketplace | false | missing | /v2/about/network/actors (high path similarity, 0.75) | /v2/about/network/architecture (high path similarity, 0.75) | /v2/about/network/design (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/protocol/economics | v2/about/protocol/economics | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/livepeer-stack | v2/about/concepts/livepeer-stack.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/marketplace-model | v2/about/network/marketplace-model.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/concepts/governance-and-economics | v2/about/concepts/governance-and-economics.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/network-metrics | v2/about/resources/reference/network-metrics.mdx | true | ok |  |  |  |
 
 ### v2/about/resources/knowledge-hub/gateways-vs-orchestrators.mdx
@@ -3779,8 +3779,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/community/contribute/build-livepeer | v2/community/contribute/build-livepeer.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/community/contribute/opportunities | v2/community/contribute/opportunities.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/getting-started/quickstart | v2/orchestrators/getting-started/quickstart | false | missing | /v2/solutions/livepeer-studio/docs/quickstart (same leaf segment match, 0.65) | /v2/orchestrators/quickstart/AI-prompt-start (high path similarity, 0.575) | /v2/orchestrators/quickstart/guide (high path similarity, 0.575) |
-| internal-rooted | /v2/delegators/getting-started/quickstart | v2/delegators/getting-started/quickstart | false | missing | /v2/solutions/livepeer-studio/docs/quickstart (same leaf segment match, 0.65) | /v2/delegators/GOVERNANCE (high path similarity, 0.5) | /v2/delegators/_design/delegators-IA (high path similarity, 0.5) |
+| internal-rooted | /v2/orchestrators/quickstart/guide | v2/orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/delegators/delegation/delegate-your-lpt | v2/delegators/delegation/delegate-your-lpt.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/community/ecosystem/governance | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 
@@ -4071,7 +4071,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/developers/resources/reference/apis | v2/developers/resources/reference/apis.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/community/ecosystem/governance#how-to-propose-an-spe | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | external-https | https://forum.livepeer.org/t/livepeer-governance-process/2767 |  | null | 🟡 untested-external |  |  |  |
@@ -5549,7 +5549,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /v2/orchestrators/concepts/role | v2/orchestrators/concepts/role.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/solutions/embody | /v2/solutions/embody | true | ok-folder-route |  |  |  |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/payments-and-pricing/remote-signers | v2/gateways/guides/payments-and-pricing/remote-signers.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/concepts/architecture | v2/gateways/concepts/architecture.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/concepts/business-model | v2/gateways/concepts/business-model.mdx | true | ok |  |  |  |
@@ -5615,7 +5615,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/go-livepeer/blob/5691cb48/core/broadcast.go |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer/blob/5691cb48/core/live_payment.go |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/gateways/setup/connect/connect-with-offerings | v2/gateways/setup/connect/connect-with-offerings | false | missing | /v2/gateways/setup/connect/research (high path similarity, 0.8) | /v2/gateways/setup/connect (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) |
+| internal-rooted | /v2/gateways/setup/connect | v2/gateways/setup/connect.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer/blob/5691cb48/core/livepeernode.go |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/gateways/setup/requirements/on-chain-setup/on-chain | v2/gateways/setup/prepare.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/payments-and-pricing/pricing-configuration | v2/gateways/guides/payments-and-pricing/pricing-configuration.mdx | true | ok |  |  |  |
@@ -5721,7 +5721,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/explorer/pull/410 |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/gateways/guides/advanced-operations/gateway-middleware | v2/gateways/guides/advanced-operations/gateway-middleware.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/AI-API/ai | v2/gateways/resources/reference/technical/api-reference/AI-API/ai | false | missing | /v2/gateways/resources/reference/technical/api-reference/AI-Worker/ai-worker-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/_delete-all-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api (high path similarity, 0.75) |
+| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api | v2/gateways/resources/reference/technical/api-reference/ai-worker-api.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/advanced-operations/gateway-middleware | v2/gateways/guides/advanced-operations/gateway-middleware.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/roadmap-and-funding/operator-support | v2/gateways/guides/roadmap-and-funding/operator-support.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy | v2/gateways/guides/roadmap-and-funding/naap-multi-tenancy.mdx | true | ok |  |  |  |
@@ -5791,11 +5791,11 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /v2/Gateways/resources/compendium/Arbitrum-rpc | v2/Gateways/resources/compendium/Arbitrum-rpc.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/Gateways/setup/requirements/on-chain-setup/on-chain | v2/Gateways/setup/requirements/on-chain-setup/on-chain | false | missing | v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx | workspace/plan/complete/ORCHESTRATOR-CONTENT-WRITING/gateways/S04-on-chain-quickstart.md |  |
-| internal-rooted | /v2/Gateways/setup/requirements/on-chain-setup/bridge-LPT-to-Arbitrum | v2/Gateways/setup/requirements/on-chain-setup/bridge-LPT-to-Arbitrum | false | missing |  |  |  |
+| internal-rooted | /v2/gateways/setup/prepare | v2/gateways/setup/prepare.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/delegators/delegation/bridge-lpt-to-arbitrum | v2/delegators/delegation/bridge-lpt-to-arbitrum.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/guides/payments-and-pricing/fund-Gateway | v2/Gateways/guides/payments-and-pricing/fund-Gateway.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/gateways/setup/install/docker-install | v2/gateways/setup/install/docker-install | false | missing | /v2/gateways/setup/install (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) | /v2/gateways/setup/connect/research (high path similarity, 0.6) |
-| internal-rooted | /v2/gateways/setup/install/linux-install | v2/gateways/setup/install/linux-install | false | missing | /v2/gateways/setup/install (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) | /v2/gateways/setup/connect/research (high path similarity, 0.6) |
+| internal-rooted | /v2/gateways/setup/install | v2/gateways/setup/install.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/gateways/setup/install | v2/gateways/setup/install.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/quickstart/gateway-setup | v2/gateways/quickstart/gateway-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/deployment-details/gwid-single-click-deploy | v2/gateways/guides/deployment-details/gwid-single-click-deploy.mdx | true | ok |  |  |  |
 
@@ -5855,13 +5855,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://explorer-arbitrum-one-git-feat-add-g-10dba1-livepeer-foundation.vercel.app/gateways |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://tools.livepeer.cloud/gateways |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/cli-http-api | v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/cli-http-api | false | missing | /v2/gateways/resources/reference/technical/api-reference/AI-Worker/ai-worker-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/_delete-all-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api (high path similarity, 0.75) |
+| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api | v2/gateways/resources/reference/technical/api-reference/ai-worker-api.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/monitoring-and-tooling/on-chain-metrics | v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/monitoring-and-tooling/monitoring-setup | v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/monitoring-and-tooling/on-chain-metrics | v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/cli-http-api | v2/gateways/resources/reference/technical/api-reference/CLI-HTTP/cli-http-api | false | missing | /v2/gateways/resources/reference/technical/api-reference/AI-Worker/ai-worker-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/_delete-all-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api (high path similarity, 0.75) |
+| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api | v2/gateways/resources/reference/technical/api-reference/ai-worker-api.mdx | true | ok |  |  |  |
 
 ### v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5896,23 +5896,23 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/go-livepeer/blob/master/server/ai_http.go |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/gateways/guides/payments-and-pricing/pricing-strategy | v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/guide | v2/gateways/guides/node-pipelines/guide.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/build/comfystream | v2/developers/build/comfystream | false | missing | /v2/resources/changelog/ai-compute/comfystream (same leaf segment match, 0.65) | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview | v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/byoc-pipelines | v2/gateways/guides/node-pipelines/byoc-pipelines.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer/blob/master/server/ai_mediaserver.go |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/guide | v2/gateways/guides/node-pipelines/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/byoc-pipelines | v2/gateways/guides/node-pipelines/byoc-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/pipeline-configuration | v2/gateways/guides/node-pipelines/pipeline-configuration.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/build/model-support | v2/developers/build/model-support | false | missing | /v2/developers/build/ai-and-agents/model-support (same leaf segment match, 0.65) | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/build/workload-fit | v2/developers/build/workload-fit | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
-| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/AI-API/text-to-image | v2/gateways/resources/reference/technical/api-reference/AI-API/text-to-image | false | missing | /v2/gateways/resources/reference/technical/api-reference/AI-Worker/ai-worker-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/_delete-all-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api (high path similarity, 0.75) |
+| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api | v2/gateways/resources/reference/technical/api-reference/ai-worker-api.mdx | true | ok |  |  |  |
 
 ### v2/gateways/guides/node-pipelines/byoc-pipelines.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/build/workload-fit | v2/developers/build/workload-fit | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
 | internal-rooted | /v2/gateways/guides/node-pipelines/guide | v2/gateways/guides/node-pipelines/guide.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/pipeline-configuration | v2/gateways/guides/node-pipelines/pipeline-configuration.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/ai-pipelines#orchestrator-discovery | v2/gateways/guides/node-pipelines/ai-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/ai-pipelines#finding-ai-models | v2/gateways/guides/node-pipelines/ai-pipelines.mdx | true | ok |  |  |  |
@@ -5920,14 +5920,14 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/gateways/guides/node-pipelines/ai-pipelines | v2/gateways/guides/node-pipelines/ai-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/pipeline-configuration | v2/gateways/guides/node-pipelines/pipeline-configuration.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/build/workload-fit | v2/developers/build/workload-fit | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/monitoring-and-tooling/monitoring-setup | v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx | true | ok |  |  |  |
 
 ### v2/gateways/guides/node-pipelines/guide.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/developers/build/model-support | v2/developers/build/model-support | false | missing | /v2/developers/build/ai-and-agents/model-support (same leaf segment match, 0.65) | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) |
-| internal-rooted | /v2/developers/build/comfystream | v2/developers/build/comfystream | false | missing | /v2/resources/changelog/ai-compute/comfystream (same leaf segment match, 0.65) | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview | v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/solutions/daydream/overview | v2/solutions/daydream/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/build/workload-fit | v2/developers/build/workload-fit | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
 | internal-rooted | /v2/gateways/guides/node-pipelines/video-pipelines | v2/gateways/guides/node-pipelines/video-pipelines.mdx | true | ok |  |  |  |
@@ -5935,7 +5935,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/gateways/guides/node-pipelines/byoc-pipelines | v2/gateways/guides/node-pipelines/byoc-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/pipeline-configuration | v2/gateways/guides/node-pipelines/pipeline-configuration.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/build/workload-fit | v2/developers/build/workload-fit | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
-| internal-rooted | /v2/developers/build/model-support | v2/developers/build/model-support | false | missing | /v2/developers/build/ai-and-agents/model-support (same leaf segment match, 0.65) | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
 
 ### v2/gateways/guides/node-pipelines/pipeline-configuration.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -5961,7 +5961,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/gateways/guides/payments-and-pricing/pricing-strategy | v2/gateways/guides/payments-and-pricing/pricing-strategy.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/monitoring-and-tooling/monitoring-setup | v2/gateways/guides/monitoring-and-tooling/monitoring-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/node-pipelines/ai-pipelines | v2/gateways/guides/node-pipelines/ai-pipelines.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 
 ### v2/gateways/guides/operator-considerations/business-case.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -6179,7 +6179,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://bridge.arbitrum.io/ |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/Gateways/resources/compendium/Arbitrum-exchanges | v2/Gateways/resources/compendium/Arbitrum-exchanges.mdx | true | ok |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/Gateways/setup/requirements/on-chain-setup/on-chain | v2/Gateways/setup/requirements/on-chain-setup/on-chain | false | missing | v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx | workspace/plan/complete/ORCHESTRATOR-CONTENT-WRITING/gateways/S04-on-chain-quickstart.md |  |
+| internal-rooted | /v2/gateways/setup/prepare | v2/gateways/setup/prepare.mdx | true | ok |  |  |  |
 | external-https | https://infura.io |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://alchemy.com |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/Gateways/resources/compendium/Arbitrum-rpc | v2/Gateways/resources/compendium/Arbitrum-rpc.mdx | true | ok |  |  |  |
@@ -6233,7 +6233,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/Gateways/guides/tutorials/tutorial-1-offchain-transcoding-test | v2/Gateways/guides/tutorials/tutorial-1-offchain-transcoding-test.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/guides/tutorials/tutorial-2-byoc-CPU-pipeline | v2/Gateways/guides/tutorials/tutorial-2-byoc-CPU-pipeline.mdx | true | ok |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/Gateways/setup/requirements/on-chain-setup/on-chain | v2/Gateways/setup/requirements/on-chain-setup/on-chain | false | missing | v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx | workspace/plan/complete/ORCHESTRATOR-CONTENT-WRITING/gateways/S04-on-chain-quickstart.md |  |
+| internal-rooted | /v2/gateways/setup/prepare | v2/gateways/setup/prepare.mdx | true | ok |  |  |  |
 | external-https | https://bridge.arbitrum.io/ |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
 | external-https | https://infura.io |  | null | 🟡 untested-external |  |  |  |
@@ -6263,7 +6263,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/Gateways/quickstart/Gateway-setup | v2/Gateways/quickstart/Gateway-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/guides/node-pipelines/ai-pipelines | v2/Gateways/guides/node-pipelines/ai-pipelines.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/guides/payments-and-pricing/pricing-strategy | v2/Gateways/guides/payments-and-pricing/pricing-strategy.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/Gateways/setup/requirements/setup | v2/Gateways/setup/requirements/setup | false | missing | v2/gateways/custom/views/setup/configure/ai-configuration-content.mdx | v2/gateways/custom/views/setup/configure/dual-configuration-content.mdx | v2/gateways/custom/views/setup/configure/video-configuration-content.mdx |
+| internal-rooted | /v2/gateways/setup/prepare | v2/gateways/setup/prepare.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/setup/configure | v2/Gateways/setup/configure.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/guides/monitoring-and-tooling/troubleshooting | v2/Gateways/guides/monitoring-and-tooling/troubleshooting.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/concepts/business-model | v2/Gateways/concepts/business-model.mdx | true | ok |  |  |  |
@@ -6365,11 +6365,11 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://linux.org |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/gateways/setup/guide | v2/gateways/setup/guide.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/gateways/setup/install/docker-install | v2/gateways/setup/install/docker-install | false | missing | /v2/gateways/setup/install (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) | /v2/gateways/setup/connect/research (high path similarity, 0.6) |
+| internal-rooted | /v2/gateways/setup/install | v2/gateways/setup/install.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/resources/reference/technical/configuration-flags | v2/gateways/resources/reference/technical/configuration-flags.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/gateways/setup/install/linux-install | v2/gateways/setup/install/linux-install | false | missing | /v2/gateways/setup/install (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) | /v2/gateways/setup/connect/research (high path similarity, 0.6) |
+| internal-rooted | /v2/gateways/setup/install | v2/gateways/setup/install.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/resources/reference/technical/configuration-flags | v2/gateways/resources/reference/technical/configuration-flags.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/gateways/setup/install/windows-install | v2/gateways/setup/install/windows-install | false | missing | /v2/gateways/setup/install (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) | /v2/gateways/setup/connect/research (high path similarity, 0.6) |
+| internal-rooted | /v2/gateways/setup/install | v2/gateways/setup/install.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/resources/reference/technical/configuration-flags | v2/gateways/resources/reference/technical/configuration-flags.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/quickstart/guide | v2/orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/resources/reference/faq | v2/gateways/resources/reference/faq.mdx | true | ok |  |  |  |
@@ -6398,7 +6398,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---|---|---|---|---|---|---|
 | external-https | "https://hub.docker.com/r/livepeer/go-livepeer" |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/Gateways/resources/reference/technical/cli-commands | v2/Gateways/resources/reference/technical/cli-commands.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/AI-API/ai | v2/gateways/resources/reference/technical/api-reference/AI-API/ai | false | missing | /v2/gateways/resources/reference/technical/api-reference/AI-Worker/ai-worker-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/_delete-all-api (high path similarity, 0.75) | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api (high path similarity, 0.75) |
+| internal-rooted | /v2/gateways/resources/reference/technical/api-reference/ai-worker-api | v2/gateways/resources/reference/technical/api-reference/ai-worker-api.mdx | true | ok |  |  |  |
 
 ### v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -6811,7 +6811,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/Gateways/setup/verify | v2/Gateways/setup/verify.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/advanced-operations/orchestrator-selection | v2/gateways/guides/advanced-operations/orchestrator-selection.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/guides/advanced-operations/gateway-discoverability | v2/gateways/guides/advanced-operations/gateway-discoverability.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/gateways/setup/connect/lp-marketplace | v2/gateways/setup/connect/lp-marketplace | false | missing | /v2/gateways/setup/connect/research (high path similarity, 0.8) | /v2/gateways/setup/connect (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) |
+| internal-rooted | /v2/gateways/resources/reference/technical/orchestrator-offerings | v2/gateways/resources/reference/technical/orchestrator-offerings.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/resources/reference/technical/configuration-flags | v2/gateways/resources/reference/technical/configuration-flags.mdx | true | ok |  |  |  |
 
 ### v2/gateways/setup/guide.mdx
@@ -6931,15 +6931,15 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/00_HOME/Eric%20Shreck%20Gif.gif |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/developers/get-started/transcoding-quickstart | v2/developers/get-started/transcoding-quickstart | false | missing | /v2/developers/concepts/infra-stack (high path similarity, 0.5) | /v2/developers/concepts/landscape (high path similarity, 0.5) | /v2/developers/concepts/repo-map (high path similarity, 0.5) |
-| internal-rooted | /v2/developers/get-started/ai-quickstart | v2/developers/get-started/ai-quickstart | false | missing | /v2/developers/concepts/infra-stack (high path similarity, 0.5) | /v2/developers/concepts/landscape (high path similarity, 0.5) | /v2/developers/concepts/repo-map (high path similarity, 0.5) |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/developers/build/video/transcoding-direct-quickstart | v2/developers/build/video/transcoding-direct-quickstart.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart | v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/quickstart/guide | v2/orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/community/portal | v2/community/portal.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/home/solutions/showcase | v2/home/solutions/showcase.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/setup/guide | v2/gateways/setup/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/delegators/concepts/overview | v2/delegators/concepts/overview.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/guides/opportunities/overview | v2/developers/guides/opportunities/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
+| internal-rooted | /v2/developers/resources/grants-and-programmes | v2/developers/resources/grants-and-programmes.mdx | true | ok |  |  |  |
 
 ### v2/home/primer.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7012,7 +7012,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/wiki/wiki/Governance |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/about | v2/about/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/glossary | v2/resources/glossary.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/home/get-started | v2/home/get-started | false | missing | /v2/home (high path similarity, 0.6667) | /v2/home (high path similarity, 0.6667) | /v2/home/mission-control (high path similarity, 0.6667) |
+| internal-rooted | /v2/home/primer | v2/home/primer.mdx | true | ok |  |  |  |
 
 ### v2/home/solutions/applications.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7185,22 +7185,22 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/go-livepeer |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/capabilities | v2/orchestrators/concepts/capabilities.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/incentive-model | v2/orchestrators/concepts/incentive-model.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/technical/contract-addresses | v2/orchestrators/resources/technical/contract-addresses | false | missing | /v2/gateways/resources/reference/technical/contract-addresses (same leaf segment match, 0.65) | /v2/orchestrators/resources/reference/technical/contract-addresses (same leaf segment match, 0.65) | /v2/resources/references/contract-addresses (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/reference/technical/contract-addresses | v2/orchestrators/resources/reference/technical/contract-addresses.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/role | v2/orchestrators/concepts/role.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/capabilities | v2/orchestrators/concepts/capabilities.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/incentive-model | v2/orchestrators/concepts/incentive-model.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/payment-flow | v2/orchestrators/guides/payments-and-pricing/payment-flow | false | missing | /v2/orchestrators/guides/payments-and-pricing/payment-receipts (high path similarity, 0.8) | /v2/orchestrators/guides/payments-and-pricing/payments (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) |
+| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/payments | v2/orchestrators/guides/payments-and-pricing/payments.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/concepts/capabilities.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /v2/orchestrators/concepts/architecture | v2/orchestrators/concepts/architecture.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/pricing-strategy | v2/orchestrators/guides/payments-and-pricing/pricing-strategy | false | missing | /v2/gateways/guides/payments-and-pricing/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/payments-and-pricing/payment-receipts (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy | v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/concepts/role | v2/gateways/concepts/role.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/role | v2/orchestrators/concepts/role.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/architecture | v2/orchestrators/concepts/architecture.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/incentive-model | v2/orchestrators/concepts/incentive-model.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/workloads-and-ai/job-types | v2/orchestrators/guides/workloads-and-ai/job-types | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.6) |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/workload-options | v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/concepts/composable/orchestratorRole.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7212,14 +7212,14 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/rewards-and-fees | v2/orchestrators/guides/staking-and-rewards/rewards-and-fees | false | missing | /v2/orchestrators/guides/staking-and-rewards/delegate-operations (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/earning-model (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/network-participation (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/reward-mechanics | v2/orchestrators/guides/staking-and-rewards/reward-mechanics.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/quickstart | /v2/orchestrators/quickstart | true | ok-folder-route |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/capabilities | v2/orchestrators/concepts/capabilities.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/pricing-strategy | v2/orchestrators/guides/payments-and-pricing/pricing-strategy | false | missing | /v2/gateways/guides/payments-and-pricing/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/payments-and-pricing/payment-receipts (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/attracting-delegates | v2/orchestrators/guides/staking-and-rewards/attracting-delegates | false | missing | /v2/orchestrators/guides/staking-and-rewards/delegate-operations (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/earning-model (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/network-participation (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy | v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/delegate-operations | v2/orchestrators/guides/staking-and-rewards/delegate-operations.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/role | v2/orchestrators/concepts/role.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/capabilities | v2/orchestrators/concepts/capabilities.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/pricing-strategy | v2/orchestrators/guides/payments-and-pricing/pricing-strategy | false | missing | /v2/gateways/guides/payments-and-pricing/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/payments-and-pricing/payment-receipts (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy | v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/concepts/business-model | v2/gateways/concepts/business-model.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/concepts/role.mdx
@@ -7289,7 +7289,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/Orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/Orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Orchestrators/guides/ai-and-job-workloads/model-demand-reference | v2/Orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/resources/reference/technical/Orchestrator-offerings | v2/Gateways/resources/reference/technical/Orchestrator-offerings.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/concepts/ai-on-Livepeer | v2/developers/concepts/ai-on-Livepeer | false | missing | /v2/developers/concepts/infra-stack (high path similarity, 0.75) | /v2/developers/concepts/landscape (high path similarity, 0.75) | /v2/developers/concepts/repo-map (high path similarity, 0.75) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
 | external-https | https://huggingface.co/SG161222/RealVisXL_V4.0_Lightning |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://huggingface.co/openai/whisper-large-v3 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/facebookresearch/segment-anything-2 |  | null | 🟡 untested-external |  |  |  |
@@ -7348,12 +7348,12 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://tools.livepeer.cloud/ai/network-capabilities |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://tools.livepeer.cloud/ai/network-capabilities |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/developers/concepts/ai-on-Livepeer | v2/developers/concepts/ai-on-Livepeer | false | missing | /v2/developers/concepts/infra-stack (high path similarity, 0.75) | /v2/developers/concepts/landscape (high path similarity, 0.75) | /v2/developers/concepts/repo-map (high path similarity, 0.75) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/resources/reference/technical/Orchestrator-offerings | v2/Gateways/resources/reference/technical/Orchestrator-offerings.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | external-https | https://www.youtube.com/embed/Kf3fV00XFRU |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/developers/concepts/ai-on-livepeer | v2/developers/concepts/ai-on-livepeer | false | missing | /v2/developers/concepts/infra-stack (high path similarity, 0.75) | /v2/developers/concepts/landscape (high path similarity, 0.75) | /v2/developers/concepts/repo-map (high path similarity, 0.75) |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/gateways/resources/reference/technical/orchestrator-offerings | v2/gateways/resources/reference/technical/orchestrator-offerings.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference | v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup | v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx | true | ok |  |  |  |
@@ -7471,7 +7471,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations | v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/config-and-optimisation/ai-model-management | v2/orchestrators/guides/config-and-optimisation/ai-model-management.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting | v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/gpu-support | v2/orchestrators/resources/gpu-support | false | missing | /v2/gateways/resources/reference/go-livepeer/gpu-support (same leaf segment match, 0.65) | /v2/gateways/resources/reference/technical/go-livepeer/gpu-support (same leaf segment match, 0.65) | /v2/orchestrators/resources/reference/gpu-support (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/reference/gpu-support | v2/orchestrators/resources/reference/gpu-support.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7506,13 +7506,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://explorer.livepeer.org/orchestrators |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
 | external-https | https://tools.livepeer.cloud/ai/network-capabilities |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://tools.livepeer.cloud |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/advanced-operations/gateway-relationships | v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/staking-and-rewards/earning-model | v2/orchestrators/guides/staking-and-rewards/earning-model.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/guides/deployment-details/join-a-pool.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7530,20 +7530,20 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/orchestrators/guides/deployment-details/setup-options | v2/orchestrators/guides/deployment-details/setup-options.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/guide | v2/orchestrators/setup/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/operator-considerations/operator-rationale | v2/orchestrators/guides/operator-considerations/operator-rationale.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/community-pools | v2/orchestrators/resources/community-pools | false | missing | /v2/orchestrators/resources/knowledge-hub/community-pools (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) | /v2/orchestrators/resources/operator-terms (high path similarity, 0.75) |
+| internal-rooted | /v2/orchestrators/resources/knowledge-hub/community-pools | v2/orchestrators/resources/knowledge-hub/community-pools.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/guides/deployment-details/orchestrator-transcoder-setup.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/orchestrators/guides/advanced-operations/run-a-pool | v2/orchestrators/guides/advanced-operations/run-a-pool | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/advanced-operations/pool-operators | v2/orchestrators/guides/advanced-operations/pool-operators.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/setup-options | v2/orchestrators/guides/deployment-details/setup-options.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/advanced-operations/run-a-pool | v2/orchestrators/guides/advanced-operations/run-a-pool | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/advanced-operations/gateways-orchestrators | v2/orchestrators/guides/advanced-operations/gateways-orchestrators | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/monitoring-and-tools/troubleshooting | v2/orchestrators/guides/monitoring-and-tools/troubleshooting | false | missing | /v2/gateways/guides/monitoring-and-tooling/troubleshooting (same leaf segment match, 0.65) | /v2/orchestrators/guides/monitoring-and-tooling/troubleshooting (same leaf segment match, 0.65) | /v2/resources/troubleshooting (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/guides/advanced-operations/pool-operators | v2/orchestrators/guides/advanced-operations/pool-operators.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/advanced-operations/gateway-relationships | v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/monitoring-and-tooling/troubleshooting | v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/setup-options | v2/orchestrators/guides/deployment-details/setup-options.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/siphon-setup | v2/orchestrators/guides/deployment-details/siphon-setup.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/advanced-operations/run-a-pool | v2/orchestrators/guides/advanced-operations/run-a-pool | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/advanced-operations/large-scale-operations | v2/orchestrators/guides/advanced-operations/large-scale-operations | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/advanced-operations/pool-operators | v2/orchestrators/guides/advanced-operations/pool-operators.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/advanced-operations/scale-operations | v2/orchestrators/guides/advanced-operations/scale-operations.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/guides/deployment-details/setup-options.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7648,13 +7648,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://tools.livepeer.cloud/ai/network-capabilities |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/concepts/incentive-model | v2/orchestrators/concepts/incentive-model.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/pricing-strategy | v2/orchestrators/guides/payments-and-pricing/pricing-strategy | false | missing | /v2/gateways/guides/payments-and-pricing/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/payments-and-pricing/payment-receipts (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/pricing-strategy | v2/orchestrators/guides/payments-and-pricing/pricing-strategy | false | missing | /v2/gateways/guides/payments-and-pricing/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/payments-and-pricing/payment-receipts (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/monitoring-and-tools/metrics-monitoring | v2/orchestrators/guides/monitoring-and-tools/metrics-monitoring | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.6) |
+| internal-rooted | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy | v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy | v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting | v2/orchestrators/guides/monitoring-and-tooling/metrics-and-alerting.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/operator-considerations/operator-rationale | v2/orchestrators/guides/operator-considerations/operator-rationale.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/payments-and-pricing/pricing-strategy | v2/orchestrators/guides/payments-and-pricing/pricing-strategy | false | missing | /v2/gateways/guides/payments-and-pricing/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy (same leaf segment match, 0.65) | /v2/orchestrators/guides/payments-and-pricing/payment-receipts (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/advanced-operations/gateways-orchestrators | v2/orchestrators/guides/advanced-operations/gateways-orchestrators | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.8) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/operator-considerations/protocol-influence | v2/orchestrators/guides/operator-considerations/protocol-influence | false | missing | /v2/orchestrators/guides/operator-considerations/business-case (high path similarity, 0.8) | /v2/orchestrators/guides/operator-considerations/feasibilits-sources (high path similarity, 0.8) | /v2/orchestrators/guides/operator-considerations/operator-impact (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/config-and-optimisation/pricing-strategy | v2/orchestrators/guides/config-and-optimisation/pricing-strategy.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/advanced-operations/gateway-relationships | v2/orchestrators/guides/advanced-operations/gateway-relationships.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/operator-considerations/operator-impact | v2/orchestrators/guides/operator-considerations/operator-impact.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/guides/operator-considerations/operator-impact.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7858,7 +7858,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://bridge.arbitrum.io/ |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/Gateways/resources/compendium/Arbitrum-exchanges | v2/Gateways/resources/compendium/Arbitrum-exchanges.mdx | true | ok |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/Gateways/setup/requirements/on-chain-setup/on-chain | v2/Gateways/setup/requirements/on-chain-setup/on-chain | false | missing | v2/gateways/guides/monitoring-and-tooling/on-chain-metrics.mdx | workspace/plan/complete/ORCHESTRATOR-CONTENT-WRITING/gateways/S04-on-chain-quickstart.md |  |
+| internal-rooted | /v2/gateways/setup/prepare | v2/gateways/setup/prepare.mdx | true | ok |  |  |  |
 | external-https | https://infura.io |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://alchemy.com |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/Gateways/resources/compendium/Arbitrum-rpc | v2/Gateways/resources/compendium/Arbitrum-rpc.mdx | true | ok |  |  |  |
@@ -7867,9 +7867,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/j0sh/livepeer-python-gateway/pulls |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/ai-runner/blob/main/docs/custom-pipeline.md |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/gateways/payments/remote-signers | v2/gateways/payments/remote-signers | false | missing | /v2/gateways/guides/payments-and-pricing/remote-signers (same leaf segment match, 0.65) | /v2/gateways/GOVERNANCE (high path similarity, 0.5) | /v2/gateways/concepts/architecture (high path similarity, 0.5) |
-| internal-rooted | /v2/gateways/payments/payment-clearinghouse | v2/gateways/payments/payment-clearinghouse | false | missing | /v2/gateways/GOVERNANCE (high path similarity, 0.5) | /v2/gateways/concepts/architecture (high path similarity, 0.5) | /v2/gateways/concepts/business-model (high path similarity, 0.5) |
-| internal-rooted | /v2/gateways/setup/monitor/monitor-and-optimise | v2/gateways/setup/monitor/monitor-and-optimise | false | missing | /v2/gateways/setup/monitor/research (high path similarity, 0.8) | /v2/gateways/setup/monitor (high path similarity, 0.8) | /v2/gateways/setup/configure (high path similarity, 0.6) |
+| internal-rooted | /v2/gateways/guides/payments-and-pricing/remote-signers | v2/gateways/guides/payments-and-pricing/remote-signers.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/gateways/guides/payments-and-pricing/clearinghouse-guide | v2/gateways/guides/payments-and-pricing/clearinghouse-guide.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/gateways/setup/monitor | v2/gateways/setup/monitor.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/guides/tutorials/full-ai-pipeline-tutorial.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -7927,7 +7927,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/orchestrators/quickstart/guide | v2/orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/operator-considerations/operator-rationale | v2/orchestrators/guides/operator-considerations/operator-rationale.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/join-a-pool | v2/orchestrators/guides/deployment-details/join-a-pool.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/community-pools | v2/orchestrators/resources/community-pools | false | missing | /v2/orchestrators/resources/knowledge-hub/community-pools (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) | /v2/orchestrators/resources/operator-terms (high path similarity, 0.75) |
+| internal-rooted | /v2/orchestrators/resources/knowledge-hub/community-pools | v2/orchestrators/resources/knowledge-hub/community-pools.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations | v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/guide | v2/orchestrators/setup/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/dual-mode-configuration | v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx | true | ok |  |  |  |
@@ -7941,7 +7941,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/orchestrators/quickstart/guide | v2/orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/operator-considerations/operator-rationale | v2/orchestrators/guides/operator-considerations/operator-rationale.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/join-a-pool | v2/orchestrators/guides/deployment-details/join-a-pool.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/community-pools | v2/orchestrators/resources/community-pools | false | missing | /v2/orchestrators/resources/knowledge-hub/community-pools (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) | /v2/orchestrators/resources/operator-terms (high path similarity, 0.75) |
+| internal-rooted | /v2/orchestrators/resources/knowledge-hub/community-pools | v2/orchestrators/resources/knowledge-hub/community-pools.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations | v2/orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/guide | v2/orchestrators/setup/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/dual-mode-configuration | v2/orchestrators/guides/deployment-details/dual-mode-configuration.mdx | true | ok |  |  |  |
@@ -7979,33 +7979,33 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/orchestrators/quickstart/AI-prompt-start.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/Orchestrators/setup/rs-install | v2/Orchestrators/setup/rs-install | false | missing | workspace/plan/active/ORCHS/setup/rs-install.mdx |  |  |
+| internal-rooted | /v2/orchestrators/setup/install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Orchestrators/quickstart/guide | v2/Orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/Orchestrators/guides/advanced-operations/large-scale-operations | v2/Orchestrators/guides/advanced-operations/large-scale-operations | false | missing |  |  |  |
-| internal-rooted | /v2/Orchestrators/setup/rs-install | v2/Orchestrators/setup/rs-install | false | missing | workspace/plan/active/ORCHS/setup/rs-install.mdx |  |  |
-| internal-rooted | /v2/Orchestrators/guides/workloads-and-ai/job-types | v2/Orchestrators/guides/workloads-and-ai/job-types | false | missing |  |  |  |
-| internal-rooted | /v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | false | missing |  |  |  |
-| internal-rooted | /v2/Orchestrators/guides/workloads-and-ai/job-types | v2/Orchestrators/guides/workloads-and-ai/job-types | false | missing |  |  |  |
-| internal-rooted | /v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | false | missing |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/model-hosting | v2/orchestrators/guides/ai-and-job-workloads/model-hosting.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/workload-options | v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/workload-options | v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
 | external-https | https://explorer.livepeer.org |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/Orchestrators/setup/activate | v2/Orchestrators/setup/activate | false | missing | workspace/plan/active/ORCHS/setup/connect-and-activate.mdx | workspace/plan/active/ORCHS/setup/x-deprecated/dep-activate.mdx |  |
-| internal-rooted | /v2/Orchestrators/guides/workloads-and-ai/job-types | v2/Orchestrators/guides/workloads-and-ai/job-types | false | missing |  |  |  |
-| internal-rooted | /v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | false | missing |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/workloads-and-ai/batch-ai-setup | v2/orchestrators/guides/workloads-and-ai/batch-ai-setup | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.6) |
-| internal-rooted | /v2/orchestrators/guides/workloads-and-ai/realtime-ai-setup | v2/orchestrators/guides/workloads-and-ai/realtime-ai-setup | false | missing | /v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup (same leaf segment match, 0.65) | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/workload-options | v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup | v2/orchestrators/guides/ai-and-job-workloads/realtime-ai-setup.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/quickstart/guide.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | v2/Orchestrators/guides/workloads-and-ai/ai-workloads-guide | false | missing |  |  |  |
-| internal-rooted | /v2/Orchestrators/guides/feasibility-and-hardware/hardware-reference | v2/Orchestrators/guides/feasibility-and-hardware/hardware-reference | false | missing |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/operator-considerations/requirements | v2/orchestrators/guides/operator-considerations/requirements.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Orchestrators/setup/guide | v2/Orchestrators/setup/guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/quickstart/video-transcoding | v2/orchestrators/quickstart/video-transcoding.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/setup-paths/join-a-pool | v2/orchestrators/guides/setup-paths/join-a-pool | false | missing | /v2/orchestrators/guides/deployment-details/join-a-pool (same leaf segment match, 0.65) | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) |
-| internal-rooted | /v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide | v2/orchestrators/guides/workloads-and-ai/ai-workloads-guide | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.6) |
-| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/earnings | v2/orchestrators/guides/staking-and-rewards/earnings | false | missing | /v2/orchestrators/guides/staking-and-rewards/delegate-operations (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/earning-model (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/network-participation (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/deployment-details/join-a-pool | v2/orchestrators/guides/deployment-details/join-a-pool.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/workload-options | v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/earning-model | v2/orchestrators/guides/staking-and-rewards/earning-model.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/r-monitor | v2/orchestrators/setup/monitor.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/attracting-delegates | v2/orchestrators/guides/staking-and-rewards/attracting-delegates | false | missing | /v2/orchestrators/guides/staking-and-rewards/delegate-operations (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/earning-model (high path similarity, 0.8) | /v2/orchestrators/guides/staking-and-rewards/network-participation (high path similarity, 0.8) |
+| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/delegate-operations | v2/orchestrators/guides/staking-and-rewards/delegate-operations.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/quickstart/tutorial.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8022,8 +8022,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://docs.docker.com/engine/install/ |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/gateways/quickstart/gateway-setup | v2/gateways/quickstart/gateway-setup.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/workload-options | v2/orchestrators/guides/ai-and-job-workloads/workload-options.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/setup/install-go-livepeer | v2/orchestrators/setup/install-go-livepeer | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/setup/install-go-livepeer | v2/orchestrators/setup/install-go-livepeer | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
+| internal-rooted | /v2/orchestrators/setup/install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/resources/reference/technical/cli-flags | v2/orchestrators/resources/reference/technical/cli-flags.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/resources/glossary.mdx
@@ -8084,7 +8084,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://en.wikipedia.org/wiki/Throughput |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators | v2/orchestrators/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/glossary | v2/resources/glossary.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/resources/knowledge-hub/community-guides.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8094,8 +8094,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/comfystream |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/Orchestrators/guides/ai-and-job-workloads/ai-inference-operations | v2/Orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/build/model-support | v2/developers/build/model-support | false | missing | /v2/developers/build/ai-and-agents/model-support (same leaf segment match, 0.65) | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | external-https | https://www.speedybird.xyz/?page_id=339 |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v1/Orchestrators/guides/Gateway-introspection | v1/Orchestrators/guides/Gateway-introspection.mdx | true | ok |  |  |  |
 | external-https | https://livepeer.tools |  | null | 🟡 untested-external |  |  |  |
@@ -8115,13 +8115,13 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/ai-worker |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://thegraph.com/explorer/subgraphs/FGMqFR8PATJJPFwMVEHfaLRCPXhqCjsVnH92xYGqv3Cx |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/developers/resources/knowledge-hub/awesome-Livepeer | v2/developers/resources/knowledge-hub/awesome-Livepeer | false | missing | /v2/developers/resources/awesome-livepeer (high path similarity, 0.6) | /v2/developers/resources/contributing (high path similarity, 0.6) | /v2/developers/resources/deepwiki (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/resources/awesome-livepeer | v2/developers/resources/awesome-livepeer.mdx | true | ok |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/c/transcoders/7 |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/Orchestrators/resources/faq | v2/Orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
-| internal-rooted | /v2/orchestrators/resources/community-pools | v2/orchestrators/resources/community-pools | false | missing | /v2/orchestrators/resources/knowledge-hub/community-pools (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) | /v2/orchestrators/resources/operator-terms (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/resources/technical/cli-flags | v2/orchestrators/resources/technical/cli-flags | false | missing | /v2/orchestrators/resources/reference/technical/cli-flags (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.6) | /v2/orchestrators/resources/knowledge-hub/community-guides (high path similarity, 0.6) |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/resources/knowledge-hub/community-pools | v2/orchestrators/resources/knowledge-hub/community-pools.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/resources/reference/technical/cli-flags | v2/orchestrators/resources/reference/technical/cli-flags.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/resources/knowledge-hub/community-pools.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8186,15 +8186,15 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | empty | #adding-ai-inference |  | null | skipped |  |  |  |
 | external-https | https://tools.livepeer.cloud/ai/network-capabilities |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/rs-install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/setup/sc-connect | v2/orchestrators/setup/sc-connect | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/guides/deployment-details/requirements | v2/orchestrators/guides/deployment-details/requirements | false | missing | /v2/orchestrators/guides/operator-considerations/requirements (same leaf segment match, 0.65) | /v2/orchestrators/guides/deployment-details/dual-mode-configuration (high path similarity, 0.8) | /v2/orchestrators/guides/deployment-details/join-a-pool (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/setup/sc-connect | v2/orchestrators/setup/sc-connect | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/operator-considerations/requirements | v2/orchestrators/guides/operator-considerations/requirements.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/guides/deployment-details/setup-options | v2/orchestrators/guides/deployment-details/setup-options.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/guides/deployment-details/requirements | v2/orchestrators/guides/deployment-details/requirements | false | missing | /v2/orchestrators/guides/operator-considerations/requirements (same leaf segment match, 0.65) | /v2/orchestrators/guides/deployment-details/dual-mode-configuration (high path similarity, 0.8) | /v2/orchestrators/guides/deployment-details/join-a-pool (high path similarity, 0.8) |
-| internal-rooted | /v2/orchestrators/guides/workloads-and-ai/batch-ai-setup | v2/orchestrators/guides/workloads-and-ai/batch-ai-setup | false | missing | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-relationships (high path similarity, 0.6) |
-| internal-rooted | /v2/orchestrators/setup/sc-connect | v2/orchestrators/setup/sc-connect | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/setup/activate | v2/orchestrators/setup/activate | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/resources/technical/cli-flags | v2/orchestrators/resources/technical/cli-flags | false | missing | /v2/orchestrators/resources/reference/technical/cli-flags (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.6) | /v2/orchestrators/resources/knowledge-hub/community-guides (high path similarity, 0.6) |
+| internal-rooted | /v2/orchestrators/guides/operator-considerations/requirements | v2/orchestrators/guides/operator-considerations/requirements.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup | v2/orchestrators/guides/ai-and-job-workloads/diffusion-pipeline-setup.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/resources/reference/technical/cli-flags | v2/orchestrators/resources/reference/technical/cli-flags.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/setup/connect.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8213,27 +8213,27 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/orchestrators/setup/guide.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-rooted | /v2/orchestrators/guides/join-a-pool | v2/orchestrators/guides/join-a-pool | false | missing | /v2/orchestrators/guides/deployment-details/join-a-pool (same leaf segment match, 0.65) | /v2/orchestrators/guides/advanced-operations/advanced-sources (high path similarity, 0.6) | /v2/orchestrators/guides/advanced-operations/gateway-orchestrator-interface (high path similarity, 0.6) |
-| internal-rooted | /v2/orchestrators/dep-rc-navigator | v2/orchestrators/dep-rc-navigator | false | missing | /v2/orchestrators/GOVERNANCE (high path similarity, 0.6667) | /v2/orchestrators (high path similarity, 0.6667) | /v2/orchestrators (high path similarity, 0.6667) |
+| internal-rooted | /v2/orchestrators/guides/deployment-details/join-a-pool | v2/orchestrators/guides/deployment-details/join-a-pool.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/navigator | v2/orchestrators/navigator.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/prepare | v2/orchestrators/setup/prepare.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/setup/r-configure | v2/orchestrators/setup/r-configure | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/setup/sc-connect | v2/orchestrators/setup/sc-connect | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/setup/x-test | v2/orchestrators/setup/x-test | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
+| internal-rooted | /v2/orchestrators/setup/configure | v2/orchestrators/setup/configure.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/verify | v2/orchestrators/setup/verify.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/monitor | v2/orchestrators/setup/monitor.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/orchestrators/setup/sc-connect | v2/orchestrators/setup/sc-connect | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/unclassified/rcs-connect-activate-publish | v2/orchestrators/unclassified/rcs-connect-activate-publish | false | missing | /v2/orchestrators/GOVERNANCE (high path similarity, 0.5) | /v2/orchestrators/concepts/architecture (high path similarity, 0.5) | /v2/orchestrators/concepts/capabilities (high path similarity, 0.5) |
-| internal-rooted | /v2/orchestrators/setup/x-test | v2/orchestrators/setup/x-test | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/verify | v2/orchestrators/setup/verify.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/setup/install.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/Orchestrators/setup/orch-config | v2/Orchestrators/setup/orch-config | false | missing |  |  |  |
-| internal-rooted | /v2/Orchestrators/resources/faq | v2/Orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
-| internal-rooted | /v2/orchestrators/setup/orch-config | v2/orchestrators/setup/orch-config | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/get-started/quickstart | v2/orchestrators/get-started/quickstart | false | missing | /v2/solutions/livepeer-studio/docs/quickstart (same leaf segment match, 0.65) | /v2/orchestrators/quickstart/AI-prompt-start (high path similarity, 0.575) | /v2/orchestrators/quickstart/guide (high path similarity, 0.575) |
+| internal-rooted | /v2/orchestrators/setup/configure | v2/orchestrators/setup/configure.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/configure | v2/orchestrators/setup/configure.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/quickstart/guide | v2/orchestrators/quickstart/guide.mdx | true | ok |  |  |  |
 
 ### v2/orchestrators/setup/monitor.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8253,16 +8253,16 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/orchestrators/setup/s-guide.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-relative | ./hardware-requirements | v2/orchestrators/setup/hardware-requirements | false | missing | /v2/gateways/resources/reference/go-livepeer/hardware-requirements (same leaf segment match, 0.65) | /v2/gateways/resources/reference/technical/go-livepeer/hardware-requirements (same leaf segment match, 0.65) | /v2/resources/references/go-livepeer/hardware-requirements (same leaf segment match, 0.65) |
-| internal-relative | ./install-go-livepeer | v2/orchestrators/setup/install-go-livepeer | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-relative | ./connect-to-Arbitrum | v2/orchestrators/setup/connect-to-Arbitrum | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-relative | ./orch-config | v2/orchestrators/setup/orch-config | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-relative | ./publish-offerings | v2/orchestrators/setup/publish-offerings | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-relative | ./Orchestrator-stats | v2/orchestrators/setup/Orchestrator-stats | false | missing | /v2/orchestrators/setup/configure (high path similarity, 0.75) | /v2/orchestrators/setup/connect (high path similarity, 0.75) | /v2/orchestrators/setup/guide (high path similarity, 0.75) |
-| internal-relative | ../concepts/overview | v2/orchestrators/concepts/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-relative | ../get-started/join-a-pool | v2/orchestrators/get-started/join-a-pool | false | missing | /v2/orchestrators/guides/deployment-details/join-a-pool (same leaf segment match, 0.65) | /v2/orchestrators/GOVERNANCE (high path similarity, 0.5) | /v2/orchestrators/concepts/architecture (high path similarity, 0.5) |
-| internal-relative | ../advanced/staking-LPT | v2/orchestrators/advanced/staking-LPT | false | missing | /v2/orchestrators/GOVERNANCE (high path similarity, 0.5) | /v2/orchestrators/concepts/architecture (high path similarity, 0.5) | /v2/orchestrators/concepts/capabilities (high path similarity, 0.5) |
-| internal-relative | ../advanced/rewards-and-fees | v2/orchestrators/advanced/rewards-and-fees | false | missing | /v2/orchestrators/GOVERNANCE (high path similarity, 0.5) | /v2/orchestrators/concepts/architecture (high path similarity, 0.5) | /v2/orchestrators/concepts/capabilities (high path similarity, 0.5) |
+| internal-rooted | /v2/orchestrators/setup/prepare | v2/orchestrators/setup/prepare.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/configure | v2/orchestrators/setup/configure.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/setup/monitor | v2/orchestrators/setup/monitor.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/concepts/role | v2/orchestrators/concepts/role.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/deployment-details/join-a-pool | v2/orchestrators/guides/deployment-details/join-a-pool.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/delegators/delegation/delegate-your-lpt | v2/delegators/delegation/delegate-your-lpt.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/guides/staking-and-rewards/earning-model | v2/orchestrators/guides/staking-and-rewards/earning-model.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/prepare | v2/orchestrators/setup/prepare.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/install | v2/orchestrators/setup/install.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/orchestrators/setup/connect | v2/orchestrators/setup/connect.mdx | true | ok |  |  |  |
@@ -8419,9 +8419,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | internal-rooted | /docs-guide/frameworks/research-skill-workflow | docs-guide/frameworks/research-skill-workflow.mdx | true | ok |  |  |  |
-| internal-relative | ./documentation-guide | v2/resources/documentation-guide/ai-automations/documentation-guide | false | missing | /v2/resources/documentation-guide (same leaf segment match, 0.65) | /v2/resources/documentation-guide (same leaf segment match, 0.65) | /v2/resources/documentation-guide/ai-automations/ai-features (high path similarity, 0.8) |
-| internal-relative | ./docs-features-and-ai-integrations | v2/resources/documentation-guide/ai-automations/docs-features-and-ai-integrations | false | missing | /v2/resources/documentation-guide/features/docs-features-and-ai-integrations (same leaf segment match, 0.65) | /v2/resources/documentation-guide/ai-automations/ai-features (high path similarity, 0.8) | /v2/resources/documentation-guide/ai-automations/automations-workflows (high path similarity, 0.8) |
-| internal-relative | ./contribute-to-the-docs | v2/resources/documentation-guide/ai-automations/contribute-to-the-docs | false | missing | /v2/resources/documentation-guide/contributing/contribute-to-the-docs (same leaf segment match, 0.65) | /v2/resources/documentation-guide/ai-automations/ai-features (high path similarity, 0.8) | /v2/resources/documentation-guide/ai-automations/automations-workflows (high path similarity, 0.8) |
+| internal-rooted | /v2/resources/documentation-guide/documentation-guide | v2/resources/documentation-guide/documentation-guide.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/features/docs-features-and-ai-integrations | v2/resources/documentation-guide/features/docs-features-and-ai-integrations.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
 
 ### v2/resources/documentation-guide/catalog/components-catalog.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8570,16 +8570,16 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
 | external-https | https://mintlify.com/docs/text |  | null | 🟡 untested-external |  |  |  |
-| internal-relative | ./component-library | v2/resources/documentation-guide/copy-style/component-library | false | missing | /v2/resources/documentation-guide/component-library (same leaf segment match, 0.65) | /v2/resources/documentation-guide/copy-style/authoring-guide (high path similarity, 0.8) | /v2/resources/documentation-guide/copy-style/authoring-standard (high path similarity, 0.8) |
-| internal-rooted | /contribute/CONTRIBUTING/GIT-HOOKS.md | v2/pages/contribute/CONTRIBUTING/GIT-HOOKS.md | false | missing |  |  |  |
-| internal-relative | ./component-library | v2/resources/documentation-guide/copy-style/component-library | false | missing | /v2/resources/documentation-guide/component-library (same leaf segment match, 0.65) | /v2/resources/documentation-guide/copy-style/authoring-guide (high path similarity, 0.8) | /v2/resources/documentation-guide/copy-style/authoring-standard (high path similarity, 0.8) |
+| internal-rooted | /v2/resources/documentation-guide/component-library/component-library | v2/resources/documentation-guide/component-library/component-library.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/contributing/git-hooks | v2/resources/documentation-guide/contributing/git-hooks.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/component-library/component-library | v2/resources/documentation-guide/component-library/component-library.mdx | true | ok |  |  |  |
 | external-https | https://mintlify.com/docs |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /docs-guide/contributing/Mintlify | docs-guide/contributing/Mintlify.mdx | true | ok |  |  |  |
-| internal-rooted | /contribute/CONTRIBUTING/GIT-HOOKS.md | v2/pages/contribute/CONTRIBUTING/GIT-HOOKS.md | false | missing |  |  |  |
-| internal-relative | ./component-library | v2/resources/documentation-guide/copy-style/component-library | false | missing | /v2/resources/documentation-guide/component-library (same leaf segment match, 0.65) | /v2/resources/documentation-guide/copy-style/authoring-guide (high path similarity, 0.8) | /v2/resources/documentation-guide/copy-style/authoring-standard (high path similarity, 0.8) |
-| internal-relative | ./snippets-inventory | v2/resources/documentation-guide/copy-style/snippets-inventory | false | missing | /v2/resources/documentation-guide/tooling/snippets-inventory (same leaf segment match, 0.65) | /v2/resources/documentation-guide/copy-style/authoring-guide (high path similarity, 0.8) | /v2/resources/documentation-guide/copy-style/authoring-standard (high path similarity, 0.8) |
+| internal-rooted | /v2/resources/documentation-guide/contributing/git-hooks | v2/resources/documentation-guide/contributing/git-hooks.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/component-library/component-library | v2/resources/documentation-guide/component-library/component-library.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/tooling/snippets-inventory | v2/resources/documentation-guide/tooling/snippets-inventory.mdx | true | ok |  |  |  |
 | internal-rooted | /docs-guide/contributing/Mintlify | docs-guide/contributing/Mintlify.mdx | true | ok |  |  |  |
-| internal-relative | ./contribute-to-the-docs | v2/resources/documentation-guide/copy-style/contribute-to-the-docs | false | missing | /v2/resources/documentation-guide/contributing/contribute-to-the-docs (same leaf segment match, 0.65) | /v2/resources/documentation-guide/copy-style/authoring-guide (high path similarity, 0.8) | /v2/resources/documentation-guide/copy-style/authoring-standard (high path similarity, 0.8) |
+| internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
 
 ### v2/resources/documentation-guide/docs-library/pipelines/component-health.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8614,15 +8614,15 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/resources/documentation-guide/documentation-guide.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-relative | ./contribute-to-the-docs | v2/resources/documentation-guide/contribute-to-the-docs | false | missing | /v2/resources/documentation-guide/contributing/contribute-to-the-docs (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
-| internal-relative | ./docs-features-and-ai-integrations | v2/resources/documentation-guide/docs-features-and-ai-integrations | false | missing | /v2/resources/documentation-guide/features/docs-features-and-ai-integrations (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
-| internal-relative | ./research-and-fact-checking | v2/resources/documentation-guide/research-and-fact-checking | false | missing | /v2/resources/documentation-guide/ai-automations/research-and-fact-checking (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
-| internal-relative | ./style-guide | v2/resources/documentation-guide/style-guide | false | missing | /v2/resources/documentation-guide/copy-style/style-guide (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
-| internal-relative | ./snippets-inventory | v2/resources/documentation-guide/snippets-inventory | false | missing | /v2/resources/documentation-guide/tooling/snippets-inventory (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
-| internal-relative | ./docs-features-and-ai-integrations#automatic-page-index-generation | v2/resources/documentation-guide/docs-features-and-ai-integrations | false | missing | /v2/resources/documentation-guide/features/docs-features-and-ai-integrations (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
-| internal-relative | ./contribute-to-the-docs | v2/resources/documentation-guide/contribute-to-the-docs | false | missing | /v2/resources/documentation-guide/contributing/contribute-to-the-docs (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
+| internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/features/docs-features-and-ai-integrations | v2/resources/documentation-guide/features/docs-features-and-ai-integrations.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/ai-automations/research-and-fact-checking | v2/resources/documentation-guide/ai-automations/research-and-fact-checking.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/copy-style/style-guide | v2/resources/documentation-guide/copy-style/style-guide.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/tooling/snippets-inventory | v2/resources/documentation-guide/tooling/snippets-inventory.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/features/docs-features-and-ai-integrations#automatic-page-index-generation | v2/resources/documentation-guide/features/docs-features-and-ai-integrations.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
 | internal-relative | ./component-library | /v2/resources/documentation-guide/component-library | true | ok-folder-route |  |  |  |
-| internal-relative | ./automations-workflows | v2/resources/documentation-guide/automations-workflows | false | missing | /v2/resources/documentation-guide/ai-automations/automations-workflows (same leaf segment match, 0.65) | /v2/resources/documentation-guide (high path similarity, 0.6667) | /v2/resources/faq (high path similarity, 0.6667) |
+| internal-rooted | /v2/resources/documentation-guide/ai-automations/automations-workflows | v2/resources/documentation-guide/ai-automations/automations-workflows.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/documentation-guide/component-library | v2/resources/documentation-guide/component-library/component-library.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/documentation-guide/copy-style/style-guide | v2/resources/documentation-guide/copy-style/style-guide.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/documentation-guide/tooling/snippets-inventory | v2/resources/documentation-guide/tooling/snippets-inventory.mdx | true | ok |  |  |  |
@@ -8636,7 +8636,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---|---|---|---|---|---|---|
 | internal-relative | ./contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
 | internal-rooted | /about/portal | v2/about/portal.mdx | true | ok |  |  |  |
-| internal-rooted | /about/core-concepts | v2/about/core-concepts | false | missing | v1/developers/core-concepts/core-api/access-control.mdx | v1/developers/core-concepts/core-api/asset.mdx | v1/developers/core-concepts/core-api/multistream.mdx |
+| internal-rooted | /v2/about/concepts/about-livepeer | v2/about/concepts/about-livepeer.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/navigator | v2/developers/navigator.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/navigator | v2/developers/navigator.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/developers/portal | v2/developers/portal.mdx | true | ok |  |  |  |
@@ -8688,12 +8688,12 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 ### v2/resources/documentation-guide/features/docs-features-and-ai-integrations.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
 |---|---|---|---|---|---|---|---|
-| internal-relative | ./research-and-fact-checking | v2/resources/documentation-guide/features/research-and-fact-checking | false | missing | /v2/resources/documentation-guide/ai-automations/research-and-fact-checking (same leaf segment match, 0.65) | /v2/resources/documentation-guide/features/adaptive-architecture (high path similarity, 0.8) | /v2/resources/documentation-guide/features/ai-features-dg (high path similarity, 0.8) |
+| internal-rooted | /v2/resources/documentation-guide/ai-automations/research-and-fact-checking | v2/resources/documentation-guide/ai-automations/research-and-fact-checking.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/home/mission-control | v2/home/mission-control.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/home/mission-control | v2/home/mission-control.mdx | true | ok |  |  |  |
-| internal-relative | ./documentation-guide | v2/resources/documentation-guide/features/documentation-guide | false | missing | /v2/resources/documentation-guide (same leaf segment match, 0.65) | /v2/resources/documentation-guide (same leaf segment match, 0.65) | /v2/resources/documentation-guide/features/adaptive-architecture (high path similarity, 0.8) |
-| internal-relative | ./contribute-to-the-docs | v2/resources/documentation-guide/features/contribute-to-the-docs | false | missing | /v2/resources/documentation-guide/contributing/contribute-to-the-docs (same leaf segment match, 0.65) | /v2/resources/documentation-guide/features/adaptive-architecture (high path similarity, 0.8) | /v2/resources/documentation-guide/features/ai-features-dg (high path similarity, 0.8) |
-| internal-relative | ./component-library | v2/resources/documentation-guide/features/component-library | false | missing | /v2/resources/documentation-guide/component-library (same leaf segment match, 0.65) | /v2/resources/documentation-guide/features/adaptive-architecture (high path similarity, 0.8) | /v2/resources/documentation-guide/features/ai-features-dg (high path similarity, 0.8) |
+| internal-rooted | /v2/resources/documentation-guide/documentation-guide | v2/resources/documentation-guide/documentation-guide.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/resources/documentation-guide/component-library/component-library | v2/resources/documentation-guide/component-library/component-library.mdx | true | ok |  |  |  |
 
 ### v2/resources/documentation-guide/features/feature-map.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -8968,11 +8968,11 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/community/resources/faq | v2/community/resources/faq.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Gateways/resources/reference/faq | v2/Gateways/resources/reference/faq.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/Orchestrators/resources/reference/faq | v2/Orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/concepts/livepeer-overview | v2/about/concepts/livepeer-overview | false | missing | /v2/about/concepts/about-livepeer (high path similarity, 0.75) | /v2/about/concepts/actors-and-capabilities (high path similarity, 0.75) | /v2/about/concepts/governance-and-economics (high path similarity, 0.75) |
-| internal-rooted | /v2/about/protocol/overview | v2/about/protocol/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
-| internal-rooted | /v2/about/network/overview | v2/about/network/overview | false | missing | /v2/about/concepts/composables/overview (same leaf segment match, 0.65) | /v2/delegators/concepts/overview (same leaf segment match, 0.65) | /v2/delegators/delegation/overview (same leaf segment match, 0.65) |
+| internal-rooted | /v2/about/concepts/composables/overview | v2/about/concepts/composables/overview.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/protocol/design | v2/about/protocol/design.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/about/network/design | v2/about/network/design.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/livepeer-token | v2/about/protocol/livepeer-token.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/about/protocol/economics | v2/about/protocol/economics | false | missing | /v2/about/protocol/actors (high path similarity, 0.75) | /v2/about/protocol/architecture (high path similarity, 0.75) | /v2/about/protocol/blockchain-contracts (high path similarity, 0.75) |
+| internal-rooted | /v2/about/concepts/governance-and-economics | v2/about/concepts/governance-and-economics.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/protocol/blockchain-contracts | v2/about/protocol/blockchain-contracts.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/navigator | v2/about/navigator.mdx | true | ok |  |  |  |
@@ -9232,8 +9232,8 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org/t/bash-script-to-update-livepeer/1513 |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/comfystream |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/Orchestrators/guides/ai-and-job-workloads/ai-inference-operations | v2/Orchestrators/guides/ai-and-job-workloads/ai-inference-operations.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/developers/build/model-support | v2/developers/build/model-support | false | missing | /v2/developers/build/ai-and-agents/model-support (same leaf segment match, 0.65) | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/ai-and-agents/model-support | v2/developers/build/ai-and-agents/model-support.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | external-https | https://www.speedybird.xyz/?page_id=339 |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v1/Orchestrators/guides/Gateway-introspection | v1/Orchestrators/guides/Gateway-introspection.mdx | true | ok |  |  |  |
 | external-https | https://livepeer.tools |  | null | 🟡 untested-external |  |  |  |
@@ -9253,10 +9253,10 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://github.com/livepeer/ai-worker |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/LIPs |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://thegraph.com/explorer/subgraphs/FGMqFR8PATJJPFwMVEHfaLRCPXhqCjsVnH92xYGqv3Cx |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/developers/resources/knowledge-hub/awesome-Livepeer | v2/developers/resources/knowledge-hub/awesome-Livepeer | false | missing | /v2/developers/resources/awesome-livepeer (high path similarity, 0.6) | /v2/developers/resources/contributing (high path similarity, 0.6) | /v2/developers/resources/deepwiki (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/resources/awesome-livepeer | v2/developers/resources/awesome-livepeer.mdx | true | ok |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://forum.livepeer.org/c/transcoders/7 |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/Orchestrators/resources/faq | v2/Orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/delegators/delegation/overview | v2/delegators/delegation/overview.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
@@ -9270,7 +9270,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://forum.livepeer.org |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/developers/resources/reference/apis | v2/developers/resources/reference/apis.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/developers/build/byoc | v2/developers/build/byoc | false | missing | /v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-pipelines (high path similarity, 0.6) | /v2/developers/build/ai-and-agents/ai-sdks-overview (high path similarity, 0.6) |
+| internal-rooted | /v2/developers/build/compute/byoc/overview | v2/developers/build/compute/byoc/overview.mdx | true | ok |  |  |  |
 | external-https | https://github.com/livepeer/awesome-livepeer |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/community/ecosystem/governance#how-to-propose-an-spe | v2/community/ecosystem/governance.mdx | true | ok |  |  |  |
 | external-https | https://forum.livepeer.org/t/livepeer-governance-process/2767 |  | null | 🟡 untested-external |  |  |  |
@@ -9331,9 +9331,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://www.youtube.com/results?search_query=livepeer+gateway+setup+titan+node |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://blog.livepeer.org/building-real-time-ai-video-effects-with-comfystream/ |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://www.livepeer.org/dev-hub |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /v2/orchestrators/resources/faq | v2/orchestrators/resources/faq | false | missing | /v2/about/resources/faq (same leaf segment match, 0.65) | /v2/community/resources/faq (same leaf segment match, 0.65) | /v2/gateways/resources/reference/faq (same leaf segment match, 0.65) |
-| internal-rooted | /v2/orchestrators/resources/community-pools | v2/orchestrators/resources/community-pools | false | missing | /v2/orchestrators/resources/knowledge-hub/community-pools (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.75) | /v2/orchestrators/resources/operator-terms (high path similarity, 0.75) |
-| internal-rooted | /v2/orchestrators/resources/technical/cli-flags | v2/orchestrators/resources/technical/cli-flags | false | missing | /v2/orchestrators/resources/reference/technical/cli-flags (same leaf segment match, 0.65) | /v2/orchestrators/resources/glossary (high path similarity, 0.6) | /v2/orchestrators/resources/knowledge-hub/community-guides (high path similarity, 0.6) |
+| internal-rooted | /v2/orchestrators/resources/reference/faq | v2/orchestrators/resources/reference/faq.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/resources/knowledge-hub/community-pools | v2/orchestrators/resources/knowledge-hub/community-pools.mdx | true | ok |  |  |  |
+| internal-rooted | /v2/orchestrators/resources/reference/technical/cli-flags | v2/orchestrators/resources/reference/technical/cli-flags.mdx | true | ok |  |  |  |
 
 ### v2/resources/help-center.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -9364,7 +9364,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-rooted | /v2/resources/documentation-guide/documentation-overview | v2/resources/documentation-guide/documentation-overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/documentation-guide/documentation-overview | v2/resources/documentation-guide/documentation-overview.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/documentation-guide/contributing/contribute-to-the-docs | v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx | true | ok |  |  |  |
-| internal-relative | docs-guide/contributing/contributing | v2/resources/docs-guide/contributing/contributing | false | missing | /v2/developers/resources/contributing (same leaf segment match, 0.65) | /v2/resources/documentation-guide/contributing (same leaf segment match, 0.65) | /v2/resources/documentation-guide/contributing/agent-instructions (high path similarity, 0.46) |
+| internal-rooted | /docs-guide/contributing/contributing | docs-guide/contributing/contributing.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/glossary | v2/resources/glossary.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/resource-hub-terms | v2/resources/resource-hub-terms.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/about/resources/reference/livepeer-contract-addresses | v2/about/resources/reference/livepeer-contract-addresses.mdx | true | ok |  |  |  |
@@ -10146,7 +10146,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 |---|---|---|---|---|---|---|---|
 | internal-relative | ../player | v2/solutions/livepeer-studio/docs/player.mdx | true | ok |  |  |  |
 | internal-relative | playback-livestream | v2/solutions/livepeer-studio/docs/livestream/playback-livestream.mdx | true | ok |  |  |  |
-| internal-relative | optimise-latency | v2/solutions/livepeer-studio/docs/livestream/optimise-latency | false | missing | /v2/solutions/livepeer-studio/docs/livestream/clip-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/create-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/livestream-from-browser (high path similarity, 0.8333) |
+| internal-rooted | /v2/solutions/livepeer-studio/docs/livestream/optimize-latency | v2/solutions/livepeer-studio/docs/livestream/optimize-latency.mdx | true | ok |  |  |  |
 
 ### v2/solutions/livepeer-studio/docs/livestream/multistream.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -10188,7 +10188,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | internal-relative | ./multistream | v2/solutions/livepeer-studio/docs/livestream/multistream.mdx | true | ok |  |  |  |
 | internal-relative | ./clip-livestream | v2/solutions/livepeer-studio/docs/livestream/clip-livestream.mdx | true | ok |  |  |  |
 | internal-relative | ./stream-health | v2/solutions/livepeer-studio/docs/livestream/stream-health.mdx | true | ok |  |  |  |
-| internal-relative | ./optimise-latency | v2/solutions/livepeer-studio/docs/livestream/optimise-latency | false | missing | /v2/solutions/livepeer-studio/docs/livestream/clip-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/create-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/livestream-from-browser (high path similarity, 0.8333) |
+| internal-rooted | /v2/solutions/livepeer-studio/docs/livestream/optimize-latency | v2/solutions/livepeer-studio/docs/livestream/optimize-latency.mdx | true | ok |  |  |  |
 
 ### v2/solutions/livepeer-studio/docs/livestream/playback-livestream.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -10205,7 +10205,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://livepeer.studio/docs/api-reference/session/get |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://livepeer.studio/docs |  | null | 🟡 untested-external |  |  |  |
 | internal-relative | stream-via-OBS | v2/solutions/livepeer-studio/docs/livestream/stream-via-OBS.mdx | true | ok |  |  |  |
-| internal-relative | optimise-latency | v2/solutions/livepeer-studio/docs/livestream/optimise-latency | false | missing | /v2/solutions/livepeer-studio/docs/livestream/clip-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/create-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/livestream-from-browser (high path similarity, 0.8333) |
+| internal-rooted | /v2/solutions/livepeer-studio/docs/livestream/optimize-latency | v2/solutions/livepeer-studio/docs/livestream/optimize-latency.mdx | true | ok |  |  |  |
 
 ### v2/solutions/livepeer-studio/docs/livestream/stream-via-obs.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -10213,9 +10213,9 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://obsproject.com/ |  | null | 🟡 untested-external |  |  |  |
 | internal-relative | create-livestream | v2/solutions/livepeer-studio/docs/livestream/create-livestream.mdx | true | ok |  |  |  |
 | internal-relative | create-livestream | v2/solutions/livepeer-studio/docs/livestream/create-livestream.mdx | true | ok |  |  |  |
-| internal-relative | optimise-latency | v2/solutions/livepeer-studio/docs/livestream/optimise-latency | false | missing | /v2/solutions/livepeer-studio/docs/livestream/clip-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/create-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/livestream-from-browser (high path similarity, 0.8333) |
+| internal-rooted | /v2/solutions/livepeer-studio/docs/livestream/optimize-latency | v2/solutions/livepeer-studio/docs/livestream/optimize-latency.mdx | true | ok |  |  |  |
 | internal-relative | ./playback-livestream | v2/solutions/livepeer-studio/docs/livestream/playback-livestream.mdx | true | ok |  |  |  |
-| internal-relative | optimise-latency | v2/solutions/livepeer-studio/docs/livestream/optimise-latency | false | missing | /v2/solutions/livepeer-studio/docs/livestream/clip-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/create-livestream (high path similarity, 0.8333) | /v2/solutions/livepeer-studio/docs/livestream/livestream-from-browser (high path similarity, 0.8333) |
+| internal-rooted | /v2/solutions/livepeer-studio/docs/livestream/optimize-latency | v2/solutions/livepeer-studio/docs/livestream/optimize-latency.mdx | true | ok |  |  |  |
 
 ### v2/solutions/livepeer-studio/docs/player.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -10361,7 +10361,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://livepeer.studio/docs |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://github.com/livepeer/studio |  | null | 🟡 untested-external |  |  |  |
 | external-https | https://discord.gg/livepeer |  | null | 🟡 untested-external |  |  |  |
-| internal-rooted | /solutions/livepeer-studio/client-use-cases | v2/solutions/livepeer-studio/client-use-cases | false | missing | v2/solutions/livepeer-studio/studio-client-use-cases.mdx |  |  |
+| internal-rooted | /v2/solutions/livepeer-studio/studio-client-use-cases | v2/solutions/livepeer-studio/studio-client-use-cases.mdx | true | ok |  |  |  |
 
 ### v2/solutions/livepeer-studio/studio-client-use-cases.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |
@@ -10436,7 +10436,7 @@ Operator note: external HTTP/HTTPS links are classified only and marked as `🟡
 | external-https | https://en.wikipedia.org/wiki/Webhook |  | null | 🟡 untested-external |  |  |  |
 | internal-rooted | /v2/solutions | v2/solutions/index.mdx | true | ok |  |  |  |
 | internal-rooted | /v2/resources/glossary | v2/resources/glossary.mdx | true | ok |  |  |  |
-| internal-rooted | /v2/home/get-started | v2/home/get-started | false | missing | /v2/home (high path similarity, 0.6667) | /v2/home (high path similarity, 0.6667) | /v2/home/mission-control (high path similarity, 0.6667) |
+| internal-rooted | /v2/home/primer | v2/home/primer.mdx | true | ok |  |  |  |
 
 ### v2/solutions/solution-providers.mdx
 | linkType | rawPath | resolvedPath | exists | status | movedCandidate1 | movedCandidate2 | movedCandidate3 |

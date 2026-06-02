@@ -56,6 +56,34 @@ export const MermaidColours = {
       fontFamily: "Inter, 'Inter Fallback', -apple-system, system-ui",
     },
   },
+  // Sanctioned multi-colour palette for diagram NODE classes (mermaid classDef/style).
+  // Flowcharts colour-code node categories (input, process, success, warning, etc.); the
+  // single-accent theme above cannot express that. Each family pairs a light fill with a
+  // dark stroke/text (and the dark-mode inverse). These hexes are governed: check-component-props
+  // greps every hex in this file into its allowed set. Add a colour here before using it in a
+  // diagram — do not introduce ad-hoc hexes.
+  diagram: {
+    // Brand green — the de-facto diagram stroke used across the repo (near-miss of #2b9a66).
+    green: { stroke: '#2d9a67', fillDark: '#04342c', fillLight: '#e1f5ee', strokeDeep: '#0f6e56' },
+    // Blue — input / external / data-source nodes.
+    blue: { base: '#3b82f6', strong: '#0b66ff', deep: '#0a4cc6', text: '#185fa5', fillDark: '#042c53', fillLight: '#e6f1fb' },
+    // Indigo / violet — protocol / on-chain nodes.
+    indigo: { base: '#534ab7', deep: '#3c3489', darkest: '#26215c', fillLight: '#eeedfe', fillLightest: '#f6f0ff' },
+    // Purple — AI / inference nodes.
+    purple: { base: '#a855f7' },
+    // Amber / gold — warning / attention / payment nodes.
+    amber: { base: '#f59e0b', soft: '#fbbf24', text: '#854f0b', deep: '#412402', fillLight: '#faeeda', fillLightest: '#fffae6' },
+    // Olive — secondary highlight.
+    olive: { text: '#8a7a0a', deep: '#3d3a0a' },
+    // Pink / magenta — emphasis / off-path nodes.
+    pink: { text: '#993556', deep: '#4b1528', fillLight: '#fbeaf0', fillLightest: '#faece7' },
+    // Rust / orange — error / failure-path nodes.
+    rust: { text: '#993c1d', deep: '#4a1b0c' },
+    // Teal / forest — success / completed nodes.
+    teal: { text: '#3b6d11', deep: '#173404', darkest: '#0b1f17', fillLight: '#eaf3de' },
+    // Neutral grey — disabled / muted nodes.
+    neutral: { base: '#71717a', text: '#5f5e5a', fillDark: '#2c2c2a', fillLight: '#f1efe8' },
+  },
   css: {
     accent:
       ':root { --theme-accent: #3CB540; } .dark { --theme-accent: #2b9a66; }',
@@ -80,7 +108,6 @@ export const MermaidColours = {
 // NOTE: DO NOT USE OUTSIDE MERMAID - use style.css colours.
 // This file centralizes literal theme colors for Mermaid diagrams because Mermaid
 // does not support CSS custom properties such as var(--...).
-// Mermaid requires literal colour values and does not support CSS custom properties.
 
 /* Colors Used In this repo
 3CB540 - Jade Green

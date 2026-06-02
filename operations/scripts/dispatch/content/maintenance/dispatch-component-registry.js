@@ -46,6 +46,20 @@ const GENERATORS = [
   'operations/scripts/generators/components/library/generate-component-registry.js'
 ];
 
+// Paired remediators (D-GOV-03) for the prop-* detector categories. These accept the
+// standard --dry-run/--write/--verify + --files/--staged/--full scope flags.
+const REMEDIATORS = [
+  'operations/scripts/remediators/components/library/repair-divider-before-related.js',
+  'operations/scripts/remediators/components/library/repair-hardcoded-hex.js',
+];
+
+function repairScope(args) {
+  if (args.files) return ['--files', args.files];
+  if (args.staged) return ['--staged'];
+  if (args.full) return ['--full'];
+  return ['--staged'];
+}
+
 function scopeKey(args) {
   if (args.files) return 'files';
   if (args.full) return 'full';
@@ -88,6 +102,18 @@ function main() {
     const flags = resolveFlags(d, key, args);
     if (flags === null) continue;
     code = Math.max(code, runIfExists(d.script, flags));
+  }
+  // Repair: scheduled+write or manual applies fixes with --verify; PR mode previews via --dry-run.
+  const scope = repairScope(args);
+  if ((args.mode === 'scheduled' && args.write) || args.mode === 'manual') {
+    const repairFlags = args.write ? ['--write', '--verify', ...scope] : ['--dry-run', ...scope];
+    for (const p of REMEDIATORS) {
+      code = Math.max(code, runIfExists(p, repairFlags));
+    }
+  } else if (args.mode === 'pr') {
+    for (const p of REMEDIATORS) {
+      runIfExists(p, ['--dry-run', ...scope]); // advisory preview, non-blocking
+    }
   }
   // Generate (post-merge or scheduled)
   if (args.mode === 'post-merge' || args.mode === 'scheduled') {

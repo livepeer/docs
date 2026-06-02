@@ -23,6 +23,8 @@ const {
   GOVERNED_ROOTS,
   SCRIPT_EXTENSIONS,
   VALID_CONCERNS,
+  LEGACY_CONCERN_MAP,
+  LEGACY_TYPE_MAP,
   normalizeRepoPath,
   shouldExcludeScriptPath
 } = require('../../../../../tools/lib/governance/script-governance-config');
@@ -99,8 +101,8 @@ const TYPE_FROM_SEGMENT = new Map([
   ['interfaces', 'interface'],
 ]);
 
-// Legacy concern mapping — matches LEGACY_CONCERN_MAP in script-governance-config.js
-const LEGACY_CONCERN_MAP = { components: 'maintenance', ai: 'discoverability', governance: 'governance' };
+// LEGACY_CONCERN_MAP and LEGACY_TYPE_MAP are imported from script-governance-config.js
+// (single source of truth — a local copy here drifted and missed testing/dev-tools).
 const CONTENT_NICHE_TO_CONCERN = {
   health: 'health', quality: 'health', structure: 'health', repair: 'health', veracity: 'health',
   style: 'brand', grammar: 'brand', copy: 'brand',
@@ -108,11 +110,41 @@ const CONTENT_NICHE_TO_CONCERN = {
   seo: 'discoverability', reference: 'maintenance', catalogs: 'maintenance',
   reconciliation: 'maintenance', classification: 'governance',
 };
-// Legacy type mapping
-const LEGACY_TYPE_MAP = { automation: 'integrator', orchestrator: 'dispatch', enforcer: 'validator' };
 
 function deriveFromPath(repoPath) {
   const parts = repoPath.split('/');
+
+  // Specific non-operations roots first. These don't follow the
+  // <type>/<concern>/<niche> convention but are still governed — derive a canonical
+  // concern (governance: they enforce or support repo invariants) and best-effort type
+  // so they don't pollute the registry. (Checked before the generic 'scripts'-index
+  // block because several of these paths also contain a 'scripts' segment.)
+  // JSDoc @type/@concern in the file still win in extractEntry; this is the fallback.
+  if (parts[0] === '.githooks') {
+    return { type: 'dispatch', concern: 'governance', niche: 'hooks' };
+  }
+  if (parts[0] === 'operations' && parts[1] === 'tests') {
+    const sub = parts[2] || '';
+    const niche = sub === 'utils' ? 'test-utils' : (sub || 'tests');
+    return { type: 'validator', concern: 'governance', niche };
+  }
+  if (parts[0] === 'tools' && parts[1] === 'dev') {
+    return { type: 'integrator', concern: 'governance', niche: 'dev-tools' };
+  }
+  if (parts[0] === 'tools' && parts[1] === 'lib') {
+    return { type: 'integrator', concern: 'governance', niche: parts[2] || 'lib' };
+  }
+  if (parts[0] === 'tools' && parts[1] === 'scripts') {
+    return { type: 'generator', concern: 'governance', niche: parts[2] || 'tools' };
+  }
+  if (parts[0] === 'workspace' && parts[1] === 'scripts') {
+    return { type: 'integrator', concern: 'governance', niche: parts[2] || 'workspace' };
+  }
+  if (parts[0] === '.github' && parts[1] === 'scripts') {
+    return { type: 'integrator', concern: 'governance', niche: 'ci' };
+  }
+
+  // Generic operations/scripts/<type>/<concern>/<niche> convention.
   const scriptsIdx = parts.indexOf('scripts');
   if (scriptsIdx >= 0 && parts.length > scriptsIdx + 1) {
     const typeSegment = parts[scriptsIdx + 1];
@@ -131,6 +163,7 @@ function deriveFromPath(repoPath) {
 
     return { type, concern, niche };
   }
+
   return { type: '', concern: '', niche: '' };
 }
 

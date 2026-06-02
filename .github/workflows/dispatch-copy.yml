@@ -1,6 +1,6 @@
 # type: dispatch
 # concern: copy
-# pipeline: composite (P3 + P5/P6 + manual)
+# pipeline: composite
 # dispatch-copy.yml — Action workflow for copy concern.
 name: Copy Pipeline
 
@@ -45,10 +45,6 @@ jobs:
         with:
           node-version: "20"
       - run: cd tools && npm ci
-      - name: Stage PR files for scoped checks
-        run: |
-          git diff --name-only -z --diff-filter=ACMR "origin/${{ github.base_ref }}...HEAD" |
-            xargs -0 -r git add --
       - name: copy PR meta
         env:
           NODE_PATH: tools/node_modules

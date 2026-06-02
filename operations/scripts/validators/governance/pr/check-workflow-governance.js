@@ -24,7 +24,11 @@ const AUDIT_PATH = path.join(ACTIONS_LIBRARY, 'actions-audit.json');
 
 const VALID_TYPES = ['audit', 'generator', 'validator', 'remediator', 'dispatch', 'integrator', 'interface'];
 const VALID_CONCERNS = ['copy', 'health', 'maintenance', 'discoverability', 'governance', 'brand', 'integrations'];
-const VALID_PIPELINES = ['P2', 'P3', 'P4', 'P5', 'P5-auto', 'P6', 'P7', 'manual', 'event-driven'];
+// "composite" covers meta-dispatcher workflows that genuinely span multiple modes in a
+// single YAML (e.g. PR + scheduled + manual + post-merge jobs sharing one file). Tagging
+// these with a single primary phase would mislead — the workflow's own mode-keyed jobs
+// document the specifics. Added 2026-06-03 alongside the 6 dispatch-{concern}.yml files.
+const VALID_PIPELINES = ['P2', 'P3', 'P4', 'P5', 'P5-auto', 'P6', 'P7', 'manual', 'event-driven', 'composite'];
 
 const TYPE_FOLDERS = {
   integrator: 'integrators',
