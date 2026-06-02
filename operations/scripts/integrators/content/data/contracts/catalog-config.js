@@ -510,7 +510,9 @@ const CONTRACT_DEFINITIONS = [
     chain: "ethereumMainnet",
     category: "migration",
     lifecycle: "migration_residual",
-    governorKey: "l1Migrator",
+    // Active deployment is L1MigratorV2. Resolve from the manifest's l1MigratorV2
+    // key, not l1Migrator (that key still holds the retired V1 address).
+    governorKey: "l1MigratorV2",
     artifactAuthority: {
       repo: "livepeer/arbitrum-lpt-bridge",
       branch: "main",
