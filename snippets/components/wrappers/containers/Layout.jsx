@@ -1,5 +1,6 @@
 /**
  * Layout utilities — LazyLoad and ScrollBox.
+ * @aiDiscoverability none
  */
 
 // Re-exports for consumers that import these from Layout.jsx
