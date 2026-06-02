@@ -1,6 +1,6 @@
 # Folder-allowlist audit
 
-Generated 2026-05-26
+Generated 2026-06-02
 
 **Total drift entries: 0**
 
@@ -11,7 +11,7 @@ Generated 2026-05-26
 
 ## .github
 
-- Permitted: 10
+- Permitted: 11
 - Drift: 0
 
 ## ai-tools
@@ -21,7 +21,7 @@ Generated 2026-05-26
 
 ## docs-guide
 
-- Permitted: 19
+- Permitted: 18
 - Drift: 0
 
 ## tools/config
