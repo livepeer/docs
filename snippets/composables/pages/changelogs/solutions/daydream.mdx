@@ -46,6 +46,59 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "MIDI mapping, vocal hotswap, song-swap track export, enhanced looping, and custom-song upload fixes land in DEMON this week." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **MIDI mapping** — Map any DEMON control surface parameter to a MIDI controller for hands-on, hardware-driven performance.
+  - **Vocal hotswap** — Swap vocal stems on the fly without restarting the stream.
+  - **Song-swap track export** — Export the individual tracks produced during a song swap.
+  - **Enhanced looping** — More expressive loop controls for sculpting sections in real time.
+  - **Adaptive decode lead** — Smarter buffering decoupled from the VAE span, with softer defaults you can override per session for tighter latency vs. resilience under GPU contention.
+
+  #### Bug Fixes
+
+  - **Custom-song upload** — Resolved a hang where the "Almost Ready" dialog could get stuck in "Encoding…" forever; upload progress and errors are now surfaced in the modal.
+  - **Source swap stability** — Silenced latent crashes when swapping to very short or oddly-sized sources.
+  - **Session lifecycle** — Sessions are now fully transactional with proper cleanup, reducing stuck-session edge cases.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
+
+<Update label="demonTD: v0.2.6 – v0.2.14" tags={["Features", "Fixes", "demonTD"]} rss={{ title: "Daydream demonTD v0.2.6 – v0.2.14", description: "A rapid release sweep adds an audio output device picker, integer seeds + randomize, auto-extend leases, pod failover, scheduled curves, and a stack of stability fixes." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
+  ## demonTD: v0.2.6 – v0.2.14
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **Audio output device picker** (v0.2.13) — Choose your output device from the Session page and switch live without reconnecting. Fixes the "connected but no audio" case when TouchDesigner's default device wasn't the one you were listening on.
+  - **Integer seeds + Randomize Seed** (v0.2.14) — The Seed parameter is now a real 32-bit integer (default 42), with a Randomize Seed pulse on the Synthesis page that matches the web client's dice button.
+  - **Auto-extend lease** (v0.2.6) — A Session toggle (on by default) automatically extends your hosted session before it expires, so playback continues without manual "Still playing?" clicks until the server cap is hit.
+  - **Pod failover** (v0.2.4) — If a hosted pod fails to reach ready, demonTD now releases it and re-queues for a different pod, up to 3 attempts.
+  - **Scheduled curves** (v0.2.4) — Per-parameter scheduling for Denoise, Hint Strength, Feedback, and Shift, matching the web client's curve editor with a 500 ms manual-override window.
+  - **Blend interpolation controls** (v0.2.12) — Per-path slerp/linear menus for prompt, timbre, structure, and feedback blends on the Prompt + LoRA page.
+  - **Windows install** (v0.2.12) — Confirmed working on Windows 11 + TD 2025.32820 with new documented install steps.
+
+  #### Bug Fixes
+
+  - **Hosted sessions surviving full leases** (v0.2.6, v0.2.11, v0.2.12) — Restored heartbeats, post-ready params keepalive, and a thread-safe WebSocket send path so hosted sessions no longer drop after \~30 s or shortly after ready.
+  - **LoRA toggles work end-to-end** (v0.2.4) — Enable/disable toggles, strength changes, and prompt/LoRA edits no longer silently drop or disconnect the session.
+  - **TouchDesigner timeline pause pauses audio** (v0.2.7) — Pressing Space or pausing the TD timeline now mutes generation within one audio callback, and resumes from the same sample.
+  - **Audio Analyze receives an audio-rate stream** (v0.2.8) — Wire the COMP's `out` into an Audio Analyze CHOP and audio-reactive material now responds to generated audio.
+  - **Loop-wrap source flash** (v0.2.6) — Eliminated the brief source-y flash at the first loop wrap on a fresh Connect.
+  - **Pre-flight clarity** (v0.2.8, v0.2.12) — Hid the confusing Source Audio File picker in favor of the wired Audio File In CHOP, and fixed stale guidance in the textport.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View latest release on GitHub" href="https://github.com/daydreamlive/demonTD/releases/tag/v0.2.14" iconLeft="github" />
+</Update>
+
 <Update label="demonTD: v0.2.1" tags={["Features", "Fixes", "demonTD"]} rss={{ title: "Daydream demonTD v0.2.1", description: "Hosted mode lets demonTD connect to the Daydream queue at music.daydream.live, plus an audio stutter fix." }} description={<Subtitle variant="changelog">May 2026</Subtitle>}>
   ## demonTD: v0.2.1
 
