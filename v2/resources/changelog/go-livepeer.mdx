@@ -1,0 +1,69 @@
+---
+sidebarTitle: Go-Livepeer (weekly)
+title: go-livepeer weekly changelog
+description: >-
+  Weekly summary of merged changes to the Livepeer node software (go-livepeer) that affect gateway operators,
+  orchestrators, and developers.
+lifecycleStage: discover
+complexity: intermediate
+pageType: changelog
+keywords:
+  - livepeer
+  - go-livepeer
+  - changelog
+  - weekly
+  - node
+  - gateway
+  - orchestrator
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: changelog
+audience: everyone
+lastVerified: 2026-06-10T00:00:00.000Z
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
+
+<Tip>
+  Weekly digest of merged go-livepeer changes. For tagged releases, see the [release changelog](/v2/resources/changelog/protocol/go-livepeer).
+  <Subtitle variant="changelog" style={{fontSize: "0.95rem", marginTop: "0.25rem"}}>Subscribe to the release changelog's <LinkArrow label="RSS Feed" href="/v2/resources/changelog/protocol/go-livepeer/rss.xml" newline={false} /></Subtitle>
+</Tip>
+
+<CustomDivider />
+
+Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<CustomDivider />
+
+<Update label="Week of June 8, 2026" tags={["Live AI", "Remote Signer"]} description={<Subtitle variant="changelog">June 8 – 10, 2026</Subtitle>}>
+  ## Week of June 8, 2026
+
+### Updates
+
+- **Optional auth webhook for remote signers** - Operators running a remote signer alongside a Live AI gateway can now point the signer at an external webhook to enforce policy checks before payments are signed. When configured, the signer forwards the incoming request headers and current signer state to the webhook URL and only proceeds with signing if the webhook returns a 200. Non-200 responses are propagated back to the caller with the upstream status code, making it straightforward to reject or rate-limit payment requests at the policy layer. Existing remote signer deployments are unaffected unless the new webhook URL is set. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers) for setup details.
+
+</Update>
+
+<CustomDivider />
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Release changelog" icon="tag" href="/v2/resources/changelog/protocol/go-livepeer" arrow>
+    Notes for tagged go-livepeer releases
+  </Card>
+  <Card title="GitHub releases" icon="github" href="https://github.com/livepeer/go-livepeer/releases" arrow>
+    Download binaries and view full release notes
+  </Card>
+  <Card title="Remote signers" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow>
+    Set up keyless gateway operation with remote signing
+  </Card>
+  <Card title="Gateway capabilities" icon="grid-2" href="/v2/gateways/concepts/capabilities" arrow>
+    How gateways discover and route to orchestrator capabilities
+  </Card>
+</CardGroup>
