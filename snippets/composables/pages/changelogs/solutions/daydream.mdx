@@ -46,6 +46,44 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON + demonTD: Weekly Update" tags={["Features", "Fixes", "DEMON", "demonTD"]} rss={{ title: "Daydream DEMON + demonTD weekly update", description: "Spectral steering, smoother audio, longer keepalive, and a privacy-safe session wipe ship in DEMON. demonTD v0.2.15–v0.2.17 lands LoRA trigger-word injection, prompt blending, and stable streaming fixes." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
+  ## DEMON + demonTD: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **Spectral steering (DEMON)** — A new spectral control path lets you steer generation by frequency band for finer creative control, with calibration improvements to keep automation feeling natural.
+  - **LoRA trigger-word injection (demonTD v0.2.15)** — demonTD now auto-prepends each LoRA's activation token to your prompt, matching the web client. Fixes "LoRAs feel weaker in TD" — enabled LoRAs now actually shape the sound. Toggle via **Auto-Prepend LoRA Triggers** on the Prompt + LoRA page.
+  - **Prompt B / blending in demonTD (v0.2.15)** — A new editable `Promptb` field on the Prompt + LoRA page makes prompt blending actually blend live, not just stream a value.
+  - **Audio output device picker, live switching** — Already shipped in demonTD v0.2.13 and refined this week; pick your output device on the Session page and switch without reconnecting.
+  - **Improved setup experience (DEMON)** — A smoother first-run flow for local installs.
+
+  #### Updates
+
+  - **Smoother audio in demonTD (v0.2.16)** — Heartbeat polling, the params pacer, and slice decoding all moved off TouchDesigner's main thread, so frame hitches no longer cause choppy audio. A new health line in the textport names the culprit if chop returns.
+  - **Stable streaming (demonTD v0.2.17)** — No more `1011 keepalive ping timeout` drops ~40 s into a session. demonTD now stays silent through the pod's initial encode (matching the web client and VST), and LoRA-strength changes are debounced to avoid weight-refit storms that caused un-processed audio bleed.
+  - **VST-matched defaults (demonTD v0.2.17)** — Fresh installs open with the same starter prompts, LoRAs, and strength values as the VST so you hear something good on first Connect. Saved toggles still win.
+  - **Longer WebSocket keepalive (DEMON)** — Raised the pod's keepalive ping timeout to 90 s so live sessions no longer drop mid-stream with a 1011 close.
+  - **Quieter logs (DEMON)** — Per-operation VAE backend logs are demoted to debug, cutting log volume by ~87% for cleaner self-hosted runs.
+  - **"Structure" label in demonTD** — `Hint Strength` is now labelled **Structure** to match the canonical UI, with `Denoise → Strength` and the DCW scalers relabeled to match.
+
+  #### Bug Fixes
+
+  - **Custom-song upload modal (DEMON)** — The "Almost Ready" upload dialog now surfaces encoding progress and errors instead of looking stuck.
+  - **Cross-session upload isolation (DEMON)** — User uploads are now wiped between sessions so audio from a previous user can never leak into yours.
+  - **No more mid-session disconnects (demonTD v0.2.12 / v0.2.17)** — Fixed a thread-safety bug where concurrent reads and writes on the same TLS socket were corrupting the WebSocket and tearing down live sessions client-side.
+  - **VRAM pressure handling (DEMON)** — Mel-band-aware VRAM accounting reduces OOM risk during long sessions on smaller GPUs.
+
+  #### Other
+
+  - **DEMON is now AGPL-3.0-or-later** — License updated. See the [DEMON repository](https://github.com/daydreamlive/DEMON) for details.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
+
 <Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "MIDI mapping, vocal hotswap, song-swap track export, enhanced looping, and custom-song upload fixes land in DEMON this week." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
   ## DEMON: Weekly Update
 
