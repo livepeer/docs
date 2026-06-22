@@ -46,6 +46,31 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Headless MCP sessions, external demo support, a new prompt enhancer endpoint, an unstable-connection indicator, and a fix for raw-source audio bleed on slow links." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **Headless MCP sessions** — AI agents can now create and own their own DEMON streaming sessions over MCP, no browser tab required. Useful for automated testing, CI, and reproducing realtime behavior end-to-end. New tools: `headless_start`, `headless_stop`, `headless_status`, and `headless_lag_report` for measuring lead and staleness against the simulated playhead.
+  - **External demos** — DEMON now supports pointing the docs and tooling at external demo apps, so you can build and ship your own real-time music demo on top of the public DEMON pod instead of forking the bundled one.
+  - **Prompt enhancer endpoint** — A new `/api/enhance` endpoint that turns short, rough prompts into richer, model-friendly prompts before they hit generation. Drop-in for any client building on the DEMON demo API.
+  - **Unstable-connection indicator (web)** — The web client now flags an "unstable connection" warning when generated slices start landing behind the playhead, so you know when network or pod conditions — not your prompt — are why the output feels off.
+
+  #### Updates
+
+  - **Lower-bandwidth streaming (opt-in)** — A new `emit-trim` mode cuts slice bandwidth by ~2.8× at the same latency. Off by default; enable it via the pod flag when you're streaming over a constrained uplink.
+
+  #### Bug Fixes
+
+  - **No more raw-source audio bleed on slow links** — On congested or slow networks the un-processed source audio could leak through; chunked sends and `write_audio` hardening keep the generated stream clean.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
+
 <Update label="DEMON + demonTD: Weekly Update" tags={["Features", "Fixes", "DEMON", "demonTD"]} rss={{ title: "Daydream DEMON + demonTD weekly update", description: "Spectral steering, smoother audio, longer keepalive, and a privacy-safe session wipe ship in DEMON. demonTD v0.2.15–v0.2.17 lands LoRA trigger-word injection, prompt blending, and stable streaming fixes." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
   ## DEMON + demonTD: Weekly Update
 
