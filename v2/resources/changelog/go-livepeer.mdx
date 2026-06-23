@@ -40,10 +40,12 @@ Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this we
 
 <CustomDivider />
 
-<Update label="Week of June 22, 2026" tags={["Quiet week"]} description={<Subtitle variant="changelog">June 15 – 21, 2026</Subtitle>}>
+<Update label="Week of June 22, 2026" tags={["Security", "Payments"]} description={<Subtitle variant="changelog">June 22 – 26, 2026</Subtitle>}>
   ## Week of June 22, 2026
 
-No user-facing changes shipped to go-livepeer this week. For tagged builds and full release notes, browse the [release changelog](/v2/resources/changelog/protocol/go-livepeer) or the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases). The next digest goes out Monday.
+### Bug fixes
+
+- **Stricter ticket parameter validation on gateways** - Gateways now reject probabilistic micropayment tickets that advertise a zero expiration block, ensuring every paid ticket is subjected to the standard economic caps before it is accepted. Previously, tickets with a zero expiration block could bypass those caps. Honest orchestrators always advertise a non-zero expiration block, so well-behaved deployments are unaffected. Gateway operators should update to the latest build to pick up the fix. See the [payment guide](/v2/gateways/guides/payments-and-pricing/payment-guide) for background on how gateways handle orchestrator tickets.
 
 </Update>
 
