@@ -22,7 +22,7 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-06-26T00:00:00.000Z
+lastVerified: 2026-06-27T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -37,6 +37,21 @@ import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
 <CustomDivider />
 
 Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<CustomDivider />
+
+<Update label="Week of June 22, 2026 (mid-week update)" tags={["Remote Signer", "Logging"]} description={<Subtitle variant="changelog">June 26, 2026</Subtitle>}>
+  ## Mid-week update — June 26, 2026
+
+### Updates
+
+- **Debug logging now follows the `-v` flag** - Setting `-v 6` (the documented maximum verbosity) now also enables debug-level output from the structured logger used by the live runner, trickle, AI worker, and media subsystems. Previously those debug lines were silently dropped, making it harder to diagnose Live AI and BYOC issues. No action is required for normal operation; raise `-v` only when you need deeper logs. See the [Live AI overview](/v2/gateways/guides/node-pipelines/ai-pipelines) for context on which components this covers.
+
+### Bug fixes
+
+- **Remote signer mode no longer fails to start as a non-root user** - When launching a node with `-remoteSigner`, the management CLI address was unset and the node fell back to binding port 80, which fails with "permission denied" for non-root users and shut the node down on startup. The CLI address now defaults to `127.0.0.1:3935` in remote signer mode, matching the loopback default used by other node types and avoiding a port collision with a co-located broadcaster. Existing setups that explicitly pass `-cliAddr` are unaffected. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers) for setup details.
+
+</Update>
 
 <CustomDivider />
 
