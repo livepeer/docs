@@ -46,6 +46,25 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Optional BPM override for any source track, a hand-tracking gesture demo on the project page, and a fix that stops frozen browser sessions from holding onto a pod seat." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **BPM override** — Manually set the BPM used for generation on any source track, overriding the auto-detected value (and track metadata / sidecar). Useful when detection is off on ambient, half-time, or unusual material.
+  - **Hand-tracking demo on the project page** — A new sample showcases driving DEMON's live controls from a MediaPipe hand-tracking frontend, highlighting that you can build custom gesture/performance UIs on top of the public DEMON pod.
+
+  #### Bug Fixes
+
+  - **Dead client no longer wedges a pod** — A closed tab, slept laptop, or half-open tunnel could leave a session "stuck": the pod's one seat stayed reserved and `/sessions` never emptied. A new per-session watchdog detects the stall from outside the I/O threads and tears the session down cleanly, so pods return to the pool promptly.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
+
 <Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Headless MCP sessions, external demo support, a new prompt enhancer endpoint, an unstable-connection indicator, and a fix for raw-source audio bleed on slow links." }} description={<Subtitle variant="changelog">June 2026</Subtitle>}>
   ## DEMON: Weekly Update
 
