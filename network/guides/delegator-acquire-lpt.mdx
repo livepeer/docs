@@ -1,0 +1,79 @@
+---
+title: "Acquire LPT on Arbitrum"
+description: "Get LPT into a self-custody wallet on Arbitrum One so it can be delegated — by bridging, withdrawing, or swapping."
+---
+
+Delegation happens on **Arbitrum One**. Before you can bond, your LPT must be in a self-custody wallet
+on that network, with a little ETH there for gas. This guide covers the three routes to get there.
+
+<Warning>
+  This applies only to **unbonded** LPT. If your LPT is already bonded, you must
+  [unbond and withdraw](/network/guides/delegator-manage) — and wait out the unbonding period — before you can
+  bridge or move it.
+</Warning>
+
+## What "ready to delegate" means
+
+Your LPT is ready once **all** of these are true:
+
+- the token is in a self-custody wallet on **Arbitrum One**,
+- you hold a small **ETH balance on Arbitrum One** for future protocol transactions,
+- the wallet can connect to [Livepeer Explorer](https://explorer.livepeer.org).
+
+<Tip>
+  You always need gas on the chain where you're signing. A canonical bridge deposit means **Ethereum
+  mainnet** gas first, then a small **Arbitrum** balance for delegation actions afterward.
+</Tip>
+
+## Route 1 — Canonical bridge (Ethereum → Arbitrum One)
+
+Use this if you already hold LPT on Ethereum mainnet and want the trust-minimized path.
+
+<Steps>
+  <Step title="Open the official Arbitrum bridge">
+    Go to [bridge.arbitrum.io](https://bridge.arbitrum.io/) and connect the wallet holding your
+    mainnet LPT.
+  </Step>
+  <Step title="Select LPT">
+    Search for `LPT`. If it doesn't appear, paste the Ethereum-mainnet LPT token address directly.
+  </Step>
+  <Step title="Set Arbitrum One as the destination and approve">
+    Confirm the destination is **Arbitrum One**, enter the amount, and sign the approval.
+  </Step>
+  <Step title="Confirm the deposit">
+    Sign the deposit. The bridge locks mainnet LPT and mints the Arbitrum-side token. Track it in the
+    bridge UI or the [retryable dashboard](https://retryable-dashboard.arbitrum.io/).
+  </Step>
+  <Step title="Verify receipt on Arbitrum">
+    Confirm the LPT is visible in your Arbitrum wallet before delegating.
+  </Step>
+</Steps>
+
+<Warning>
+  LPT uses **dedicated bridge contracts**, not the generic ERC-20 gateway flow. Don't assume a
+  third-party bridge supports LPT unless it explicitly says so. See
+  [Contract addresses](/network/reference/contracts).
+</Warning>
+
+## Route 2 — Withdraw directly from an exchange
+
+If you're buying LPT on an exchange, the fastest route is often a **direct withdrawal to Arbitrum
+One**. Don't rely on any static list of supported exchanges — verify the exchange's network selector
+offers Arbitrum One at the moment you withdraw.
+
+## Route 3 — Swap on Arbitrum One
+
+If you're already on Arbitrum One with ETH, WETH, or stablecoins, swapping into LPT on a DEX can be
+simpler than bridging LPT itself. The end requirement is identical: the LPT must end up in your own
+Arbitrum wallet.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Choose an orchestrator" icon="list-check" href="/network/guides/delegator-choose-orchestrator">
+    Compare operators before you bond.
+  </Card>
+  <Card title="Delegate your first LPT" icon="hand-holding-dollar" href="/network/tutorials/delegate-your-first-lpt">
+    Execute the bond once your LPT is on Arbitrum.
+  </Card>
+</CardGroup>

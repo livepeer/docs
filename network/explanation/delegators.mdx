@@ -1,0 +1,81 @@
+---
+title: "What a delegator is"
+description: "Bonding LPT is stake attribution, not custody transfer. What delegation means, what you earn, and what you actually risk."
+---
+
+A **delegator** is an LPT holder who **bonds** their tokens to an orchestrator. This puts your
+capital to work securing the network and earning a share of that orchestrator's rewards — without
+running any hardware yourself.
+
+The single most important idea:
+
+<Tip>
+  **Delegation is stake attribution, not custody transfer.** When you bond, your LPT sits in the
+  protocol's `BondingManager` contract on Arbitrum One. The orchestrator **cannot move or spend
+  your tokens.** Your wallet is always the only party that can unbond, withdraw, or redelegate.
+</Tip>
+
+What changes when you bond is *attribution*: your balance now counts toward one specific
+orchestrator's total stake, which is what determines its rank and reward share.
+
+## Why "doing nothing" costs you
+
+Livepeer mints new LPT every round and distributes it to **bonded** stake. If you hold LPT but leave
+it unbonded, you receive none of that issuance while bonded holders do. Your share of total supply
+shrinks over time. Staying unbonded is not a neutral position — it is a slow dilution.
+
+## What you earn
+
+A bonded delegator can earn two things, both filtered through the orchestrator you pick:
+
+- **LPT inflation rewards** — a share of each round's newly minted LPT, after the orchestrator keeps its `rewardCut`.
+- **ETH fees** — a share of the ETH the orchestrator earns for compute work, according to its `feeShare`.
+
+Neither is guaranteed by bonding alone. They depend on the orchestrator staying **active** and
+reliably calling `reward()` each round. See [Economics](/network/explanation/economics) for the formulas and
+a worked example.
+
+## One wallet, one orchestrator
+
+| Commitment | What it means |
+| --- | --- |
+| One orchestrator per wallet | A bonded position points to a single orchestrator at a time. To split, use separate wallets. |
+| Arbitrum One only | Delegation happens on Arbitrum One, not Ethereum mainnet. |
+| Exit delay | Full withdrawal requires unbonding and waiting out the [unbonding period](/network/reference/protocol-parameters). |
+| Ongoing attention | Commission terms and reliability can change; check periodically. |
+
+## Switching vs exiting
+
+There are two different ways to change your position — pick by **what your problem is**:
+
+- **Redelegate** — move your stake to a different orchestrator *without* the unbonding wait. Use this when the issue is the **operator** (missed rewards, worse terms, dropped out of the active set).
+- **Unbond and withdraw** — stop participating and wait out the unbonding period before tokens return to your wallet. Use this when you want **liquid tokens** back.
+
+## What you're actually risking
+
+Slashing is **not currently active** on Livepeer mainnet, and your tokens are in the protocol
+contract — not the operator's wallet. So the real risks are operational, not custodial:
+
+- choosing an orchestrator that **misses reward calls** (the pool simply forgoes that round's inflation — there is no catch-up)
+- an operator that later changes commission terms unfavorably
+- needing liquidity before the unbonding period has passed
+- contributing to stake concentration by always picking already-dominant operators
+
+This is why **reward-call reliability matters more than a slightly better headline commission.**
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Economics" icon="coins" href="/network/explanation/economics">
+    How rewardCut, feeShare, and inflation turn into real returns.
+  </Card>
+  <Card title="Choose an orchestrator" icon="list-check" href="/network/guides/delegator-choose-orchestrator">
+    The checklist for picking a good operator.
+  </Card>
+  <Card title="Delegate your first LPT" icon="hand-holding-dollar" href="/network/tutorials/delegate-your-first-lpt">
+    The end-to-end wallet walkthrough.
+  </Card>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    The live unbonding period and other governance values.
+  </Card>
+</CardGroup>

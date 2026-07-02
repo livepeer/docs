@@ -1,0 +1,151 @@
+---
+title: "Add AI inference"
+description: "Add AI pipelines to a working transcoding orchestrator: check VRAM, configure aiModels.json, and enable the AI worker."
+---
+
+This guide adds AI inference to an orchestrator that is **already running and activated** for
+transcoding. By the end, your node accepts AI jobs alongside video work.
+
+<Note>
+  Setting up from scratch? Do [Run your first orchestrator](/network/tutorials/run-your-first-orchestrator)
+  first, then come back here. AI pipelines require **Linux**.
+</Note>
+
+## 1. Check your available VRAM
+
+AI inference runs in a separate Docker container. If it shares a GPU with transcoding, VRAM is split
+between them. Check what's free:
+
+```bash
+nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv
+```
+
+Pick a pipeline you can actually fit:
+
+| Pipeline | Min VRAM |
+| --- | --- |
+| `image-to-text` | 4 GB |
+| `segment-anything-2` | 6 GB |
+| `llm` (quantized 7–8B) | 8 GB |
+| `audio-to-text` (Whisper) | 12 GB |
+| `image-to-video` | 16 GB+ |
+| `image-to-image` | 20 GB |
+| `text-to-image` (SD/SDXL) | 24 GB |
+
+<Warning>
+  If the GPU lacks free VRAM for both transcoding and your chosen pipeline, AI runner containers fail
+  to start. Pick a lower-VRAM pipeline, dedicate a second GPU to AI, or stop transcoding on that GPU.
+</Warning>
+
+See the [hardware reference](/network/reference/hardware) for the full VRAM-by-workload table.
+
+## 2. Pull the AI runner image
+
+```bash
+docker pull livepeer/ai-runner:latest
+# Some pipelines need a dedicated image, e.g.:
+docker pull livepeer/ai-runner:segment-anything-2
+```
+
+## 3. Configure `aiModels.json`
+
+This file tells your node which pipelines and models to serve, what to charge, and what to keep warm
+in VRAM. Create `~/.lpData/aiModels.json` with at least one entry:
+
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "ByteDance/SDXL-Lightning",
+    "price_per_unit": 4768371,
+    "warm": true
+  }
+]
+```
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `pipeline` | Yes | Pipeline name (e.g. `text-to-image`, `audio-to-text`, `llm`) |
+| `model_id` | Yes | Hugging Face model ID (must be on the Livepeer-verified list) |
+| `price_per_unit` | Yes | Price in wei per unit |
+| `warm` | No | If `true`, preload into VRAM on startup |
+| `capacity` | No | Max concurrent requests (default `1`) |
+| `optimization_flags` | No | `SFAST` (~+25% speed) and/or `DEEPCACHE` (~+50% speed) |
+
+<Warning>
+  Don't use `DEEPCACHE` with Lightning/Turbo models — they're already optimized and quality drops.
+  `SFAST` and `DEEPCACHE` can't be combined. Changes to `aiModels.json` are **not** hot-reloaded —
+  restart the node after editing.
+</Warning>
+
+## 4. Enable the AI worker
+
+Add three flags to your startup command:
+
+```bash
+livepeer \
+  ...your existing transcoding flags... \
+  -aiWorker \
+  -aiModels ~/.lpData/aiModels.json \
+  -aiModelsDir ~/.lpData/models
+```
+
+| Flag | What it does |
+| --- | --- |
+| `-aiWorker` | Enables the AI worker; without it, all AI config is ignored |
+| `-aiModels` | Path to `aiModels.json` |
+| `-aiModelsDir` | Host directory holding cached model weights |
+
+Running in Docker? Mount the Docker socket so the node can spawn AI runner containers, and use port
+`8936` to avoid clashing with the transcoding orchestrator on `8935`:
+
+```bash
+docker run --name livepeer-ai-orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --network host --gpus all \
+  livepeer/go-livepeer:master \
+  -orchestrator -serviceAddr 0.0.0.0:8936 -nvidia 0 \
+  -aiWorker \
+  -aiModels /root/.lpData/aiModels.json \
+  -aiModelsDir ~/.lpData/models
+```
+
+<Warning>
+  With Docker-out-of-Docker, `-aiModelsDir` must be a path on the **host machine**, not inside the
+  container — the node passes it directly to the runner containers it spawns.
+</Warning>
+
+## 5. Verify AI is active
+
+Within seconds of startup you should see a managed-container log line for each warm model:
+
+```
+INFO Starting managed container gpu=0 name=text-to-image_ByteDance_SDXL-Lightning ...
+```
+
+Then send a test request to the runner:
+
+```bash
+curl -X POST "http://localhost:8000/text-to-image" \
+  -H "Content-Type: application/json" \
+  -d '{"model_id":"ByteDance/SDXL-Lightning","prompt":"A cool cat on the beach","width":512,"height":512}'
+```
+
+A successful response contains an `images` array. Finally, confirm your pipelines appear externally at
+[tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
+(search your orchestrator address; allow 2–5 minutes).
+
+If jobs still don't arrive, check `aiModels.json` is valid, the `model_id` matches a verified model,
+and the runner is reachable — see the AI troubleshooting entries in the [FAQ](/network/reference/faq).
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Set pricing" icon="tag" href="/network/guides/orchestrator-pricing">
+    Price each pipeline and model competitively.
+  </Card>
+  <Card title="Hardware reference" icon="microchip" href="/network/reference/hardware">
+    VRAM planning and GPU selection for AI.
+  </Card>
+</CardGroup>

@@ -1,0 +1,137 @@
+---
+title: "How the network works"
+description: "Rounds, the active set, reward calls, and the life of a single job — the shared machinery behind both roles."
+---
+
+Both orchestrators and delegators are governed by the same small set of on-chain mechanics. Once you
+understand rounds, the active set, and reward calls, almost everything else follows.
+
+## Rounds
+
+A **round** is the protocol's unit of accounting. Each round, the protocol:
+
+- elects the active set,
+- updates inflation state,
+- lets active orchestrators mint that round's rewards,
+- snapshots bonded stake for governance.
+
+The common shorthand is "about one day per round." The exact cadence depends on chain timing — use
+the [Explorer](https://explorer.livepeer.org) for the current round and countdown rather than a fixed
+hourly estimate.
+
+## The active set
+
+Only the **top orchestrators by total bonded stake** (self-stake + delegated stake) are in the
+**active set** for a given round. Only active-set members:
+
+- receive LPT inflation rewards, and
+- receive jobs from gateways.
+
+Stake below the threshold means an orchestrator is registered but earns nothing from either stream.
+
+<Note>
+  Livepeer's public product surfaces describe the active set as **100 orchestrators**. The size is
+  governance-controlled — if you need an operationally exact value, read `numActiveTranscoders()`
+  on-chain. See [Protocol parameters](/network/reference/protocol-parameters).
+</Note>
+
+## The `reward()` call
+
+Every active orchestrator must submit `reward()` on-chain **once per round**. That call is what
+causes the protocol to mint and account for the round's inflationary LPT for that orchestrator's
+pool — which is then split between the orchestrator and its delegators.
+
+If the call is missed:
+
+- no inflation is minted for that pool for that round,
+- **the missed round is never backfilled**,
+- every delegator in that pool permanently misses that round's inflation.
+
+This is the single most important reliability signal on the network. It's why orchestrators automate
+reward calling and why delegators check a candidate's reward-call history before bonding.
+
+## How stake is accounted
+
+When a delegator bonds to an orchestrator, the orchestrator's **effective stake** grows by that
+amount. That total is what determines active-set ranking and the size of the orchestrator's reward
+pool. Your tokens remain yours; only your stake *weight* is attributed to the operator you chose.
+
+The protocol tracks earnings through cumulative accounting rather than rewriting every delegator's
+balance each round. You realize accrued earnings by calling `claimEarnings()`, which also runs
+automatically when you bond more, unbond, rebond, or redelegate.
+
+<Warning>
+  **Claim timing has an edge case.** If you claim *before* your orchestrator has called `reward()`
+  for the current round, you can skip that round's accounting entirely. Safe default: claim **late
+  in the round**, after your orchestrator has already called `reward()`.
+</Warning>
+
+## Where demand comes from
+
+Everything above is the supply side. The work itself comes from **applications** — real-time AI
+video products, streaming platforms, and other services that need video transcoded or AI models run.
+Applications don't talk to orchestrators directly: they integrate with a **gateway**, which
+aggregates their jobs, selects orchestrators (by capability, price, latency, performance, and
+stake), and pays for the work in ETH. From an orchestrator's seat, gateways *are* the demand.
+
+<Note>
+  Want to be on that side of the marketplace — sending jobs instead of serving them? A developer
+  platform and a Build section of these docs are on the way; until then, ask in the
+  [Livepeer Discord](https://discord.gg/livepeer).
+</Note>
+
+## The life of a job
+
+This is what happens when a gateway sends a single job to an orchestrator:
+
+<Steps>
+  <Step title="Job arrives">
+    The gateway sends a video segment or AI request with an attached probabilistic micropayment ticket.
+  </Step>
+  <Step title="Ticket verified">
+    The orchestrator checks the ticket is valid — correct signer, sufficient face value, expected range.
+  </Step>
+  <Step title="Routed to a pipeline">
+    The job goes to the video pipeline (transcoder) or AI pipeline (AI runner) based on its type.
+  </Step>
+  <Step title="Executed">
+    The worker transcodes the segment to all requested profiles, or runs inference against the loaded model.
+  </Step>
+  <Step title="Result returned">
+    The orchestrator returns the result to the gateway over HTTP.
+  </Step>
+  <Step title="Payment accumulates">
+    The ticket is stored. Each ticket has a probability of being a "winning" ticket.
+  </Step>
+  <Step title="Winning tickets redeemed">
+    Only winning tickets are submitted to the `TicketBroker` contract on Arbitrum, releasing ETH to the orchestrator.
+  </Step>
+</Steps>
+
+Over many tickets, actual ETH earnings converge to the expected value (face value × win
+probability). This **probabilistic micropayment** scheme avoids an on-chain transaction per segment.
+
+## The protocol contracts
+
+Orchestrators interact with four contracts; gateways touch only two of them. This protocol depth is
+what distinguishes the orchestrator role.
+
+| Contract | Role |
+| --- | --- |
+| `BondingManager` | Staking, delegation, reward/fee cuts, reward distribution |
+| `RoundsManager` | Tracks rounds; gates the once-per-round reward call |
+| `TicketBroker` | Redeems winning payment tickets for ETH |
+| `ServiceRegistry` | Stores each orchestrator's service URI for discovery |
+
+See [Contract addresses](/network/reference/contracts) for the deployed addresses and how to verify them.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Economics" icon="coins" href="/network/explanation/economics">
+    Turn these mechanics into a revenue model.
+  </Card>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    The live, governance-controlled values referenced above.
+  </Card>
+</CardGroup>

@@ -1,0 +1,139 @@
+---
+title: "Configure your orchestrator"
+description: "Set the go-livepeer flags that define how your node runs: GPU selection, session limits, networking, and deployment mode."
+---
+
+This guide covers the flags every orchestrator sets, and how to choose their values. It assumes
+`go-livepeer` is installed and your GPU is detected. For the full flag list, see the
+[CLI flags reference](/network/reference/cli-flags).
+
+## The essential flags
+
+These must be set every time the node starts as an orchestrator.
+
+| Flag | Purpose |
+| --- | --- |
+| `-network arbitrum-one-mainnet` | Join the production network (default is `offchain` — no protocol participation) |
+| `-ethUrl <RPC>` | An **Arbitrum One** RPC endpoint for on-chain reads/writes |
+| `-orchestrator` | Enable the on-chain protocol role (routing, reward calls, discovery) |
+| `-transcoder` | Enable local GPU transcoding |
+| `-nvidia <ids>` | Which NVIDIA GPUs to use (`0`, `0,1`, or `all`) |
+| `-maxSessions <n>` | Max concurrent transcode sessions |
+| `-pricePerUnit <wei>` | Price per pixel, in **wei** (see [Pricing](/network/guides/orchestrator-pricing)) |
+| `-serviceAddr <ip:port>` | Public address gateways use to reach you |
+
+A complete combined-mode startup command:
+
+```bash
+livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+```
+
+Add `-v 6` while getting started for verbose logs (transcoding activity, RPC calls, sessions).
+
+## Choosing the GPU
+
+```bash
+nvidia-smi -L          # list device IDs first
+```
+
+```bash
+-nvidia 0              # single GPU, device 0
+-nvidia 0,1            # two GPUs
+-nvidia all            # all available GPUs
+```
+
+Omitting `-nvidia` falls back to CPU transcoding, which is too slow to be competitive. For AI-only
+operation you still need `-nvidia` to expose the GPU to AI runner containers, even without
+`-transcoder`.
+
+## Setting the session limit
+
+Set `-maxSessions` to the **minimum of your hardware limit and your bandwidth limit**:
+
+```
+session limit = min(hardware limit, bandwidth limit)
+```
+
+- **Hardware limit** — the highest concurrent session count your GPU sustains at a real-time ratio ≤ 0.8 (benchmark with `livepeer_bench`).
+- **Bandwidth limit** — `available symmetric Mbps ÷ 6 Mbps per stream × 0.8 margin`.
+
+Example: hardware limit 12, 100 Mbps bandwidth (~13) → use `-maxSessions 12`.
+
+<Note>
+  `-maxSessions` applies to **video transcoding only**. AI capacity is set per pipeline by the
+  `capacity` field in `aiModels.json` — see [Add AI inference](/network/guides/orchestrator-add-ai).
+</Note>
+
+## Setting the service address
+
+`-serviceAddr` is how the network finds you. Common mistakes that silently cost you all your jobs:
+
+- using an internal IP (`192.168.x.x`, `10.x.x.x`) — not routable from the internet
+- using `0.0.0.0` — binds locally but isn't a network address
+- changing the IP without updating on-chain registration — gateways lose contact
+
+Prefer a **domain name** (`orch.yourdomain.com:8935`): if the server IP changes, you update DNS
+instead of paying for a new on-chain registration transaction.
+
+## Deployment modes
+
+| Mode | Flags | Use when |
+| --- | --- | --- |
+| **Combined** (most common) | `-orchestrator -transcoder` | One machine handles everything |
+| **Orchestrator-only** | `-orchestrator` | Remote transcoders connect via `-orchSecret` |
+| **Transcoder-only** | `-transcoder -orchAddr <host:port>` | Running a GPU worker that reports to a separate orchestrator process |
+
+<Warning>
+  In a split (O-T) setup, add `-reward=false` to **all transcoder** processes — only the orchestrator
+  process should call `reward()`. Also drop `-ethUrl` from transcoders sharing the wallet so they
+  don't submit on-chain transactions.
+</Warning>
+
+## Run it as a service
+
+For production, supervise the process so it restarts on failure. A minimal `systemd` unit:
+
+```ini title="/etc/systemd/system/livepeer.service"
+[Unit]
+Description=Livepeer Orchestrator
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+ExecStart=/usr/local/bin/livepeer \
+  -network arbitrum-one-mainnet \
+  -ethUrl https://arb-mainnet.g.alchemy.com/v2/YOUR_API_KEY \
+  -orchestrator -transcoder -nvidia 0 \
+  -maxSessions 10 -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload && sudo systemctl enable --now livepeer
+journalctl -u livepeer -f
+```
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Activate on Arbitrum" icon="link" href="/network/guides/orchestrator-activate">
+    Fund the wallet, stake LPT, and register on-chain.
+  </Card>
+  <Card title="Set pricing" icon="tag" href="/network/guides/orchestrator-pricing">
+    Price so gateways actually select your node.
+  </Card>
+</CardGroup>

@@ -1,0 +1,172 @@
+---
+title: "Monitor your orchestrator"
+description: "Expose Prometheus metrics, stand up a dashboard, watch the signals that affect earnings, and catch failures before they cost you jobs or rewards."
+---
+
+A running node isn't the same as a *healthy* one. Missed reward calls, a saturated GPU, or an
+unredeemed-ticket backlog quietly cost you income and gateway reputation. This guide instruments your
+orchestrator so you see problems before they show up in your earnings.
+
+<Note>
+  Logs explain individual incidents; **metrics** show whether throughput, latency, capacity, and
+  ticket flow are trending the right way. You want both.
+</Note>
+
+## 1. Enable metrics
+
+`go-livepeer` exposes a Prometheus endpoint when you start it with `-monitor`:
+
+```bash
+livepeer \
+  -orchestrator -transcoder \
+  -monitor \
+  -metricsPerStream \
+  -network arbitrum-one-mainnet \
+  # ...your other flags
+```
+
+The metrics are served at **`http://localhost:7935/metrics`** — the same port as the go-livepeer CLI;
+`-monitor` just activates the `/metrics` path on it.
+
+| Flag | What it does |
+| --- | --- |
+| `-monitor` | Enables `/metrics`. Required for any Prometheus scraping. |
+| `-metricsPerStream` | Breaks performance metrics out per stream — useful for diagnosing a single session. |
+| `-metricsClientIP` | Adds the client IP to metric labels, so you can see which gateway is routing to you. |
+
+<Note>
+  In a split orchestrator/transcoder setup, pass `-monitor` on **both** processes — each exposes its
+  own `/metrics` on its own CLI port.
+</Note>
+
+## 2. Stand up a dashboard
+
+<Tabs>
+  <Tab title="Fastest: Docker stack">
+    Livepeer maintains an image bundling Prometheus, Grafana, and starter dashboards:
+
+    ```bash
+    docker pull livepeer/monitoring
+
+    docker run --net=host \
+      --env LP_MODE=standalone \
+      --env LP_NODES=localhost:7935 \
+      livepeer/monitoring:latest
+    ```
+
+    Then open Grafana at `http://localhost:3000` (default login `admin` / `admin`). For multiple
+    nodes, pass a comma-separated list: `LP_NODES=node1:7935,node2:7935`. `LP_MODE` also supports
+    `docker-compose` and `kubernetes`. Source and dashboards:
+    [livepeer/livepeer-monitoring](https://github.com/livepeer/livepeer-monitoring).
+  </Tab>
+  <Tab title="Existing Prometheus">
+    Already running Prometheus? Add the node as a scrape target:
+
+    ```yaml
+    # prometheus.yml
+    scrape_configs:
+      - job_name: 'livepeer-orchestrator'
+        static_configs:
+          - targets: ['localhost:7935']
+        scrape_interval: 15s
+        metrics_path: /metrics
+    ```
+
+    Reload with `kill -HUP <prometheus-pid>` or the reload API at `http://localhost:9090/-/reload`.
+    Add **Node exporter** (host) and the **NVIDIA DCGM exporter** (GPU) for full hardware coverage.
+  </Tab>
+</Tabs>
+
+## 3. Watch the signals that matter
+
+Monitor across five layers — the last two are where money is won or lost:
+
+| Layer | What to watch | How |
+| --- | --- | --- |
+| **Hardware** | GPU utilization, VRAM, temperature | `nvidia-smi`, DCGM exporter |
+| **Application** | Segment / job success rate, session capacity | `/metrics`, dashboard |
+| **Network** | Latency, packet loss | host monitoring |
+| **On-chain** | Active-set status, bonded stake, **reward calls** | [Explorer](https://explorer.livepeer.org) |
+| **Economics** | ETH fees, LPT rewards | Explorer, `/metrics` |
+
+The metrics you'll actually act on:
+
+| Metric | Signal |
+| --- | --- |
+| `livepeer_current_sessions_total` vs `livepeer_max_sessions` | How close to capacity you are (idle → lower price; maxed → add GPU) |
+| `livepeer_segment_processed_total` / `livepeer_segment_errors_total` | Core transcoding health. Rising errors → gateways deprioritize you |
+| `livepeer_transcode_latency_seconds` | GPU saturation or a slow pipeline — both hurt gateway scoring |
+| Winning tickets received vs redeemed | A growing gap means an ETH-balance or redemption problem |
+| Round number & reward-call status | Whether you're claiming inflation every round |
+
+<Warning>
+  The single highest-value alert: **a missed `reward()` call.** Miss a round and that round's LPT is
+  gone permanently — there's no catch-up. Alert on it, and keep enough ETH on Arbitrum for gas. See
+  [Activate on Arbitrum](/network/guides/orchestrator-activate#6-confirm-reward-calling).
+</Warning>
+
+## 4. Monitor the AI runner (if you serve AI)
+
+AI inference runs in a separate `ai-runner` container, so watch it independently for a faster signal:
+
+```bash
+docker ps --filter name=livepeer-ai-runner   # status
+docker logs -f livepeer-ai-runner             # live logs
+docker stats livepeer-ai-runner               # CPU / mem / GPU usage
+```
+
+Log lines worth alerting on:
+
+| Message | Meaning |
+| --- | --- |
+| `Loaded model <id>` | Model is warm in VRAM, ready to process |
+| `Error loading model` | Bad model ID or not enough VRAM |
+| `CUDA out of memory` | VRAM exhausted — lower `capacity` in `aiModels.json` or the model count |
+| `Container health check failed` | Alive but not responding |
+
+Confirm your pipelines are actually advertised to the network:
+
+```bash
+curl http://localhost:7935/getNetworkCapabilities | jq
+```
+
+Cross-check network-wide at [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+
+## 5. Capture logs
+
+By default logs go to stdout only. For a production node, persist them and know the two debug levers:
+
+```bash
+# Keep a log file while still printing to the terminal
+livepeer -orchestrator -transcoder -monitor ... 2>&1 | tee /var/log/livepeer/livepeer.log
+
+# -v 6 prints per-segment activity — the fastest way to confirm you're receiving work
+livepeer -orchestrator -transcoder -v 6 ...
+```
+
+```bash
+grep -i "reward" /var/log/livepeer/livepeer.log   # confirm reward calls are happening
+```
+
+## Also on the Explorer
+
+Even without a metrics stack, [explorer.livepeer.org](https://explorer.livepeer.org) shows your
+active-set status, bonded and delegated LPT, reward-call history, fee earnings, and historical
+performance — the fastest external gut-check that your node is healthy and earning.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Configure your orchestrator" icon="sliders" href="/network/guides/orchestrator-configure">
+    The flags these metrics reflect — sessions, GPUs, pricing.
+  </Card>
+  <Card title="Activate on Arbitrum" icon="link" href="/network/guides/orchestrator-activate">
+    Reward calling and the ETH balance your alerts depend on.
+  </Card>
+  <Card title="Not receiving jobs?" icon="circle-question" href="/network/reference/faq">
+    When the dashboard says idle, work through the four causes.
+  </Card>
+  <Card title="Hardware & GPU" icon="microchip" href="/network/reference/hardware">
+    VRAM and session-limit context for capacity metrics.
+  </Card>
+</CardGroup>

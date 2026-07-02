@@ -1,0 +1,86 @@
+---
+title: "What an orchestrator is"
+description: "The compute supply layer of Livepeer: what orchestrators do, how they fit into the network, and what running one involves."
+---
+
+An **orchestrator** is the compute supply layer of the Livepeer network. It accepts jobs from
+gateways, runs them on GPU hardware, and returns the results. Orchestrators do the actual work —
+transcoding video and running AI inference — and get paid for it.
+
+<Tip>
+  The clearest mental model: an orchestrator is a **GPU-for-hire on a decentralized marketplace**.
+  You connect your GPU, declare what it can run and at what price, and the network sends you work.
+  You earn ETH for each completed job and LPT for participating in the protocol each round.
+</Tip>
+
+## Where it sits
+
+The network has three layers above the protocol. Orchestrators are the compute layer.
+
+| Layer | Who | Responsibility |
+| --- | --- | --- |
+| **Application** | Developers, streaming and AI products | Send requests to gateways; receive results |
+| **Gateway** | Gateway operators | Aggregate demand, select orchestrators, dispatch jobs, handle payment |
+| **Compute (orchestrator)** | **You** | Execute video and AI work on GPUs; receive payment tickets |
+| **Protocol** | Arbitrum smart contracts | Staking, reward distribution, payment settlement, discovery |
+
+A key consequence: **you don't choose your work — gateways choose you.** Selection runs in one
+direction. Gateways rank orchestrators by capability, price, latency, reliability, and stake, then
+send jobs to the winners. Everything you do as an operator is about being an attractive choice in
+that ranking. See [How the network works](/network/explanation/how-the-network-works) for the full job flow.
+
+## What it does
+
+Core responsibilities of the `go-livepeer` node running in orchestrator mode:
+
+- **Execute jobs** — receive video segments or AI inference requests and route them to GPU workers.
+- **Advertise capabilities** — broadcast which pipelines, models, and codecs it supports, and the price for each.
+- **Receive payments** — collect probabilistic micropayment tickets per segment or request from gateways.
+- **Call rewards** — trigger the protocol's reward mechanism once per round to claim LPT inflation.
+- **Manage workers** — coordinate the transcoder (video) and AI runner (inference) processes.
+
+## Two pipelines, one node
+
+A single orchestrator process runs two independent pipelines. Many operators run both at once — a
+"dual-workload" node.
+
+| | Video pipeline | AI pipeline |
+| --- | --- | --- |
+| **Input** | Live video segments from a gateway | An HTTP inference request (prompt, image, audio) |
+| **Worker** | Transcoder (NVENC GPU) | AI runner (a Docker container per model) |
+| **Output** | Encoded segments | Image, video clip, JSON, or audio |
+| **Payment** | Wei per pixel per segment | Wei per pixel or per millisecond |
+| **Session** | Long-lived (whole stream) | Short-lived (one request or batch) |
+
+## What it is *not*
+
+Orchestrators handle compute and payment receipt. They do **not** route jobs between nodes, ingest
+RTMP from applications, or manage end-user API keys and billing — that is the **gateway** role. If
+you want to aggregate demand and route work across many orchestrators, you're looking for a gateway,
+which is out of scope for these docs.
+
+## Ways to run one
+
+| Setup | What it means | Best for |
+| --- | --- | --- |
+| **Solo operator** | One node on one machine handles everything | Single-GPU operators getting started |
+| **O-T split** | Orchestrator and transcoder run as separate processes/machines | Multi-GPU operators optimizing throughput |
+
+These docs assume you're running your own node.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="How the network works" icon="diagram-project" href="/network/explanation/how-the-network-works">
+    Rounds, the active set, and the life of a job.
+  </Card>
+  <Card title="Economics" icon="coins" href="/network/explanation/economics">
+    The two revenue streams and how they're split with delegators.
+  </Card>
+  <Card title="Run your first orchestrator" icon="rocket" href="/network/tutorials/run-your-first-orchestrator">
+    Put this into practice on mainnet.
+  </Card>
+  <Card title="Hardware reference" icon="microchip" href="/network/reference/hardware">
+    Which GPUs work, and how much VRAM each workload needs.
+  </Card>
+</CardGroup>

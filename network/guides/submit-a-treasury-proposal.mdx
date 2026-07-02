@@ -1,0 +1,96 @@
+---
+title: "Submit a treasury proposal"
+description: "Request funding from the Livepeer community treasury: scope and budget, forum RFP, on-chain submission to LivepeerGovernor, and delivery."
+---
+
+This guide is for requesting **funding from the community treasury** — the protocol-owned pool
+funded by a cut of LPT inflation (LIP-92; contributions pause at a balance ceiling). It's a specialized task: most stakeholders only ever [vote](/network/guides/vote-on-a-proposal),
+while proposals typically come from **Special-Purpose Entities** or teams taking on a defined scope of
+work. For the concepts behind all of this, see [Governance & the treasury](/network/explanation/governance).
+
+<Note>
+  A treasury proposal is **not** a protocol LIP. It uses a different contract and different
+  preparation — a budget and deliverable rather than a technical spec. Only the *vote* is shared with
+  protocol governance. Mixing the two up is the most common mistake new proposers make.
+</Note>
+
+## Before you start
+
+- A concrete **scope of work** and an itemized **budget**.
+- A **recipient address** (usually an SPE or team multisig) to receive the LPT.
+- **100 LPT** available to submit — it's returned if the proposal passes.
+- A little ETH on **Arbitrum One** for gas.
+
+## Submit a proposal
+
+<Steps>
+  <Step title="Define the scope and budget">
+    Write exactly what you'll do, over what timeline, with what deliverable. Itemize the budget by
+    category (engineering, research, infrastructure, communications). Proposals without a defensible,
+    line-item budget rarely pass.
+  </Step>
+  <Step title="Post a Request for Feedback on the forum">
+    Publish the proposal as an RFP in the [LIPs category on the forum](https://forum.livepeer.org/c/lips/18).
+    This is where orchestrators and delegators ask questions, raise concerns, and negotiate scope. A
+    proposal that hasn't been workshopped here is unlikely to clear quorum.
+  </Step>
+  <Step title="Refine and finalize">
+    Iterate on the feedback, then lock the **scope**, the **recipient address**, and the **requested
+    LPT amount**. Post the final version with a clear "ready for on-chain submission" marker.
+  </Step>
+  <Step title="Submit on-chain to LivepeerGovernor">
+    Anyone with **100 LPT** can submit the proposal to the [`LivepeerGovernor`](/network/reference/contracts)
+    contract. The text, recipient, and amount are committed on-chain at this step. Your 100 LPT is
+    returned if the proposal passes.
+  </Step>
+  <Step title="Voting period">
+    An on-chain voting window opens — **10 rounds (~9 days)** as verified on-chain (see [Protocol parameters](/network/reference/protocol-parameters)
+    for the current length). Stake-weighted voting decides the outcome under the standard **33% quorum**
+    and majority-of-votes-cast rules — bonded LPT, with delegator override. This is the same vote
+    covered in [Vote on a proposal](/network/guides/vote-on-a-proposal).
+  </Step>
+  <Step title="Execution and reporting">
+    On a successful vote, `LivepeerGovernor` releases the requested LPT to the recipient address — no
+    protocol-code change. You're then expected to deliver the scope and report progress publicly.
+    Treasury funding is a relationship, not a one-time grant.
+  </Step>
+</Steps>
+
+## What makes a proposal pass
+
+Clearing quorum takes more than favorable votes — passed proposals consistently show:
+
+| Signal | What it looks like |
+| --- | --- |
+| **Defensible budget** | Line items, not lump sums; benchmarks where possible |
+| **Track record** | Prior public delivery in Livepeer or an adjacent protocol |
+| **Concrete deliverables** | Working software, public research, measurable outputs — not "we'll explore" |
+| **Ongoing reporting** | Forum threads, dashboards, regular updates |
+| **Network alignment** | Strengthens the protocol or network — not a single operator or vendor |
+
+Miss any one and a proposal tends to fail quorum even when the votes it *does* get are favorable.
+
+## Track it
+
+Follow live proposals and treasury balances at
+[explorer.livepeer.org/treasury](https://explorer.livepeer.org/treasury).
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Governance & the treasury" icon="landmark" href="/network/explanation/governance">
+    Why the treasury exists, what it funds, and how the two proposal tracks differ.
+  </Card>
+  <Card title="Submit a protocol LIP" icon="file-code" href="/network/guides/submit-a-protocol-lip">
+    The other track: changing protocol rules instead of requesting funds.
+  </Card>
+  <Card title="Vote on a proposal" icon="check-to-slot" href="/network/guides/vote-on-a-proposal">
+    The vote step — identical for treasury and protocol proposals.
+  </Card>
+  <Card title="Contract addresses" icon="file-contract" href="/network/reference/contracts">
+    LivepeerGovernor and Treasury on Arbitrum One.
+  </Card>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    Live quorum, proposal threshold, and voting-window values.
+  </Card>
+</CardGroup>

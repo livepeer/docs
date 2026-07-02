@@ -1,0 +1,115 @@
+---
+title: "Economics"
+description: "Two revenue streams, two commission settings, and how every reward is split between an orchestrator and its delegators."
+---
+
+The orchestrator and delegator roles are two sides of one economic engine. An orchestrator earns
+from two independent streams, and **shares a configurable portion of each with its delegators.**
+Understanding this split is what lets either side make good decisions.
+
+## Two revenue streams
+
+| Stream | Currency | Source | Frequency | Depends on |
+| --- | --- | --- | --- | --- |
+| **Service fees** | ETH | Gateways paying for compute | Per job (probabilistic) | Volume of work, price, uptime |
+| **Inflation rewards** | LPT | New LPT minted each round | Once per round | Total bonded stake; the reward call |
+
+The streams are structurally independent. Fees track how much **work** you do; rewards track how much
+**stake** you have. Both require active-set membership.
+
+## Service fees (ETH)
+
+Gateways pay with **probabilistic micropayment tickets**. Each ticket has a face value and a win
+probability; the orchestrator redeems only winning tickets on-chain for ETH. Over many tickets,
+earnings converge to face value × win probability.
+
+How fees are split is set by the orchestrator's **fee share** (`feeShare`) — the percentage of fees
+passed through to delegators:
+
+```
+total fee value = orchestrator's keep + delegator fee pool
+```
+
+A `feeShare` of 80% means delegators share 80% of fee revenue and the orchestrator keeps 20%. For
+delegators, **higher feeShare is better.**
+
+<Note>
+  Current Explorer surfaces label this **Fee Share** (the part passed to delegators), not "fee cut."
+  Read it as: higher is better for delegators.
+</Note>
+
+## Inflation rewards (LPT)
+
+The protocol mints new LPT each round. An active orchestrator's pool receives a share proportional
+to its total bonded stake — but **only if it calls `reward()` that round.** A missed call forfeits
+that round's LPT for the whole pool, permanently.
+
+How the pool is split is set by the **reward cut** (`rewardCut`) — the percentage the orchestrator
+keeps:
+
+```
+total round reward = orchestrator's reward cut + delegator reward pool
+```
+
+| Reward cut | Orchestrator keeps | Delegators receive | Implication |
+| --- | --- | --- | --- |
+| 0% | none | 100% | Maximum pull for delegated stake; operator earns nothing from rewards |
+| 10–25% | 10–25% | 75–90% | Common production range; balances operator return with delegator appeal |
+| 100% | 100% | none | Maximum operator return; delegators get no LPT rewards here |
+
+For delegators, **lower rewardCut is better.** `rewardCut` and `feeShare` move in opposite
+directions, which is a common source of confusion — see the table below.
+
+## The two settings, side by side
+
+| Setting | Controls | Better for delegators when |
+| --- | --- | --- |
+| `rewardCut` | Share of **LPT inflation** the orchestrator keeps | **Lower** |
+| `feeShare` | Share of **ETH fees** passed to delegators | **Higher** |
+
+## A worked example (delegator's view)
+
+Suppose in one round:
+
+- **900 LPT** of issuance is available to delegators and orchestrators (after any treasury cut),
+- your orchestrator controls **5%** of total bonded stake → its pool gets **45 LPT**,
+- its `rewardCut` is **10%** → delegators share **40.5 LPT**,
+- you hold **10%** of that pool's stake.
+
+Your reward for the round is **4.05 LPT**. If many more delegators join the same orchestrator after
+you, your slice of the pool shrinks — your *percentage* of the pool is what matters, not the absolute
+stake.
+
+## Why inflation matters even if you don't operate
+
+The protocol targets a bonding rate (~50% of LPT bonded) and **adjusts inflation to steer toward
+it**: under-bonded → inflation rises to attract stake; over-bonded → inflation falls to reduce
+dilution. Issuance can also carry a **treasury cut** (LIP-92 set 10%, currently paused at its balance
+ceiling). The practical takeaway for both roles: the mint rate is **not static** — check the
+[live values](/network/reference/protocol-parameters) rather than an old annualized figure.
+
+## An orchestrator's costs
+
+Earnings are only half the picture. Orchestrator costs fall into three buckets:
+
+- **Hardware** — GPU(s), server, networking (capital, amortized).
+- **Infrastructure** — electricity, bandwidth, colocation/cloud (electricity is usually the largest recurring cost).
+- **Staking opportunity cost** — LPT locked in self-bond can't be used elsewhere.
+
+Unlike gateways, orchestrators **don't pay for the jobs they process — they're paid.** Very low-stake
+orchestrators should also check that reward-call gas doesn't exceed the LPT earned; if so, disable
+automatic reward calling until stake grows (see [Configure](/network/guides/orchestrator-configure)).
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Set pricing (orchestrator)" icon="tag" href="/network/guides/orchestrator-pricing">
+    Price competitively so gateways select you.
+  </Card>
+  <Card title="Choose an orchestrator (delegator)" icon="list-check" href="/network/guides/delegator-choose-orchestrator">
+    Use these settings to compare operators.
+  </Card>
+  <Card title="Governance & the treasury" icon="landmark" href="/network/explanation/governance">
+    Where the treasury cut goes — and the vote your stake carries.
+  </Card>
+</CardGroup>

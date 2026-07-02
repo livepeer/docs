@@ -1,0 +1,93 @@
+---
+title: "Delegate your first LPT"
+description: "A guided walkthrough from LPT in your Arbitrum wallet to a confirmed, reward-earning delegation."
+---
+
+By the end of this tutorial you'll have bonded LPT to an orchestrator through the
+[Livepeer Explorer](https://explorer.livepeer.org) and confirmed a live delegator position that earns
+a share of that orchestrator's rewards.
+
+This is a **learning path**. For the decision-making behind each step — *how* to pick a good
+orchestrator, or *how* to claim and compound later — follow the linked how-to guides.
+
+## Before you start
+
+You need all three of these to be true:
+
+- your LPT is in a self-custody wallet on **Arbitrum One** (not Ethereum mainnet),
+- you have a small **ETH balance on Arbitrum One** for gas,
+- your wallet can connect to [explorer.livepeer.org](https://explorer.livepeer.org).
+
+<Note>
+  If your LPT is on Ethereum mainnet or an exchange, bridge or withdraw it to Arbitrum One first —
+  see [Acquire LPT on Arbitrum](/network/guides/delegator-acquire-lpt). You **cannot** delegate from
+  Ethereum mainnet.
+</Note>
+
+## Step 1 — Choose an orchestrator
+
+Open the [Explorer](https://explorer.livepeer.org), filter to **active** orchestrators, and pick one
+that is currently active, has a **reliable recent reward-call history**, and acceptable commission
+terms (`rewardCut` low, `feeShare` high).
+
+This choice matters more than any other — a great commission headline with weak reliability can earn
+you less than a slightly worse commission with near-perfect reliability. Use the full checklist in
+[Choose an orchestrator](/network/guides/delegator-choose-orchestrator) before committing a meaningful amount.
+
+## Step 2 — Connect your wallet
+
+On [explorer.livepeer.org](https://explorer.livepeer.org), click **Connect Wallet** and connect the
+wallet holding your Arbitrum-side LPT.
+
+## Step 3 — Open the orchestrator and start the delegate flow
+
+Navigate to your chosen orchestrator's profile, confirm it still shows **Active**, then click
+**Delegate** and enter the amount of LPT to bond. You don't have to bond your whole balance — you can
+start partial and add more later from the same wallet.
+
+## Step 4 — Sign two transactions
+
+<Steps>
+  <Step title="Approve">
+    The first transaction authorizes the `BondingManager` contract to move the LPT amount you entered.
+    No stake is bonded yet.
+  </Step>
+  <Step title="Bond">
+    The second transaction actually bonds your LPT and attributes your stake to the orchestrator.
+  </Step>
+</Steps>
+
+Both are on Arbitrum and cost a small amount of ETH in gas.
+
+## Step 5 — Verify your position
+
+Return to your account page in the Explorer and confirm you now see:
+
+- a **bonded LPT balance**,
+- the **orchestrator address** your stake points to,
+- a **pending rewards** area that will update in later rounds.
+
+If you delegated mid-round, don't expect immediate reward growth. First accrual typically appears in
+the **next round**, after the orchestrator calls `reward()`.
+
+## One warning before your first claim
+
+<Warning>
+  Don't claim too early. If you call `claimEarnings()` *before* your orchestrator has called
+  `reward()` for the current round, you can **skip that round's rewards entirely**. The Explorer may
+  not warn you. Safe default: claim **late in the round**, after your orchestrator has already called
+  `reward()`. Full details in [Manage your delegation](/network/guides/delegator-manage).
+</Warning>
+
+## You're delegated
+
+Your position is live. From here, the work shifts to managing it:
+
+<CardGroup cols={2}>
+  <Card title="Manage your delegation" icon="gauge" href="/network/guides/delegator-manage">
+    Claim, compound, redelegate, and exit — with the timing edge cases.
+  </Card>
+  <Card title="Understand your returns" icon="coins" href="/network/explanation/economics">
+    How rewardCut, feeShare, and inflation shape what you earn.
+  </Card>
+</CardGroup>

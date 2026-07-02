@@ -1,0 +1,90 @@
+---
+title: "Hardware & GPU support"
+description: "NVIDIA GPU compatibility, NVENC session limits, VRAM requirements by workload, and driver versions for orchestrators."
+---
+
+Livepeer orchestrators use **NVIDIA** GPUs for video transcoding (NVENC/NVDEC) and AI inference
+(CUDA / Tensor cores). **AMD and Intel GPUs are not supported.**
+
+## Supported GPUs
+
+| GPU family | Transcoding | AI inference | Notes |
+| --- | --- | --- | --- |
+| GeForce RTX 40xx (Ada) | Yes | Yes | Best consumer option; AV1 encode |
+| GeForce RTX 30xx (Ampere) | Yes | Yes | Widely used; good price/performance |
+| GeForce RTX 20xx (Turing) | Yes | Yes | Supported but older |
+| GeForce GTX 16xx (Turing) | Yes | Limited | No Tensor cores — AI slower/unsupported for some pipelines |
+| GeForce GTX 10xx (Pascal) | Yes | Limited | Legacy; NVENC Gen 6; no Tensor cores |
+| Tesla T4 | Yes | Yes | Data center, 16 GB, common in cloud |
+| Tesla V100 | Yes | Yes | Data center, 16/32 GB |
+| A100 | Yes | Yes | Data center, 40/80 GB, highest throughput |
+| A10 / A10G | Yes | Yes | Cloud-optimized (AWS G5), 24 GB |
+| L4 | Yes | Yes | Ada data center, 24 GB, good for AI |
+| L40 / L40S | Yes | Yes | 48 GB, high-end AI + transcoding |
+| H100 | Overkill | Yes | 80 GB, primarily LLM / large-model inference |
+
+## NVENC session limits
+
+Consumer GPUs cap concurrent NVENC encode sessions, which limits simultaneous transcode streams per
+GPU.
+
+| GPU class | Default NVENC sessions | |
+| --- | --- | --- |
+| GeForce GTX 10xx | 2 | Can be patched |
+| GeForce GTX 16xx | 3 | Can be patched |
+| GeForce RTX 20xx | 3 | Can be patched |
+| GeForce RTX 30xx | 3–5 (by model) | Can be patched |
+| GeForce RTX 40xx | 3–8 (by model) | Can be patched |
+| Tesla / Quadro / A-series | Unlimited | No session limit |
+
+The community [nvidia-patch](https://github.com/keylase/nvidia-patch) removes the limit on consumer
+GPUs and is widely used by orchestrators.
+
+<Warning>
+  Patching modifies a system binary, is unsupported by NVIDIA, must be re-applied after driver
+  updates, and may be disallowed on some managed cloud GPU instances.
+</Warning>
+
+## VRAM by workload
+
+| Workload | Minimum VRAM | Recommended | Notes |
+| --- | --- | --- | --- |
+| Video transcoding only | 4 GB | 8 GB | NVENC/NVDEC uses minimal VRAM |
+| Batch AI (single warm model) | 8 GB | 16 GB | SDXL needs ~7 GB |
+| Batch AI (multiple warm models) | 16 GB | 24 GB+ | Each warm model consumes VRAM simultaneously |
+| LLM inference (quantized) | 8 GB | 16 GB | Via Ollama runner, quantized weights |
+| LLM inference (full precision) | 24 GB+ | 48 GB+ | Large models at full precision |
+| Real-time AI (ComfyStream) | 12 GB | 16 GB+ | Latency-sensitive; headroom improves stability |
+
+## Driver & toolkit versions
+
+| Component | Minimum | Notes |
+| --- | --- | --- |
+| NVIDIA driver | 525+ | |
+| CUDA toolkit | 12.0+ | |
+| NVIDIA Container Toolkit | Latest | Required for Docker (AI runner, containerized orchestrator) |
+
+```bash
+nvidia-smi          # driver version
+nvcc --version      # CUDA version
+docker run --gpus all nvidia/cuda:12.0-base nvidia-smi   # Docker GPU access
+```
+
+## GPU selection guidance
+
+| Goal | Pick |
+| --- | --- |
+| Transcoding only, budget | GTX 1660 Super (6 GB); patch the NVENC limit for more sessions |
+| Transcoding + AI | RTX 4070 Ti Super (16 GB) or RTX 3090 (24 GB) — 24 GB runs 2–3 warm models + transcoding |
+| AI-heavy / LLM | RTX 4090 (24 GB), or A100 / L40S in a data center |
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Configure your orchestrator" icon="sliders" href="/network/guides/orchestrator-configure">
+    GPU selection and session-limit flags.
+  </Card>
+  <Card title="Add AI inference" icon="microchip" href="/network/guides/orchestrator-add-ai">
+    Match a pipeline to your available VRAM.
+  </Card>
+</CardGroup>
