@@ -46,6 +46,28 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Live source swap now works on Stable Audio 3 sessions, SA3 renders are reproducible for a given seed, and the local prompt enhancer picks up its config from your repo .env." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **Swap source on Stable Audio 3** — Hot-swap the source track mid-session on SA3, matching the behavior that was already available on ACE-Step. Great for A/B'ing different reference material against the same prompt without restarting the stream.
+
+  #### Updates
+
+  - **Prompt enhancer picks up local `.env` defaults** — Self-hosted DEMON now loads prompt-enhancer settings from a repo-root `.env` on launch, so you no longer have to export the same variables every shell. Deployed environments still win — exported variables continue to take precedence.
+
+  #### Bug Fixes
+
+  - **Reproducible SA3 renders** — Decoding the same latent with the same seed on Stable Audio 3 is now bit-identical (previously drifted audibly on `sa3-small`, subtly on `sa3-medium`). Sound character is unchanged; the fix pins the decode RNG rather than muting the noise. Also fixes the emerged-params echo (`gen_seed` / `gen_sa3_denoise` / `gen_prompt`) sometimes describing the previous slice after a knob change.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
+
 <Update label="DEMON: Weekly Update" tags={["Features", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Stable Audio 3 lands as a second model family alongside ACE-Step, with a dedicated demo page, model-aware prompt enhancement, and a much faster cold model load." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
   ## DEMON: Weekly Update
 
