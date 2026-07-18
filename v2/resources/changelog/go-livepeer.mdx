@@ -22,7 +22,7 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-07-17T00:00:00.000Z
+lastVerified: 2026-07-18T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -37,6 +37,21 @@ import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
 <CustomDivider />
 
 Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (weekend update)" tags={["Live AI", "AI Worker", "Trickle"]} description={<Subtitle variant="changelog">July 18, 2026</Subtitle>}>
+  ## Weekend update — July 18, 2026
+
+### New features
+
+- **Optional serverless AI worker mode** - AI worker operators can now opt in to a standalone serverless runtime via the new `-aiServerless` flag. This lets orchestrators run AI jobs against an external serverless backend instead of the bundled local worker, giving operators more flexibility in how AI capacity is provisioned. The flag is off by default, so existing AI worker setups continue to run unchanged. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for background on how AI workers fit into the node.
+
+### Updates
+
+- **Smoother startup for Live AI trickle subscribers** - The trickle publisher used by Live AI pipelines now advances its stream head as soon as bytes are written, so subscribers that connect at the leading edge no longer replay the same segment they just received. This trims a small amount of duplicated data on session start for long-running realtime streams. No configuration changes are required. See the [Live AI overview](/v2/gateways/guides/node-pipelines/ai-pipelines) for how trickle fits into the AI media path.
+
+</Update>
 
 <CustomDivider />
 
