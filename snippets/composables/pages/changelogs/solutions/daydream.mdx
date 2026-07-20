@@ -46,6 +46,24 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Stable Audio 3 gains stationary render anchors for tighter VST sync, and the ✨ Enhance button now respects solo vs full-mix intent instead of always producing full arrangements." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **Stationary render anchors on Stable Audio 3** — Sessions can now pin generation to an absolute time position instead of always tracking the transport's forward lead. Paired with a matching VST update, this keeps the generated slice locked to where you actually want it (e.g. scrubbing to a bar and rendering there) rather than drifting with the loop band. Merge the pod and VST updates together.
+
+  #### Bug Fixes
+
+  - **✨ Enhance respects solo vs full-mix intent on SA3** — Clicking Enhance in solo mode used to produce full-arrangement prompts (drums, pads, bass, vocals) because the SA3 enhancer's examples were all multi-instrument. The enhancer now defaults to full-track descriptions for arrangement prompts, and routes explicit solo intent (`solo`, `unaccompanied`, `a cappella`, `single instrument`, isolated-stem phrasing) through a strict one-instrument policy that leads with `solo <instrument>` and describes genre as a playing style. Ambient mood language like "alone at night" stays on the full-track path. Pod-side only — the VST, DreamMax SA3, and web demo all pick up the fix with no client change.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
+
 <Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Live source swap now works on Stable Audio 3 sessions, SA3 renders are reproducible for a given seed, and the local prompt enhancer picks up its config from your repo .env." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
   ## DEMON: Weekly Update
 
