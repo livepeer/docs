@@ -22,7 +22,7 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-07-22T00:00:00.000Z
+lastVerified: 2026-07-23T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -37,6 +37,21 @@ import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
 <CustomDivider />
 
 Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (end-of-week update)" tags={["Live AI", "Live Runner", "Trickle", "TLS"]} description={<Subtitle variant="changelog">July 23, 2026</Subtitle>}>
+  ## End-of-week update — July 23, 2026
+
+### New features
+
+- **Live Runner for orchestrator-managed live AI apps** - Orchestrators can now front external "live runner" processes that host live AI applications. Runners register with the orchestrator, advertise their app, version, GPU, capacity, mode, and pricing, and receive session traffic through orchestrator-proxied URLs so the runner's internal address is never exposed through discovery. Both persistent sessions (which stay active until stopped, expired, released by a health check, or ended by a payment failure) and single-shot sessions (which reserve capacity for one proxied request) are supported. Runners can register dynamically via heartbeats or be pinned statically from a JSON config. Enable with `-useLiveRunners` (requires `-orchSecret` for dynamic registration) or `-liveRunnerConfig <path>` for static registration, and set `-liveRunnerProxyUrl` to publish the public proxy URL template and `-liveRunnerAddr` for the internal heartbeat/callback address. Existing orchestrator setups are unaffected until the flags are set. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for how live AI fits into the node.
+
+### Updates
+
+- **Trickle now verifies TLS certificates by default with Live Runner** - When a node runs with `-useLiveRunners` or `-liveRunnerConfig`, the trickle publisher and subscriber now validate remote TLS certificates instead of skipping the check. This closes a man-in-the-middle gap on the trickle media path for live AI deployments. Nodes that don't use Live Runner keep the previous behavior so existing self-signed orchestrator setups continue to work. Operators combining Live Runner with BYOC or other trickle endpoints will need valid certificates on every endpoint. See the [Live AI overview](/v2/gateways/guides/node-pipelines/ai-pipelines) for how trickle fits into the AI media path.
+
+</Update>
 
 <CustomDivider />
 
