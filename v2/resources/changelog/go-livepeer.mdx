@@ -22,7 +22,7 @@ keywords:
 'og:image:height': 630
 purpose: changelog
 audience: everyone
-lastVerified: 2026-07-25T00:00:00.000Z
+lastVerified: 2026-07-26T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -37,6 +37,35 @@ import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
 <CustomDivider />
 
 Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (weekend update)" tags={["Release", "v0.9.0", "Live Runner", "Remote Signer"]} description={<Subtitle variant="changelog">July 26, 2026</Subtitle>}>
+  ## Weekend update — July 26, 2026
+
+go-livepeer **v0.9.0** shipped on July 25. This release bundles the Live Runner, TLS, remote signer, and logging changes covered in the daily updates below into a single tagged build. Highlights below; see the [GitHub release notes](https://github.com/livepeer/go-livepeer/releases/tag/v0.9.0) for the full list.
+
+### New features
+
+- **Live Runner for orchestrator-managed live AI apps** - Orchestrators can now front external live runner processes that host live AI applications, with persistent and single-shot sessions, dynamic heartbeat registration or static JSON config, and orchestrator-proxied URLs that keep the runner's internal address off the discovery path. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines).
+- **Fixed pricing for live runners** - Live runner apps can be advertised with a `fixed` price, charging once at session or request creation instead of metering over time or pixels. Existing time- and pixel-metered runners are unaffected.
+
+### Updates
+
+- **Single-shot live runner sessions now enforce payments** - Requests to the single-shot proxy path now go through the standard `402 Payment Required` challenge, matching persistent sessions. Combined with fixed pricing, this makes single-shot mode a first-class option for stateless request/response and batch inference workloads.
+- **Trickle enforces TLS when Live Runner is enabled** - Nodes running with `-useLiveRunners` or `-liveRunnerConfig` now validate remote TLS certificates on the trickle publisher and subscriber, closing a man-in-the-middle gap on the live AI media path. Nodes without Live Runner keep the previous behavior.
+- **Debug logging follows the `-v` flag** - Raising `-v` now also surfaces debug output from the live runner, trickle, AI worker, and media subsystems, making Live AI and BYOC issues easier to diagnose.
+
+### Breaking changes
+
+- **Remote signer refuses to start unauthenticated on public addresses** - A remote signer bound to a non-loopback `-httpAddr` will refuse to start unless `-remoteSignerWebhookUrl` is set or the new `-remoteSignerAllowNoAuth` flag is passed. Loopback bindings and deployments with a configured webhook are unaffected. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers).
+
+### Bug fixes
+
+- **Remote signer mode starts as a non-root user** - `-cliAddr` now defaults to `127.0.0.1:3935` in remote signer mode, so the node no longer tries to bind port 80 and fail on startup for non-root operators. Setups that explicitly pass `-cliAddr` are unaffected.
+- **Gateways reject tickets with a zero expiration block** - Probabilistic micropayment tickets that advertise a zero expiration block are now rejected so every paid ticket is subjected to the standard economic caps. Honest orchestrators always advertise a non-zero expiration block, so well-behaved deployments are unaffected.
+
+</Update>
 
 <CustomDivider />
 
