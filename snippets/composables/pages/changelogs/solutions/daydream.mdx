@@ -46,6 +46,25 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Batch render-anchor queue prewarms every sampler pad in one round trip (~1.4 s for a 12-pad kit), and the LoRA catalog now advertises which entries the loaded model can actually load — including scale-agnostic name lookup so \"Ambient\" resolves to the right variant." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **Batch render-anchor queue** — Clients can now submit a list of stationary render anchors in a single message and DEMON renders them back-to-back, one per tick, instead of round-tripping per anchor. Prewarming a 12-pad sampler kit dropped from ~50 s to ~1.4 s against a live pod. The existing scalar anchor still preempts the queue (for live pad pins) and the queue resumes when it clears; ACE and Stable Audio 3 both advertise the capability. Fully backward compatible — clients that don't send the new field hit the exact old path.
+  - **Server-computed LoRA compatibility + name aliases** — Every LoRA catalog entry now carries a server-computed `compatible` flag, so clients no longer have to re-derive which LoRAs the active model can load. `enable_lora` / `disable_lora` also accept scale-agnostic display names: sending `Ambient` resolves to whichever variant the loaded checkpoint can actually load (e.g. `ambient-v1` on 2B vs `ambient-xl-v1` on 5B), instead of failing on a hard-coded id. Same alias resolution runs on startup so saved LoRA strengths land on the right variant after a model switch.
+
+  #### Bug Fixes
+
+  - **One-shot render-anchor clears no longer get dropped** — A one-shot `render_anchor_s` (including an explicit clear) riding a superseded params snapshot could be silently dropped when GPU-heavy generation starved the receive thread, leaving the pod pinned at a stale anchor. Sticky placement fields now fold forward through params coalescing — the fix also lands automatically for existing VSTs.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
+
 <Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Stable Audio 3 gains stationary render anchors for tighter VST sync, and the ✨ Enhance button now respects solo vs full-mix intent instead of always producing full arrangements." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
   ## DEMON: Weekly Update
 
