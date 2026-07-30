@@ -17,7 +17,7 @@ governance upgrades, while the target changes when a new implementation is deplo
 ## Deployed addresses (Arbitrum One)
 
 Resolved from the on-chain **Controller** (`getContract(keccak256(name))`) — **last verified
-1 July 2026**. These are the stable proxy addresses.
+30 July 2026**. These are the stable proxy addresses.
 
 | Contract | Address | Used by / for |
 | --- | --- | --- |
@@ -32,9 +32,44 @@ Resolved from the on-chain **Controller** (`getContract(keccak256(name))`) — *
 | `Treasury` | [`0xf82C1FF415F1fCf582554fDba790E27019c8E8C4`](https://arbiscan.io/address/0xf82c1ff415f1fcf582554fdba790e27019c8e8c4) | Governance-controlled community funds |
 | `BondingVotes` | [`0x0B9C254837E72Ebe9Fe04960C43B69782E68169A`](https://arbiscan.io/address/0x0b9c254837e72ebe9fe04960c43b69782e68169a) | Stake snapshots for voting power |
 
-Not registered in the Controller (verify via [Arbiscan labels](https://arbiscan.io/accounts/label/livepeer)
-or the [protocol repo](https://github.com/livepeer/protocol)): the **AIServiceRegistry** (AI subnet
-registration) and the **LPT bridge** contracts (`L1Escrow` on Ethereum, `L2LPTGateway` on Arbitrum).
+These Arbitrum One contracts are **not** registered in the Controller. Addresses come from Livepeer's
+own deployment artifacts ([livepeer/protocol](https://github.com/livepeer/protocol/tree/confluence/deployments/arbitrumMainnet),
+[livepeer/arbitrum-lpt-bridge](https://github.com/livepeer/arbitrum-lpt-bridge/tree/main/deployments)),
+cross-checked against on-chain state:
+
+| Contract | Address | Used by / for |
+| --- | --- | --- |
+| `AIServiceRegistry` | [`0x04C0b249740175999E5BF5c9ac1dA92431EF34C5`](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) | AI capability registration (`-aiServiceRegistry`) |
+| `L2LPTGateway` | [`0x6D2457a4ad276000A615295f7A80F79E48CcD318`](https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318) | Arbitrum side of the canonical LPT bridge |
+| `L2LPTDataCache` | [`0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1`](https://arbiscan.io/address/0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1) | Caches L1 LPT supply data on Arbitrum |
+| `Governor` | [`0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6`](https://arbiscan.io/address/0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6) | Protocol admin / parameter execution (pre-treasury governance) |
+| `PollCreator` | [`0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6`](https://arbiscan.io/address/0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6) | Poll-based LIP voting |
+| `MerkleSnapshot` | [`0x10736ffaCe687658F88a46D042631d182C7757f7`](https://arbiscan.io/address/0x10736ffaCe687658F88a46D042631d182C7757f7) | Merkle-proof earnings claims |
+
+## Deployed addresses (Ethereum Mainnet)
+
+The genesis LPT token and the L1 side of the canonical bridge. Verified on-chain (token
+`name()`/`symbol()`, gateway `l1Lpt()`/`l2Lpt()` cross-references, and source-verified contract
+names) — **last verified 30 July 2026**:
+
+| Contract | Address | Used by / for |
+| --- | --- | --- |
+| `LivepeerToken` (L1) | [`0x58b6A8A3302369DAEc383334672404Ee733aB239`](https://etherscan.io/address/0x58b6A8A3302369DAEc383334672404Ee733aB239) | The original LPT ERC-20 (2018 genesis deployment) |
+| `BridgeMinter` | [`0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405`](https://etherscan.io/address/0x8dddb96cf36ac8860f1de5c7c4698fd499fab405) | Owns L1 LPT minting; backs the bridge when escrow is short |
+| `L1Escrow` | [`0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A`](https://etherscan.io/address/0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A) | Holds all L1 LPT locked into the bridge |
+| `L1LPTGateway` | [`0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676`](https://etherscan.io/address/0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676) | Ethereum side of the canonical LPT bridge |
+| `L1LPTDataCache` | [`0x1d24838b35A9c138Ac157A852e19e948aD6323D7`](https://etherscan.io/address/0x1d24838b35A9c138Ac157A852e19e948aD6323D7) | Publishes L1 LPT supply data to Arbitrum |
+| `L1Migrator` | [`0x2a69191B43c9DB47C927bD7287F9C93838d07759`](https://etherscan.io/address/0x2a69191B43c9DB47C927bD7287F9C93838d07759) | L1→L2 state migration (Confluence, 2022) |
+
+<Note>
+  **Historical:** the Confluence migration's Arbitrum-side contracts
+  ([`L2Migrator`](https://arbiscan.io/address/0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085)
+  at `0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085`,
+  [`DelegatorPool`](https://arbiscan.io/address/0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567)
+  at `0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567`) and the 2018 genesis-era utility contracts on
+  Ethereum remain deployed but play no role in day-to-day operation. See the
+  [protocol repo](https://github.com/livepeer/protocol) for the complete artifact history.
+</Note>
 
 ## Verify against the on-chain Controller
 
