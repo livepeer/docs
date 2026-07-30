@@ -61,13 +61,36 @@ names) — **last verified 30 July 2026**:
 | `L1LPTDataCache` | [`0x1d24838b35A9c138Ac157A852e19e948aD6323D7`](https://etherscan.io/address/0x1d24838b35A9c138Ac157A852e19e948aD6323D7) | Publishes L1 LPT supply data to Arbitrum |
 | `L1Migrator` | [`0x2a69191B43c9DB47C927bD7287F9C93838d07759`](https://etherscan.io/address/0x2a69191B43c9DB47C927bD7287F9C93838d07759) | L1→L2 state migration (Confluence, 2022) |
 
+### Deprecated: the pre-Confluence protocol on Ethereum
+
+Before the 2022 Confluence migration, the entire protocol ran on Ethereum mainnet. Those contracts
+are still deployed but **permanently paused** — the old Controller's `paused()` returns `true`
+on-chain. Listed so nobody mistakes a stale link for the live protocol:
+
+<Warning>
+  **Do not stake, bond, or send funds to these.** All live protocol activity is on Arbitrum One.
+</Warning>
+
+| Contract (deprecated) | Address |
+| --- | --- |
+| `Controller` | [`0xF96D54E490317c557A967ABfA5d6e33006BE69b3`](https://etherscan.io/address/0xF96D54E490317c557A967ABfA5d6e33006BE69b3) |
+| `BondingManager` | [`0x511Bc4556D823Ae99630aE8de28b9B80Df90eA2e`](https://etherscan.io/address/0x511Bc4556D823Ae99630aE8de28b9B80Df90eA2e) |
+| `TicketBroker` | [`0x5b1cE829384EeBFa30286F12d1E7A695ca45F5D2`](https://etherscan.io/address/0x5b1cE829384EeBFa30286F12d1E7A695ca45F5D2) |
+| `RoundsManager` | [`0x3984fc4ceEeF1739135476f625D36d6c35c40dc3`](https://etherscan.io/address/0x3984fc4ceEeF1739135476f625D36d6c35c40dc3) |
+| `ServiceRegistry` | [`0x406a112f3218b988c66778Fd72fc8467f2601366`](https://etherscan.io/address/0x406a112f3218b988c66778Fd72fc8467f2601366) |
+| `MerkleSnapshot` | [`0x24ebEd82c681f435E944BEEbFAEEAaE443D08438`](https://etherscan.io/address/0x24ebEd82c681f435E944BEEbFAEEAaE443D08438) |
+
+These were resolved from the old Controller's own `getContract()` — its `Minter` slot now points at
+the [`BridgeMinter`](https://etherscan.io/address/0x8dddb96cf36ac8860f1de5c7c4698fd499fab405) listed
+above, which is how L1 minting rights were handed to the bridge at migration.
+
 <Note>
-  **Historical:** the Confluence migration's Arbitrum-side contracts
+  **Also historical:** the Confluence migration's Arbitrum-side contracts
   ([`L2Migrator`](https://arbiscan.io/address/0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085)
   at `0x148D5b6B4df9530c7C76A810bd1Cdf69EC4c2085`,
   [`DelegatorPool`](https://arbiscan.io/address/0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567)
-  at `0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567`) and the 2018 genesis-era utility contracts on
-  Ethereum remain deployed but play no role in day-to-day operation. See the
+  at `0xfdb06109032AD3671a8f14f5f2E78f4B9E81b567`) and the 2018 genesis-era distribution utilities
+  (MerkleMine, GenesisManager) remain on-chain but play no role in day-to-day operation. See the
   [protocol repo](https://github.com/livepeer/protocol) for the complete artifact history.
 </Note>
 
