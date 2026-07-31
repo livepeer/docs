@@ -1,0 +1,26 @@
+# type: interface
+# concern: governance
+# pipeline: P7
+name: Discord Issue Intake
+
+on:
+  repository_dispatch:
+    types:
+      - discord-issue-intake
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Validate payload and create docs issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = require('./operations/scripts/interfaces/governance/discord-issue-intake.js');
+            return await run({ github, context });

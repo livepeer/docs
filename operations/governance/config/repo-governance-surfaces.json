@@ -1,0 +1,493 @@
+{
+  "version": "repo-governance-surfaces.v1",
+  "canonical_home": "operations/governance",
+  "bridge_mode": "retired",
+  "canonical_manifests": [
+    "operations/governance/config/root-governance.json",
+    "operations/governance/config/generated-artifacts.json",
+    "operations/governance/config/agent-write-governance.json",
+    "operations/governance/config/ownerless-governance-surfaces.json",
+    "operations/governance/config/governance-approval-policy.json"
+  ],
+  "approval_checkpoints": [
+    {
+      "id": "design-lock",
+      "label": "Design Lock",
+      "phase": "design",
+      "requires_human_approval": true,
+      "trigger": "Before registry schema, path classes, and agent-write classes are treated as locked.",
+      "required_evidence": [
+        "approved operations/governance taxonomy",
+        "approved registry schema",
+        "approved steady-state governance model"
+      ]
+    },
+    {
+      "id": "first-instance-review",
+      "label": "First-Instance Review",
+      "phase": "implement",
+      "requires_human_approval": true,
+      "trigger": "After the first thin-slice implementation and before repeating the migration pattern across additional surfaces.",
+      "required_evidence": [
+        "first-slice generator output",
+        "first-slice validator output",
+        "targeted tests passing"
+      ]
+    },
+    {
+      "id": "gate-escalation",
+      "label": "Gate Escalation",
+      "phase": "iterate",
+      "requires_human_approval": true,
+      "trigger": "Before any governance rule is promoted from advisory or autofix to blocking.",
+      "required_evidence": [
+        "baseline noise review",
+        "false-positive review",
+        "contributor impact review"
+      ]
+    },
+    {
+      "id": "legacy-retirement",
+      "label": "Legacy Retirement",
+      "phase": "cleanup",
+      "requires_human_approval": true,
+      "trigger": "Before retiring live bridge-mode governance sources under tools/config/runtime or deleting bridge logic.",
+      "required_evidence": [
+        "consumer cutover proof",
+        "bridge sync validator pass",
+        "retirement inventory"
+      ]
+    }
+  ],
+  "generated_outputs": {
+    "map_doc": "docs-guide/repo-ops/config/repo-governance-map.mdx",
+    "status_report_json": "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+    "status_report_md": "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md",
+    "handover_report_md": "workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md"
+  },
+  "production_approval_policy": {
+    "manifest": "operations/governance/config/governance-approval-policy.json",
+    "pr_template": ".github/pull_request_template.md",
+    "validator": "operations/scripts/validators/governance/pr/check-governance-approvals.js",
+    "required_labels": [
+      "approval:governance-schema",
+      "approval:governance-gate",
+      "approval:workflow-governance",
+      "approval:governance-retirement"
+    ],
+    "notes": "Production governance-sensitive PRs require GitHub labels plus PR-body evidence under the Governance Approval section."
+  },
+  "active_governance_reports": [
+    "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json",
+    "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md",
+    "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+    "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md",
+    "workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json",
+    "workspace/reports/repo-ops/REPAIR_REPORT_LATEST.md",
+    "workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.json",
+    "workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.md",
+    "workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md"
+  ],
+  "github_workspace_surfaces": [
+    {
+      "id": "workspace-framework",
+      "path": ".github/workspace/framework-canonical.md",
+      "classification": "transitional-runtime",
+      "runtime_role": "workflow-taxonomy-framework",
+      "future_state": "promote-or-replace",
+      "review_cadence_days": 90,
+      "notes": "Still referenced for workflow taxonomy and naming rules, but not treated as the long-term canonical governance home."
+    },
+    {
+      "id": "workspace-decisions-log",
+      "path": ".github/workspace/decisions-log.mdx",
+      "classification": "transitional-runtime",
+      "runtime_role": "locked-workflow-decisions",
+      "future_state": "promote-or-replace",
+      "review_cadence_days": 90,
+      "notes": "Operational decisions remain live transitional support until they are promoted into canonical docs or archived."
+    },
+    {
+      "id": "workspace-actions-library",
+      "path": ".github/workspace/actions-library",
+      "classification": "generated-support",
+      "runtime_role": "workflow-reference-library",
+      "future_state": "retain-generated-support",
+      "notes": "Generated/reference workflow documentation and supporting assets used for workflow governance visibility."
+    },
+    {
+      "id": "workspace-outcomes",
+      "path": ".github/workspace/outcomes.md",
+      "classification": "design-only",
+      "runtime_role": "visual-design-context",
+      "future_state": "archive-reference",
+      "notes": "Useful design context and maps, but not an active runtime governance source."
+    },
+    {
+      "id": "workspace-phase2",
+      "path": ".github/workspace/phase2",
+      "classification": "design-only",
+      "runtime_role": "pipeline-design-history",
+      "future_state": "archive-reference",
+      "notes": "Pipeline design and review planning material retained for context, not as canonical runtime governance."
+    },
+    {
+      "id": "workspace-design",
+      "path": ".github/workspace/design",
+      "classification": "design-only",
+      "runtime_role": "concern-design-research",
+      "future_state": "archive-reference",
+      "notes": "Concern-level design work and research should inform future promotion decisions but does not directly govern runtime behavior."
+    },
+    {
+      "id": "workspace-reports-audits",
+      "path": ".github/workspace/reports-audits",
+      "classification": "historical-audit",
+      "runtime_role": "audit-history",
+      "future_state": "archive-reference",
+      "notes": "Historical audit packets and dependency analysis remain reference material only."
+    }
+  ],
+  "legacy_bridge_inventory": [],
+  "path_classes": [
+    {
+      "id": "governance-config",
+      "allowed_paths": [
+        "operations/governance/config/**"
+      ],
+      "notes": "Canonical governance manifests live under operations/governance/config in the target model."
+    },
+    {
+      "id": "governance-docs",
+      "allowed_paths": [
+        "docs-guide/policies/**",
+        "docs-guide/repo-ops/**"
+      ],
+      "notes": "Policy prose and generated governance reference pages live under docs-guide."
+    },
+    {
+      "id": "governance-runtime",
+      "allowed_paths": [
+        "operations/config/**",
+        "tools/lib/governance/**",
+        "operations/scripts/**",
+        "operations/tests/**",
+        ".githooks/**",
+        ".github/**"
+      ],
+      "notes": "Ownerless runtime and enforcement paths remain active under operations/config, operations/governance, operations/scripts, and operations/tests."
+    },
+    {
+      "id": "workspace-report",
+      "allowed_paths": [
+        "workspace/reports/**"
+      ],
+      "notes": "Tracked governance reports and generated status outputs belong under workspace/reports."
+    },
+    {
+      "id": "workspace-local",
+      "allowed_paths": [
+        "workspace/reports/_local/**",
+        "workspace/tmp/**"
+      ],
+      "notes": "Local-only diagnostics, captures, and scratch outputs must stay out of repo root and canonical docs paths."
+    }
+  ],
+  "agent_output_classes": [
+    {
+      "id": "canonical",
+      "default_destination": "declared governed surface paths only",
+      "commit_policy": "tracked",
+      "notes": "Canonical repo changes must target an admitted governed surface."
+    },
+    {
+      "id": "generated",
+      "default_destination": "manifest-declared generated outputs only",
+      "commit_policy": "tracked",
+      "notes": "Generated tracked outputs must be declared by a governance or artifact manifest."
+    },
+    {
+      "id": "report",
+      "default_destination": "workspace/reports/**",
+      "commit_policy": "task_dependent",
+      "notes": "Tracked reports are allowed only when the task explicitly calls for a committed report."
+    },
+    {
+      "id": "scratch",
+      "default_destination": "workspace/reports/_local/**",
+      "commit_policy": "untracked",
+      "notes": "Default destination for temporary diagnostics and ad hoc working outputs."
+    },
+    {
+      "id": "capture",
+      "default_destination": "workspace/reports/_local/**",
+      "commit_policy": "untracked",
+      "notes": "Screenshots, browser captures, and similar agent artifacts must remain local-only by default."
+    },
+    {
+      "id": "task-state",
+      "default_destination": "workspace/thread-outputs/**",
+      "commit_policy": "tracked",
+      "notes": "Session and thread state belongs in the governed workspace thread-output tree."
+    },
+    {
+      "id": "forbidden",
+      "default_destination": "repo root or ad hoc top-level paths",
+      "commit_policy": "forbidden",
+      "notes": "Agents must not create undeclared top-level files or folders outside admitted governance and workspace paths."
+    }
+  ],
+  "surfaces": [
+    {
+      "id": "repo-governance-registry",
+      "name": "Repo Governance Registry",
+      "surface_type": "governance-registry",
+      "paths": [
+        "operations/governance/config/repo-governance-surfaces.json",
+        "operations/governance/config/root-governance.json",
+        "operations/governance/config/generated-artifacts.json",
+        "operations/governance/config/agent-write-governance.json",
+        "operations/governance/config/governance-approval-policy.json",
+        "operations/governance/config/ownerless-governance-surfaces.json",
+        ".github/pull_request_template.md",
+        "operations/scripts/validators/governance/pr/check-governance-approvals.js",
+        "docs-guide/repo-ops/config/repo-governance-map.mdx",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md",
+        "workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md"
+      ],
+      "canonical_sources": [
+        "operations/governance/config/repo-governance-surfaces.json",
+        "operations/governance/config/root-governance.json",
+        "operations/governance/config/generated-artifacts.json",
+        "operations/governance/config/agent-write-governance.json",
+        "operations/governance/config/ownerless-governance-surfaces.json",
+        "operations/governance/config/governance-approval-policy.json",
+        ".github/pull_request_template.md",
+        "operations/scripts/validators/governance/pr/check-governance-approvals.js",
+        "docs-guide/repo-ops/config/repo-config-map.mdx"
+      ],
+      "derived_outputs": [
+        "docs-guide/repo-ops/config/repo-governance-map.mdx",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md",
+        "workspace/reports/repo-ops/OWNERLESS_REPO_HANDOVER_LATEST.md"
+      ],
+      "validators": [
+        "operations/scripts/validators/governance/pr/check-governance-approvals.js",
+        "operations/scripts/validators/governance/compliance/check-repo-governance-sync.js",
+        "operations/tests/unit/repo-governance-sync.test.js"
+      ],
+      "repair_commands": [
+        "node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write",
+        "node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js --json"
+      ],
+      "gate_layer": "pr-changed",
+      "rollout_state": "autofix",
+      "ownerless_ready": true,
+      "write_policy": "declared_paths_only",
+      "agent_write_policy": "registry_defaults_only",
+      "network_dependent": false,
+      "public_contract": "internal",
+      "doc_refs": [
+        "docs-guide/repo-ops/config/repo-config-map.mdx"
+      ],
+      "escalation_mode": "auto-fix-pr",
+      "success_signals": [
+        "generated repo-governance outputs are current",
+        "registry references resolve",
+        "sync validator passes"
+      ],
+      "notes": "Top-level governance index for the ownerless steady-state control plane."
+    },
+    {
+      "id": "root-governance",
+      "name": "Root Governance",
+      "surface_type": "root-governance",
+      "paths": [
+        ".allowlist",
+        "docs-guide/repo-ops/config/root-governance-map.mdx",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md"
+      ],
+      "canonical_sources": [
+        "operations/governance/config/root-governance.json",
+        "docs-guide/policies/root-allowlist-governance.mdx"
+      ],
+      "derived_outputs": [
+        ".allowlist",
+        "docs-guide/repo-ops/config/root-governance-map.mdx",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md"
+      ],
+      "validators": [
+        "operations/scripts/validators/governance/compliance/check-root-governance-sync.js",
+        "operations/tests/unit/root-governance-sync.test.js",
+        "operations/tests/unit/root-allowlist-format.test.js"
+      ],
+      "repair_commands": [
+        "node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write"
+      ],
+      "gate_layer": "pre-commit",
+      "rollout_state": "autofix",
+      "ownerless_ready": true,
+      "write_policy": "manifest_declared_outputs",
+      "agent_write_policy": "root_forbidden_workspace_default",
+      "network_dependent": false,
+      "public_contract": "public_root_contract",
+      "doc_refs": [
+        "docs-guide/policies/root-allowlist-governance.mdx",
+        "docs-guide/repo-ops/config/root-governance-map.mdx"
+      ],
+      "escalation_mode": "auto-fix-pr",
+      "success_signals": [
+        ".allowlist matches manifest",
+        "root map is current",
+        "root sync report is current"
+      ],
+      "notes": "Canonical root-governance manifest under the ownerless steady-state architecture."
+    },
+    {
+      "id": "generated-artifact-governance",
+      "name": "Generated Artifact Governance",
+      "surface_type": "generated-artifact-governance",
+      "paths": [
+        "docs-index.json",
+        "llms.txt",
+        "sitemap-ai.xml"
+      ],
+      "canonical_sources": [
+        "operations/governance/config/generated-artifacts.json",
+        "docs-guide/policies/generated-artifact-and-hook-governance.mdx"
+      ],
+      "derived_outputs": [
+        "docs-index.json",
+        "llms.txt",
+        "sitemap-ai.xml",
+        "docs-guide/repo-ops/config/root-governance-map.mdx",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json",
+        "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md",
+        "docs-guide/repo-ops/config/repo-governance-map.mdx",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md"
+      ],
+      "validators": [
+        "operations/tests/unit/generated-artifacts-policy.test.js"
+      ],
+      "repair_commands": [
+        "node operations/scripts/generators/content/catalogs/generate-docs-index.js --write",
+        "node operations/scripts/generators/ai/llm/generate-llms-files.js --write",
+        "node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write"
+      ],
+      "gate_layer": "pr-changed",
+      "rollout_state": "autofix",
+      "ownerless_ready": true,
+      "write_policy": "manifest_declared_outputs",
+      "agent_write_policy": "generated_only_when_declared",
+      "network_dependent": false,
+      "public_contract": "public_root_contract",
+      "doc_refs": [
+        "docs-guide/policies/generated-artifact-and-hook-governance.mdx",
+        "docs-guide/repo-ops/config/repo-config-map.mdx"
+      ],
+      "escalation_mode": "auto-fix-pr",
+      "success_signals": [
+        "required generated artifacts are declared",
+        "artifact classes and policies validate",
+        "derived outputs stay current"
+      ],
+      "notes": "Canonical generated-artifact governance manifest under the ownerless steady-state architecture."
+    },
+    {
+      "id": "ownerless-governance",
+      "name": "Ownerless Governance",
+      "surface_type": "ownerless-governance",
+      "paths": [
+        "operations/governance/config/ownerless-governance-surfaces.json",
+        "docs-guide/policies/ownerless-governance.mdx",
+        "operations/tests/unit/ownerless-governance.test.js",
+        "operations/tests/unit/governance-approval-policy.test.js"
+      ],
+      "canonical_sources": [
+        "operations/governance/config/ownerless-governance-surfaces.json",
+        "docs-guide/policies/ownerless-governance.mdx",
+        "operations/governance/config/governance-approval-policy.json"
+      ],
+      "derived_outputs": [],
+      "validators": [
+        "operations/tests/unit/governance-approval-policy.test.js",
+        "operations/tests/unit/ownerless-governance.test.js"
+      ],
+      "repair_commands": [
+        "node operations/scripts/remediators/content/style/repair-ownerless-language.js --write"
+      ],
+      "gate_layer": "pr-changed",
+      "rollout_state": "autofix",
+      "ownerless_ready": true,
+      "write_policy": "policy_and_registry_controlled",
+      "agent_write_policy": "registry_defaults_only",
+      "network_dependent": false,
+      "public_contract": "internal",
+      "doc_refs": [
+        "docs-guide/policies/ownerless-governance.mdx"
+      ],
+      "escalation_mode": "auto-fix-pr",
+      "success_signals": [
+        "manifest remains structurally valid",
+        "policy language stays ownerless",
+        "gate-layer contract remains explicit"
+      ],
+      "notes": "Canonical ownerless-governance manifest under the ownerless steady-state architecture."
+    },
+    {
+      "id": "github-workspace-governance",
+      "name": "GitHub Workspace Governance",
+      "surface_type": "github-workspace-governance",
+      "paths": [
+        ".github/workspace/framework-canonical.md",
+        ".github/workspace/decisions-log.mdx",
+        ".github/workspace/actions-library",
+        ".github/workspace/outcomes.md",
+        ".github/workspace/phase2",
+        ".github/workspace/design",
+        ".github/workspace/reports-audits"
+      ],
+      "canonical_sources": [
+        "operations/governance/config/repo-governance-surfaces.json",
+        ".github/workspace/framework-canonical.md",
+        ".github/workspace/decisions-log.mdx"
+      ],
+      "derived_outputs": [
+        "docs-guide/repo-ops/config/repo-governance-map.mdx",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.json",
+        "workspace/reports/repo-ops/REPO_GOVERNANCE_STATUS_LATEST.md"
+      ],
+      "validators": [
+        "operations/scripts/validators/governance/compliance/check-repo-governance-sync.js",
+        "operations/tests/unit/repo-governance-sync.test.js"
+      ],
+      "repair_commands": [
+        "node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --write",
+        "node operations/scripts/validators/governance/compliance/check-repo-governance-sync.js --json"
+      ],
+      "gate_layer": "pr-changed",
+      "rollout_state": "migrating",
+      "ownerless_ready": false,
+      "write_policy": "policy_and_registry_controlled",
+      "agent_write_policy": "registry_defaults_only",
+      "network_dependent": false,
+      "public_contract": "internal",
+      "doc_refs": [
+        "docs-guide/repo-ops/config/repo-config-map.mdx",
+        "docs-guide/policies/governance-index.mdx"
+      ],
+      "escalation_mode": "human-review-required",
+      "success_signals": [
+        "github workspace references are explicitly classified",
+        "runtime support paths are distinguished from design-only history",
+        "repo governance map reflects the current promotion posture"
+      ],
+      "notes": ".github/workspace contains classified transitional support, generated reference material, and archived design history; this prevents the whole tree from being treated as canonical runtime governance."
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+
+/**
+ * @component CustomCodeBlock
+ * @category displays
+ * @subcategory code
+ * @status stable
+ * @description Code block with optional pre/post notes and expandable wrapper.
+  * @aiDiscoverability none
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx, v2/gateways/setup/install.mdx, v2/orchestrators/portal.mdx, v2/orchestrators/quickstart/video-transcoding.mdx, v2/orchestrators/setup/install.mdx, v2/orchestrators/setup/monitor.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
+ * @param {any} filename - filename prop.
+ * @param {any} icon - icon prop.
+ * @param {any} language - language prop.
+ * @param {any} highlight - highlight prop.
+ * @param {string} [codeString=""] - code String prop.
+ * @param {string} [placeholderValue=""] - placeholder Value prop.
+ * @param {boolean} [wrap=true] - wrap prop.
+ * @param {boolean} [lines=true] - lines prop.
+ * @param {string} [preNote=""] - pre Note prop.
+ * @param {string} [postNote=""] - post Note prop.
+ * @param {string} [output=""] - output prop.
+ */
+export const CustomCodeBlock = ({
+  filename,
+  icon,
+  language,
+  highlight,
+  codeString = "",
+  placeholderValue = "",
+  wrap = true,
+  lines = true,
+  preNote = "",
+  postNote = "",
+  output = "",
+}) => {
+  // Return null if no codeString is provided
+  if (!codeString || codeString.trim() === "") {
+    return null;
+  }
+
+  const renderedCode = codeString.replace(/\{PLACEHOLDER\}/g, placeholderValue);
+  // const CalloutComponent = callout?.type ? callout.type : Note;
+
+  return (
+    <>
+      {preNote && (
+        <div
+          style={{
+            marginBottom: "var(--lp-spacing-2)",
+            fontSize: "0.875rem",
+            color: "var(--lp-color-text-muted)",
+          }}
+        >
+          {preNote}
+        </div>
+      )}
+      <CodeBlock
+        filename={filename}
+        icon={icon}
+        language={language}
+        lines
+        highlight={highlight}
+        wrap={wrap}
+        line={lines}
+      >
+        {renderedCode}
+      </CodeBlock>
+      {postNote && (
+        <div
+          style={{
+            marginTop: "var(--lp-spacing-2)",
+            fontSize: "0.875rem",
+            color: "var(--lp-color-text-muted)",
+            fontStyle: "italic",
+          }}
+        >
+          {postNote}
+        </div>
+      )}
+      {output?.codeString && (
+        <>
+          <Expandable
+            title={
+              <span style={{ fontStyle: "italic", fontWeight: "bold" }}>
+                Expected Output
+              </span>
+            }
+          >
+            <CodeBlock
+              filename={output.filename || "Output Example"}
+              icon={output.icon || "terminal"}
+              language={output.language || "bash"}
+              highlight={output.highlight}
+              wrap={output.wrap || false}
+              line={output.lines || false}
+            >
+              {output.codeString}
+            </CodeBlock>
+          </Expandable>
+          <br />
+        </>
+      )}
+    </>
+  );
+};
+
+/**
+ * @component CodeComponent
+ * @category displays
+ * @subcategory code
+ * @status stable
+ * @description Simple code block with title and language syntax highlighting.
+  * @aiDiscoverability none
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
+ * @param {string} [filename=""] - filename prop.
+ * @param {string} [icon="terminal"] - icon prop.
+ * @param {string} [language=""] - language prop.
+ * @param {string} [highlight=""] - highlight prop.
+ * @param {boolean} [expandable=false] - expandable prop.
+ * @param {boolean} [wrap=true] - wrap prop.
+ * @param {boolean} [lines=true] - lines prop.
+ * @param {string} [codeString=""] - code String prop.
+ * @param {string} [placeholderValue=""] - placeholder Value prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
+ */
+export const CodeComponent = ({
+  filename = "",
+  icon = "terminal",
+  language = "",
+  highlight = "",
+  expandable = false,
+  wrap = true,
+  lines = true,
+  codeString = "",
+  placeholderValue = "",
+  className = "",
+  style = {},
+  ...rest
+}) => {
+  const renderedCode = codeString.replace(/\{PLACEHOLDER\}/g, placeholderValue);
+  return (
+    <CodeBlock
+      filename={filename}
+      icon={icon}
+      language={language}
+      highlight={highlight}
+      expandable={expandable}
+      wrap={wrap}
+      lines={lines}
+      className={className}
+      style={style}
+      {...rest}
+    >
+      {renderedCode}
+    </CodeBlock>
+  );
+};
+
+/**
+ * @component ComplexCodeBlock
+ * @category displays
+ * @subcategory code
+ * @status stable
+ * @description Code block with both pre-note and post-note sections.
+  * @aiDiscoverability none
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
+ * @param {any} filename - filename prop.
+ * @param {any} icon - icon prop.
+ * @param {any} language - language prop.
+ * @param {any} highlight - highlight prop.
+ * @param {string} [codeString=""] - code String prop.
+ * @param {string} [placeholderValue=""] - placeholder Value prop.
+ * @param {boolean} [wrap=true] - wrap prop.
+ * @param {boolean} [lines=true] - lines prop.
+ * @param {any} [preNote=null] - pre Note prop.
+ * @param {any} [postNote=null] - post Note prop.
+ */
+export const ComplexCodeBlock = ({
+  filename,
+  icon,
+  language,
+  highlight,
+  codeString = "",
+  placeholderValue = "",
+  wrap = true,
+  lines = true,
+  preNote = null,
+  postNote = null,
+}) => {
+  // Return null if no codeString is provided
+  if (!codeString || codeString.trim() === "") {
+    return null;
+  }
+
+  const renderedCode = codeString.replace(/\{PLACEHOLDER\}/g, placeholderValue);
+
+  return (
+    <>
+      {preNote && (
+        <div
+          style={{
+            marginBottom: "var(--lp-spacing-2)",
+            fontSize: "0.875rem",
+            color: "var(--lp-color-text-muted)",
+          }}
+        >
+          {preNote}
+        </div>
+      )}
+      <CodeBlock
+        filename={filename}
+        icon={icon}
+        language={language}
+        lines
+        highlight={highlight}
+        wrap={wrap}
+        line={lines}
+      >
+        {renderedCode}
+      </CodeBlock>
+      {postNote && (
+        <div
+          style={{
+            marginTop: "var(--lp-spacing-2)",
+            fontSize: "0.875rem",
+            color: "var(--lp-color-text-muted)",
+          }}
+        >
+          {postNote}
+        </div>
+      )}
+    </>
+  );
+};
+
+/**
+ * @component CodeSection
+ * @category displays
+ * @subcategory code
+ * @status stable
+ * @description Expandable code section with title header.
+  * @aiDiscoverability none
+ * @usedIn v2/gateways/quickstart/gateway-setup.mdx
+ * @breakingChangeRisk low
+ * @lastMeaningfulChange 2026-04-08
+ * @param {object} [fields={}] - fields prop.
+  * @param {string} [className=''] - Optional CSS class override.
+  * @param {object} [style={}] - Optional inline style override.
+ */
+export const CodeSection = ({ fields = {}, className = "", style = {}, ...rest }) => {
+  return <ComplexCodeBlock {...fields} className={className} style={style} {...rest} />;
+};
+
+// export const CodeSection = ({ fields = {} }) => {
+//   return <ComplexCodeBlock {...fields} />;
+// };

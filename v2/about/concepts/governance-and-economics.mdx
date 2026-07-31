@@ -1,0 +1,263 @@
+---
+title: "Governance and Economics"
+sidebarTitle: "Governance and Economics"
+description: "How decisions are made and how value flows through Livepeer."
+lifecycleStage: "discover"
+complexity: "beginner"
+pageType: "concept"
+audience: "community"
+lastVerified: "2026-05-04T00:00:00.000Z"
+purpose: "explain"
+keywords:
+  - governance
+  - economics
+  - treasury
+  - lpt
+  - voting
+  - rewards
+  - fees
+"og:image": "/snippets/assets/media/og-images/en/about.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { Image } from '/snippets/components/elements/images/Image.jsx'
+import { BorderedBox, CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { Quote, FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { QuadGrid } from '/snippets/components/displays/grids/Grids.jsx'
+
+{/* SCOPE: a single conceptual page covering both how Livepeer governs itself and how money moves through it. The reader leaves with a working model of decisions and value. The Protocol section then carries the deep technical pages on Token, Treasury, Governance specifically. */}
+
+<CenteredContainer width="90%">
+  <Tip>Livepeer is self-governing and self-funding. LPT-weighted votes set the rules, ETH from buyers pays operators per job, and a fixed share of LPT inflation funds a community treasury that buys public goods.</Tip>
+</CenteredContainer>
+
+Two control loops sit on top of one shared token. The **governance loop** turns staked LPT into binding decisions about protocol upgrades and treasury spending. The **economics loop** turns ETH from Gateways into operator revenue and LPT inflation into rewards for the people securing the network. Both run on Arbitrum One smart contracts that any participant can audit, fork, or exit at any time.
+
+This page explains both loops at conceptual depth. The deep technical pages on Token, Treasury, and Governance live in the [Protocol](/v2/about/protocol/design) section.
+
+<CustomDivider />
+
+## How decisions are made
+
+Governance decides two things: which contract code runs the protocol, and how the on-chain treasury spends its LPT. Both are controlled by the same stake-weighted voting mechanism, run on a custom Governor contract derived from OpenZeppelin's Compound-style governor pattern, and recorded permanently on Arbitrum One.
+
+<Quote>
+Livepeer is a community-driven protocol, where token holders have the ability to vote on proposals to upgrade protocol mechanisms or to spend from the treasury. Voting is conducted on-chain via the Livepeer Governor contract, with the protocol contracts enforcing the outcome.
+</Quote>
+
+The pipeline is hybrid by design. Off-chain discussion on the [Livepeer Forum](https://forum.livepeer.org/c/lips/18) lets ideas gather feedback before they cost anything; on-chain proposals lock that feedback into binding code. A proposal becomes a [Livepeer Improvement Proposal (LIP)](https://github.com/livepeer/LIPs), modelled on Ethereum's EIP process, with a numbered specification, an author, and a status. Any holder with at least 100 LPT can submit one to the Governor. That stake is returned if the proposal passes and acts as a spam filter rather than a barrier.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Discussion" icon="comment-dots">
+    Idea published on the [Livepeer Forum](https://forum.livepeer.org/c/lips/18). Open to anyone. No stake required.
+  </StyledStep>
+  <StyledStep title="Draft (RFP)" icon="comments">
+    Pre-proposal posted as a Request For Feedback. Community refines scope, parameters, and rationale before code is written.
+  </StyledStep>
+  <StyledStep title="LIP submission" icon="file-pen">
+    Finalised proposal published in [Livepeer/LIPs](https://github.com/livepeer/LIPs) with formal specification.
+  </StyledStep>
+  <StyledStep title="On-chain proposal" icon="arrow-up-right-from-square">
+    Author with at least 100 LPT submits to the Governor contract. Proposal stake is locked.
+  </StyledStep>
+  <StyledStep title="Voting" icon="ballot">
+    Voting period opens for 30 rounds (around 3.75 days). Any address with 1 LPT or more of staked weight can vote For, Against, or Abstain.
+  </StyledStep>
+  <StyledStep title="Quorum and approval" icon="people">
+    Proposal passes if at least 33 percent of all staked LPT participates and more than 50 percent of votes cast are For.
+  </StyledStep>
+  <StyledStep title="Execution" icon="check-to-slot">
+    Governor automatically executes the proposal: parameter change, contract upgrade, or treasury disbursement. No off-chain step is required.
+  </StyledStep>
+</StyledSteps>
+
+Voting power is **stake-weighted, not headcount-weighted**. An Orchestrator's vote carries the weight of its self-bond plus the LPT delegated to it. Delegators who disagree with their Orchestrator can detach their vote and cast it independently in the same proposal, which makes voting power follow capital rather than custody. The 33 percent quorum and the 50 percent threshold together rule out minority capture: a determined faction holding a third of the stake can block a proposal, but only a majority of participating stake can pass one.
+
+<Tip>Three controls keep governance rational: a 100 LPT proposal stake (anti-spam), a 33 percent quorum (anti-minority-rule), and a Delegator override (anti-custody-capture).</Tip>
+
+The governance contract enforces the outcome automatically. There is no multisig step, no foundation veto, and no off-chain ratification. If a proposal passes the Governor's checks, the change happens on the next round; if it fails, the stake is returned and the protocol is unchanged. This is the property a serious analyst would test for first: the system's rules can only be changed by the same mechanism that runs the system.
+
+The same Governor pattern handles treasury spending, on a separate Governor contract instance with the same parameters. A proposal to allocate funds passes or fails by the same 33/50 rule and the same execution flow. The only operational difference is that a passed treasury proposal triggers an LPT transfer rather than a contract parameter update.
+
+The [**Livepeer Foundation**](/v2/home/about/ecosystem#livepeer-foundation) and the **Special Purpose Entities (SPEs)** that surround it sit outside the on-chain process by design. The Foundation coordinates roadmap discussion, runs governance operations (often through GovWorks-style functions), and helps SPEs scope grant proposals before they reach the Governor. SPEs are the operational arms that actually deploy treasury capital into specific projects: protocol R&D, AI tooling, ecosystem grants, audits. None of them have unilateral authority. Every funding decision still passes through the on-chain vote.
+
+For voting workflows, delegation mechanics, and how to participate as a Delegator, see the [Delegators tab](/v2/Delegators/portal). For the deep mechanics of the Governor contracts, parameter values, and historical LIPs, see <LinkArrow href="/v2/about/protocol/governance-and-treasury" label="Protocol → Governance and Treasury" newline={false} />.
+
+<CustomDivider />
+
+## How value flows
+
+Two value flows run in parallel. They share participants and a token, but they answer different questions.
+
+<DynamicTableV2
+  headerList={["Flow", "Asset", "Source", "Destination", "Question it answers"]}
+  itemsList={[
+    { "Flow": "Work-for-pay", "Asset": "ETH", "Source": "Gateways", "Destination": "Orchestrators and delegators", "Question it answers": "Did this job get done?" },
+    { "Flow": "Inflation incentive", "Asset": "LPT", "Source": "Protocol mint", "Destination": "Orchestrators, delegators, treasury", "Question it answers": "Is the right capital staked to secure the network?" },
+  ]}
+/>
+
+### Flow 1: ETH for work
+
+Buyers (Gateways and the platforms behind them) pre-fund a deposit and a reserve in the [TicketBroker](/v2/about/protocol/blockchain-contracts) contract. For every unit of work an Orchestrator processes, the Gateway issues a signed off-chain ticket with a face value and a small win probability. Most tickets do not win and never touch the chain. The few that do are redeemable on-chain by the Orchestrator, who pulls the face value from the Gateway's reserve. The expected value matches the contracted price; the cost of settlement is roughly one percent of per-job on-chain settlement.
+
+This is the **probabilistic micropayment** design. It is the load-bearing economic primitive that makes streaming-rate compute economics work on a public chain. Without it, the gas cost per job would dwarf the price of the job itself.
+
+<ScrollableDiagram title="ETH work-for-pay flow" maxHeight="500px">
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+flowchart LR
+    Users["End users / apps"] -->|Pay in fiat or crypto| Gateways
+    Gateways -->|Deposit + reserve in ETH| TicketBroker
+    Gateways -->|Off-chain signed tickets| Orch["Orchestrators"]
+    Orch -->|Redeem winning tickets| TicketBroker
+    TicketBroker -->|Transfer ETH| Orch
+    Orch -->|"Fee share %"| Delegators
+```
+</ScrollableDiagram>
+
+When an Orchestrator redeems winning tickets, the ETH lands in its earnings pool. The Orchestrator keeps its configured **Fee Cut** (typically published as the percentage it retains) and the remainder accrues to its Delegators in proportion to their bonded stake. Delegators do not receive ETH automatically; they call `claimEarnings` to crystallise the accrued fees and rewards into withdrawable balance. The mechanic is identical to a dividend with reinvestment optionality.
+
+### Flow 2: LPT inflation as security budget
+
+Each round (roughly one day on Arbitrum), the [Minter](/v2/about/protocol/blockchain-contracts) issues new LPT proportional to the total bonded stake and the current inflation rate. The protocol uses dynamic inflation: when participation is below the target rate, inflation rises to attract more stake; when participation is above target, inflation falls. This is the same insight as Ethereum's PoS issuance curve, applied to a work-token rather than a validator-token.
+
+The freshly minted LPT splits three ways before any operator touches it.
+
+<DynamicTableV2
+  headerList={["Recipient", "Share of new LPT", "Mechanism"]}
+  itemsList={[
+    { "Recipient": "Treasury", "Share of new LPT": "10% (current parameter)", "Mechanism": "Routed inside the reward call before operator distribution per LIP-92" },
+    { "Recipient": "Orchestrators", "Share of new LPT": "Operator-set reward cut on the remainder", "Mechanism": "Retained as commission for running the node" },
+    { "Recipient": "Delegators", "Share of new LPT": "Remainder after operator's reward cut", "Mechanism": "Distributed pro-rata by stake share to that orchestrator" },
+  ]}
+/>
+
+{/* REVIEW: confirm current treasuryRewardCutRate is still 10%. LIP-92 set initial value at 10%; the Protocol → Treasury page currently reads 25% which conflicts. SME: Mehrdad / Rick. */}
+
+The **Reward Cut** and **Fee Cut** parameters are the single most important configuration any Orchestrator publishes. They are the Orchestrator's price for its services as a stake aggregator: a 5 percent Reward Cut keeps 5 percent of the inflation rewards flowing to the Orchestrator's address and sends 95 percent to Delegators. Delegators read these numbers, compare them to performance history, and route their LPT accordingly. Capital follows the spread between commission and reliability, which is the price-discovery mechanism for the Active Set.
+
+### Why the dual-asset model
+
+The choice to settle work in ETH and incentivise security in LPT is the most consequential design decision in the protocol's economics, and it is worth naming explicitly.
+
+<BorderedBox variant="accent">
+**ETH as medium of exchange.** Buyers do not need to acquire LPT to pay for work. They hold the asset they already use for everything else on Ethereum. This collapses the friction of onboarding Gateways and applications: a streaming platform integrating Livepeer does not have to take on an LPT treasury exposure to use the network.
+
+**LPT as work token.** Orchestrators and Delegators stake LPT to participate. The asset's value tracks the right to perform work and earn fees, not the right to hold. This separates the security budget from the payment medium and prevents the failure mode where rising token prices make the network too expensive to use.
+
+**Slashing as the bond.** Stake is forfeitable on protocol violation. Misbehaviour costs the operator and their Delegators directly, with 50 percent of the slashed amount burned and 50 percent routed to the treasury. The bond is the security guarantee that work was done honestly.
+</BorderedBox>
+
+This is the structural difference between Livepeer and a single-token DePIN where the same asset pays for work and secures the network. In a single-token system, the price of the service rises with the token and the security budget is contingent on speculation. In a dual-asset system, the cost of work is dollar-denominated through ETH, and the security budget compounds independently through LPT staking returns.
+
+<CustomDivider />
+
+## The token (LPT)
+
+LPT is a **work token**. It does not entitle the holder to a share of fees by holding alone; it entitles the holder to perform or back work that earns fees. Three functions distinguish it from a generic governance token.
+
+<QuadGrid icon="coins" iconSize={40} gap="0.5rem">
+  <BorderedBox variant="accent">
+    **Stake**
+    Bond LPT to an Orchestrator (your own address or someone else's) to enter the Active Set or to receive a share of the rewards and fees that Orchestrator earns. Stake is the gating mechanism for both running the network and earning from it.
+  </BorderedBox>
+  <BorderedBox variant="accent">
+    **Vote**
+    Bonded LPT confers voting weight in protocol and treasury governance, in proportion to the amount staked. Delegators inherit voting weight from the Orchestrator they bond to and can override that vote at any time.
+  </BorderedBox>
+  <BorderedBox variant="accent">
+    **Slashable bond**
+    Bonded LPT is the collateral that secures honest behaviour. A protocol violation reduces the operator's stake, with the loss split between burn and treasury. Slashing is the cryptoeconomic guarantee behind every job receipt.
+  </BorderedBox>
+  <BorderedBox variant="accent">
+    **Account unit**
+    LPT is the unit of account inside the protocol's reward and slashing accounting. ETH is the medium of exchange for work; LPT is the medium of accounting for participation rights.
+  </BorderedBox>
+</QuadGrid>
+
+The supply curve is dynamic, not fixed. Inflation responds to the participation rate: more bonded supply means lower inflation, less bonded supply means higher inflation, with bounds set by [LIP-100](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0100.md). The holder who does not stake is paying a continuous dilution cost to subsidise those who do, which is the protocol's structural answer to free-riding. The economic effect is identical to a productive bond: yield exists and accrues to the participants who actually do the work of securing the network.
+
+The LPT contract itself lives on Ethereum mainnet for historical and bridge reasons, while staking and protocol activity live on Arbitrum One since the [Confluence migration (LIP-73)](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0073.md). Operators bridge LPT to L2 to participate; the bridge architecture is documented in <LinkArrow href="/v2/about/protocol/architecture" label="Protocol → Architecture" newline={false} />.
+
+For full mechanics including bonding maths, claim flows, and slashing conditions, see <LinkArrow href="/v2/about/protocol/livepeer-token" label="Protocol → Token and Economics" newline={false} />.
+
+<CustomDivider />
+
+## The treasury
+
+The Livepeer Treasury is an on-chain LPT pool, controlled by the same governance vote mechanism as the protocol, deployed at [`0x363cdB9BaE210Ef182c60b5a496139E980330127`](https://arbiscan.io/address/0x363cdB9BaE210Ef182c60b5a496139E980330127#code) on Arbitrum One. It exists to fund public goods: work that benefits the entire network and that no individual operator has the incentive to fund alone.
+
+Funding is automatic and continuous. [LIP-92](https://github.com/livepeer/LIPs/blob/main/LIPs/LIP-0092.md) routes 10 percent of each round's newly minted LPT into the treasury before operator distribution, until the treasury balance reaches a ceiling of 750,000 LPT. {/* REVIEW: 10%/750k LPT are LIP-92 initial values. Confirm whether the treasuryRewardCutRate has been updated by a subsequent LIP. SME: Rick. */} The ceiling is itself governable: when reached, contributions pause and the community must vote to resume them, which forces a periodic re-evaluation of public goods funding rather than indefinite passive accumulation. Two secondary inflows feed the treasury continuously: 50 percent of any slashed LPT, and any remainder when Gateway fee deposits expire unused.
+
+<DynamicTableV2
+  tableTitle="Treasury funding sources"
+  headerList={["Source", "Mechanism", "Cap or trigger"]}
+  itemsList={[
+    { "Source": "Inflation contribution", "Mechanism": "10% of each round's mint, routed pre-distribution", "Cap or trigger": "Pauses at 750,000 LPT balance ceiling per LIP-92" },
+    { "Source": "Slashing penalties", "Mechanism": "50% of slashed LPT (other 50% burned)", "Cap or trigger": "Triggered by protocol violation" },
+    { "Source": "Fee remainders", "Mechanism": "Unredeemed gateway ETH deposits at expiry", "Cap or trigger": "Continuous; tracked on TicketBroker" },
+    { "Source": "Direct LIP transfers", "Mechanism": "Community or multisig deposits via passed proposal", "Cap or trigger": "Per-proposal" },
+  ]}
+/>
+
+Spending requires a passed LIP. The treasury cannot be drawn against by the Foundation, by Orchestrators acting individually, or by any party other than the on-chain Governor, which only acts when a proposal clears the same 33 percent quorum and 50 percent majority that gates protocol changes. Disbursements typically fund SPEs that scope, deliver, and report on specific initiatives: protocol engineering, audits, AI infrastructure, documentation, ecosystem grants. Every transfer is visible on the [treasury explorer](https://explorer.livepeer.org/treasury) and on Arbiscan as a `TreasuryWithdrawal` event.
+
+<Tip>The treasury is an on-chain endowment, not a foundation budget. The Foundation may shape proposals and oversee delivery, but only stakers can authorise spending.</Tip>
+
+For the Foundation's role, the SPE structure, treasury governance details, and historical disbursement patterns, see <LinkArrow href="/v2/about/protocol/governance-and-treasury" label="Protocol → Governance and Treasury" newline={false} />.
+
+<CustomDivider />
+
+## What the design guarantees
+
+A serious analyst evaluating Livepeer's governance and economics ought to test five claims. The protocol answers each of them in code rather than in policy.
+
+<DynamicTableV2
+  headerList={["Test", "Mechanism that addresses it"]}
+  itemsList={[
+    { "Test": "Can the rules be changed without the rule-makers' consent?", "Mechanism that addresses it": "No. The Governor enforces both upgrades and treasury disbursements via stake-weighted vote. There is no admin key, no multisig veto, and no off-chain ratification." },
+    { "Test": "Can a minority block or capture the system?", "Mechanism that addresses it": "Blocking yes, capture no. 33% quorum stops apathy from passing bad proposals; 50% threshold stops a determined minority from passing anything. Delegators can override their orchestrator's vote, breaking custody-as-control." },
+    { "Test": "Is the security budget sustainable without external subsidy?", "Mechanism that addresses it": "Yes. Inflation is paid by holders to stakers, denominated in the network's own asset. The protocol does not depend on venture funding to pay for security." },
+    { "Test": "Does the cost of using the network track the price of speculation in the network?", "Mechanism that addresses it": "No. Buyers pay in ETH at the price of the work, not in LPT at the price of the token. Token appreciation does not raise the cost of the service." },
+    { "Test": "Is there a credible exit for participants who disagree with governance?", "Mechanism that addresses it": "Yes. LPT can be unbonded and sold; orchestrators can leave the active set; the protocol is open-source and forkable; gateways can withdraw deposits and route to alternative infrastructure." },
+  ]}
+/>
+
+The design choices that make these answers stand up are well-trodden in protocol design literature, but the combination is specific. A Compound-style Governor with delegate override is from the DeFi governance lineage. A work-token paid in a separate medium of exchange is from the Stake Capital and Multicoin Capital "work token" thesis. A capped treasury that requires periodic re-authorisation is from public-finance theory rather than from prior protocols. Stack them, and the result is a system that runs on continuous community consent rather than on founder authority or foundation discretion.
+
+The market test is whether participants behave as if these guarantees hold. Two signals are visible on-chain: the Active Set turnover (operators leaving and joining at the margin without governance disruption) and the treasury approval rate (proposals passing or failing through normal voting rather than through political capture). Both are monitorable on the [Livepeer Explorer](https://explorer.livepeer.org). The system is self-documenting in the sense that an external observer can verify its claims without trusting any participant.
+
+<CustomDivider />
+
+## Where to go deeper
+
+<CardGroup cols={2}>
+  <Card title="Token and Economics" icon="coins" href="/v2/about/protocol/livepeer-token" arrow horizontal>
+    Bonding maths, reward and fee accounting, slashing conditions, and the full LPT contract architecture.
+  </Card>
+  <Card title="Governance and Treasury" icon="building-columns" href="/v2/about/protocol/governance-and-treasury" arrow horizontal>
+    Governor contract specification, LIP catalogue, treasury contract details, and the Foundation and SPE structure.
+  </Card>
+  <Card title="Protocol Mechanisms" icon="cogs" href="/v2/about/protocol/mechanisms" arrow horizontal>
+    Probabilistic Micropayments, rounds, the Active Set, and the cryptoeconomic primitives behind the economics described here.
+  </Card>
+  <Card title="Delegators" icon="user-check" href="/v2/delegators/portal" arrow horizontal>
+    How to delegate LPT, how to vote, how to evaluate Orchestrators, and how to participate in governance as a token holder.
+  </Card>
+  <Card title="Livepeer Improvement Proposals" icon="github" href="https://github.com/livepeer/LIPs" arrow horizontal>
+    The full canonical record of every protocol change, including LIP-89 (treasury), LIP-92 (treasury funding), and LIP-73 (Arbitrum migration).
+  </Card>
+  <Card title="Live governance and treasury" icon="chart-line" href="https://explorer.livepeer.org/voting" arrow horizontal>
+    Active proposals, vote results, treasury balance, and disbursement history on the Livepeer Explorer.
+  </Card>
+</CardGroup>

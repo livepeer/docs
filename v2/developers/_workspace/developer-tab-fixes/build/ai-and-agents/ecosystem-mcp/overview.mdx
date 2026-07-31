@@ -1,0 +1,153 @@
+---
+title: 'MCP and Livepeer'
+sidebarTitle: 'Overview'
+description: >-
+  How AI agents and coding tools access Livepeer AI pipelines and documentation
+  through the Model Context Protocol.
+keywords:
+  - livepeer
+  - MCP
+  - Model Context Protocol
+  - AI agents
+  - Cursor
+  - Claude
+  - Windsurf
+  - OpenAI
+  - docs MCP
+  - Mintlify
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The Livepeer docs MCP at docs.livepeer.org/mcp lets Cursor, Claude, and other MCP-compatible tools query this documentation corpus directly, grounding their answers in current Livepeer content.</Tip>
+</CenteredContainer>
+
+---
+
+The Model Context Protocol (MCP) is an open standard for connecting AI applications to external data sources and tools. An MCP server exposes capabilities (tools, resources, prompts) over a standardised JSON-RPC interface that any compatible client (Cursor, Claude Desktop, Windsurf, VS Code Copilot) can connect to.
+
+Livepeer has two relevant MCP surfaces: the documentation MCP served by Mintlify at `docs.livepeer.org/mcp`, which gives AI tools access to this documentation corpus; and the Livepeer AI pipeline REST API, which can be wrapped as an MCP tool server to give agents direct access to inference endpoints.
+
+<CustomDivider />
+
+## Livepeer Docs MCP
+
+The Livepeer documentation site serves an MCP endpoint at `https://docs.livepeer.org/mcp`. This is a Mintlify-provided MCP server that exposes the full documentation corpus as a queryable resource.
+
+Connecting an MCP-compatible tool to this endpoint allows it to search and retrieve current Livepeer documentation before generating responses, reducing hallucination on Livepeer-specific API shapes, configuration flags, and pipeline details.
+
+See <LinkArrow href="/v2/developers/build/ai-and-agents/mcp/docs-mcp" label="Docs MCP" newline={false} /> for connection instructions for Cursor, Claude Desktop, and Windsurf.
+
+<CustomDivider />
+
+## Using Livepeer AI Pipelines as MCP Tools
+
+The Livepeer AI gateway REST API follows standard HTTP conventions. Any MCP server framework can wrap these endpoints as tools, giving agents direct access to inference capabilities.
+
+The `@livepeer/ai` JavaScript SDK and `livepeer-ai` Python SDK cover all nine batch pipelines. An MCP server wrapping either SDK exposes methods like `text_to_image`, `audio_to_text`, and `llm` as callable tools.
+
+The OpenAPI specification at `https://docs.livepeer.org/api/ai-worker.yaml` provides the full schema for all pipeline endpoints and is the canonical source for building an MCP tool wrapper.
+
+A minimal MCP tool server wrapping the text-to-image endpoint looks like this in Python (using the `mcp` SDK):
+
+```python
+from mcp.server import Server
+import mcp.types as types
+import httpx
+
+server = Server("livepeer-ai")
+
+@server.list_tools()
+async def list_tools():
+    return [
+        types.Tool(
+            name="text_to_image",
+            description="Generate an image from a text prompt using the Livepeer network",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "prompt": {"type": "string"},
+                    "model_id": {"type": "string", "default": "ByteDance/SDXL-Lightning"},
+                    "width": {"type": "integer", "default": 1024},
+                    "height": {"type": "integer", "default": 1024},
+                },
+                "required": ["prompt"],
+            },
+        )
+    ]
+
+@server.call_tool()
+async def call_tool(name: str, arguments: dict):
+    if name == "text_to_image":
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(
+                "https://dream-gateway.livepeer.cloud/text-to-image",
+                json=arguments,
+            )
+            data = resp.json()
+            return [types.TextContent(type="text", text=data["images"][0]["url"])]
+```
+
+<CustomDivider />
+
+## llms.txt
+
+The Livepeer documentation exposes an `llms.txt` file at `https://docs.livepeer.org/llms.txt` following the emerging `llms.txt` convention. This file provides a structured index of documentation pages for LLM consumption, formatted for direct inclusion in agent context windows.
+
+Agents and coding tools that support `llms.txt` discovery can use this file to enumerate available Livepeer documentation before querying the docs MCP or constructing their own page-by-page retrieval.
+
+<CustomDivider />
+
+## Related Pages
+
+The [Livepeer Docs MCP](/v2/developers/build/ai-and-agents/ecosystem-mcp/docs-mcp) is the fastest way to query Livepeer documentation from Claude Code, Cursor, or any MCP host.
+
+<CardGroup cols={2}>
+  <Card
+    title="Docs MCP Connection"
+    icon="plug"
+    href="/v2/developers/build/ai-and-agents/mcp/docs-mcp"
+    arrow
+    horizontal
+  >
+    Step-by-step connection instructions for Cursor, Claude Desktop, and Windsurf.
+  </Card>
+  <Card
+    title="AI Pipelines"
+    icon="cpu"
+    href="/v2/developers/build/ai-and-agents/ai-pipelines"
+    arrow
+    horizontal
+  >
+    Endpoint shapes and schemas for the nine batch pipelines available as MCP tools.
+  </Card>
+  <Card
+    title="AI SDKs"
+    icon="code"
+    href="/v2/developers/build/ai-and-agents/ai-sdks-overview"
+    arrow
+    horizontal
+  >
+    JavaScript and Python SDKs that can back an MCP tool server implementation.
+  </Card>
+  <Card
+    title="Agents Overview"
+    icon="robot"
+    href="/v2/developers/build/ai-and-agents/agents/overview"
+    arrow
+    horizontal
+  >
+    Agent frameworks (Eliza, BYOC) that use Livepeer inference with or without MCP.
+  </Card>
+</CardGroup>

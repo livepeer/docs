@@ -1,0 +1,230 @@
+---
+mode: custom
+title: 'Update Contract Addresses (Current Workflow State)'
+sidebarTitle: 'Contracts Workflow Current'
+description: 'Exact current-repo-state documentation for the contracts workflows that run the contracts pipeline.'
+pageType: reference
+purpose: reference
+audience: internal
+status: working
+lastVerified: '2026-04-03'
+keywords:
+  - livepeer
+  - github-actions
+  - contracts
+  - workflow
+  - current state
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Primary workflow** | `.github/workflows/update-contract-addresses.yml` |
+| **Shadow workflow** | `.github/workflows/update-contract-addresses-shadow.yml` |
+| **Type** | `automation` |
+| **Concern** | `content/data/blockchain` |
+| **Current status** | Live repo implementation, not canonical target design |
+| **Current generator entrypoint** | `.github/scripts/fetch-contract-addresses.js` |
+
+<CustomDivider />
+
+## Purpose
+
+These two workflows are the current GitHub Actions wrappers around the contracts pipeline:
+
+- the main workflow runs the pipeline, performs a post-write `--check`, uploads artifacts, and commits changed generated data on success
+- the shadow workflow runs the pipeline in `--check` mode only and uploads artifacts on any outcome
+
+<CustomDivider />
+
+## Current Trigger Contract
+
+### Main workflow
+
+`update-contract-addresses.yml` currently triggers on:
+
+| Trigger | Current value |
+|---|---|
+| `schedule` | `0 2 * * *` |
+| `repository_dispatch` | `governor-scripts-update`, `protocol-update`, `bridge-update`, `go-livepeer-update` |
+| `workflow_dispatch` | manual run with inputs |
+
+### Shadow workflow
+
+`update-contract-addresses-shadow.yml` currently triggers on:
+
+| Trigger | Current value |
+|---|---|
+| `schedule` | `30 2 * * *` |
+| `repository_dispatch` | `governor-scripts-update`, `protocol-update`, `bridge-update`, `go-livepeer-update` |
+| `workflow_dispatch` | manual run with inputs |
+
+<CustomDivider />
+
+## Current Manual Inputs
+
+### Main workflow inputs
+
+| Input | Type | Default | Current behavior |
+|---|---|---|---|
+| `dry_run` | boolean | `false` | Adds `--dry-run` to the CLI flags |
+| `skip_verify` | boolean | `false` | Adds `--skip-verify` to the CLI flags |
+| `use_test_branch` | boolean | `false` | Chooses `vars.TEST_BRANCH` instead of `vars.DEPLOY_BRANCH` for checkout |
+
+### Shadow workflow inputs
+
+| Input | Type | Default | Current behavior |
+|---|---|---|---|
+| `skip_verify` | boolean | `false` | Adds `--skip-verify` to the CLI flags |
+| `use_test_branch` | boolean | `true` | Chooses `vars.TEST_BRANCH` instead of `vars.DEPLOY_BRANCH` for checkout on manual runs |
+
+<CustomDivider />
+
+## Current Job Steps
+
+### Main workflow current step order
+
+1. Checkout the docs repo.
+2. Set up Node.js `20`.
+3. Run `npm ci --prefix operations`.
+4. Run `node .github/scripts/fetch-contract-addresses.js` with optional `--dry-run` and `--skip-verify`.
+5. If generation succeeded, run `node .github/scripts/fetch-contract-addresses.js --check` with optional `--skip-verify`.
+6. Upload pipeline artifacts.
+7. If generation failed, create or update a GitHub issue from `contract-pipeline-issue-payload.json`.
+8. Fail the workflow if generation failed.
+9. If generation succeeded, detect whether the repo changed.
+10. If files changed and the run was not `dry_run`, commit and push the six generated files.
+
+### Shadow workflow current step order
+
+1. Checkout the docs repo.
+2. Set up Node.js `20`.
+3. Run `npm ci --prefix operations`.
+4. Run `node .github/scripts/fetch-contract-addresses.js --check` with optional `--skip-verify`.
+5. Upload pipeline artifacts.
+6. If the check failed, create or update a GitHub issue from `contract-pipeline-issue-payload.json`.
+7. Fail the workflow if the check failed.
+
+<CustomDivider />
+
+## Current Checkout And Branch Behavior
+
+The current checkout expression in both workflows is:
+
+```yaml
+ref: ${{ inputs.use_test_branch == 'true' && vars.TEST_BRANCH || vars.DEPLOY_BRANCH }}
+```
+
+Current implications:
+
+- manual runs can choose `TEST_BRANCH` through `use_test_branch`
+- the YAML does not define a separate scheduled ref path
+- scheduled and `repository_dispatch` runs do not provide manual inputs, so the current workflow text does not explicitly force `TEST_BRANCH` on those event types
+
+<CustomDivider />
+
+## Current Secrets And Permissions
+
+### Main workflow
+
+**Permissions**
+
+- `contents: write`
+- `issues: write`
+
+**Secrets / env**
+
+- `GITHUB_TOKEN`
+- `ARBISCAN_API_KEY`
+- `ETHERSCAN_API_KEY`
+- `ARBITRUM_RPC_URL`
+- `ARBITRUM_RPC_FALLBACK_URL`
+- `ETHEREUM_RPC_URL`
+- `ETHEREUM_RPC_FALLBACK_URL`
+
+### Shadow workflow
+
+**Permissions**
+
+- `contents: read`
+- `issues: write`
+
+**Secrets / env**
+
+- `GITHUB_TOKEN`
+- `ARBISCAN_API_KEY`
+- `ETHERSCAN_API_KEY`
+- `ARBITRUM_RPC_URL`
+- `ARBITRUM_RPC_FALLBACK_URL`
+- `ETHEREUM_RPC_URL`
+- `ETHEREUM_RPC_FALLBACK_URL`
+
+<CustomDivider />
+
+## Current Artifacts And Commit Behavior
+
+### Current uploaded artifacts
+
+The main workflow uploads:
+
+- `snippets/data/contract-addresses/_health-checks.json`
+- `snippets/data/contract-addresses/_branch-watch-state.json`
+- `workspace/reports/contracts/contract-pipeline-anomaly-report.json`
+- `workspace/reports/contracts/contract-pipeline-anomaly-report.md`
+- `workspace/reports/contracts/contract-pipeline-issue-payload.json`
+
+The shadow workflow uploads:
+
+- `snippets/data/contract-addresses/_health-checks.json`
+- `workspace/reports/contracts/contract-pipeline-anomaly-report.json`
+- `workspace/reports/contracts/contract-pipeline-anomaly-report.md`
+- `workspace/reports/contracts/contract-pipeline-issue-payload.json`
+
+### Current commit step
+
+The main workflow currently commits:
+
+- `snippets/data/contract-addresses/contractAddressesData.jsx`
+- `snippets/data/contract-addresses/contractAddressesData.json`
+- `snippets/data/contract-addresses/blockchainContractsPageData.jsx`
+- `snippets/data/contract-addresses/blockchainContractsPageData.json`
+- `snippets/data/contract-addresses/_health-checks.json`
+- `snippets/data/contract-addresses/_branch-watch-state.json`
+
+Current commit message:
+
+```text
+chore(contracts): refresh verified contract registry
+```
+
+The shadow workflow never commits.
+
+<CustomDivider />
+
+## Current Failure Behavior
+
+### Main workflow
+
+- The generate step runs with `continue-on-error: true`.
+- A failed generate step can still upload artifacts and create or update an issue.
+- The workflow then fails explicitly in `Fail on blocking contracts incident`.
+- The post-write `--check` step only runs when the generate step succeeded.
+
+### Shadow workflow
+
+- The check step runs with `continue-on-error: true`.
+- A failed shadow check can still upload artifacts and create or update an issue.
+- The workflow then fails explicitly in `Fail on blocking contracts incident`.
+
+<CustomDivider />
+
+## Current Workflow Facts Worth Preserving
+
+- The main workflow already uses daily cadence.
+- The main workflow already supports `schedule`, `repository_dispatch`, and `workflow_dispatch`.
+- The main workflow already uses a post-write `--check`.
+- The shadow workflow is a pure `--check` runner.
+- The current workflow contract does not expose cadence configuration through the script or workflow inputs.

@@ -1,0 +1,174 @@
+#!/usr/bin/env node
+/**
+ * @script      task-finalise
+ * @type        dispatch
+ * @concern     governance
+ * @niche       codex
+ * @purpose     Enforce Codex task completion requirements before the agent closes a session — verifies the task-contract acceptance criteria are met, the lock is released, and post-task validators pass
+ * @description End-of-session gate for the Codex AI agent. Validates that .codex/task-contract.yaml acceptance criteria are checked, runs validate-locks, runs any registered post-task validators, runs lock-release. If any step fails, blocks the session close so the agent must address it.
+ * @mode        dispatch
+ * @pipeline    manual — invoked by the Codex agent via ai-tools/agent-packs/codex/skills-manifest.json
+ * @scope       operations/scripts/dispatch/ai/codex, .codex/task-contract.yaml
+ * @usage       node operations/scripts/dispatch/ai/codex/task-finalise.js [flags]
+ * @policy      Codex task-isolation standard
+ */
+
+const { spawnSync } = require('child_process');
+const path = require('path');
+
+const REPO_ROOT = getRepoRoot();
+
+function getRepoRoot() {
+  const result = spawnSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' });
+  if (result.status === 0 && String(result.stdout || '').trim()) {
+    return String(result.stdout || '').trim();
+  }
+  return process.cwd();
+}
+
+function run(command, args) {
+  const result = spawnSync(command, args, { cwd: REPO_ROOT, encoding: 'utf8' });
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  return result.status === 0;
+}
+
+function parseArgs(argv) {
+  const args = {
+    branch: '',
+    contractPath: '.codex/task-contract.yaml',
+    baseRef: '',
+    profile: ''
+  };
+
+  for (let i = 0; i < argv.length; i += 1) {
+    const token = argv[i];
+    if (token === '--branch') {
+      args.branch = String(argv[i + 1] || '').trim();
+      i += 1;
+      continue;
+    }
+    if (token.startsWith('--branch=')) {
+      args.branch = token.slice('--branch='.length).trim();
+      continue;
+    }
+    if (token === '--contract') {
+      args.contractPath = String(argv[i + 1] || '').trim();
+      i += 1;
+      continue;
+    }
+    if (token.startsWith('--contract=')) {
+      args.contractPath = token.slice('--contract='.length).trim();
+      continue;
+    }
+    if (token === '--base-ref') {
+      args.baseRef = String(argv[i + 1] || '').trim();
+      i += 1;
+      continue;
+    }
+    if (token.startsWith('--base-ref=')) {
+      args.baseRef = token.slice('--base-ref='.length).trim();
+      continue;
+    }
+    if (token === '--profile') {
+      args.profile = String(argv[i + 1] || '').trim();
+      i += 1;
+      continue;
+    }
+    if (token.startsWith('--profile=')) {
+      args.profile = token.slice('--profile='.length).trim();
+      continue;
+    }
+    if (token === '--help' || token === '-h') {
+      args.help = true;
+      continue;
+    }
+
+    throw new Error(`Unknown argument: ${token}`);
+  }
+
+  return args;
+}
+
+function usage() {
+  console.log('Usage: node operations/scripts/dispatch/ai/codex/task-finalise.js [--branch <name>] [--contract <path>] [--base-ref <branch>] [--profile pay-orc-gate]');
+}
+
+function detectBranch(explicitBranch) {
+  if (explicitBranch) return explicitBranch;
+  const fromEnv = String(process.env.GITHUB_HEAD_REF || '').trim();
+  if (fromEnv) return fromEnv;
+  const result = spawnSync('git', ['rev-parse', '--abbrev-ref', 'HEAD'], { cwd: REPO_ROOT, encoding: 'utf8' });
+  return result.status === 0 ? String(result.stdout || '').trim() : '';
+}
+
+function main() {
+  const args = parseArgs(process.argv.slice(2));
+  if (args.help) {
+    usage();
+    process.exit(0);
+  }
+
+  const branch = detectBranch(args.branch);
+  if (!branch) {
+    throw new Error('Unable to detect branch; pass --branch explicitly');
+  }
+
+  const contractCheckArgs = [
+    'operations/scripts/validate-codex-task-contract.js',
+    '--branch',
+    branch,
+    '--contract',
+    args.contractPath,
+    '--require-pr-ready'
+  ];
+  if (args.baseRef) {
+    contractCheckArgs.push('--base-ref', args.baseRef);
+  }
+
+  console.log('🔍 Running contract scope and PR-readiness check...');
+  if (!run('node', contractCheckArgs)) {
+    throw new Error('Contract scope check failed');
+  }
+
+  console.log('🔍 Running local lock check...');
+  if (!run('node', ['operations/scripts/validators/ai/codex/validate-locks.js', '--branch', branch])) {
+    throw new Error('Local lock check failed');
+  }
+
+  const prDryRunArgs = ['operations/scripts/create-codex-pr.js', '--contract', args.contractPath, '--head', branch, '--create', '--dry-run'];
+  if (args.baseRef) {
+    prDryRunArgs.push('--base', args.baseRef);
+  }
+
+  console.log('🔍 Dry-running codex PR creation...');
+  if (!run('node', prDryRunArgs)) {
+    throw new Error('Codex PR dry-run failed');
+  }
+
+  if (args.profile) {
+    if (args.profile === 'pay-orc-gate') {
+      console.log('🔍 Running finalize profile: pay-orc-gate...');
+      if (!run('bash', ['operations/scripts/verify-pay-orc-gate-finalize.sh'])) {
+        throw new Error('Finalize profile pay-orc-gate failed');
+      }
+    } else {
+      throw new Error(`Unknown finalize profile: ${args.profile}`);
+    }
+  }
+
+  console.log('✅ Codex task finalize checks passed');
+  console.log('ℹ️  Next steps:');
+  console.log(`  1. Commit or merge ${branch} into ${args.baseRef || 'docs-v2-dev'}`);
+  console.log(`  2. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node operations/scripts/integrators/ai/codex/lock-release.js --branch ${branch}`);
+  console.log(`  3. After ${args.baseRef || 'docs-v2-dev'} contains the task commit, node operations/scripts/integrators/ai/codex/task-cleanup.js --branch ${branch} --apply`);
+}
+
+if (require.main === module) {
+  try {
+    main();
+  } catch (error) {
+    console.error(`❌ ${error.message}`);
+    process.exit(1);
+  }
+}

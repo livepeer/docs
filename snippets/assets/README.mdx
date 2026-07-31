@@ -1,31 +1,43 @@
-Assets Folder Structure:
+# Assets Folder Structure
 
-These assets are organised **By Type** and **By Domain**
+`snippets/assets/` is in transition from the older location-based layout to the newer asset-type taxonomy.
 
-**By Type:** General-purpose assets used across the site (logos, icons, images, videos, data).
+The `/site` phase is complete:
 
-**By Domain:** Page-specific assets organised by documentation section.
+- favicon assets now live in `logos/favicon/`
+- generated OG output now lives in `media/og-images/`
+- site-scoped images now live in `media/images/site/`
+- canonical `sitemap-ai.xml` lives at repo root, not inside `snippets/assets/`
 
-```bash
+The `/domain` phase is not complete yet. `domain/` remains on disk while the audit in `snippets/_workspace/audit.md` determines what should move and what should be archived.
+
+## Current Structure
+
+```text icon="terminal" title="snippets/assets current structure"
 assets/
-├── logos/                    # Brand logos and symbols
-│   ├── Livepeer-Logo-Symbol.svg
-│   ├── Livepeer-Logo-Symbol-Light.svg
-│   └── Livepeer-Logo-Symbol-Theme.svg # Auto-switches dark/light mode colour
-├── media/                    # General media assets
-│   ├── icons/                # Reusable custom icons
-│   ├── images/               # Reusable images
-│   └── videos/               # Reusable videos
-└── domain/                   # Domain-specific assets by section
-    ├── SHARED/               # Assets shared across sections
-    ├── SITE/                 # Site-wide assets (favicon, etc.)
-    ├── 00_HOME/
-    ├── 01_ABOUT/
-    ├── 02_COMMUNITY/
-    ├── 03_DEVELOPERS/
-    ├── 04_GATEWAYS/
-    ├── 05_ORCHESTRATORS/
-    ├── 06_TOKEN/
-    ├── 07_REFERENCES/
-    └── 08_OTHER/
+├── README.mdx
+├── decision-log.mdx
+├── data/
+├── domain/                   # legacy, audit-only until phase 2
+├── logos/
+│   ├── Arbitrum/
+│   ├── favicon/              # canonical favicon bundle
+│   └── products/
+├── media/
+│   ├── heros/
+│   ├── images/
+│   │   ├── showcase/
+│   │   └── site/             # layered image, UK flag
+│   ├── og-images/            # canonical generated OG output
+│   └── videos/
+└── scripts/
+    └── n8n/
 ```
+
+## Canonical Rules
+
+- Do not recreate `site/`.
+- Put browser favicon assets in `logos/favicon/`.
+- Put generated OG assets in `media/og-images/`.
+- Put site-only images in `media/images/site/`.
+- Treat `domain/` as frozen pending the approved phase-two audit.

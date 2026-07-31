@@ -1,0 +1,79 @@
+# type: validator
+# concern: health
+# pipeline: P3
+name: WCAG Accessibility Check
+
+on:
+  pull_request:
+    paths:
+      - 'v2/**/*.mdx'
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "Scope"
+        required: false
+        type: choice
+        default: 'staged'
+        options:
+          - staged
+          - full
+      fail_impact:
+        description: "Block on findings at or above this impact"
+        required: false
+        type: choice
+        default: 'serious'
+        options:
+          - minor
+          - moderate
+          - serious
+          - critical
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-wcag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd tools && npm ci
+
+      - name: Resolve scope
+        id: scope
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            FILES=$(git diff --name-only "$BASE_SHA" HEAD -- 'v2/*.mdx' 'v2/**/*.mdx' | tr '\n' ',' | sed 's/,$//')
+            echo "scope=files" >> "$GITHUB_OUTPUT"
+            echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          else
+            echo "scope=${{ inputs.scope || 'staged' }}" >> "$GITHUB_OUTPUT"
+            echo "files=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run WCAG validator
+        if: steps.scope.outputs.scope == 'files' && steps.scope.outputs.files != ''
+        run: |
+          node operations/scripts/validators/content/health/check-wcag.js \
+            --files "${{ steps.scope.outputs.files }}" \
+            --fail-impact "${{ inputs.fail_impact || 'serious' }}"
+
+      - name: Run WCAG validator (full / staged fallback)
+        if: steps.scope.outputs.scope != 'files'
+        run: |
+          node operations/scripts/validators/content/health/check-wcag.js \
+            --${{ steps.scope.outputs.scope }} \
+            --fail-impact "${{ inputs.fail_impact || 'serious' }}"

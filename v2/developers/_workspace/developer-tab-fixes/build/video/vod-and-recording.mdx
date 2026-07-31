@@ -1,0 +1,168 @@
+---
+title: 'Video on Demand'
+sidebarTitle: 'VOD'
+description: >-
+  Upload and transcode video-on-demand assets on Livepeer: direct upload,
+  upload via URL, transcoding profiles, and retrieving playback URLs.
+keywords:
+  - livepeer
+  - VOD
+  - video on demand
+  - asset upload
+  - transcoding
+  - HLS
+  - playback
+  - livepeer SDK
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>VOD assets transcode asynchronously. Poll asset.status.phase or use the asset.updated webhook to detect when transcoding completes and the playbackUrl is ready.</Tip>
+</CenteredContainer>
+
+---
+
+VOD assets on Livepeer are video files that the network transcodes into ABR HLS for playback. Upload a source file or provide a URL; Livepeer produces a set of renditions and a playback URL usable with any HLS player or the `@livepeer/react` Player component.
+
+<CustomDivider />
+
+## Upload via URL
+
+The simplest path is upload-via-URL. Livepeer fetches the source, transcodes it, and makes the output available at a playback URL:
+
+```javascript
+import { Livepeer } from 'livepeer';
+
+const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+const { asset } = await client.asset.createViaUrl({
+  name: 'conference-talk-2026',
+  url: 'https://storage.example.com/source.mp4',
+  staticMp4: false,
+});
+
+console.log(asset.id);
+console.log(asset.status.phase);  // 'waiting' | 'processing' | 'ready' | 'failed'
+```
+
+## Direct Upload
+
+For files on the client, request an upload URL first, then PUT the file:
+
+```javascript
+const { url, asset } = await client.asset.createUploadUrl({
+  name: 'my-video',
+  playbackPolicy: { type: 'public' },
+});
+
+// PUT the file to the pre-signed URL
+await fetch(url, {
+  method: 'PUT',
+  body: fileBlob,
+  headers: { 'Content-Type': 'video/mp4' },
+});
+```
+
+<CustomDivider />
+
+## Polling for Completion
+
+Transcoding is asynchronous. Poll asset status:
+
+```javascript
+async function waitForAsset(assetId) {
+  while (true) {
+    const { asset } = await client.asset.get(assetId);
+    if (asset.status.phase === 'ready') return asset;
+    if (asset.status.phase === 'failed') throw new Error(asset.status.errorMessage);
+    await new Promise(r => setTimeout(r, 3000));
+  }
+}
+
+const ready = await waitForAsset(asset.id);
+console.log(ready.playbackUrl);   // https://livepeercdn.com/hls/<playbackId>/index.m3u8
+```
+
+Or subscribe to the `asset.updated` webhook to avoid polling.
+
+<CustomDivider />
+
+## Playback URL
+
+Once `asset.status.phase === 'ready'`, the asset has a `playbackUrl` and a `playbackId`. Pass `playbackId` to the `@livepeer/react` Player:
+
+```jsx
+import { Player } from '@livepeer/react';
+
+export function VideoPlayer({ playbackId }) {
+  return (
+    <Player
+      playbackId={playbackId}
+      showTitle={false}
+      muted
+    />
+  );
+}
+```
+
+The Player handles ABR selection, HLS parsing, and WebRTC fallback automatically. For non-React environments, the HLS manifest at `playbackUrl` works with hls.js or any ABR player.
+
+<CustomDivider />
+
+## Updating and Deleting Assets
+
+Rename or update asset metadata:
+
+```javascript
+await client.asset.update(asset.id, {
+  name: 'conference-talk-revised',
+  storage: { ipfs: false },
+});
+```
+
+Delete an asset:
+
+```javascript
+await client.asset.delete(asset.id);
+```
+
+List all assets:
+
+```javascript
+const { assets } = await client.asset.getAll({
+  limit: 50,
+  order: 'desc',
+});
+```
+
+<CustomDivider />
+
+VOD assets transcode asynchronously. Poll `asset.status.phase` or use the `asset.updated` webhook to detect when the playback URL is ready.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest" arrow horizontal>
+    Live stream ingest for creating assets from recorded streams.
+  </Card>
+  <Card title="Player" icon="play" href="/v2/developers/build/applications/player" arrow horizontal>
+    @livepeer/react Player component for embedding VOD playback.
+  </Card>
+  <Card title="Video Overview" icon="grid" href="/v2/developers/build/video/overview" arrow horizontal>
+    Access paths and workload comparison for Livepeer video.
+  </Card>
+  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding" arrow horizontal>
+    Direct segment transcoding for custom media server integrations.
+  </Card>
+</CardGroup>

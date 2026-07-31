@@ -1,0 +1,297 @@
+---
+title: "Content Writing Pipeline"
+sidebarTitle: "Content Writing"
+description: >-
+  Canonical framework for writing and reviewing v2/ documentation pages. Page
+  taxonomy, voice rules, the 9-stage project pipeline, and how the per-page
+  review pipeline fits in. Verified against live workspace state on 2026-05-23.
+keywords:
+  - content writing
+  - page taxonomy
+  - content pipeline
+  - voice rules
+  - documentation authoring
+authority: framework
+consumer: [human, agent]
+maintenance: hand-maintained
+status: current
+lastVerified: 2026-05-23
+sourceDocs:
+  - workspace/plan/active/_MY_PROCESS/my-process.mdx
+  - workspace/plan/active/master-checks.mdx
+  - workspace/plan/active/CONTENT-WRITING/plan-canonical.md
+  - workspace/plan/active/CONTENT-WRITING/Frameworks/content-pipeline-framework.md
+  - workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md
+  - v2/orchestrators/_workspace/canonical/Frameworks.mdx
+owner: "@livepeer/docs-team"
+scope: "v2/**/*.mdx"
+pageType: reference
+audience: developer
+purpose: reference
+---
+
+# Content Writing Pipeline
+
+How a v2/ documentation page goes from "needed" to "published". Two pipelines run in sequence:
+
+1. **The project pipeline (this page)** – 9 stages, applies to a tab or a section of the docs. Takes a tab from "audience defined" to "all pages shipped."
+2. **The per-page review pipeline ([Checks Framework](./checks-framework.mdx))** – 11 phases, applies to a single page once written. Takes a page from "drafted" to "approved for publication."
+
+The project pipeline writes the pages. The review pipeline ships them. Neither phase ships without the prior phase's human sign-off recorded in [`workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md).
+
+<Note>
+**Where this pipeline canonical lives.** The full project execution plan ([997 lines](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/plan-canonical.md)) and per-stage tooling live under `workspace/plan/active/_MY_PROCESS/` + `workspace/plan/active/CONTENT-WRITING/`. This page is the published reference. Locked structural decisions (D-NAV-01 currently) live in the [decision-registry](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md). Per-tab gate status lives in [`tab-status.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md). **As of 2026-05-23, no tab has IA Approved – all 5 are stuck at Phase 2 or earlier.**
+</Note>
+
+---
+
+## Page taxonomy
+
+Every routable v2/ page declares 10 frontmatter fields. The enumerations below are canonical.
+
+### `pageType` (7 primary)
+
+| Type | Job |
+| --- | --- |
+| `navigation` | Route the reader. Portals, tab landings, section roots. No instructional content; routing only. |
+| `concept` | Explain how a mechanism works. Exit state: reader can describe or reason about X (not "do X"). |
+| `tutorial` | End-to-end guided learning. Prerequisites + ordered verifiable steps + outcome statement. |
+| `guide` | Opinionated guidance for a specific outcome. Takes a position; no step-by-step procedures as primary content. |
+| `instruction` | Step-by-step procedure. Prerequisites + numbered steps + verification step + next steps. |
+| `reference` | Structured lookup. Tables, ParamField, ResponseField. Highest factual standard. |
+| `resource` | Curated discovery. Tools, directories, showcases, community channels. |
+
+### `pageVariant` (refines pageType)
+
+| pageType | Allowed variants |
+| --- | --- |
+| `navigation` | `portal`, `landing` |
+| `concept` | `overview` |
+| `tutorial` | `overview` |
+| `guide` | `overview` |
+| `instruction` | `overview`, `quickstart`, `setup` |
+| `reference` | `overview`, `specification`, `compendium`, `changelog` |
+| `resource` | `overview`, `knowledge-hub` |
+
+`overview` is a cross-type variant for entry/orientation pages within a section. `knowledge-hub` is the resource variant for external/community content (no instructional content mixed in).
+
+### `audience` (7 tokens)
+
+| Token | Who | Arriving question |
+| --- | --- | --- |
+| `founder` | Evaluating Livepeer for their product/business | "Is Livepeer right for my product?" |
+| `builder` | Building products via APIs/SDKs/hosted gateways | "How do I add Livepeer to my app?" |
+| `developer` | Building custom pipelines, BYOC, protocol extensions | "How do I build something on the network?" |
+| `gateway` | Running gateway infrastructure | "How do I set up and run a gateway?" |
+| `orchestrator` | Running compute nodes | "How do I set up, run, and earn with a node?" |
+| `delegator` | Staking LPT | "How do I stake and participate?" |
+| `community` | Ecosystem, governance, newcomers, researchers | "How do I get involved?" |
+
+`founder` → `builder` → `developer` → `gateway` is the documented graduation path. Per-persona refinements (e.g. builder `[studio, ai]`, orchestrator `[operator, commercial]`) are an optional array field; full enumeration in the [content-pipeline-framework](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/Frameworks/content-pipeline-framework.md).
+
+### `purpose` (15 intent-based values)
+
+`orient` · `explain` · `learn` · `choose` · `evaluate` · `start` · `build` · `configure` · `operate` · `troubleshoot` · `verify` · `integrate` · `optimise` · `reference` · `update`
+
+**Deprecated aliases that still appear in some files but should not be authored:** `landing` → use `orient`. `overview` → use `orient`. `orientation` → use `orient`. `setup` → use `configure`. `how_to` → use `build` or `configure`. `operations` → use `operate`. `tutorial` → use `learn`. `evaluation` → use `choose`. `decision` → use `choose`. `faq`, `glossary` → use `reference`. `changelog` → use `update`. `troubleshooting` → use `troubleshoot`.
+
+### Information types (9, section-level)
+
+`factual` · `conceptual` · `procedural` · `analytical` · `evaluative` · `structural` · `change` · `narrative` · `technical`
+
+**Information type is section-level**, identified by the author at runtime per section. It is not a frontmatter field. The veracity standard that applies to each section is derived from its information type:
+
+| Info type | Veracity standard |
+| --- | --- |
+| `factual`, `technical`, `change` | very high |
+| `procedural` | high |
+| `structural`, `analytical`, `evaluative` | medium |
+| `conceptual`, `narrative` | lower |
+
+### Other frontmatter fields
+
+| Field | Values | Notes |
+| --- | --- | --- |
+| `veracityStatus` | `verified` · `unverified` · `stale` | Set after Phase 6 (veracity pass). |
+| `complexity` | `beginner` · `intermediate` · `advanced` | |
+| `lifecycleStage` | `discover` · `evaluate` · `setup` · `build` · `operate` · `troubleshoot` · `optimise` | |
+| `industry` | array max 2: `technical` · `finance` · `economics` · `business` · `marketing` · `governance` · `broadcast` · `AI` · `livepeer` | First entry dominates. |
+| `niche` | array: `web3` · `protocol` · `tokenomics` · `AI` · `video` · `streaming` · `hardware` · `infrastructure` | |
+| `lastVerified` | `YYYY-MM-DD` | Updated on review pass. |
+| `status` | `draft` · `current` · `published` · `deprecated` · `retired` | `current` only after all REVIEW markers cleared. |
+
+The full required minimum frontmatter for every routable page is documented in [`docs-guide/standards/frontmatter.mdx`](../standards/frontmatter.mdx) and enforced (advisory) by the per-page review pipeline.
+
+---
+
+## Voice and copy
+
+UK English throughout. The full canonical rules – banned words, banned phrases, banned constructions, opening order, paragraph discipline, per-audience extensions, heading rules, domain terminology – live in [`docs-guide/standards/voice-and-copy.mdx`](../standards/voice-and-copy.mdx).
+
+Working source with full per-audience prohibited-phrase lists: [`workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md).
+
+---
+
+## The 9-stage project pipeline
+
+This pipeline applies to a whole tab (or a section of one). Each stage has a human gate; the next stage cannot start until the prior gate is opened in `tab-status.md`.
+
+Canonical source: [`workspace/plan/active/_MY_PROCESS/my-process.mdx`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/_MY_PROCESS/my-process.mdx). Full per-stage inventory (with usefulness scores per item) lives in [`_MY_PROCESS/index.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/_MY_PROCESS/index.md).
+
+| # | Stage | What it produces | Primary tools | Gate artefact |
+| --- | --- | --- | --- | --- |
+| 1 | **Personas, Audience & Journey** | Primary personas + arriving questions + JTBDs + section structure per tab | `Prompts/Prompts-By-Phase/1-audience-design/audience-design-v5.md` + `pack-guide.md` + per-tab `veracity-sources.md`/`glossary-{tab}.md` | Phase 1 audience-design output per tab |
+| 2 | **IA section structuring** | Tab-level IA: page hierarchy, predecessor/successor links, persona paths | `Prompts/Prompts-By-Phase/2-structure-audit/structure-audit.md` + `content-scan.md` + `content-pipeline-tab-map` skill | `v2/{tab}/_workspace/tab-map.mdx` (NOT YET CREATED for any tab – see Gaps) |
+| 3 | **Current content mapping + gaps** | Content inventory per tab, dispositions (KEEP / MOVE / MERGE / SPLIT / REWRITE / DROP), gap report, terminology lock | `Prompts/Prompts-By-Phase/2-content-scan/content-scan.md`; sub-phases 3.a research, 3.b veracity, 3.c terminology extractor | `context-packs/{tab}-content-scan.md` (exists for 3 of 5 tabs) |
+| 4 | **IA pages structuring + journeys** | Per-page brief: purpose, sections, info type per section, frontmatter, journey position | `Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` (REVIEW/WRITE/REWRITE/AUDIT modes) + `Frameworks/Frameworks.mdx` taxonomy | Approved per-page brief in `_workspace/canonical/REVIEW-REGISTRY.md` |
+| 5 | **Find information + place** | Content sources mapped to page + section, gap pages identified | `content-pipeline-tab-map` skill; `docs-coverage-and-route-integrity-audit` skill; `docs-quality-and-freshness-audit` skill | Per-tab gap report |
+| 6 | **Copy writing + content fill** | Page draft with content (markdown layer, no MDX components yet) | [`page-authoring`](https://github.com/livepeer/docs/blob/docs-v2-dev/ai-tools/ai-skills/page-authoring/SKILL.md) skill; [`content-pipeline-pass-a`](https://github.com/livepeer/docs/blob/docs-v2-dev/ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md) skill; `Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` WRITE mode; [`docs-copy`](https://github.com/livepeer/docs/blob/docs-v2-dev/ai-tools/ai-skills/docs-copy/SKILL.md) skill | Page draft saved to `_workspace/drafts/` |
+| 7 | **Review copy against purpose + voice** | Quality verdict (PASS / NEEDS WORK / REWRITE REQUIRED) + prioritised fix list | [Checks Framework](./checks-framework.mdx) Phases 0–6 (per-page review pipeline) | Review packet from `docs-review-packet-generation` |
+| 8 | **Layout + style** | Production MDX file with components, frontmatter, template, render-validated | [`content-pipeline-pass-b`](https://github.com/livepeer/docs/blob/docs-v2-dev/ai-tools/ai-skills/content-pipeline-pass-b/SKILL.md) skill; `Prompts/Prompts-By-Phase/4-layout-pass/layout-pass.md`; `component-layout-governance` skill | Page MDX rendered locally without error |
+| 9 | **Human review + style refinement** | Approved, published page | [Checks Framework](./checks-framework.mdx) Phase 10 (human sign-off); `rubric-static-review` skill; `repo-audit-orchestrator` skill | Page in `v2/` with `status: current`; gate ✅ in `tab-status.md` |
+
+**Stage 7 = Phases 0–6 of the per-page review pipeline. Stage 8 = Phase 7 of the per-page review pipeline. Stage 9 = Phase 10.** The two pipelines interlock at these points.
+
+---
+
+## Locked decisions
+
+| ID | Decision | Applies to | Date | Source |
+| --- | --- | --- | --- | --- |
+| D-NAV-01 | `pageType: navigation` disambiguation page is a locked cross-tab pattern – one file per tab, shared entry point for all paths, all downstream sections reference it. | All tabs with multiple setup paths (Orchestrators confirmed; applies to Gateways, Developers, any other multi-path tab) | 2026-03-23 | [`decision-registry.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md) |
+
+**No phase may consume a decision that is not in this registry.** Decisions made in chat that are not written here do not exist. Proposals and open items go in [`blocking-items.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/decisions/blocking-items.md), not the registry.
+
+---
+
+## Current state (as of 2026-05-23)
+
+Per [`tab-status.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md):
+
+| Tab | IA Approved | Terminology Locked | Content Scan Done | Structure Approved | Content Pass Open | Veracity Done | Layout Done |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Gateways | ⬜ | ⬜ | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Orchestrators | ⬜ | ⬜ | 🔄 | ⬜ | ⬜ | ⬜ | ⬜ |
+| Developers | ⬜ | ⬜ | 🔄 | ⬜ | ⬜ | ⬜ | ⬜ |
+| About | ⬜ | ⬜ | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Delegators | ⬜ | ⬜ | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+Legend: ⬜ not started · 🔄 in progress · ✅ human-approved.
+
+**Zero tabs have IA Approved.** The project pipeline is stalled at Phase 2 or earlier across the entire docs estate. A tab is only "open" for the next phase when its gate is explicitly unlocked by human sign-off recorded in `decision-registry.md`. Agents may not proceed past a locked gate.
+
+---
+
+## Supporting infrastructure
+
+The full inventory lives in [`_MY_PROCESS/index.md`](https://github.com/livepeer/docs/blob/docs-v2-dev/workspace/plan/active/_MY_PROCESS/index.md) – every item per stage with usefulness score, status, and known issues. Summary by category:
+
+### AI skills (live as of 2026-05-23)
+
+| Skill | Stage | Status | Lives at |
+| --- | --- | --- | --- |
+| `page-authoring` | 6 (write) | tested, mature | `ai-tools/ai-skills/page-authoring/SKILL.md` |
+| `content-pipeline-pass-a` | 6 (write) + 7 (review content layer) | tested, mature | `ai-tools/ai-skills/content-pipeline-pass-a/SKILL.md` |
+| `content-pipeline-pass-b` | 8 (layout) | tested, mature | `ai-tools/ai-skills/content-pipeline-pass-b/SKILL.md` |
+| `content-pipeline-tab-map` | 2 (IA structuring) + 5 (placement) | known-good | `ai-tools/ai-skills/content-pipeline-tab-map/SKILL.md` |
+| `docs-copy` | 6 (write) | mature; 5-mode routing | `ai-tools/ai-skills/docs-copy/SKILL.md` |
+| `rubric-static-review` | 7 (review) + 9 (final review) | mature | `ai-tools/ai-skills/rubric-static-review/SKILL.md` |
+| `docs-review-packet-generation` | 7 (review) | tested | `ai-tools/ai-skills/docs-review-packet-generation/SKILL.md` |
+| `docs-review-fix-execution` | 7 (review) | tested | `ai-tools/ai-skills/docs-review-fix-execution/SKILL.md` |
+| `docs-quality-and-freshness-audit` | 5 (gaps) + 7 (re-check) | script-backed, production | `ai-tools/ai-skills/docs-quality-and-freshness-audit/SKILL.md` |
+| `docs-coverage-and-route-integrity-audit` | 5 (gaps) | known-good | `ai-tools/ai-skills/docs-coverage-and-route-integrity-audit/SKILL.md` |
+| `style-and-language-homogenizer-en-gb` | 7 (voice) | script-backed, production | `ai-tools/ai-skills/style-and-language-homogenizer-en-gb/SKILL.md` |
+| `component-layout-governance` | 8 (layout) | script-backed, production | `ai-tools/ai-skills/component-layout-governance/SKILL.md` |
+| `repo-audit-orchestrator` | 9 (final review) | mature | `ai-tools/ai-skills/repo-audit-orchestrator/SKILL.md` |
+| `product-thinking` | 9 (final review) | tested | `ai-tools/ai-skills/product-thinking/SKILL.md` |
+
+**Note (2026-05-23):** the parent audit of all 34 local SKILL.md files found 18 still carry `status: draft` with empty test logs (see [`SLICE-02-ai-tools.md`](../../workspace/thread-outputs/repo-consolidation-deep/SLICE-02-ai-tools.md) for the live status per skill).
+
+### Prompts
+
+| Prompt | Phase | Status |
+| --- | --- | --- |
+| `audience-design-v5.md` | Project pipeline Phase 1 | Tested, known-good |
+| `structure-audit.md` + `content-scan.md` | Project pipeline Phase 2 + 3 | Tested |
+| `content-pass.md` (REVIEW/WRITE/REWRITE/AUDIT modes) | Project pipeline Phase 4 + 6 + 7 | REVIEW mode pilot-complete on Gateways; AUDIT mode awaits test runs |
+| `layout-pass.md` | Project pipeline Phase 8 | Exists; test status unknown |
+| `veracity-pass.md` | Per-page review Phase 6 | **DRAFT** – requires 1 review agent pass + 3 test runs + human sign-off before production use |
+
+Per-phase pack guides (pre-flight + running order + failure modes) live alongside each prompt at `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/{N-phase}/pack-guide.md`.
+
+### Canonical frameworks
+
+| File | What it provides |
+| --- | --- |
+| [`docs-guide/standards/frontmatter.mdx`](../standards/frontmatter.mdx) | Required + optional frontmatter fields per authority tier |
+| [`docs-guide/standards/voice-and-copy.mdx`](../standards/voice-and-copy.mdx) | Voice + copy + heading rules + per-audience extensions |
+| [`docs-guide/standards/naming-conventions.mdx`](../standards/naming-conventions.mdx) | File + folder + workflow + script naming |
+| ~~`docs-guide/frameworks/page-taxonomy-framework.mdx`~~ | **Retired 2026-05-23** – content consolidated into this page. The retired file is a thin redirect. |
+| ~~`docs-guide/frameworks/page-composition-framework.mdx`~~ | **Retired 2026-05-23** – content consolidated into [Checks Framework Phase 7](./checks-framework.mdx#phase-7--layout--component-check-cat-5). |
+| `workspace/plan/active/CONTENT-WRITING/Frameworks/content-pipeline-framework.md` | Full taxonomy spec + decisions log (997 lines) |
+| `v2/orchestrators/_workspace/canonical/Frameworks.mdx` | Canonical taxonomy reference + section naming rubric + voice + content rules (LOCKED) |
+| `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity.md` | Veracity standards per information type (LOCKED 2026-03-23) |
+| `workspace/plan/active/CONTENT-WRITING/Frameworks/veracity-library.md` | 45-source authoritative library |
+
+### Automated scripts (production-ready)
+
+| Script | Purpose | Stage |
+| --- | --- | --- |
+| `operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js` | TODO/TBD markers, thin content, freshness risk | 5 (gaps) + 7 (re-check) |
+| `operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js` | UK English + style consistency | 7 (voice) |
+| `operations/scripts/validators/components/library/component-layout-governance.js` | Page composition vs component layout contracts | 8 (layout) |
+| `operations/scripts/validators/content/structure/check-docs-path-sync.js` | Internal link resolution | 7 + 8 |
+| `operations/tests/run-all.js` | Full test suite | 8 |
+
+---
+
+## Known gaps (2026-05-23, verified)
+
+The pipeline is real but incomplete. Five blockers prevent any tab moving past Phase 2 today.
+
+### Tab maps do not exist at the canonical location
+
+The per-page review pipeline (`content-pipeline-pass-a` skill) requires a tab map at `v2/{tab}/_workspace/tab-map.mdx` before it can run with full adjacency context. **No tab map exists at the canonical location for any tab.** The Orchestrators tab map exists in workspace output (`workspace/plan/active/CONTENTI-PIPLEINE/03-tab-map.md` – note the misspelled folder name) but not at the canonical location.
+
+**Unblocks:** project pipeline Phase 5 onwards for any tab.
+**Action:** move or symlink the ORCHS tab map into `v2/orchestrators/_workspace/tab-map.mdx`; produce equivalents for the other 4 tabs.
+
+### `veracity-pass.md` is DRAFT and unvalidated
+
+The veracity pass prompt at `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/7-veracity-pass/veracity-pass.md` is explicitly DRAFT in its header and in `PROJECT-MANAGEMENT-CANONICAL.md`. The pack guide requires 3 test runs with human sign-off before production. No test runs are recorded.
+
+**Unblocks:** per-page review Phase 6 (veracity pass).
+**Action:** run 3 test passes on pages with governance-controlled values, CLI flag claims, and mixed information types; record results; human sign-off.
+
+### Frontmatter validator path is wrong in multiple references
+
+`page-authoring/SKILL.md` and `master-checks.mdx` reference `tools/config/frontmatter-taxonomy.js` and `tools/lib/docs/frontmatter-taxonomy.js`. Neither path appears in the current `tools/` tree. **The automated frontmatter validator either does not exist, exists under a different name, or has been retired without updating references.**
+
+**Unblocks:** automated frontmatter validation in the per-page review pipeline.
+**Action:** locate the current frontmatter validator (if any) and update all references, or confirm absence and remove the references from prompts and skill files.
+
+### `page-taxonomy-framework.mdx` and `page-composition-framework.mdx` are scratch notes
+
+Per the parallel slice audit (`SLICE-08-snippets.md` and prior session findings), both files sit under `docs-guide/frameworks/` but are not real frameworks. `page-composition-framework.mdx` is a literal MDX template scaffold with placeholder description "Describe page-structure-template". `page-taxonomy-framework.mdx` has no frontmatter and contains typo'd field labels.
+
+**Action:** either rewrite both as real frameworks (sourcing from `v2/orchestrators/_workspace/canonical/Frameworks.mdx`) or move both to `_workspace/` lane.
+
+### Three pageType enumerations are in circulation
+
+The canonical 7-type schema (above) is correct. However: `docs-guide/frameworks/page-taxonomy-framework.mdx` (scratch notes) has different enums; `workspace/plan/active/ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` frontmatter schema lists deprecated values (`landing`, `faq`, `troubleshooting` as pageType values, not pageVariants); `v2/resources/documentation-guide/copy-style/authoring-guide.mdx` (public) also lists a subset. Agents following the wrong source will produce wrong frontmatter.
+
+**Action:** lock one canonical pageType enum on this page; have all other sources transclude or be marked deprecated.
+
+---
+
+## Related
+
+- **[Checks Framework](./checks-framework.mdx)** – the per-page review pipeline that operationalises Stage 7 + 8 + 9 above (11 phases, 9 universal check categories, per-pageType specific checks).
+- **[`docs-guide/standards/voice-and-copy.mdx`](../standards/voice-and-copy.mdx)** – canonical voice + copy + heading rules.
+- **[`docs-guide/standards/frontmatter.mdx`](../standards/frontmatter.mdx)** – frontmatter required minimum + per-tier rules.
+- **[`docs-guide/standards/naming-conventions.mdx`](../standards/naming-conventions.mdx)** – file + folder + script + workflow naming.
+- **[`docs-guide/policies/source-of-truth-policy.mdx`](../policies/source-of-truth-policy.mdx)** – canonical-source contract for every governed surface.
+- **`workspace/plan/active/_MY_PROCESS/`** – full 9-stage project pipeline source.
+- **`workspace/plan/active/CONTENT-WRITING/`** – execution plan, decisions registry, tab status, prompts, frameworks (997 lines + 240 supporting files).
+- **`workspace/plan/active/master-checks.mdx`** – meta-checks framework (882 lines) referenced from the per-tab `canonical/checks.mdx` files.
+- **`v2/{tab}/_workspace/canonical/checks.mdx`** – per-tab Cat 1-9 quality spec (exists for gateways, orchestrators, about, delegators, developers1 as of 2026-05-23).

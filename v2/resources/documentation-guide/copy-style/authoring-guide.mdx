@@ -1,0 +1,338 @@
+---
+title: Authoring Guide
+sidebarTitle: Authoring Guide
+description: "How to write, structure, and publish documentation pages in the Livepeer docs."
+lifecycleStage: discover
+complexity: intermediate
+purpose: build
+pageType: guide
+pagePurpose: build
+audience:
+  - developer
+  - orchestrator
+  - gateway
+status: current
+---
+
+Every documentation page in this repo follows a shared structure: frontmatter metadata, voice rules per audience, and a component library for layout and interactivity. What you need to produce a page that passes review.
+
+## Frontmatter Fields
+
+Every `.mdx` file starts with a YAML frontmatter block. Required fields and their valid values are defined by the locked taxonomy in `Frameworks.mdx`.
+
+### Required Fields
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `title` | string | Page title, rendered in browser tab and nav |
+| `sidebarTitle` | string | Shorter title for sidebar navigation |
+| `description` | string | One-sentence summary for SEO and search |
+| `pageType` | enum | Content structure classification |
+| `pagePurpose` | enum | Reader intent the page serves |
+| `audience` | array | Primary audience tokens |
+| `status` | enum | Publication readiness |
+
+### `pageType` Values (7)
+
+| Value | Use |
+|-------|-----|
+| `navigation` | Pure routing pages, portals, tab roots |
+| `concept` | Explains how something works, builds mental model |
+| `tutorial` | End-to-end guided learning exercise |
+| `guide` | Opinionated guidance for a specific outcome |
+| `instruction` | Step-by-step procedure for a specific task |
+| `reference` | Structured lookup: specification, compendium, changelog |
+| `resource` | Curated discovery: external tools, directories, showcases |
+
+Each type supports an optional `pageVariant` field. For example, `instruction` supports variants `quickstart` and `troubleshooting`. The full variant list lives in `v2/orchestrators/_workspace/canonical/Frameworks.mdx`.
+
+### `pagePurpose` Values (15)
+
+`orient` | `explain` | `learn` | `choose` | `evaluate` | `start` | `build` | `configure` | `operate` | `troubleshoot` | `verify` | `integrate` | `optimise` | `reference` | `update`
+
+Each value maps to a specific reader process. `build` means the reader needs to complete an end-to-end implementation. `configure` means they need to map system options to effects. Select the purpose that matches the reader's actual intent on the page.
+
+### `audience` Tokens (7)
+
+`founder` | `builder` | `developer` | `gateway` | `orchestrator` | `delegator` | `community`
+
+Set as an array. Most pages serve one audience. Multi-audience pages are rare by design.
+
+### Additional Taxonomy Fields
+
+| Field | Values | Purpose |
+|-------|--------|---------|
+| `complexity` | `beginner`, `intermediate`, `advanced` | Reader knowledge assumption |
+| `lifecycleStage` | `discover`, `evaluate`, `setup`, `build`, `operate`, `troubleshoot`, `optimise` | Reader position in adoption journey |
+| `industry` | `technical`, `finance`, `economics`, `business`, `marketing`, `governance`, `broadcast`, `AI`, `livepeer` | Primary vocabulary register |
+| `niche` | `web3`, `protocol`, `tokenomics`, `AI`, `video`, `streaming`, `hardware`, `infrastructure` | Cross-industry scope |
+| `veracityStatus` | `verified`, `unverified`, `stale` | Factual verification state |
+
+### Example Frontmatter Block
+
+```yaml
+---
+title: GPU Configuration
+sidebarTitle: GPU Config
+description: 'Configure GPU resources for AI inference pipelines on Livepeer.'
+pageType: instruction
+pagePurpose: configure
+audience:
+  - orchestrator
+complexity: intermediate
+lifecycleStage: setup
+industry:
+  - technical
+  - AI
+niche:
+  - hardware
+  - infrastructure
+veracityStatus: unverified
+status: draft
+---
+```
+
+### VS Code Snippet
+
+Type `frontmatter` in any `.mdx` file to expand the full frontmatter block with auto-filled title (from filename) and date. Type `fm` for a minimal block with title and description only. Individual field snippets (`pageType`, `audience`, `status`) insert a single YAML line with a dropdown of canonical values.
+
+All snippets are workspace-scoped in `.vscode/mdx.code-snippets` and load automatically when you open this repo.
+
+## Custom Components
+
+117 custom components are available across six categories: `displays` (20), `elements` (27), `integrators` (18), `scaffolding` (20), `wrappers` (31), and `config` (1). The full registry lives in `docs-guide/config/component-registry.json`.
+
+### Top 5 by Usage
+
+| Component | Import path | Pages using it | Use |
+|-----------|-------------|----------------|-----|
+| `ScrollableDiagram` | `snippets/components/displays/diagrams/ScrollableDiagram.jsx` | 23 | Scrollable or zoomable diagram container |
+| `DisplayCard` | `snippets/components/displays/cards/Cards.jsx` | 10 | Styled card for featured content |
+| `Starfield` | `snippets/components/scaffolding/heroes/StarfieldCanvas.jsx` | 8 | Animated hero background |
+| `H1` | `snippets/components/scaffolding/frame-mode/FrameMode.jsx` | 7 | Styled heading (frame mode) |
+| `H2` | `snippets/components/scaffolding/frame-mode/FrameMode.jsx` | 7 | Styled heading (frame mode) |
+
+### Import Syntax
+
+Import custom components at the top of your MDX file, after the frontmatter block:
+
+```mdx
+---
+title: My Page
+---
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { DisplayCard } from '/snippets/components/displays/cards/Cards.jsx'
+
+<ScrollableDiagram title="Architecture Overview" maxHeight="600px">
+  ...diagram content...
+</ScrollableDiagram>
+```
+
+Import paths start with `/snippets/components/` and use named exports.
+
+### VS Code Snippets for Components
+
+Type any component name in your `.mdx` file to expand it with placeholder props. The snippet library at `.vscode/components.code-snippets` covers all 117 registered components. Both bare names (`ScrollableDiagram`) and tag prefixes (`<ScrollableDiagram`) work as triggers.
+
+### Finding Components
+
+Three approaches, from fastest to most thorough:
+
+1. **VS Code snippets** - type the component name or a keyword; autocomplete shows matches
+2. **Component registry** - open `docs-guide/config/component-registry.json` for the full list with categories, file paths, and prop signatures
+3. **Usage map** - open `docs-guide/config/component-usage-map.json` to see which pages use each component and how frequently
+
+## Page Templates
+
+VS Code snippets provide scaffolds for common page types. The snippet library at `.vscode/mdx.code-snippets` includes 17 snippets covering frontmatter, page scaffolds, and reusable MDX blocks.
+
+### Template Workflow
+
+<Steps>
+
+<Step title="Create the file">
+  Create a new `.mdx` file in the correct tab directory (e.g., `v2/orchestrators/guides/`).
+</Step>
+
+<Step title="Expand the frontmatter snippet">
+  Type `frontmatter` and press Tab. Fill in each placeholder field using the dropdown values.
+</Step>
+
+<Step title="Add the page body">
+  Write content following the structure rules for your chosen `pageType`. Concept pages lead with the mental model. Instruction pages lead with prerequisites, then steps. Guide pages lead with the outcome.
+</Step>
+
+<Step title="Import components as needed">
+  Add import statements after the frontmatter block. Use the VS Code component snippets to insert components with correct props.
+</Step>
+
+</Steps>
+
+## Native Mintlify Components
+
+Mintlify provides built-in components that require no import. Use them directly in MDX.
+
+### Callouts
+
+Four severity levels for inline notices:
+
+```mdx
+<Tip>Optimisation advice or best practice.</Tip>
+
+<Note>Supplementary context the reader should be aware of.</Note>
+
+<Info>Background information that adds depth.</Info>
+
+<Warning>Risk of data loss, downtime, or irreversible action.</Warning>
+```
+
+Use callouts for information that sits outside the main flow. Do not use `<Note>` or `<Info>` for content that belongs in the body text.
+
+### Tabs
+
+Group related content by variant, platform, or method:
+
+```mdx
+<Tabs>
+  <Tab title="Linux">
+    Linux-specific instructions here.
+  </Tab>
+  <Tab title="macOS">
+    macOS-specific instructions here.
+  </Tab>
+</Tabs>
+```
+
+### Accordion
+
+Collapsible sections for optional or supplementary detail:
+
+```mdx
+<AccordionGroup>
+  <Accordion title="Advanced configuration" icon="gear">
+    Content hidden by default.
+  </Accordion>
+</AccordionGroup>
+```
+
+### Cards
+
+Navigation and feature cards:
+
+```mdx
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/v2/orchestrators/guides/setup">
+    Get running in 15 minutes.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/v2/orchestrators/guides/configure">
+    Tune your node for your hardware.
+  </Card>
+</CardGroup>
+```
+
+### Steps
+
+Ordered procedures:
+
+```mdx
+<Steps>
+  <Step title="Install dependencies">
+    Run `apt install ...`
+  </Step>
+  <Step title="Configure the node">
+    Edit `config.toml` with your settings.
+  </Step>
+</Steps>
+```
+
+### Code Groups
+
+Side-by-side code blocks for multiple languages or variants:
+
+````mdx
+<CodeGroup>
+```bash title="Linux"
+curl -L https://example.com/install.sh | bash
+```
+```powershell title="Windows"
+Invoke-WebRequest -Uri https://example.com/install.ps1 | powershell
+```
+</CodeGroup>
+````
+
+### Frame
+
+Image or media container with optional caption:
+
+```mdx
+<Frame caption="Network architecture overview">
+  ![Architecture diagram](/images/architecture.png)
+</Frame>
+```
+
+### Full Snippet Library
+
+25 Mintlify component snippets are available in `.vscode/mintlify.code-snippets`. Type any component name (e.g., `Card`, `Tabs`, `Accordion`) to expand it with placeholder props.
+
+## Voice and Tone
+
+Every page targets a specific audience. The `audience` frontmatter field determines which voice rules apply.
+
+### Universal Rules
+
+These apply to all pages, regardless of audience:
+
+- **UK English** throughout: -ise, -our, -re endings (optimise, colour, centre)
+- **No em dashes** - rewrite the sentence or use hyphens
+- **No questions** in headings or body text
+- **Headings name the thing**: 3-6 words, no questions, no verbs. "GPU Configuration" not "How to Configure Your GPU"
+- **Lead with the fact**, not the reasoning. End with a fact, number, or next step - never a hedge
+- **One paragraph, one job**. Lead sentence states the fact
+- **No self-reference**: delete "This page", "This section", "This guide covers"
+- **No banned words**: effectively, essentially, basically, meaningful, significant, various, several, obviously, clearly
+
+### Per-Audience Summary
+
+| Audience | Register | Key principle |
+|----------|----------|---------------|
+| `orchestrator` | Operational, hardware-aware | Lead with earnings, performance, or operational outcomes. Quantify with hardware specs |
+| `gateway` | Peer-technical, networking vocabulary | Direct, factual, assumes infrastructure competence. State commands imperatively |
+| `developer` | Code-first, minimal prose | Code example first, prose second. Function signatures are primary content |
+| `builder` | Integration-focused, outcome-first | Lead with what the integration gives the product. Show the full request/response cycle |
+| `delegator` | Accessible, decision-support | Plain language for economics. Explain protocol terms at first use |
+| `founder` | Executive summary, numbers over adjectives | Lead with business outcome. State unit economics with actual numbers |
+| `community` | Inclusive, participatory, substantive | Concrete and actionable. State what participation requires |
+
+Full per-audience voice rules, including prohibited phrases and positive exemplars: `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md`
+
+### Domain Terms
+
+| Use | Never |
+|-----|-------|
+| LPT | "tokens", "crypto" |
+| Orchestrator | "miner", "node" generically |
+| gateway | "API gateway" |
+| Active Set | "top Orchestrators" |
+| Reward Cut / Fee Cut | "commission" |
+| Probabilistic Micropayments | "payments" generically |
+
+Define domain-specific terms at first use on every page. Terms that always require definition: pool worker, Active Set, probabilistic micropayment tickets, Reward Cut / Fee Cut, NVENC/NVDEC, Cascade, BYOC, Arbitrum One.
+
+## Verification and Testing
+
+Before submitting a page for review:
+
+1. **Frontmatter** - all required fields present with valid enum values
+2. **Imports** - all custom component imports resolve to files in `snippets/components/`
+3. **Links** - internal links point to existing `.mdx` files; external links are live
+4. **Rendering** - run the scoped dev server to confirm the page renders:
+
+```bash
+lpd dev --scoped --scope-prefix v2/orchestrators
+```
+
+5. **Smoke test** - run the MDX component runtime smoke test:
+
+```bash
+node operations/tests/integration/mdx-component-runtime-smoke.js --routes /v2/path
+```

@@ -1,0 +1,54 @@
+---
+title: Access control with JWTs
+description: Gate playback using signed JWTs so only viewers with a valid token can watch.
+lifecycleStage: discover
+complexity: intermediate
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - solutions
+  - livepeer studio
+  - access control
+  - jwt
+  - access
+  - control
+  - with
+  - jwts
+  - gate
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+lastVerified: 2026-03-17T00:00:00.000Z
+---
+With **JWT** access control, you mark a stream or asset as gated. Viewers must send a **JWT** signed with a Studio **signing key**. You issue JWTs from your backend after validating the user.
+
+## 1. Create a signing key
+
+In the dashboard or via the [Signing Key API](https://livepeer.studio/docs/api-reference/signing-key/create), create a signing key. Store the **private key** in your backend (env) and use the **public key** in Studio for verification.
+
+## 2. Create gated content
+
+Set `playbackPolicy.type` to `"jwt"` when creating the stream or asset:
+
+```ts icon="terminal"
+await livepeer.stream.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+await livepeer.asset.create({ name: "Gated", playbackPolicy: { type: "jwt" } });
+```
+
+## 3. Sign and return a JWT from your API
+
+In a backend route (e.g. `/api/sign-jwt`), validate the user, then sign a JWT with the private key. Include `playbackId`, expiration, and any custom claims. Return the token to the client. Use `@livepeer/core/crypto` `signAccessJwt` or any JWT library with the same claims Livepeer expects (see [Livepeer Studio docs](https://livepeer.studio/docs)).
+
+## 4. Pass the JWT to the Player
+
+```tsx icon="terminal"
+<Player.Root src={src} jwt={jwt}>
+  <Player.Container><Player.Video /></Player.Container>
+</Player.Root>
+```
+
+**Custom player:** Send the JWT in the `Livepeer-Jwt` header for WebRTC/HLS, or as query param `jwt` on the playback URL.

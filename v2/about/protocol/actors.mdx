@@ -1,0 +1,85 @@
+---
+title: "Protocol Actors"
+sidebarTitle: "Protocol Actors"
+description: >-
+  An introduction to the key actors of the Livepeer protocol, their roles and responsibilities, and how they interact with each other and the protocol.
+keywords:
+  - livepeer
+  - about
+  - protocol
+  - actors
+  - roles
+  - responsibilities
+  - interactions
+  - incentives
+  - network
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+{/* This page defines the key actors of the Livepeer protocol.
+
+It serves as a high-level overview and introduction to the different roles and responsibilities of the participants in the Livepeer protocol, and how they interact with each other and the protocol.
+
+It provides a mental model for understanding the different actors in the system, their incentives, and how they contribute to the overall functioning of the Livepeer network.
+
+There are only a few core actors in the Livepeer protocol
+- Orchestrators
+- Gateways: aka Broadcasters, the entities that submit video and AI jobs to the network
+- Transcoders / AI Workers: the entities that perform the actual compute work of transcoding and AI inference
+- Verifiers: the entities that verify the correctness of the work performed by the transcoders (BUT NOT AI workers), and ensure the integrity of the network
+- Delegators (?): secure the network and earn rewards by bonding their stake
+
+Define: role, interactions, incentives, responsibilities, how they relate to the protocol and network layers, and how they contribute to the overall functioning of the Livepeer ecosystem.
+
+Define difference between AI & video jobs, and how the different actors interact with these different types of jobs. */}
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { BorderedBox, CenteredContainer } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { QuadGrid } from '/snippets/components/displays/grids/Grids.jsx'
+import { Quote, FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
+
+<Quote>
+In protocol design, “actor” is a formal category used to describe participants with distinct responsibilities, incentives, and interactions.
+Actors are fundamental to describing how the protocol (and network) functions end-to-end.
+</Quote>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+The protocol defines three core actors, and implements mechanisms to coordinate their interactions and align incentives for the desired network outcomes:
+- **Orchestrators** - GPU nodes that perform transcoding and AI inference work, earn fees and staking rewards, and participate in governance
+- **Gateways** - aka Broadcasters, the entities that submit video and AI jobs to the network, route work, manage payment flows, and connect to Orchestrators
+- **Delegators** - LPT token holders who stake to an Orchestrator to secure the network and earn rewards, and participate in governance and voting
+
+A fourth actor could be argued: **Transcoders** and **AI Workers** - specialised nodes that execute video transcoding and AI inference tasks in Docker containers or as external endpoints, and contribute to the overall Video and AI capabilities of the network.
+
+<QuadGrid icon="arrows-spin" iconSize={50} gap="0.5rem">
+  <Card title="Orchestrators" icon="microchip" cta="Go to Orchestrators" href="/v2/orchestrators/portal">
+ GPU nodes that perform transcoding / AI jobs, earn fees + staking rewards.
+
+ **Roles**: Perform Compute Operations, participate in governance
+  </Card>
+  <Card title="Gateways" icon="torii-gate" cta="Go to Gateways" href="/v2/gateways/portal">
+ Clients submitting jobs (video or AI) into the network. The users and builders of the network.
+
+ **Roles**: Submit jobs, route work, manage payment flows, connect to Orchestrators
+ {/* **Types**: Video Gateway, AI Gateway, Hybrid Gateway */}
+  </Card>
+  <Card title="Delegators" icon="coins" cta="Go to Delegators" href="/v2/delegators/portal">
+ LPT holders who stake to an Orchestrator.
+
+ **Roles**: Stake LPT, earn rewards, participate in governance and voting
+  </Card>
+  <Card title="AI Workers" icon="laptop-code" cta="Go to Developers" href="/v2/developers/portal">
+ Specialised nodes that execute AI inference tasks in Docker containers or as external endpoints
+
+ **Roles**: Execute AI inference tasks, ensure correctness of AI computations, and contribute to the overall AI capabilities of the network
+  </Card>
+</QuadGrid>
+
+<CustomDivider style={{ margin: "2rem 0" }} />
+

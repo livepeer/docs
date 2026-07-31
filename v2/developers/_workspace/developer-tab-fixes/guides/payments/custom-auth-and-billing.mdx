@@ -1,0 +1,141 @@
+---
+title: 'Custom Auth and Billing'
+sidebarTitle: 'Custom Auth and Billing'
+description: >-
+  Implementing custom authentication and billing on top of Livepeer gateways:
+  clearinghouse patterns, per-user metering, and traditional currency settlement.
+keywords:
+  - livepeer
+  - clearinghouse
+  - custom billing
+  - authentication
+  - gateway
+  - remote signer
+  - per-user metering
+  - traditional currency
+  - payment operator
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The remote signer architecture allows a clearinghouse to operate the Ethereum payment layer on behalf of multiple gateway operators. Gateways settle with the clearinghouse in traditional currency; the clearinghouse handles PM settlement with orchestrators.</Tip>
+</CenteredContainer>
+
+---
+
+The Livepeer network settles payments between gateways and orchestrators using probabilistic micropayments in ETH on Arbitrum One. Applications built on top of gateways typically need a different billing model: per-user metering, subscription tiers, or fiat currency invoicing. These concerns sit between your application and the gateway, not inside the Livepeer protocol itself.
+
+<CustomDivider />
+
+## Clearinghouse Operators
+
+The remote signer architecture enables a clearinghouse model: a third-party operator runs the Ethereum-facing signer service and manages ETH deposits on behalf of multiple gateway operators. Gateway operators settle with the clearinghouse using traditional currency; the clearinghouse handles PM ticket generation and on-chain redemption transparently.
+
+From the gateway operator's perspective:
+
+- No ETH required in the gateway process
+- No Arbitrum RPC dependency
+- No PM bookkeeping in the gateway implementation
+- Bills arrive from the clearinghouse in a traditional currency at agreed intervals
+
+The clearinghouse's `signTicket` HTTP service is the boundary point. It prices compute, validates requests, and signs tickets only for sessions the clearinghouse has authorised.
+
+This is the primary mechanism for third-party gateway providers (such as community gateways) to offer Livepeer compute access without requiring every developer to operate their own Arbitrum account.
+
+<CustomDivider />
+
+## Per-User Metering
+
+A gateway operator running a multi-tenant platform needs to track usage per user to issue invoices, enforce quotas, or implement credit-based billing. This metering layer sits above the gateway and below the application:
+
+1. **Authentication middleware:** Validate the incoming request (API key, JWT, session token) and associate it with a user account
+2. **Usage recording:** Record session start time, pipeline type, and associated user ID
+3. **Fee calculation:** At session end or billing cycle close, multiply elapsed seconds by the per-second price
+4. **Billing integration:** Push usage records to your billing system (Stripe, internal ledger, etc.)
+
+The gateway itself does not natively expose per-user accounting. You add this as a proxy layer in front of the gateway, or by instrumenting the gateway's webhook callbacks.
+
+For real-time AI sessions, the start and stop of each session provide natural billing events. Subscribe to the `stream.started` and `stream.idle` webhook events (for managed gateway scenarios) or implement session tracking at the proxy layer.
+
+<CustomDivider />
+
+## Quota and Rate Limiting
+
+Quota enforcement sits in the clearinghouse or authentication proxy, not the gateway. Patterns:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Enforcement point</TableCell>
+      <TableCell header>Mechanism</TableCell>
+      <TableCell header>Suitable for</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Clearinghouse `signTicket`</TableCell>
+      <TableCell>Refuse to sign tickets when the user's pre-purchased credit is exhausted</TableCell>
+      <TableCell>Prepaid compute credit systems</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Authentication proxy</TableCell>
+      <TableCell>Block session start requests based on remaining quota</TableCell>
+      <TableCell>Subscription tiers, trial limits</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Gateway webhook</TableCell>
+      <TableCell>Reject streams that exceed per-user session count limits</TableCell>
+      <TableCell>Concurrent session caps</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Fiat Settlement
+
+When a clearinghouse operator runs the signer on behalf of gateway operators, fiat settlement replaces direct ETH management for those operators:
+
+- The clearinghouse tracks ETH spending per gateway operator (derivable from the PM state it manages)
+- The clearinghouse invoices operators periodically (weekly, monthly) in USD or another fiat currency
+- Operators pay via bank transfer, credit card, or any agreed method
+- The clearinghouse replenishes its ETH deposit pool from this revenue
+
+From the orchestrator side, nothing changes: they receive ETH PM tickets and redeem winners on-chain as normal.
+
+<Note>
+  A production clearinghouse requires careful ETH deposit pool management. The clearinghouse's sender deposit in TicketBroker must cover the outstanding expected value of all in-flight tickets across all gateways it is signing for. Underfunding the deposit causes job rejections across all client gateways simultaneously.
+</Note>
+
+<CustomDivider />
+
+For a production-ready implementation of this pattern, [pymthouse](/v2/developers/guides/payments/clearinghouse-pattern) provides OIDC identity, usage ledger, and remote payment signing out of the box.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Remote Signer" icon="key" href="/v2/developers/guides/payments/remote-signer" arrow horizontal>
+    The signer architecture that enables clearinghouse and off-chain gateway patterns.
+  </Card>
+  <Card title="ETH Escrow and Deposits" icon="lock" href="/v2/developers/guides/payments/eth-escrow-and-deposits" arrow horizontal>
+    Managing TicketBroker deposits for a gateway or clearinghouse.
+  </Card>
+  <Card title="Payments Overview" icon="grid" href="/v2/developers/guides/payments/overview" arrow horizontal>
+    Payment modes and gateway deposit flow.
+  </Card>
+  <Card title="Alt-Gateway Overview" icon="server" href="/v2/developers/build/alt-gateways/overview" arrow horizontal>
+    Non-Go gateway implementations that connect to a clearinghouse signer.
+  </Card>
+</CardGroup>

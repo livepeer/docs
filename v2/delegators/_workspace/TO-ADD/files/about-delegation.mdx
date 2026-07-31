@@ -1,0 +1,128 @@
+---
+title: What Bonding LPT Means
+sidebarTitle: What Bonding Means
+description: >-
+  How LPT delegation works — non-custodial mechanics, the dilution cost of not staking, and what bonded stake commits you to.
+keywords:
+  - livepeer
+  - LPT
+  - bonding
+  - delegation
+  - staking mechanics
+  - dilution
+  - thawing period
+  - BondingManager
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: delegator
+purpose: explain
+status: current
+lastVerified: 2026-04-06
+---
+
+Bonding LPT attributes your stake to an orchestrator and entitles you to a share of their rewards. Your tokens do not go to the orchestrator — they are held by the Livepeer BondingManager contract on Arbitrum One and remain yours throughout. This page explains the mechanics before you commit.
+
+---
+
+## Delegation is not lending
+
+When you bond LPT, the BondingManager contract takes custody of the tokens. The orchestrator you choose cannot access, move, or spend them. You remain the economic owner at all times.
+
+What you are doing is attributing your stake weight to an orchestrator. That attribution:
+
+- Increases their total bonded stake, which raises their proportional share of network rewards and their priority for routing video and AI jobs
+- Entitles you to a cut of what they earn, determined by their `rewardCut` and `feeShare` parameters
+- Gives your bonded balance voting weight in on-chain governance
+
+You can move your attribution to a different orchestrator at any time without waiting — only full withdrawal requires an unbonding period.
+
+---
+
+## The dilution cost of not staking
+
+Each protocol round, new LPT is minted and distributed proportionally to all bonded stake. If your LPT is unbonded, you receive nothing from that minting — but your share of total supply decreases as new tokens go to active stakers.
+
+The erosion rate depends on the current inflation rate, which adjusts automatically each round:
+
+- **Below 50% of LPT bonded** → inflation increases, incentivising more delegation
+- **Above 50% bonded** → inflation decreases toward equilibrium
+
+Holding LPT without bonding means watching your proportional ownership dilute round by round while active stakers accumulate a growing share. Bonding is not optional for anyone who intends to preserve their proportional stake in the network.
+
+<Note>
+  10% of each round's minted LPT is diverted to the Livepeer Community Treasury under LIP-92. The remaining 90% is distributed to orchestrators and their delegators. See [Delegation Economics](/v2/delegators/delegation/delegation-economics) for how this affects your returns.
+</Note>
+
+---
+
+## What your tokens do while bonded
+
+Bonded LPT sits in the BondingManager contract, attributed to your chosen orchestrator. Each round that your orchestrator calls the `Reward()` function on-chain:
+
+1. New LPT is minted for that round's inflation
+2. Your orchestrator retains their `rewardCut` percentage
+3. The remainder is distributed proportionally across all stake bonded to that orchestrator — including yours
+4. Your pending balance in the contract grows accordingly
+
+Rewards accumulate in contract state. They do not arrive in your wallet automatically. You claim them separately — and the timing of when you claim relative to the `Reward()` call matters. See [Manage Your Delegation](/v2/delegators/delegation/manage-your-delegation#claim-timing) for the timing detail.
+
+---
+
+## What you can and cannot do while bonded
+
+| Action | Allowed? | Notes |
+|---|---|---|
+| Redelegate to a different orchestrator | ✅ Yes | Takes effect next round; no unbonding required |
+| Add more LPT to your position | ✅ Yes | Bond again from the same wallet |
+| Claim accumulated earnings | ✅ Yes | Moves rewards into your bonded balance |
+| Vote on governance proposals | ✅ Yes | Full bonded balance counts as voting weight |
+| Partially unbond | ✅ Yes | A portion exits; the remainder stays bonded and earning |
+| Withdraw immediately | ❌ No | Requires initiating unbonding, then waiting for the thawing period |
+| Transfer bonded LPT to another address | ❌ No | Unbond and withdraw first |
+| Bridge bonded LPT to Ethereum mainnet | ❌ No | Unbond and withdraw first |
+
+---
+
+## The thawing period
+
+Withdrawing your LPT to your wallet is a two-step process:
+
+1. **Initiate unbonding** — Your stake exits the bonded state and stops earning rewards from this point.
+2. **Wait for the thawing period** — The protocol enforces a mandatory delay before your tokens become withdrawable. You can cancel and rebond during this window if you change your mind.
+3. **Withdraw** — After the delay, your LPT moves from the contract to your wallet.
+
+The thawing period exists so the protocol can apply any slashing penalties before stake is freed. Slashing is currently disabled on Livepeer mainnet — the mechanism exists but is not active.
+
+<Info>
+  The unbonding period is a governance-controlled parameter. See [Protocol Parameters](/v2/delegators/resources/reference/protocol-parameters) for the current value verified against on-chain state.
+</Info>
+
+To switch orchestrators rather than exit, use redelegation — it transfers your stake attribution without any thawing period.
+
+---
+
+## Safety
+
+The primary risk in delegation is orchestrator underperformance, not token loss:
+
+- **Slashing is disabled.** Bonded LPT cannot be reduced as a protocol penalty on the current mainnet.
+- **The orchestrator cannot access your tokens.** The BondingManager enforces this at the contract level.
+- **Missed `Reward()` calls mean zero income for that round.** No catch-up in subsequent rounds. The round's allocation is permanently forfeit for every delegator in that pool.
+- **Commission can change without notice.** Orchestrators can update `rewardCut` and `feeShare` at any time, effective from the next round.
+
+The [Choose an Orchestrator](/v2/delegators/delegation/choose-an-orchestrator) guide covers how to evaluate reward call reliability before you commit.
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Delegation Economics" icon="chart-line" href="/v2/delegators/delegation/delegation-economics" arrow>
+    How rewardCut and feeShare determine your returns — and why reward call consistency matters more than commission rate.
+  </Card>
+  <Card title="Choose an Orchestrator" icon="list-check" href="/v2/delegators/delegation/choose-an-orchestrator" arrow>
+    Evaluate orchestrators before bonding your stake.
+  </Card>
+</CardGroup>

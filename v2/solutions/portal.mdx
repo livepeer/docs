@@ -1,20 +1,56 @@
 ---
 mode: frame
-title: 'Livepeer Solutions Providers'
-sidebarTitle: 'Solutions Portal'
-description: 'Welcome To The Solutions Portal: Explore, Build, Create'
-tag: 'Start Here'
-keywords: ['livepeer', 'about', 'about livepeer', 'about portal', 'about livepeer portal', 'about livepeer network', 'about livepeer protocol', 'about livepeer network', 'about livepeer protocol', 'about livepeer token', 'about livepeer governance', 'about livepeer actors', 'about livepeer economics', 'about livepeer whitepaper', 'about livepeer faq']
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsHero.svg"
+title: Livepeer Solutions Providers
+sidebarTitle: Portal
+description: "Welcome To The Solutions Portal: Explore, Build, Create"
+lifecycleStage: discover
+complexity: beginner
+keywords:
+  - livepeer
+  - about
+  - about livepeer
+  - about portal
+  - about livepeer portal
+  - about livepeer network
+  - about livepeer protocol
+  - about livepeer network
+  - about livepeer protocol
+  - about livepeer token
+  - about livepeer governance
+  - about livepeer actors
+  - about livepeer economics
+  - about livepeer whitepaper
+  - about livepeer faq
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: landing
+audience: platform-builder
+lastVerified: 2026-03-17T00:00:00.000Z
+purpose: landing
+tag: Start Here
 ---
 
-import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/domain/SHARED/Portals.jsx'
-import { H1, H2, H5,P } from '/snippets/components/display/frame-mode.jsx'
-import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
-import { BlinkingIcon } from '/snippets/components/primitives/links.jsx'
-import { Starfield } from "/snippets/components/domain/SHARED/HeroGif.jsx";
+{/* COMPONENT IMPORTS */}
+import { PortalHeroContent, HeroImageBackgroundComponent, LogoHeroContainer, HeroContentContainer, HeroSectionContainer, PortalCardsHeader, PortalContentContainer } from '/snippets/components/scaffolding/portals/Portals.jsx'
+import { H1, H2, H5, P } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { BlinkingIcon } from '/snippets/components/elements/icons/Icons.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { SolutionCard } from '/snippets/components/displays/cards/Cards.jsx'
+import { BadgeWrapper, IconBadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { SocialLinks } from '/snippets/components/elements/links/Links.jsx'
+import { Starfield } from "/snippets/components/scaffolding/heroes/StarfieldCanvas.jsx";
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx';
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx';
 
-import { YouTubeVideo } from '/snippets/components/display/video.jsx'
+{/* DATA INPORTS */}
+import { daydreamBadges, studioBadges, frameworksBadges, streamplaceBadges, embodyBadges } from './data/badges.jsx'
+import { daydreamInfra, studioInfra, frameworksInfra, streamplaceInfra, embodyInfra } from './data/infra.jsx'
+import { daydreamSocials, studioSocials, frameworksSocials, streamplaceSocials, embodySocials } from './data/socials.jsx'
 
 <HeroSectionContainer>
 
@@ -27,7 +63,7 @@ import { YouTubeVideo } from '/snippets/components/display/video.jsx'
     <LogoHeroContainer height="20px" />
 
     <PortalHeroContent
-      title="Use Livepeer AI Video"
+      title="Integrate Livepeer AI & Video"
       subtitle="Discover – Create – Run"
       refCardLink={
           <Card
@@ -64,65 +100,105 @@ import { YouTubeVideo } from '/snippets/components/display/video.jsx'
     <BlinkingIcon icon="circle-play" size={20}  />
   </PortalCardsHeader>
 
-  <Columns cols={2}>
+<LazyLoad>
+  <CardGroup cols={2}>
     <Card
-      title="Daydream"
-      icon="building-columns"
-      href="./daydream/overview"
+      title={<CustomCardTitle icon="hat-wizard" title="Daydream" />}
+      href="/v2/solutions/daydream/overview"
       arrow
+      cta="Learn More About Daydream"
     >
- Daydream is a real-time AI video platform that allows you to create, edit, and share AI video content.
-
- It provides the tools to build with open world models and real-time AI, in a community where creatives, builders, and researchers advance the field together.
+      <SolutionCard
+        badges={<BadgeWrapper badges={daydreamBadges} />}
+        logoSrc="/snippets/assets/logos/products/daydream-logo-dark.svg"
+        logoAlt="Daydream Logo"
+        subtitle="Open Toolkit For World Models & Real-time AI Video"
+        infraTags={<IconBadgeWrapper items={daydreamInfra} iconColor="var(--accent)" size={12} />}
+        blurb="Open-source engine for real-time AI video generation. Compose node-based workflows that combine generative video, audio, and computer vision - runs locally or in the cloud. Native integrations with OSC, MIDI, Syphon, Spout, and NDI connect it directly into professional creative toolchains (Ableton, TouchDesigner, OBS, Resolume). Powered by Livepeer's decentralised GPU compute network."
+        ScrollBox={ScrollBox}
+        socialLinks={<SocialLinks links={daydreamSocials} justify="center" className="lp-social-links-tight" />}
+      />
     </Card>
     <Card
-      title="Livepeer Studio"
-      icon="cube"
-      href="./livepeer-studio/overview"
+      title={<CustomCardTitle icon="tv" title="Livepeer Studio" />}
+      href="/v2/solutions/livepeer-studio/overview"
       arrow
+      cta="Learn More About Livepeer Studio"
     >
- Livepeer Studio is a developer-friendly gateway and toolkit for the Livepeer decentralized video infrastructure.
-
- Livepeer Studio offers easy-to-use APIs and dashboards for builders to add scalable, cost-efficient, and censorship-resistant live streaming and video-on-demand (VOD) features to applications.
+      <SolutionCard
+        badges={<BadgeWrapper badges={studioBadges} />}
+        logoSrc="/snippets/assets/logos/products/livepeer-studio-logo.svg"
+        logoAlt="Livepeer Studio Logo"
+        subtitle="An Open Performant Video Streaming Stack"
+        infraTags={<IconBadgeWrapper items={studioInfra} iconColor="var(--accent)" size={12} />}
+        blurb="Managed gateway and API platform for Livepeer's decentralised video infrastructure. REST APIs and a dashboard cover live streaming ingest, video-on-demand transcoding, and delivery - with no infrastructure to operate. Usage-based pricing routes jobs to the open orchestrator network, giving applications cost and scale properties unavailable from centralised providers."
+        ScrollBox={ScrollBox}
+        socialLinks={<SocialLinks links={studioSocials} justify="center" className="lp-social-links-tight" />}
+      />
     </Card>
     <Card
-      title="Frameworks"
-      icon="circle-nodes"
-      href="./frameworks/overview"
+      title={<CustomCardTitle icon="video" title="Frameworks" />}
+      href="/v2/solutions/frameworks/overview"
       arrow
+      cta="Learn More About Frameworks"
     >
- Frameworks offers a full-stack video streaming platform that combines full self-hosting capabilities with hosted processing and features to 10x your ideas.
-
- The MistServer team is on a mission to democratize video infrastructure by leveraging decentralized protocols and open source technology -> creating a streaming infrastructure that doesn't lock you in.
-
+      <SolutionCard
+        badges={<BadgeWrapper badges={frameworksBadges} />}
+        logoSrc="https://frameworks.network/frameworks-dark-horizontal-lockup-transparent.svg"
+        logoAlt="Frameworks Logo"
+        subtitle="Full-Stack Live Video Infrastructure"
+        infraTags={<IconBadgeWrapper items={frameworksInfra} iconColor="var(--accent)" size={12} />}
+        blurb="Full-stack video streaming platform built by the MistServer team, combining a self-hosted open-source core with optional hosted processing. Deploy the full stack on your own infrastructure, use Frameworks' hosted tier, or run a hybrid. No vendor lock-in: the infrastructure stack travels with you. Built on Livepeer's decentralised protocol and subsidised by the Livepeer treasury."
+        ScrollBox={ScrollBox}
+        socialLinks={<SocialLinks links={frameworksSocials} justify="center" className="lp-social-links-tight" />}
+      />
     </Card>
     <Card
-      title="Stream.place"
-      icon="book"
-      href="./streamplace/overview"
+      title={<CustomCardTitle icon="cubes" title="Streamplace" />}
+      href="/v2/solutions/streamplace/overview"
       arrow
+      cta="Learn More About Streamplace"
     >
- Streamplace is an open-source video infrastructure layer for social networks, livestreaming platforms and web3-native apps.
-
- It provides identity, distribution, monetisation and sovreignty primitives to bring high-quality video experiences while preserving content authenticity.
-    </Card>
- {/* <Card
-      title="Embody"
-      icon="book"
-      href="./embody/overview"
-      arrow
-    >
- A comprehensive glossary of terms used in the Livepeer Real-time Video AI Network.
+      <SolutionCard
+        badges={<BadgeWrapper badges={streamplaceBadges} />}
+        logoSrc="/snippets/assets/logos/products/streamplace-logo.svg"
+        logoAlt="Streamplace Logo"
+        subtitle="Open Video Infrastucture For Social Networks"
+        infraTags={<IconBadgeWrapper items={streamplaceInfra} iconColor="var(--accent)" size={12} />}
+        blurb="Open-source video infrastructure layer for AT Protocol-native applications. Provides identity, distribution, monetisation, and content-authenticity primitives as composable building blocks for social networks, livestreaming platforms, and web3 applications. Preserves user sovereignty and content provenance at the protocol level."
+        ScrollBox={ScrollBox}
+        socialLinks={<SocialLinks links={streamplaceSocials} justify="center" className="lp-social-links-tight" />}
+      />
     </Card>
     <Card
-      title="More Ecosystem Apps"
-      icon="book"
-      href="./product-hub"
+      title={<CustomCardTitle icon="person-rays" title="Embody" />}
+      href="/v2/solutions/embody/overview"
       arrow
+      cta="Learn More About Embody"
     >
- A comprehensive glossary of terms used in the Livepeer Real-time Video AI Network.
- </Card> */}
-  </Columns>
-
+      <SolutionCard
+        badges={<BadgeWrapper badges={embodyBadges} />}
+        logoSrc="/snippets/assets/logos/products/embody-logo.png"
+        logoAlt="Embody Logo"
+        logoHeight="90px"
+        subtitle="Enterprise-Grade AI Avatars for Real-Time Telepresence"
+        infraTags={<IconBadgeWrapper items={embodyInfra} iconColor="var(--accent)" size={12} />}
+        blurb="Enterprise AI avatar platform for real-time telepresence and on-demand branded content. Integrates into learning platforms, communication tools, and content pipelines to deliver embodied AI presence at scale - covering tutoring, enterprise telepresence, and branded video without live camera requirements."
+        ScrollBox={ScrollBox}
+        socialLinks={<SocialLinks links={embodySocials} justify="center" className="lp-social-links-tight" />}
+      />
+    </Card>
+    <Card
+      title="More Ecosystem Products"
+      img="/snippets/assets/logos/products/solutionProviders.png"
+      icon="webhook"
+      href="/v2/solutions/solution-providers"
+      arrow
+      cta="Go to All Platforms"
+    >
+ See all platforms available to builders in the Livepeer Ecosystem
+    </Card>
+  </CardGroup>
+</LazyLoad>
   <br/>
 </PortalContentContainer>

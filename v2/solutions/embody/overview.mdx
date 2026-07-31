@@ -1,38 +1,191 @@
 ---
-title: 'Embody Avatars'
-description: 'Embody Avatars is a Livepeer-powered platform for creating and sharing 3D avatars and virtual worlds.'
-sidebarTitle: 'Embody Avatars'
-keywords: ["livepeer", "developers", "developer platforms", "embody", "embody avatars", "overview", "exists"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: About Embody Avatars and Agents
+sidebarTitle: About Embody
+description: "Real-time interactive 3D avatars for education, training, and communication, powered by Livepeer."
+lifecycleStage: discover
+complexity: beginner
+keywords:
+  - livepeer
+  - solutions
+  - embody
+  - overview
+  - 3d avatars
+  - real-time
+  - ai
+  - education
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: platform-builder
+lastVerified: 2026-03-25T00:00:00.000Z
+purpose: overview
 ---
 
-import { Video } from '/snippets/components/display/video.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CustomCardTitle } from "/snippets/components/elements/text/Text.jsx";
+import { SocialLinks } from "/snippets/components/elements/links/Links.jsx";
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { CenteredContainer } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { YouTubeVideo, Video } from "/snippets/components/displays/video/Video.jsx";
+import { BadgeWrapper, IconBadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { embodyBadges } from "./data/badges.jsx"
+import { embodyInfra } from "./data/infra.jsx"
+import { embodySocials } from "./data/socials.jsx"
 
-Embody Enables real-time interactive 3D avatars for education, training, and communication.
+<IconBadgeWrapper margin="-1rem 0 1rem 0" iconColor="var(--accent)" size={16} items={embodyInfra} />
+<BadgeWrapper margin="0 0 1rem 0" badges={embodyBadges} />
 
-<Video 
-  src="/snippets/assets/domain/10_PRODUCTS/Embody/Videos/arealiensreal.mp4" 
+{/* socials links */}
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox style={ {margin: 0, padding: "0.5rem 1rem 1rem 1rem"}} variant="accent">
+    <SocialLinks iconColor="var(--text)" links={embodySocials} />
+  </BorderedBox>
+</CenteredContainer>
+
+<Info>
+  This page is maintained by the Embody Team. Help & support available via the [Livepeer Discord]('https://discord.gg/livepeer').
+</Info>
+
+<Video
+  src="https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/domain/10_PRODUCTS/Embody/Videos/arealiensreal.mp4"
+  alt="Embody Avatars"
   author="Embody Media"
-  caption="Video Prompt: What is the closest evidence we have to aliens being real? 👽"
+  caption="Video Prompt: What is the closest evidence we have that aliens exist?"
   href="https://embody.zone/"
 />
 
-{/* Any more recent? */}
-{/* <YouTubeVideo embedUrl="https://youtu.be/_MAM5ZPsTdM?si=ebEvU9xDEoaI55z9"> */}
-<iframe
-  src="https://embody.zone/"
-  width="100%"
-  height="1000px"
-  frameborder="0"
-  allowfullscreen
-  marginheight="0"
-  marginwidth="0" title="Embedded content from embody.zone" />
+{/* explains the product */}
+Embody builds **real-time interactive 3D avatars** for education, training, and communication. Avatars are AI-driven and respond to prompts and questions live, enabling interactive video experiences at scale.
 
-{/* ## Embody Avatars */}
-{/* 
-FORUM POST embedding Not currently allowed. (asked)
-<iframe src="https://forum.livepeer.org/t/embody-unreal-engine-updates/3186"
-  className="w-full h-96 rounded-xl"
-  title="Embody Unreal Engine Updates"
-  allowFullScreen
-/> */}
+{/* explains connection to Livepeer */}
+Embody runs on the Livepeer Network, using decentralised GPU infrastructure for real-time AI inference and video delivery.
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Key Features
+
+- **Interactive 3D avatars** - AI-driven avatars that respond to text prompts and questions in real time.
+- **Live video streaming** - Powered by Livepeer for low-latency, decentralised video delivery.
+- **Education and training** - Purpose-built for interactive learning, onboarding, and communication use cases.
+- **Unreal Engine integration** - Avatar rendering via Unreal Engine for high-fidelity, real-time 3D output.
+
+<YouTubeVideo
+  embedUrl="https://www.youtube.com/embed/_MAM5ZPsTdM"
+  title="Embody  -  real-time interactive 3D avatars"
+/>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Try Embody
+{/*
+  Link to actual try-me / use-me / dev references  -  NOT links already in socials.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
+
+<CardGroup cols={2}>
+    <Card title={<CustomCardTitle icon="wand-magic-sparkles" title="Try Embody Interface" />} href="https://embody.zone/" img="/snippets/assets/media/heros/solutions/embody/Embody_Hero_Human-App.png">
+    Try the human Avatar Interface - Interact with a live AI avatar in real time
+    </Card>
+    <Card title={<CustomCardTitle icon="user-robot" title="Agents on Embody" />} href="https://embody.zone/" img="/snippets/assets/media/heros/solutions/embody/Embody_Hero_Agent-App.png">
+    Try Embody Openclaw Agent Workflows
+    </Card>
+  <Card title={<CustomCardTitle icon="comment-dots" title="Livepeer Forum" />} href="https://forum.livepeer.org/t/embody-unreal-engine-updates/3186" img="/snippets/assets/media/heros/solutions/embody/Embody_Hero_Updates.png">
+    Embody Unreal Engine updates and community discussion.
+  </Card>
+  <Card title={<CustomCardTitle icon="pencil-line" title="Livepeer Onchain Builders" />} href="https://blog.livepeer.org/" img="/snippets/assets/media/heros/solutions/embody/Embody_Hero_Builders.png">
+    Livepeer ecosystem news and SPE updates.
+  </Card>
+</CardGroup>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Get Started
+
+Get started with Embody by trying the hosted app on the [Embody Website](https://embody.zone).
+
+<Info>
+  You need an NVIDIA GPU host and a Payments allowlist entry from the Embody team before starting. Contact the team via the [Embody Discord](https://discord.gg/gVmDMhYm) to get registered.
+</Info>
+
+<StyledSteps>
+
+  <StyledStep title="Clone and run setup">
+
+    ```bash
+    git clone https://github.com/its-DeFine/Unreal_Vtuber.git
+    cd Unreal_Vtuber
+    sudo ./scripts/embody_cli.sh
+    ```
+
+    The CLI prompts for your payout wallet address (`ORCHESTRATOR_ADDRESS`) and your host's public IP. It writes `.env` and validates your Payments allowlist entry.
+
+  </StyledStep>
+
+  <StyledStep title="Pull the game image">
+
+    ```bash
+    sudo ./scripts/embody_cli.sh rollout
+    ```
+
+    Fetches, decrypts, and loads the encrypted Unreal Engine game image. Allow 10-20 minutes on first run.
+
+    <Warning>
+      If you see `denied` pulling `ghcr.io/.../embody-ue-ps:*`, your address is not yet allowlisted. Run `./scripts/embody_cli.sh allowlists fix` after the team confirms registration.
+    </Warning>
+
+  </StyledStep>
+
+  <StyledStep title="Deploy the avatar cluster">
+
+    ```bash
+    sudo ./scripts/embody_cli.sh cluster deploy --auto --yes --pull missing
+    ```
+
+    `--auto` selects the number of avatar slots based on available GPU VRAM. The full stack starts: Pixel Streaming UE5 instance, health endpoint at `:9090`, signaling server at `:8080`.
+
+  </StyledStep>
+
+  <StyledStep title="Verify and connect">
+
+    Check the node is healthy:
+
+    ```bash
+    curl http://localhost:9090/health
+    curl http://localhost:9090/meta/gpu/stats
+    ```
+
+    Then open [embody.zone](https://embody.zone/) in Chrome or Edge. The matchmaker routes your session to the registered node. To connect directly to your instance, navigate to `http://<your-host-ip>:8080`.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Embody Resources
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox margin="0 0 1rem 0" padding="0.5rem 1rem 1rem 1rem" variant="accent">
+      <SocialLinks iconColor="var(--text)" links={embodySocials} />
+  </BorderedBox>
+</CenteredContainer>
+{/*
+  At least 2 dev items (docs, GitHub, website) + main comms/support channel (Discord) + one other dev-focused item.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
+
+<CardGroup cols={2}>
+  <Card title={<CustomCardTitle title="Embody" icon="globe"/>} href="https://embody.zone/" arrow>
+    Website, product, and live avatar demos.
+  </Card>
+  <Card title={<CustomCardTitle title="Livepeer Forum" icon="comment-dots"/>} href="https://forum.livepeer.org/t/embody-unreal-engine-updates/3186" arrow>
+    Technical updates, Unreal Engine integration, and community posts.
+  </Card>
+</CardGroup>

@@ -1,0 +1,253 @@
+# Snippets Guide
+
+This file is the canonical human-authored governance guide for `snippets/`.
+
+Use it for:
+- folder purpose and placement rules
+- how to create new snippet items
+- generated versus manual ownership rules
+- the machine-readable folder metadata consumed by `snippets/snippets-registry.mdx`
+
+Do not hand-edit `snippets/snippets-registry.mdx`. Regenerate it from this guide and the live filesystem.
+
+## Scope
+
+`snippets/` is the shared import namespace for reusable docs infrastructure content. It is where the repo stores:
+- shared MDX composables
+- governed data modules and generated feed outputs
+- static assets used by docs pages and components
+- authoring templates
+- the governed component library subtree
+
+The generated root registry intentionally ignores:
+- `snippets/_workspace/`
+- `snippets/automations/`
+
+Those folders still exist for ongoing migration and working-state reasons, but they are not part of the canonical steady-state snippets taxonomy.
+
+## Root Contract
+
+The governed root documentation surface is exactly two files:
+- `snippets/guide.mdx`
+  The only manual source of truth for snippets taxonomy, rules, and folder descriptions.
+- `snippets/snippets-registry.mdx`
+  Fully generated from the live `snippets/` tree plus the metadata block embedded in this guide.
+
+No other root-level snippets governance file should compete with these two files.
+
+## Folder Taxonomy
+
+### `assets/`
+
+Use `assets/` for static, non-code files that are consumed by docs pages, metadata, or generators.
+
+Put here:
+- images
+- logos
+- videos
+- downloadable files
+- raw workflow exports or support artifacts that should be retained but not executed as live code
+
+Do not put here:
+- JSX or MDX data modules
+- page composables
+- templates
+- active generator scripts
+
+### `components/`
+
+`components/` is governed separately.
+
+Use:
+- `snippets/components/README.md`
+- `docs-guide/frameworks/component-framework-canonical.mdx`
+- `v2/resources/documentation-guide/component-library/overview.mdx`
+
+This root guide only points to that governance. It does not restate component placement rules.
+
+### `composables/`
+
+Use `composables/` for MDX imported into other MDX pages.
+
+Put here:
+- shared page sections
+- page fragments reused across routes
+- imported external-doc MDX fragments that are rendered as page content
+
+Do not put here:
+- JSX data exports
+- raw assets
+- one-off page-local files that should live beside their route instead
+
+### `data/`
+
+Use `data/` for shared data modules, generated feed outputs, reference datasets, snapshots, variables, and similar non-component content inputs.
+
+Put here:
+- generated `.jsx` feed outputs
+- reference maps
+- snapshots and companion data
+- shared variables and content constants
+- solution-specific data grouped by source family
+
+Do not put here:
+- page composable MDX
+- static images/files
+- n8n workflow definitions unless they are explicitly being retained as archived data assets
+
+### `templates/`
+
+Use `templates/` for copy-ready authoring scaffolds.
+
+Put here:
+- block templates
+- page templates
+- internal docs-guide template sources
+
+Do not put here:
+- active page content
+- generated data
+- runtime components
+
+## Placement Rules
+
+When adding something new:
+
+1. If it is an `.mdx` file imported into another `.mdx` page, place it under `composables/`.
+2. If it is a data module or generated content input for pages/components, place it under `data/`.
+3. If it is a static file or retained workflow export, place it under `assets/`.
+4. If it is a reusable UI/runtime component, do not decide from this file; route it through component governance under `components/`.
+5. If it is a starter scaffold for future authoring, place it under `templates/`.
+
+If a file does not fit one of those lanes, stop and resolve taxonomy first. Do not create ad hoc top-level buckets.
+
+## Generated vs Manual Ownership
+
+Follow these rules:
+- Manual guidance lives in `guide.mdx`.
+- The registry is generated and must be overwritten, not edited.
+- Generated data files in `snippets/data/**` should be refreshed by their owning scripts/actions rather than patched by hand unless the owning workflow is intentionally being replaced.
+- Files under `assets/` may be manual or generator-owned; the deciding factor is the producer, not the extension.
+- `_workspace/` is for working state, reports, and archival material, not canonical steady-state governance.
+
+## What Does Not Belong Here
+
+Do not introduce:
+- a third root governance file for snippets
+- duplicate folder-framework docs at the snippets root
+- active generator scripts under `snippets/`
+- ambiguous holding folders that hide ownership instead of clarifying it
+- component governance duplication in this file
+
+## Maintenance Workflow
+
+When the snippets structure changes:
+
+1. Move or create the real folder in `snippets/`.
+2. Update the folder metadata block in this guide.
+3. Regenerate `snippets/snippets-registry.mdx`.
+4. Run the snippets root governance validator and the relevant script governance checks.
+5. Update any live docs that describe the snippets root contract if they would otherwise drift.
+
+## Folder Metadata
+
+The JSON block below is the machine-readable description source for the generated registry.
+
+- Keys are repo-relative folder paths.
+- Every included non-`components/**` folder rendered in the registry must appear here.
+- `components/**` descriptions are generated as delegated governance pointers instead of being defined here.
+
+{/* SNIPPETS_FOLDER_METADATA:START */}
+```json
+{
+  "folders": {
+    "snippets": "Root shared-resource namespace for reusable docs imports, assets, composables, data modules, and authoring templates.",
+    "snippets/assets": "Static, non-code assets used by docs pages, metadata, or retained support workflows.",
+    "snippets/assets/data": "Non-runtime asset data and retained raw support files that are not governed as primary data modules.",
+    "snippets/assets/data/n8n": "Archived or reference n8n workflow exports retained as data assets rather than active runtime automation code.",
+    "snippets/assets/domain": "Route- or section-scoped static assets grouped by owning docs domain.",
+    "snippets/assets/domain/00_HOME": "Assets scoped to home and top-level landing surfaces.",
+    "snippets/assets/media/heros/home": "Home hero image sources and supporting hero visuals.",
+    "snippets/assets/domain/00_HOME/home": "Additional home page asset exports and supporting visuals.",
+    "snippets/assets/domain/00_HOME/showcase": "Showcase-specific home assets and supporting visual material.",
+    "snippets/assets/domain/00_HOME/showcase/nytv.live": "Showcase assets scoped to the nytv.live example entry.",
+    "snippets/assets/domain/01_ABOUT": "Static assets owned by the About section.",
+    "snippets/assets/domain/02_COMMUNITY": "Static assets owned by community-facing pages.",
+    "snippets/assets/domain/02_COMMUNITY/hero-images": "Community hero image assets.",
+    "snippets/assets/domain/04_GATEWAYS": "Static assets used by gateway docs and related route surfaces.",
+    "snippets/assets/domain/04_GATEWAYS/code_examples": "Static code-example exports and visuals used by gateway docs.",
+    "snippets/assets/domain/10_PRODUCTS": "Static assets grouped under product and solution surfaces.",
+    "snippets/assets/domain/10_PRODUCTS/Embody": "Embody-specific product assets.",
+    "snippets/assets/domain/10_PRODUCTS/Embody/Avatars": "Avatar source assets for Embody surfaces.",
+    "snippets/assets/domain/SHARED": "Cross-domain static assets reused by multiple docs sections.",
+    "snippets/assets/logos": "Brand, partner, and product logo assets.",
+    "snippets/assets/logos/Arbitrum": "Arbitrum-specific logo assets.",
+    "snippets/assets/logos/favicon": "Favicon and icon source assets.",
+    "snippets/assets/logos/products": "Product- and solution-level logo assets.",
+    "snippets/assets/media": "Shared media assets grouped by file type and usage surface.",
+    "snippets/assets/media/files": "Downloadable or embedded document-style media files.",
+    "snippets/assets/media/heros": "Hero image assets used by docs pages.",
+    "snippets/assets/media/heros/solutions": "Solution-specific hero asset bucket.",
+    "snippets/assets/media/heros/solutions/daydream": "Daydream hero assets.",
+    "snippets/assets/media/heros/solutions/embody": "Embody hero assets.",
+    "snippets/assets/media/heros/solutions/frameworks": "Frameworks hero assets.",
+    "snippets/assets/media/heros/solutions/streamplace": "Streamplace hero assets.",
+    "snippets/assets/media/heros/solutions/studio": "Livepeer Studio hero assets.",
+    "snippets/assets/media/images": "General-purpose image assets.",
+    "snippets/assets/media/images/showcase": "Showcase gallery and card image assets.",
+    "snippets/assets/media/images/site": "Site-wide utility images and shared visual assets.",
+    "snippets/assets/media/og-images": "Open Graph image assets, manifests, and localized outputs.",
+    "snippets/assets/media/og-images/cn": "Chinese localized OG image outputs.",
+    "snippets/assets/media/og-images/en": "English localized OG image outputs.",
+    "snippets/assets/media/og-images/es": "Spanish localized OG image outputs.",
+    "snippets/assets/media/og-images/fr": "French localized OG image outputs.",
+    "snippets/assets/media/videos": "Video files and clip assets retained in-repo.",
+    "snippets/composables": "MDX composables imported into other MDX pages.",
+    "snippets/composables/pages": "Active composable MDX organized by the page surfaces that import it.",
+    "snippets/composables/pages/about": "Composable MDX for About-section pages.",
+    "snippets/composables/pages/about/concepts": "About concepts page fragments and imported sections.",
+    "snippets/composables/pages/canonical": "Canonical reusable composables shared across routes.",
+    "snippets/composables/pages/canonical/data": "Canonical data-oriented MDX fragments and shared render blocks.",
+    "snippets/composables/pages/gpu": "GPU-specific composable MDX.",
+    "snippets/composables/pages/gpu/diagrams": "GPU diagram composables and diagram-oriented MDX fragments.",
+    "snippets/composables/pages/home": "Composable MDX used by home and landing pages.",
+    "snippets/composables/pages/internal": "Internal-only or governance-facing composable MDX.",
+    "snippets/composables/pages/shared": "Shared multi-route composables, including synchronized external-doc MDX fragments.",
+    "snippets/composables/pages/unclassified": "Temporary holding lane for composables that still need permanent placement.",
+    "snippets/data": "Shared data modules, generated content inputs, snapshots, and reference datasets.",
+    "snippets/data/changelogs": "Release and changelog data modules.",
+    "snippets/data/contract-addresses": "Contracts datasets, snapshots, and companion files used by contract docs.",
+    "snippets/data/gateways": "Gateway-specific code strings, flags, and supporting data modules.",
+    "snippets/data/globals": "Shared global values and version-oriented data modules.",
+    "snippets/data/reference-maps": "Generated lookup maps and reference inventories used by docs tooling or imports.",
+    "snippets/data/references": "Reusable reference datasets imported by docs pages or components.",
+    "snippets/data/showcase-feed": "Showcase feed output data consumed by showcase surfaces.",
+    "snippets/data/snapshots": "Snapshot-style data artifacts and AI companion inputs captured from external sources.",
+    "snippets/data/social-feed-solutions": "Solution-specific social feed data grouped by solution.",
+    "snippets/data/social-feed-solutions/daydream": "Daydream solution feed data outputs.",
+    "snippets/data/social-feed-solutions/embody": "Embody solution feed data outputs.",
+    "snippets/data/social-feed-solutions/frameworks": "Frameworks solution feed data outputs.",
+    "snippets/data/social-feed-solutions/livepeer-studio": "Livepeer Studio solution feed data outputs.",
+    "snippets/data/social-feed-solutions/streamplace": "Streamplace solution feed data outputs.",
+    "snippets/data/social-feeds": "Shared cross-product social feed outputs and source-aligned feed modules.",
+    "snippets/data/social-feeds/transformers": "Helper scripts and utilities that shape social feed data before output.",
+    "snippets/data/variables": "Shared MDX variables and lightweight content constants.",
+    "snippets/templates": "Authoring scaffolds and reusable starter templates.",
+    "snippets/templates/blocks": "Block-level template fragments for reuse in authored pages.",
+    "snippets/templates/docs-guide": "Templates used by internal docs-guide and governance pages.",
+    "snippets/templates/pages": "Page-level authoring templates grouped by page shape and use case.",
+    "snippets/templates/pages/canonical": "Canonical page template patterns and baseline structures.",
+    "snippets/templates/pages/concepts-overviews": "Templates for concept, overview, and explainer pages.",
+    "snippets/templates/pages/data-imports": "Templates for pages built around imported data modules or composables.",
+    "snippets/templates/pages/domain-pages": "Templates for section landing pages and domain-specific route pages.",
+    "snippets/templates/pages/landing-and-navigation": "Templates for portal, landing, and navigation-heavy pages.",
+    "snippets/templates/pages/repo-documentation": "Templates for repository documentation and governance-oriented pages.",
+    "snippets/templates/pages/resources": "Templates for resource and reference-oriented page types.",
+    "snippets/templates/pages/resources/compendium": "Templates for compendium, glossary, and catalog-style resource pages.",
+    "snippets/templates/pages/resources/technical-reference": "Templates for technical reference and specification-heavy pages.",
+    "snippets/templates/pages/setup-and-code-layouts": "Templates for setup, quickstart, and code-heavy instructional pages.",
+    "snippets/templates/pages/tutorial-and-guides": "Templates for tutorial and guide pages."
+  }
+}
+```
+{/* SNIPPETS_FOLDER_METADATA:END */}

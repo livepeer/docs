@@ -1,0 +1,237 @@
+---
+title: 'Fetch Contract Addresses'
+sidebarTitle: 'Fetch Contract Addresses'
+description: 'Internal reference for the contracts registry builder script used by the docs contracts pipeline.'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - contracts
+  - fetch-contract-addresses
+  - scripts-library
+  - internal
+---
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/scripts/fetch-contract-addresses.js` |
+| **Type** | `automation` |
+| **Concern** | `integrations` |
+| **Purpose** | Build the published Livepeer contracts registry for docs consumers |
+| **Mode** | Generate |
+| **Primary workflow** | `.github/workflows/update-contract-addresses.yml` |
+
+## Summary
+
+`fetch-contract-addresses.js` builds the contract registry used by the Livepeer Docs contracts page and verifier widget.
+
+It is not a pure repo-file republisher, but it is also not a pure event-derived system today. It starts from governed manifest inputs, validates the live protocol state on-chain where applicable, enriches the result with explorer/runtime data, then emits grouped registry outputs for docs consumers.
+
+The script exists to answer one question reliably:
+
+> What contract addresses should the docs publish right now, and what evidence do we have that they are correct?
+
+## What The Script Uses As Inputs
+
+### 1. Canonical manifest inputs
+
+- `livepeer/governor-scripts/updates/addresses.js`
+- `operations/scripts/config/contract-addresses-authority.json`
+
+These are the starting inputs, not the final proof on their own.
+
+### 2. On-chain runtime inputs
+
+- Arbitrum One public RPC endpoints
+- Ethereum Mainnet public RPC endpoints
+- live Controller addresses hardcoded in the script for both chains
+
+These are used to verify current controller-managed addresses and proxy runtime state.
+
+### 3. Explorer enrichment inputs
+
+- Blockscout APIs
+- Arbiscan / Etherscan APIs
+
+These are used to enrich the registry with source verification, deployment metadata, activity metadata, and proxy details.
+
+### 4. Previous generated data
+
+- `snippets/data/contract-addresses/contractAddressesData.json`
+- `snippets/data/contract-addresses/contractAddressesData.jsx`
+
+This is only used as a fallback for stale metadata fields when explorer enrichment is missing. It is not the canonical address source.
+
+## What The Script Does
+
+### Step 1. Fetch the governor manifest
+
+The script fetches `updates/addresses.js` from `livepeer/governor-scripts` via the GitHub API or `gh`, parses the `ADDRESSES` object, and records the resolved commit SHA.
+
+This gives it the canonical manifest values for contracts that are maintained in `governor-scripts`.
+
+### Step 2. Load the contracts catalog config
+
+The script loads `operations/scripts/integrators/content/data/contracts/catalog-config.js`.
+
+This catalog config fills the gaps that `governor-scripts` does not cover and defines:
+
+- which contracts are governed by which source
+- chain ownership
+- lifecycle classification
+- code repo / branch / path
+- current implementation strategy for proxies
+
+This is how the script handles contracts that are not present in `governor-scripts`.
+
+### Step 3. Resolve each deployment deterministically
+
+For every deployment definition, the script resolves:
+
+- address
+- chain
+- lifecycle
+- category
+- deployment kind
+- code source
+
+It does this by explicit authority rules.
+
+It does not infer “latest” from naming patterns such as `V2`, `Target`, or branch names.
+
+### Step 4. Check bytecode exists on-chain
+
+The script uses explorer RPC/API calls such as `eth_getCode` to confirm that the resolved address has contract bytecode on-chain.
+
+This becomes the `hasBytecode` signal.
+
+### Step 5. Reconcile controller-managed contracts on-chain
+
+For contracts that should be registered in the live Controller, the script calls:
+
+- `Controller.getContract(keccak256(slotName))`
+
+It compares that live result to the resolved address from the manifest/catalog.
+
+This is what establishes whether a controller-managed contract is actually current and registered.
+
+### Step 6. Verify active proxy runtime state
+
+For proxy contracts, the script performs runtime verification through the proxy itself:
+
+1. call `controller()` on the proxy
+2. call `targetContractId()` on the proxy
+3. call `Controller.getContract(targetContractId)` on the resolved Controller
+
+That gives the current downstream implementation address for active proxies.
+
+This is stronger than checking a static manifest alone because it verifies the currently wired runtime path.
+
+### Step 7. Enrich with explorer data
+
+Where explorer services are available, the script enriches entries with:
+
+- explorer contract label
+- creator address
+- source verification state
+- compiler metadata
+- deployment metadata
+- recent activity metadata
+- proxy metadata from explorer responses
+
+This enrichment improves the published evidence model, but it is not the primary address authority.
+
+### Step 8. Build structured verification data
+
+The script writes structured verification fields such as:
+
+- `controllerRegistered`
+- `addressSource`
+- `codeSource`
+- `verification.controller`
+- `verification.proxy`
+- `verification.explorer`
+- `verification.status`
+
+These fields are what the contracts widget and page can use to explain why an address is trusted.
+
+### Step 9. Build lifecycle-safe outputs
+
+The script groups contracts into lifecycle outputs including:
+
+- `active`
+- `paused`
+- `migration_residual`
+- `legacy_operational`
+- `currentImplementations`
+- `historical`
+- `inventory`
+
+This is what allows the page to show active contracts separately from historical or residual ones.
+
+### Step 10. Write the generated JSON files
+
+The script writes:
+
+- `snippets/data/contract-addresses/contractAddressesData.json`
+- `snippets/data/contract-addresses/blockchainContractsPageData.json`
+- `snippets/data/contract-addresses/_health-checks.json`
+
+These are the canonical generated outputs. MDX pages consume them through the checked-in adapter at `snippets/data/contract-addresses/index.jsx`.
+
+## What The Script Does Not Do
+
+It does not do these things:
+
+- It does not reconstruct the entire published registry from emitted protocol events alone.
+- It does not rely only on `governor-scripts`.
+- It does not assume every contract is controller-managed.
+- It does not guess current deployments from naming conventions.
+- It does not treat docs pages as a source of truth.
+
+## How To Explain The Current Trust Model
+
+The most accurate short description is:
+
+> The contracts script is manifest-driven on input, on-chain validated where applicable, and explorer-enriched before publishing.
+
+That means:
+
+- manifest files define what should exist
+- on-chain controller and proxy checks confirm live current state for operational contracts
+- explorer/runtime data adds extra evidence and metadata
+
+## Where The Security Committee Recommendation Fits
+
+The recommendation in `livepeer/governor-scripts` PR `#14` is to compare addresses against protocol events emitted by the Controller.
+
+That is a valid strengthening step for controller-managed contracts, especially for:
+
+- completeness checks
+- historical controller state
+- drift detection in `governor-scripts`
+
+But it would be an additional verification layer, not a full replacement for this docs script on its own, because the docs script still has to handle:
+
+- contracts not present in `governor-scripts`
+- contracts not managed by the Controller
+- lifecycle grouping
+- code source links
+- widget/page-facing structured verification data
+
+## Historical Contracts
+
+The script can emit historical and residual contract data, but that does not mean the main docs page must foreground it.
+
+This is an output-model capability, not a requirement for the main user-facing table.
+
+If product wants historical contracts deprioritised, hidden, or moved into reference-only sections, that can be handled at the page-consumer level without removing the underlying generation capability.
+
+## Human-Safe One Paragraph Description
+
+`fetch-contract-addresses.js` builds the Livepeer Docs contracts registry by pulling canonical manifest inputs from `governor-scripts` and the local authority catalog, resolving each contract through explicit authority rules, checking live controller-managed and proxy runtime state on-chain, enriching entries with explorer verification and metadata, then writing lifecycle-grouped output files used by the contracts page and verifier widget. It is not a pure repo-file mirror, but it is also not yet a pure event-derived registry.

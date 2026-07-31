@@ -1,0 +1,63 @@
+---
+title: "Storage and archival"
+sidebarTitle: "Storage and Archival"
+description: >-
+  Storage options for Livepeer video assets: managed storage via the REST API,
+  IPFS pinning, and Arweave permanent archival.
+pageType: concept
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - video storage
+  - IPFS
+  - Arweave
+  - archival
+  - asset storage
+  - VOD storage
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Livepeer handles transcoding, not long-term storage. The REST API stores assets on managed infrastructure. For decentralised archival, export to IPFS or Arweave after transcoding.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Livepeer transcodes video; it does not provide permanent storage as a protocol-level service. Storage depends on which access path you use.
+
+<CustomDivider />
+
+## Storage options
+
+**Managed storage (REST API):** Assets uploaded and transcoded through the REST API are stored on managed infrastructure. Playback URLs remain active as long as the asset exists in the account. Storage is included in the API pricing.
+
+**IPFS:** After transcoding, export the asset and pin it to IPFS via Pinata, web3.storage, or a self-hosted IPFS node. The HLS manifest and segments are standard files that pin normally. The [IPFS video integration tutorial](/v2/developers/build/tutorials/ipfs-video-integration) walks through this flow.
+
+**Arweave:** For permanent, immutable archival, upload transcoded assets to Arweave. The asset is stored permanently with a one-time payment. Arweave's gateway serves HLS manifests directly.
+
+**Self-hosted:** When using a self-hosted gateway (go-livepeer broadcaster), transcoded segments are written to local disk or a configured object store. You manage storage, retention, and delivery.
+
+<CustomDivider />
+
+## Livestream recording and archival
+
+Livestream recordings are generated when a stream with `record: true` goes idle. The recording is stored as a VOD asset on managed infrastructure. To archive it, export the asset via the API and pin to IPFS or Arweave.
+
+```bash
+# Get the recording asset after stream ends
+curl https://livepeer.com/api/asset/{assetId} \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY"
+# Download the MP4 source from asset.downloadUrl
+```
+
+<CustomDivider />
+
+The [VOD and recording](/v2/developers/build/video/vod-and-recording) page covers the asset lifecycle. The [IPFS tutorial](/v2/developers/build/tutorials/ipfs-video-integration) covers the full IPFS export flow.

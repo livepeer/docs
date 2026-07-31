@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+/**
+ * @script      dispatch-release-version
+ * @type        dispatch
+ * @concern     maintenance
+ * @niche       release-version
+ * @purpose     Pipeline dispatcher for release-version (full lifecycle: detect → repair → verify → escalate)
+ * @description go-livepeer release version fetcher.
+ * @mode        dispatch
+ * @pipeline    P3 (PR), P5/P6 (scheduled), manual
+ * @scope       snippets/data/releases/
+ * @usage       node operations/scripts/dispatch/content/maintenance/dispatch-release-version.js [--mode pr|scheduled|manual] [--dry-run|--write] [--verify]
+ * @policy      D-GOV-03; D-GOV-07
+ */
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const REPO_ROOT = process.cwd();
+const { parsePipelineArgs, runAtomic, printPipelineHelp } = require(path.join(REPO_ROOT, 'tools/lib/governance/pipeline-mode'));
+
+const ATOMICS = {
+    // update-livepeer-release is an integrator (fetches go-livepeer latest tag, writes
+    // snippets/data/releases/latestReleaseData.jsx). No drift-check mode — only --dry-run / --write.
+    // Runs in post-merge or scheduled with --write; PR mode skips it (no point checking drift
+    // against external service state at PR time).
+    generate: [
+      'operations/scripts/integrators/maintenance/release/update-livepeer-release.js'
+    ]
+  };
+
+function scopeFlags(args) {
+  if (args.files) return ['--files', args.files];
+  if (args.staged) return ['--staged'];
+  if (args.full) return ['--full'];
+  return [];
+}
+
+function runIfExists(p, flags) {
+  if (!fs.existsSync(path.join(REPO_ROOT, p))) return 0;
+  return runAtomic(path.join(REPO_ROOT, p), flags).exitCode;
+}
+
+function main() {
+  let args; try { args = parsePipelineArgs(process.argv.slice(2)); } catch (e) { console.error(e.message); process.exit(2); }
+  if (args.help) { printPipelineHelp('dispatch-release-version.js', 'release-version'); process.exit(0); }
+  const scope = scopeFlags(args);
+  let code = 0;
+  // Detect (drift check via --check for generator atomics)
+  for (const p of (ATOMICS.detect || [])) {
+    code = Math.max(code, runIfExists(p, ['--check', ...scope]));
+  }
+  // Repair (only in scheduled+write or manual)
+  if ((args.mode === 'scheduled' && args.write) || args.mode === 'manual') {
+    const repairFlags = args.write ? ['--write', '--verify', ...scope] : ['--dry-run', ...scope];
+    for (const p of (ATOMICS.repair || [])) {
+      code = Math.max(code, runIfExists(p, repairFlags));
+    }
+  } else if (args.mode === 'pr' && (ATOMICS.repair || []).length > 0) {
+    // PR mode: dry-run preview of repairs (advisory)
+    for (const p of (ATOMICS.repair || [])) {
+      runIfExists(p, ['--dry-run', ...scope]);
+    }
+  }
+  // Generate (for post-merge concerns). This atomic only accepts --dry-run / --write
+  // (no --check), so adapt: in PR/scheduled-without-write, use --dry-run; only --write actually writes.
+  if (args.mode === 'post-merge' || args.mode === 'scheduled' || args.mode === 'manual') {
+    for (const p of (ATOMICS.generate || [])) {
+      code = Math.max(code, runIfExists(p, args.write ? [] : ['--dry-run']));
+    }
+  }
+  process.exit(code);
+}
+main();

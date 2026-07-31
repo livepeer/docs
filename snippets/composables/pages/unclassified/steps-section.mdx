@@ -1,0 +1,49 @@
+{/*
+  @composable  steps-section
+  @purpose     Ordered procedural steps block for task-oriented pages.
+  @pageTypes   instruction (how-to), tutorial, start, build
+  @variables
+    - Section heading: describes the task outcome — noun phrase, not a verb (e.g. "Configuration", not "Configure the server")
+    - Step title:      short verb phrase (e.g. "Prepare the environment")
+    - Step body:       one action per step; include a code block if the step involves a command
+  @notes       Each <Step> should contain exactly one action. Add or remove <Step> blocks as needed.
+               For branching flows, add a <Tabs> block between <Step> elements (see optional block below).
+               Pair with prerequisites-section.mdx before this section and validation-section.mdx after.
+  @promoted    2026-03-21
+*/}
+
+## Steps
+
+<Steps>
+  <Step title="Prepare">
+    Describe the setup action and any guardrails before the user changes anything.
+
+    ```bash title="Terminal" icon="terminal"
+    # Optional: show the command for this step — remove block if no command
+    ```
+  </Step>
+  <Step title="Apply">
+    Show the command, configuration update, or UI action that completes the task.
+
+    ```bash title="Terminal" icon="terminal"
+    # Replace with the actual command
+    ```
+  </Step>
+  <Step title="Confirm">
+    Describe the output or state that confirms this step succeeded before moving on.
+  </Step>
+</Steps>
+
+{/*
+  OPTIONAL — decision branch between steps (build / configure pages with multiple paths):
+  Insert a <Tabs> block between two <Step> elements to branch on environment, runtime, or config choice.
+
+  <Tabs>
+    <Tab title="Option A">
+      Steps or content for path A.
+    </Tab>
+    <Tab title="Option B">
+      Steps or content for path B.
+    </Tab>
+  </Tabs>
+*/}

@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Codex Thread Failure Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #334155; line-height: 1.65; padding: 48px 24px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { font-size: 32px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    h2 { font-size: 20px; font-weight: 600; color: #0f172a; margin-top: 48px; margin-bottom: 16px; }
+    .subtitle { color: #64748b; font-size: 15px; margin-bottom: 32px; }
+    .nav-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 32px 0; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .nav-toc a { font-size: 12px; color: #64748b; text-decoration: none; padding: 6px 12px; border-radius: 6px; background: #f1f5f9; transition: all 0.15s; }
+    .nav-toc a:hover { background: #e2e8f0; color: #334155; }
+    .stats-row { display: flex; gap: 24px; margin-bottom: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #0f172a; }
+    .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; }
+    .at-a-glance { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border: 1px solid #ef4444; border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; }
+    .glance-title { font-size: 16px; font-weight: 700; color: #991b1b; margin-bottom: 16px; }
+    .glance-sections { display: flex; flex-direction: column; gap: 12px; }
+    .glance-section { font-size: 14px; color: #7f1d1d; line-height: 1.6; }
+    .glance-section strong { color: #991b1b; }
+    .see-more { color: #b91c1c; text-decoration: none; font-size: 13px; white-space: nowrap; }
+    .see-more:hover { text-decoration: underline; }
+    .project-areas { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .project-area { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+    .area-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .area-name { font-weight: 600; font-size: 15px; color: #0f172a; }
+    .area-count { font-size: 12px; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
+    .area-desc { font-size: 14px; color: #475569; line-height: 1.5; }
+    .narrative { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+    .narrative p { margin-bottom: 12px; font-size: 14px; color: #475569; line-height: 1.7; }
+    .key-insight { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; color: #1d4ed8; }
+    .section-intro { font-size: 14px; color: #64748b; margin-bottom: 16px; }
+    .big-wins, .features-section, .patterns-section, .horizon-section, .friction-categories { display: flex; flex-direction: column; gap: 12px; }
+    .big-win { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; }
+    .big-win-title { font-weight: 600; font-size: 15px; color: #166534; margin-bottom: 8px; }
+    .big-win-desc { font-size: 14px; color: #15803d; line-height: 1.5; }
+    .friction-category { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 16px; }
+    .friction-title { font-weight: 600; font-size: 15px; color: #991b1b; margin-bottom: 6px; }
+    .friction-desc { font-size: 13px; color: #7f1d1d; margin-bottom: 10px; }
+    .friction-examples { margin: 0 0 0 20px; font-size: 13px; color: #334155; }
+    .friction-examples li { margin-bottom: 4px; }
+    .claude-md-section { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    .claude-md-section h3 { font-size: 14px; font-weight: 600; color: #1e40af; margin: 0 0 12px 0; }
+    .claude-md-actions { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #dbeafe; }
+    .copy-all-btn { background: #2563eb; color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .copy-all-btn:hover { background: #1d4ed8; }
+    .copy-all-btn.copied { background: #16a34a; }
+    .claude-md-item { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; padding: 10px 0; border-bottom: 1px solid #dbeafe; }
+    .claude-md-item:last-child { border-bottom: none; }
+    .cmd-checkbox { margin-top: 2px; }
+    .cmd-code { background: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; color: #1e40af; border: 1px solid #bfdbfe; font-family: monospace; display: block; white-space: pre-wrap; word-break: break-word; flex: 1; }
+    .cmd-why { font-size: 12px; color: #64748b; width: 100%; padding-left: 24px; margin-top: 4px; }
+    .feature-card { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px; }
+    .pattern-card { background: #f0f9ff; border: 1px solid #7dd3fc; border-radius: 8px; padding: 16px; }
+    .horizon-card { background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%); border: 1px solid #c4b5fd; border-radius: 8px; padding: 16px; }
+    .feature-title, .pattern-title, .horizon-title { font-weight: 600; font-size: 15px; color: #0f172a; margin-bottom: 6px; }
+    .feature-oneliner, .pattern-summary, .horizon-possible { font-size: 14px; color: #475569; margin-bottom: 8px; }
+    .feature-why, .pattern-detail, .horizon-tip { font-size: 13px; color: #334155; line-height: 1.5; }
+    .feature-examples, .copyable-prompt-section { margin-top: 12px; }
+    .example-code-row, .copyable-prompt-row { display: flex; align-items: flex-start; gap: 8px; }
+    .example-code, .copyable-prompt { flex: 1; background: #f8fafc; padding: 10px 12px; border-radius: 4px; font-family: monospace; font-size: 12px; color: #334155; border: 1px solid #e2e8f0; white-space: pre-wrap; line-height: 1.5; }
+    .prompt-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
+    .copy-btn { background: #e2e8f0; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer; color: #475569; flex-shrink: 0; }
+    .copy-btn:hover { background: #cbd5e1; }
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+    .chart-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+    .chart-title { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 12px; }
+    .bar-row { display: flex; align-items: center; margin-bottom: 6px; }
+    .bar-label { width: 120px; font-size: 11px; color: #475569; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { flex: 1; height: 6px; background: #f1f5f9; border-radius: 3px; margin: 0 8px; }
+    .bar-fill { height: 100%; border-radius: 3px; }
+    .bar-value { width: 40px; font-size: 11px; font-weight: 500; color: #64748b; text-align: right; }
+    .fun-ending { background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 1px solid #60a5fa; border-radius: 12px; padding: 24px; margin-top: 40px; text-align: center; }
+    .fun-headline { font-size: 18px; font-weight: 600; color: #1d4ed8; margin-bottom: 8px; }
+    .fun-detail { font-size: 14px; color: #1e3a8a; }
+    @media (max-width: 640px) { .charts-row { grid-template-columns: 1fr; } .stats-row { justify-content: center; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Codex Thread Failure Report</h1>
+    <p class="subtitle">69,360 messages across 455 sessions | 10/02/2026 to 03/04/2026</p>
+
+    <div class="at-a-glance">
+      <div class="glance-title">At a Glance</div>
+      <div class="glance-sections">
+        <div class="glance-section"><strong>How much Codex screws up:</strong> 199 of 455 sessions (43.7%) hit compaction, 39 sessions (8.6%) hit tool failures, and 159 sessions (34.9%) contain explicit user frustration. <a href="#section-damage" class="see-more">Damage Summary →</a></div>
+        <div class="glance-section"><strong>What it screws up:</strong> Codex threads mostly fail at carrying state, retrieving the right past work, and preserving one coherent project identity. The transcript is huge, the index is thin, and the same repo is split across multiple path variants and client versions. <a href="#section-failures" class="see-more">Failure Modes →</a></div>
+        <div class="glance-section"><strong>How to stop it screwing up:</strong> Treat threads as disposable logs. Keep them short, checkpoint decisions explicitly, force one canonical workspace path, and make hooks write usable memory outside the thread. <a href="#section-fixes" class="see-more">Controls To Add →</a></div>
+        <div class="glance-section"><strong>Root-cause fix:</strong> Build a proper intelligence layer over sessions: lineage, per-repo memory shards, and thread-quality scoring. That is how you stop transcript sludge from pretending to be memory. <a href="#section-horizon" class="see-more">Root-Cause Roadmap →</a></div>
+      </div>
+    </div>
+
+    <nav class="nav-toc">
+      <a href="#section-work">What You Work On</a>
+      <a href="#section-damage">How Much It Screws Up</a>
+      <a href="#section-failures">What It Screws Up</a>
+      <a href="#section-fixes">How To Stop It</a>
+      <a href="#section-patterns">Habits That Help</a>
+      <a href="#section-horizon">Root-Cause Fixes</a>
+    </nav>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-value">455</div><div class="stat-label">Sessions</div></div>
+      <div class="stat"><div class="stat-value">199</div><div class="stat-label">Compacted Sessions</div></div>
+      <div class="stat"><div class="stat-value">39</div><div class="stat-label">Tool Error Sessions</div></div>
+      <div class="stat"><div class="stat-value">159</div><div class="stat-label">Frustrated Sessions</div></div>
+      <div class="stat"><div class="stat-value">437</div><div class="stat-label">Overlap Events</div></div>
+      <div class="stat"><div class="stat-value">428</div><div class="stat-label">Path-Variant Sessions</div></div>
+    </div>
+
+    <h2 id="section-work">What You Work On</h2>
+    <div class="project-areas">
+      <div class="project-area">
+          <div class="area-header">
+            <span class="area-name">Livepeer Docs Main Worktrees</span>
+            <span class="area-count">~323 sessions</span>
+          </div>
+          <div class="area-desc">Primary Livepeer docs work happened here. This is where Codex threads are most exposed to path-identity fragmentation because the same logical project appears under 5 workspace variants, across multiple clients and versions.</div>
+        </div>
+<div class="project-area">
+          <div class="area-header">
+            <span class="area-name">Docs-v2-dev Working Tree</span>
+            <span class="area-count">~105 sessions</span>
+          </div>
+          <div class="area-desc">This appears to be your more stable implementation workspace. Threads here are generally narrower and easier to interpret, which makes them a better candidate for canonical launch paths.</div>
+        </div>
+<div class="project-area">
+          <div class="area-header">
+            <span class="area-name">livepeer-docs-current</span>
+            <span class="area-count">~25 sessions</span>
+          </div>
+          <div class="area-desc">Sessions in this workspace contribute to the overall thread corpus, but they are secondary compared with the main Livepeer docs work.</div>
+        </div>
+<div class="project-area">
+          <div class="area-header">
+            <span class="area-name">codex-work</span>
+            <span class="area-count">~2 sessions</span>
+          </div>
+          <div class="area-desc">Sessions in this workspace contribute to the overall thread corpus, but they are secondary compared with the main Livepeer docs work.</div>
+        </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">What You Wanted</div>
+        <div class="bar-row">
+        <div class="bar-label">Implementation</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#2563eb"></div></div>
+        <div class="bar-value">260</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Planning / Research</div>
+        <div class="bar-track"><div class="bar-fill" style="width:27.307692307692307%;background:#2563eb"></div></div>
+        <div class="bar-value">71</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Debug / Fix</div>
+        <div class="bar-track"><div class="bar-fill" style="width:23.846153846153847%;background:#2563eb"></div></div>
+        <div class="bar-value">62</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Validation</div>
+        <div class="bar-track"><div class="bar-fill" style="width:10.384615384615385%;background:#2563eb"></div></div>
+        <div class="bar-value">27</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Review</div>
+        <div class="bar-track"><div class="bar-fill" style="width:9.230769230769232%;background:#2563eb"></div></div>
+        <div class="bar-value">24</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Thread / Infra</div>
+        <div class="bar-track"><div class="bar-fill" style="width:4.230769230769231%;background:#2563eb"></div></div>
+        <div class="bar-value">11</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Top Tools Used</div>
+        <div class="bar-row">
+        <div class="bar-label">exec_command</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#0891b2"></div></div>
+        <div class="bar-value">137,208</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">write_stdin</div>
+        <div class="bar-track"><div class="bar-fill" style="width:19.451489709054865%;background:#0891b2"></div></div>
+        <div class="bar-value">26,689</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">apply_patch</div>
+        <div class="bar-track"><div class="bar-fill" style="width:8.821643052883214%;background:#0891b2"></div></div>
+        <div class="bar-value">12,104</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">shell_command</div>
+        <div class="bar-track"><div class="bar-fill" style="width:6.149787184420733%;background:#0891b2"></div></div>
+        <div class="bar-value">8,438</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">web_search_call</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.2105708121975396%;background:#0891b2"></div></div>
+        <div class="bar-value">1,661</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">request_user_input</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.7149728878782579%;background:#0891b2"></div></div>
+        <div class="bar-value">981</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Workspace Variants</div>
+        <div class="bar-row">
+        <div class="bar-label">Livepeer Docs Main Worktrees</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#10b981"></div></div>
+        <div class="bar-value">5</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Docs-v2-dev Working Tree</div>
+        <div class="bar-track"><div class="bar-fill" style="width:32.50773993808049%;background:#10b981"></div></div>
+        <div class="bar-value">1</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">livepeer-docs-current</div>
+        <div class="bar-track"><div class="bar-fill" style="width:7.739938080495357%;background:#10b981"></div></div>
+        <div class="bar-value">1</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">codex-work</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.6191950464396285%;background:#10b981"></div></div>
+        <div class="bar-value">1</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Session Types</div>
+        <div class="bar-row">
+        <div class="bar-label">Iterative Refinement</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#8b5cf6"></div></div>
+        <div class="bar-value">324</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Exploration</div>
+        <div class="bar-track"><div class="bar-fill" style="width:25%;background:#8b5cf6"></div></div>
+        <div class="bar-value">81</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Review</div>
+        <div class="bar-track"><div class="bar-fill" style="width:7.4074074074074066%;background:#8b5cf6"></div></div>
+        <div class="bar-value">24</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Single Task</div>
+        <div class="bar-track"><div class="bar-fill" style="width:6.481481481481481%;background:#8b5cf6"></div></div>
+        <div class="bar-value">21</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Thread Infrastructure</div>
+        <div class="bar-track"><div class="bar-fill" style="width:1.5432098765432098%;background:#8b5cf6"></div></div>
+        <div class="bar-value">5</div>
+      </div>
+      </div>
+    </div>
+
+    <h2 id="section-damage">How Much Codex Screws Up</h2>
+    <div class="narrative">
+      <p>This is the blunt version: Codex thread handling screws you up operationally when it asks a transcript to behave like memory. Across 455 local sessions, 199 were compacted, 39 had at least one tool failure, and 159 contain explicit user frustration. The screwup is measurable, not vibes-based.</p>
+      <p>The failure is usually not &quot;Codex forgot everything.&quot; It is worse than that: Codex keeps a massive raw log, then surfaces a thin thread abstraction that hides the parts you actually need. You have 932,864 transcript lines and 189,530 recorded tool calls, but that evidence is poorly indexed and gets harder to recover once threads broaden.</p>
+      <p>Your history is also <strong>multi-client, multi-version, and path-fragmented</strong>. Local session metadata spans 11 Codex client versions, and the main Livepeer workspace appears under 5 path variants. That means continuity can break before the model even starts reasoning.</p>
+      <div class="key-insight"><strong>Key insight:</strong> Codex fails as a state carrier before it fails as a logger. The logging layer is rich. The memory layer is weak.</div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Compacted Sessions</div>
+        <div style="font-size: 28px; font-weight: 700; color: #dc2626; margin-bottom: 8px;">43.7%</div>
+        <p style="font-size: 13px; color: #475569;">199 sessions hit context compaction. Once that happens, continuity depends on an opaque summary you do not control.</p>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Tool Failure Sessions</div>
+        <div style="font-size: 28px; font-weight: 700; color: #dc2626; margin-bottom: 8px;">8.6%</div>
+        <p style="font-size: 13px; color: #475569;">39 sessions produced 852 tool errors, which adds retry churn and pushes useful state deeper into noise.</p>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Frustrated Sessions</div>
+        <div style="font-size: 28px; font-weight: 700; color: #dc2626; margin-bottom: 8px;">34.9%</div>
+        <p style="font-size: 13px; color: #475569;">159 sessions include direct user frustration. That is a practical signal that the thread model stopped helping and started getting in the way.</p>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Path-Variant Sessions</div>
+        <div style="font-size: 28px; font-weight: 700; color: #dc2626; margin-bottom: 8px;">94.1%</div>
+        <p style="font-size: 13px; color: #475569;">428 sessions ran under workspace-path variants. That splits history across near-identical repos and makes thread retrieval dumber than it needs to be.</p>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin: 24px 0;">
+      <div class="chart-title">User Response Time Distribution</div>
+      <div class="bar-row">
+        <div class="bar-label">2-10s</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#6366f1"></div></div>
+        <div class="bar-value">7,516</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">10-30s</div>
+        <div class="bar-track"><div class="bar-fill" style="width:8.116019159127195%;background:#6366f1"></div></div>
+        <div class="bar-value">610</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">30s-1m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:8.02288451303885%;background:#6366f1"></div></div>
+        <div class="bar-value">603</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">1-2m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:8.062799361362426%;background:#6366f1"></div></div>
+        <div class="bar-value">606</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">2-5m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:9.659393294305483%;background:#6366f1"></div></div>
+        <div class="bar-value">726</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">5-15m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:11.202767429483767%;background:#6366f1"></div></div>
+        <div class="bar-value">842</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">&gt;15m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:13.71740287386908%;background:#6366f1"></div></div>
+        <div class="bar-value">1,031</div>
+      </div>
+      <div style="font-size: 12px; color: #64748b; margin-top: 8px;">
+        Median: 0.0s &bull; Average: 14.5m
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin: 24px 0;">
+      <div class="chart-title">Parallel Codex Sessions</div>
+      <div style="display: flex; gap: 24px; margin: 12px 0; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">437</div>
+          <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Overlap Events</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">446</div>
+          <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Sessions Involved</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">25</div>
+          <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Max Concurrent</div>
+        </div>
+      </div>
+      <p style="font-size: 13px; color: #475569; margin-top: 12px;">Parallel sessions are normal in your workflow, which makes thread lineage and consistent workspace identity more important than they would be for a casual single-thread user.</p>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Session Starts by Time of Day (Local Transcript Time)</div>
+        <div class="bar-row">
+        <div class="bar-label">Morning (6-12)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:49.629629629629626%;background:#8b5cf6"></div></div>
+        <div class="bar-value">67</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Afternoon (12-18)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:97.77777777777777%;background:#8b5cf6"></div></div>
+        <div class="bar-value">132</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Evening (18-24)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#8b5cf6"></div></div>
+        <div class="bar-value">135</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Night (0-6)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:89.62962962962962%;background:#8b5cf6"></div></div>
+        <div class="bar-value">121</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Thread Stress Signals</div>
+        <div class="bar-row">
+        <div class="bar-label">Sessions with compaction</div>
+        <div class="bar-track"><div class="bar-fill" style="width:46.49532710280374%;background:#dc2626"></div></div>
+        <div class="bar-value">199</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Sessions with tool errors</div>
+        <div class="bar-track"><div class="bar-fill" style="width:9.11214953271028%;background:#dc2626"></div></div>
+        <div class="bar-value">39</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Frustrated sessions</div>
+        <div class="bar-track"><div class="bar-fill" style="width:37.149532710280376%;background:#dc2626"></div></div>
+        <div class="bar-value">159</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Workspace variants</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#dc2626"></div></div>
+        <div class="bar-value">428</div>
+      </div>
+      </div>
+    </div>
+
+    <h2 id="section-failures">What It Screws Up</h2>
+    <p class="section-intro">These are the main ways the current Codex thread model fails you in practice.</p>
+    <div class="big-wins">
+      <div class="big-win">
+        <div class="big-win-title">It Screws Up State Carry-Over</div>
+        <div class="big-win-desc">A resumed thread feels continuous, but long sessions are compacted and the surviving summary is not a first-class artifact you can inspect or fix. That means Codex can carry the wrong distilled state forward while still looking like one coherent conversation.</div>
+      </div>
+      <div class="big-win">
+        <div class="big-win-title">It Screws Up Retrieval</div>
+        <div class="big-win-desc">The raw transcript store is rich, but the history surface is metadata-poor. Important work gets buried behind thin titles, flat session lists, and missing lineage. The result is that finding the right past thread feels much dumber than the underlying data should allow.</div>
+      </div>
+      <div class="big-win">
+        <div class="big-win-title">It Screws Up Project Identity</div>
+        <div class="big-win-desc">The same repo shows up under multiple worktree and path variants, across multiple Codex clients and versions. That fragments history, makes continuity feel random, and increases the chance that a resumed thread is anchored to the wrong environment assumptions.</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Client Fragmentation</div>
+        <div class="bar-row">
+        <div class="bar-label">Codex Desktop</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#16a34a"></div></div>
+        <div class="bar-value">321</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">codex_vscode</div>
+        <div class="bar-track"><div class="bar-fill" style="width:41.74454828660436%;background:#16a34a"></div></div>
+        <div class="bar-value">134</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Version Fragmentation</div>
+        <div class="bar-row">
+        <div class="bar-label">0.108.0-alpha.12</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#7c3aed"></div></div>
+        <div class="bar-value">188</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">0.118.0-alpha.2</div>
+        <div class="bar-track"><div class="bar-fill" style="width:35.638297872340424%;background:#7c3aed"></div></div>
+        <div class="bar-value">67</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">0.105.0</div>
+        <div class="bar-track"><div class="bar-fill" style="width:29.78723404255319%;background:#7c3aed"></div></div>
+        <div class="bar-value">56</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">0.107.0</div>
+        <div class="bar-track"><div class="bar-fill" style="width:25.53191489361702%;background:#7c3aed"></div></div>
+        <div class="bar-value">48</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">0.100.0-alpha.10</div>
+        <div class="bar-track"><div class="bar-fill" style="width:23.404255319148938%;background:#7c3aed"></div></div>
+        <div class="bar-value">44</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">0.115.0-alpha.11</div>
+        <div class="bar-track"><div class="bar-fill" style="width:18.617021276595743%;background:#7c3aed"></div></div>
+        <div class="bar-value">35</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Inferred Outcomes</div>
+        <div class="bar-row">
+        <div class="bar-label">Partially Achieved</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#8b5cf6"></div></div>
+        <div class="bar-value">151</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Mostly Achieved</div>
+        <div class="bar-track"><div class="bar-fill" style="width:93.37748344370861%;background:#8b5cf6"></div></div>
+        <div class="bar-value">141</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Unclear</div>
+        <div class="bar-track"><div class="bar-fill" style="width:79.47019867549669%;background:#8b5cf6"></div></div>
+        <div class="bar-value">120</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Not Achieved</div>
+        <div class="bar-track"><div class="bar-fill" style="width:28.47682119205298%;background:#8b5cf6"></div></div>
+        <div class="bar-value">43</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">User Friction Signals</div>
+        <div class="bar-row">
+        <div class="bar-label">Frustrated</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#eab308"></div></div>
+        <div class="bar-value">159</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Neutral</div>
+        <div class="bar-track"><div class="bar-fill" style="width:96.22641509433963%;background:#eab308"></div></div>
+        <div class="bar-value">153</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Likely Satisfied</div>
+        <div class="bar-track"><div class="bar-fill" style="width:76.72955974842768%;background:#eab308"></div></div>
+        <div class="bar-value">122</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Dissatisfied</div>
+        <div class="bar-track"><div class="bar-fill" style="width:9.433962264150944%;background:#eab308"></div></div>
+        <div class="bar-value">15</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Unclear</div>
+        <div class="bar-track"><div class="bar-fill" style="width:3.7735849056603774%;background:#eab308"></div></div>
+        <div class="bar-value">6</div>
+      </div>
+      </div>
+    </div>
+
+    <h2 id="section-fix-causes">Why It Keeps Screwing Up</h2>
+    <p class="section-intro">These are the structural reasons the screwups repeat.</p>
+    <div class="friction-categories">
+      <div class="friction-category">
+        <div class="friction-title">Thin Metadata, Thick Transcript</div>
+        <div class="friction-desc">Your thread index is too weak compared with the raw logs. The session index stores only an id, a title, and an update timestamp, while the real evidence is buried in 932,864 transcript lines. This makes retrieval feel stupid because the storage layer is rich but the navigation layer is poor.</div>
+        <ul class="friction-examples">
+          <li>Thread history is title-driven, so low-signal names make important work hard to find later.</li>
+          <li>Resume and fork exist operationally, but parent/child lineage is not surfaced in the local metadata you can actually browse.</li>
+        </ul>
+      </div>
+      <div class="friction-category">
+        <div class="friction-title">Workspace Identity Fragmentation</div>
+        <div class="friction-desc">The same logical repo is being represented by multiple workspace paths. That creates avoidable thread splits, duplicate histories, and cross-thread confusion, especially when you are moving between Desktop, VS Code, and branch/worktree variants.</div>
+        <ul class="friction-examples">
+          <li>Livepeer Docs Main Worktrees appears under 5 distinct cwd variants.</li>
+          <li>Sessions span both branch-label paths and sanitized fallback paths for the same Livepeer docs estate.</li>
+        </ul>
+      </div>
+      <div class="friction-category">
+        <div class="friction-title">Multi-Client Version Drift</div>
+        <div class="friction-desc">The same session model is being exercised by different Codex clients and versions. When behavior feels inconsistent, part of that inconsistency is real environment drift rather than just thread quality.</div>
+        <ul class="friction-examples">
+          <li>Your local history spans 11 distinct client versions.</li>
+          <li>The dominant version is 0.108.0-alpha.12, which means older and newer client behaviors are mixed into one corpus.</li>
+        </ul>
+      </div>
+      <div class="friction-category">
+        <div class="friction-title">Opaque Context Compression</div>
+        <div class="friction-desc">Long threads are being compacted, but the surviving summary is not a first-class artifact you can inspect or curate. That means the system can silently preserve the wrong context while still looking like one continuous thread.</div>
+        <ul class="friction-examples">
+          <li>2,334 explicit context compaction events were recorded locally.</li>
+          <li>When compaction is combined with multi-client usage and path variants, you get continuity theater rather than dependable memory.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin: 24px 0;">
+      <div class="chart-title">Observed Tool Error Categories</div>
+      <div class="bar-row">
+        <div class="bar-label">command_failed</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#dc2626"></div></div>
+        <div class="bar-value">664</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">missing_file_or_command</div>
+        <div class="bar-track"><div class="bar-fill" style="width:20.03012048192771%;background:#dc2626"></div></div>
+        <div class="bar-value">133</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">timeout</div>
+        <div class="bar-track"><div class="bar-fill" style="width:7.530120481927711%;background:#dc2626"></div></div>
+        <div class="bar-value">50</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">approval_or_sandbox</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.7530120481927711%;background:#dc2626"></div></div>
+        <div class="bar-value">5</div>
+      </div>
+    </div>
+
+    <h2 id="section-fixes">How To Stop It Screwing Up</h2>
+    <div class="claude-md-section">
+      <h3>Suggested AGENTS.md Additions</h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">These rules reduce thread screwups by forcing explicit state and path discipline.</p>
+      <div class="claude-md-actions">
+        <button class="copy-all-btn" onclick="copyAllCheckedClaudeMd()">Copy All Checked</button>
+      </div>
+      <div class="claude-md-item">
+          <input type="checkbox" id="cmd-0" class="cmd-checkbox" checked data-text="## Thread Safety Rule&#10;Threads are logs, not memory. If a task changes concern, start a fresh thread. Do not assume resume or fork carries reliable distilled state forward.">
+          <label for="cmd-0">
+            <code class="cmd-code">## Thread Safety Rule
+Threads are logs, not memory. If a task changes concern, start a fresh thread. Do not assume resume or fork carries reliable distilled state forward.</code>
+            <button class="copy-btn" onclick="copyCmdItem(0)">Copy</button>
+          </label>
+          <div class="cmd-why">This prevents broad noisy threads from pretending to be coherent memory.</div>
+        </div>
+<div class="claude-md-item">
+          <input type="checkbox" id="cmd-1" class="cmd-checkbox" checked data-text="## Mandatory Checkpoints&#10;At each major milestone, append 5 bullets: goal, decisions made, current evidence, validation run, and unresolved risks. If you cannot produce that checkpoint, say the thread is degraded.">
+          <label for="cmd-1">
+            <code class="cmd-code">## Mandatory Checkpoints
+At each major milestone, append 5 bullets: goal, decisions made, current evidence, validation run, and unresolved risks. If you cannot produce that checkpoint, say the thread is degraded.</code>
+            <button class="copy-btn" onclick="copyCmdItem(1)">Copy</button>
+          </label>
+          <div class="cmd-why">This turns hidden thread state into explicit recoverable state.</div>
+        </div>
+<div class="claude-md-item">
+          <input type="checkbox" id="cmd-2" class="cmd-checkbox" checked data-text="## Canonical Workspace Path&#10;Always print the exact cwd and git root before major work. If the same repo exists under multiple worktrees or path variants, choose one canonical path and stick to it for the session.">
+          <label for="cmd-2">
+            <code class="cmd-code">## Canonical Workspace Path
+Always print the exact cwd and git root before major work. If the same repo exists under multiple worktrees or path variants, choose one canonical path and stick to it for the session.</code>
+            <button class="copy-btn" onclick="copyCmdItem(2)">Copy</button>
+          </label>
+          <div class="cmd-why">Your local history shows path fragmentation as a direct thread-quality problem.</div>
+        </div>
+    </div>
+
+    <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">These are the highest-leverage controls to add first.</p>
+    <div class="features-section">
+      <div class="feature-card">
+          <div class="feature-title">Hooks</div>
+          <div class="feature-oneliner">Write state outside the thread at SessionStart and Stop.</div>
+          <div class="feature-why"><strong>Why for you:</strong> The official hook model already exposes session id, cwd, and transcript path. Use it to emit checkpoints and summaries so Codex does not have to recover state from transcript sludge.</div>
+          <div class="feature-examples">
+            <div class="example-code-row">
+              <code class="example-code">{
+  &quot;hooks&quot;: {
+    &quot;Stop&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;node ~/.codex/bin/codex-memory-append.mjs&quot;,
+            &quot;timeout&quot;: 30
+          }
+        ]
+      }
+    ]
+  }
+}</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+<div class="feature-card">
+          <div class="feature-title">AGENTS.md</div>
+          <div class="feature-oneliner">Put operating rules where Codex can see them every time.</div>
+          <div class="feature-why"><strong>Why for you:</strong> OpenAI&amp;apos;s durable context path is AGENTS guidance, not chat history. Use it for thread safety rules, canonical path requirements, and checkpoint expectations.</div>
+          <div class="feature-examples">
+            <div class="example-code-row">
+              <code class="example-code"># ~/.codex/AGENTS.md
+
+## Working agreements
+- Threads are logs, not memory.
+- Restate the goal and canonical repo path before major work.
+- End each substantial session with a decision checkpoint.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+<div class="feature-card">
+          <div class="feature-title">Start-Fresh Trigger</div>
+          <div class="feature-oneliner">Define a hard rule for when a thread is too degraded to keep using.</div>
+          <div class="feature-why"><strong>Why for you:</strong> Compaction, tool-error churn, and path confusion are signals that you should stop recovering and start fresh.</div>
+          <div class="feature-examples">
+            <div class="example-code-row">
+              <code class="example-code">If this thread has changed scope, accumulated repeated tool failures, or lost a clear checkpointed state summary, stop and recommend a fresh thread before making more edits.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <h2 id="section-patterns">Habits That Reduce Screwups</h2>
+    <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">These workflow habits cut down the repeated failure modes above.</p>
+    <div class="patterns-section">
+      <div class="pattern-card">
+          <div class="pattern-title">Short Threads, Hard Stops</div>
+          <div class="pattern-summary">Do not let one thread absorb multiple concerns.</div>
+          <div class="pattern-detail">Compaction and metadata thinness make broad threads degrade fast. The fix is shorter task-scoped threads plus an explicit rule that scope changes trigger a fresh thread.</div>
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Codex:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">This task gets one thread. If scope changes concern, stop and tell me to start a fresh thread. Before you finish, append a 5-bullet checkpoint: current goal, decisions made, validation run, unresolved risks, and canonical workspace path.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+<div class="pattern-card">
+          <div class="pattern-title">Force Canonical Path Declaration</div>
+          <div class="pattern-summary">Make Codex state exactly which repo identity it is using before it does anything serious.</div>
+          <div class="pattern-detail">Your history shows the same Livepeer docs repo split across multiple cwd variants. That is a retrieval and trust problem before the model even reasons.</div>
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Codex:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Before any implementation, print the exact cwd and git root you are using. If this repo exists under multiple worktrees or path variants, stop and recommend one canonical path for this task before continuing.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+<div class="pattern-card">
+          <div class="pattern-title">Demand Explicit State Recovery</div>
+          <div class="pattern-summary">When a thread is already noisy, require Codex to prove it still knows the current state.</div>
+          <div class="pattern-detail">This catches the common failure where the thread contains plenty of history but not the right distilled state.</div>
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Codex:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Before you edit anything, summarize the current state of this task in 5 bullets: goal, what is already true, what is uncertain, what evidence you have, and what single next action you recommend. If you cannot do that confidently from the thread, say so and ask me for a fresh thread instead.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <h2 id="section-horizon">On the Horizon</h2>
+    <p class="section-intro">If you want the root-cause fix instead of coping strategies, build a proper memory and lineage layer over the raw sessions.</p>
+    <div class="horizon-section">
+      <div class="horizon-card">
+          <div class="horizon-title">Thread Lineage Indexing</div>
+          <div class="horizon-possible">Build a local ancestry index that links startup, resume, and fork sessions into explicit chains. That would give you navigation Codex currently does not surface.</div>
+          <div class="horizon-tip"><strong>Getting started:</strong> Use session ids, transcript paths, and hook-generated metadata to persist parent/child relationships outside the base thread store.</div>
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Codex:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Create a lineage index for Codex sessions. Persist parent/child relationships for startup, resume, and fork into ~/.codex/usage-data/lineage.json and add a report section that shows thread families instead of flat history.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+<div class="horizon-card">
+          <div class="horizon-title">Per-Repo Memory Shards</div>
+          <div class="horizon-possible">Global memory is useful, but repo-scoped memory would stop Livepeer docs decisions from being diluted by unrelated Codex sessions.</div>
+          <div class="horizon-tip"><strong>Getting started:</strong> Shard summaries by canonical git root and merge them into the global AGENTS guidance only when they are truly cross-project.</div>
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Codex:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Build per-repo memory shards under ~/.codex/memories/repos/&lt;slug&gt;.md. On Stop, append only decisions that are specific to the current git root, and keep global AGENTS.md reserved for cross-project operating rules.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+<div class="horizon-card">
+          <div class="horizon-title">Thread Quality Scoring</div>
+          <div class="horizon-possible">You already have enough local data to score threads for risk: compaction, workspace variants, frustration, low-signal titles, and tool-error density.</div>
+          <div class="horizon-tip"><strong>Getting started:</strong> Surface a &amp;quot;thread quality&amp;quot; score in the history UI or in a generated dashboard so you know which threads are worth resuming and which should be retired.</div>
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Codex:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Add a thread-quality score to the Codex insights report. Weight compaction, tool errors, low-signal titles, workspace variants, and frustration. Mark threads as resume-safe, caution, or start-fresh.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="fun-ending">
+      <div class="fun-headline">&quot;Codex threads are good at recording the crash and bad at preventing it&quot;</div>
+      <div class="fun-detail">The way to stop the screwups is not &quot;trust the thread more.&quot; It is shorter threads, explicit checkpoints, one canonical workspace path, and memory written outside the transcript.</div>
+    </div>
+  </div>
+  <script>
+    function copyText(btn) {
+      const code = btn.previousElementSibling;
+      navigator.clipboard.writeText(code.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+    function copyCmdItem(idx) {
+      const checkbox = document.getElementById('cmd-' + idx);
+      if (checkbox) {
+        const text = checkbox.dataset.text;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = checkbox.nextElementSibling.querySelector('.copy-btn');
+          if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy'; }, 2000); }
+        });
+      }
+    }
+    function copyAllCheckedClaudeMd() {
+      const checkboxes = document.querySelectorAll('.cmd-checkbox:checked');
+      const texts = [];
+      checkboxes.forEach(cb => {
+        if (cb.dataset.text) { texts.push(cb.dataset.text); }
+      });
+      const combined = texts.join('\n');
+      const btn = document.querySelector('.copy-all-btn');
+      if (btn) {
+        navigator.clipboard.writeText(combined).then(() => {
+          btn.textContent = 'Copied ' + texts.length + ' items!';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Copy All Checked'; btn.classList.remove('copied'); }, 2000);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

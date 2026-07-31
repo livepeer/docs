@@ -1,0 +1,123 @@
+---
+title: 'Bug Bounties'
+sidebarTitle: 'Bug Bounties'
+description: >-
+  Reporting smart contract vulnerabilities in the Livepeer protocol and earning
+  USDC rewards through the Livepeer bug bounty programme on Immunefi.
+keywords:
+  - livepeer
+  - bug bounty
+  - Immunefi
+  - security
+  - smart contract
+  - vulnerability
+  - USDC
+  - KYC
+  - responsible disclosure
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>The Livepeer bug bounty programme covers smart contracts only. Rewards are paid in USDC on Ethereum. KYC and a proof of concept are required for all reward claims.</Tip>
+</CenteredContainer>
+
+---
+
+Livepeer runs a bug bounty programme on Immunefi at `immunefi.com/bug-bounty/livepeer/`. The programme covers smart contract vulnerabilities in the Livepeer protocol contracts deployed on Arbitrum One and Ethereum.
+
+<CustomDivider />
+
+## Scope and Rewards
+
+**Scope:** Smart contracts only. Websites, applications, and off-chain infrastructure are not in scope.
+
+**Reward currency:** USDC on Ethereum, denominated in USD. Payouts are handled by the Livepeer team directly.
+
+**Critical vulnerability cap:** Rewards for critical vulnerabilities are capped at 10% of the economic damage, with primary focus on possible loss of funds for Orchestrators, Delegators, and Broadcasters.
+
+**High vulnerability rewards:** Depend on the amount of unclaimed yield at risk and how long funds could be frozen.
+
+**KYC:** Required for all reporters claiming a reward. Visual proof of identity is collected by the project team.
+
+**Proof of concept:** Required for all severity levels.
+
+<CustomDivider />
+
+## In-Scope Impacts
+
+The programme focuses on preventing:
+
+- Direct theft of any user funds, whether at-rest or in-motion, other than unclaimed yield
+- Permanent freezing of funds
+- Unexpected calls to functions that should only be called by authorised addresses (e.g. Governor)
+
+<CustomDivider />
+
+## Testing Requirements
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Requirement</TableCell>
+      <TableCell header>Detail</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Testing environment</TableCell>
+      <TableCell>Local forks of mainnet or public testnet only. No testing on live mainnet or public testnet deployed code.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Proof of concept</TableCell>
+      <TableCell>Required for all severity levels before a report is eligible for reward.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Disclosure</TableCell>
+      <TableCell>Responsible disclosure only. Public disclosure of an unpatched vulnerability before the project has responded forfeits reward eligibility.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Prohibited</TableCell>
+      <TableCell>Testing with pricing oracles or third-party smart contracts, phishing or social engineering attacks, denial-of-service attacks against project infrastructure, automated traffic generation.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Submission
+
+Submit all reports through the Immunefi platform at `immunefi.com/bug-bounty/livepeer/`. Do not report security vulnerabilities in public GitHub issues. The Immunefi submission process handles triage, severity assessment, and payout coordination.
+
+For questions about programme scope before submitting, reach out in the `#security` channel in the Livepeer Discord or contact the team via the Immunefi platform.
+
+<Note>
+  The complete programme terms, reward schedule, scope details, and known excluded vulnerabilities are maintained on Immunefi and may be updated by the Livepeer team. The Immunefi page is the authoritative source.
+</Note>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Contract Addresses" icon="file-code" href="/v2/developers/resources/contract-addresses" arrow horizontal>
+    Addresses for the smart contracts in scope on Arbitrum One and Ethereum.
+  </Card>
+  <Card title="OSS Contributions" icon="git-branch" href="/v2/developers/opportunities/oss-contributions" arrow horizontal>
+    Non-security code and documentation contributions to Livepeer repos.
+  </Card>
+  <Card title="Builder Opportunities" icon="coins" href="/v2/developers/opportunities/overview" arrow horizontal>
+    All funding mechanisms for builders on the Livepeer network.
+  </Card>
+</CardGroup>

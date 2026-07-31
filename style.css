@@ -1,69 +1,242 @@
+/* Mintlify dev server injects <style>body { padding: 24px }</style>.
+   Not present in production builds. Safe no-op in prod. */
+body {
+  padding: 0 !important;
+}
+
 /* Colors Used
-3CB540 - Jade Green
-2b9a66 - Light Green
-18794E - Dark Green
+#3CB540 - Jade Green
+#2b9a66 - Light Green
+#18794E - Dark Green
 
 Complementary Greens
 See https://coolors.co/004225-1a794e-08a045-3cb540-62ba4f
-004225 - Deep Forrest
-1A794E - Turf Green
-08A045 - Medium Jungle
-3CB540 - Jade Green
-6BBF59 - Moss Green
+#004225 - Deep Forrest
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#3CB540 - Jade Green
+#6BBF59 - Moss Green
 
 See https://coolors.co/0c0c0c-073b3a-1a794e-08a045-6bbf59
-0C0C0C - Onyx Black
-073B3A - Dark Teal
-1A794E - Turf Green
-08A045 - Medium Jungle
-6BBF59 - Moss Green
+#0C0C0C - Onyx Black
+#073B3A - Dark Teal
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#6BBF59 - Moss Green
 
 See https://coolors.co/fffffa-073b3a-1a794e-08a045-6bbf59
-FFFFFA - Porcelain
-073B3A - Dark Teal
-1A794E - Turf Green
-08A045 - Medium Jungle
-6BBF59 - Moss Green
+#FFFFFA - Porcelain
+#073B3A - Dark Teal
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#6BBF59 - Moss Green
 
 Pink Offset Colour
 See https://coolors.co/073b3a-1a794e-f61067-08a045-6bbf59
-F61067 - Razzmatazz Pink
-073B3A - Dark Teal
-1A794E - Turf Green
-08A045 - Medium Jungle
-6BBF59 - Moss Green
+#F61067 - Razzmatazz Pink
+#073B3A - Dark Teal
+#1A794E - Turf Green
+#08A045 - Medium Jungle
+#6BBF59 - Moss Green
 */
 
 /* ============================================
    GLOBAL THEME VARIABLES
-   Matches ThemeData from snippets/styles/themeStyles.jsx
+   Component governance source of truth
    ============================================ */
 
 :root {
-  /* Light Mode Colors */
-  --accent: #3cb540;
-  --accent-dark: #18794e;
-  --hero-text: #181c18;
-  --text: #717571;
-  --muted-text: #9ca3af;
-  --background: #ffffff;
-  --card-background: #f9fafb;
-  --border: #e5e7eb;
-  --button-text: #ffffff;
+  --lp-color-accent: #3cb540;
+  --lp-color-accent-strong: #18794e;
+  --lp-color-accent-soft: #6bbf59;
+  --lp-color-accent-bright: #5dd662;
+  --lp-color-accent-brightest: #a0f0a5;
+  --lp-color-arbitrum: #3ea6f8;
+  --lp-color-text-primary: #181c18;
+  --lp-color-text-secondary: #717571;
+  --lp-color-text-muted: #9ca3af;
+  --lp-color-bg-page: #ffffff;
+  --lp-color-bg-card: #f9fafb;
+  --lp-color-bg-elevated: #f3f6f4;
+  --lp-color-bg-subtle: rgba(24, 28, 24, 0.04);
+  --lp-color-bg-overlay: rgba(12, 12, 12, 0.5);
+  --lp-color-border-default: #e5e7eb;
+  --lp-color-border-strong: rgba(24, 28, 24, 0.18);
+  --lp-color-border-inverse: rgba(255, 255, 255, 0.5);
+  --lp-color-on-accent: #ffffff;
+  --lp-color-link: #18794e;
+  --lp-color-link-hover: #004225;
+  --lp-color-brand-discord: #5865f2;
+  --lp-color-brand-forum: #00aeef;
+  --lp-color-brand-github: #181c18;
+  --lp-color-brand-x: #181c18;
+  --lp-color-brand-globe: #00c0ff;
+  --lp-color-brand-twitch: #9048ff;
+  --lp-color-brand-youtube: #ff0034;
+  --lp-color-brand-instagram: #dc2275;
+  --lp-color-brand-linkedin: #0189df;
+  --lp-color-brand-preview: #b636dd;
+  --lp-color-brand-coming-soon: #ef1a73;
+  --lp-color-brand-linux: #ff9a0e;
+  --lp-color-brand-windows: #14bbf7;
+  --lp-color-brand-macos: #60ba47;
+  --lp-color-status-good: #22c55e;
+  --lp-color-status-warn: #fbbf24;
+  --lp-color-status-bad: #ef4444;
+  --lp-spacing-1: 0.25rem;
+  --lp-spacing-2: 0.5rem;
+  --lp-spacing-3: 0.75rem;
+  --lp-spacing-4: 1rem;
+  --lp-spacing-6: 1.5rem;
+  --lp-spacing-8: 2rem;
+  --lp-spacing-px-3: 3px;
+  --lp-spacing-px-4: 4px;
+  --lp-spacing-px-6: 6px;
+  --lp-spacing-px-8: 8px;
+  --lp-spacing-px-12: 12px;
+  --lp-font-sans: 'Inter', 'Segoe UI', sans-serif;
+  --lp-font-mono: 'SFMono-Regular', 'SF Mono', 'Menlo', monospace;
+  --lp-radius-sm: 0.25rem;
+  --lp-radius-md: 0.5rem;
+  --lp-radius-lg: 0.75rem;
+  --lp-shadow-card: 0 8px 24px rgba(24, 28, 24, 0.08);
+  --lp-z-base: 1;
+  --lp-z-overlay: 10;
+  --lp-z-modal: 50;
+
+  /* Legacy aliases maintained during migration */
+  --accent: var(--lp-color-accent);
+  --accent-dark: var(--lp-color-accent-strong);
+  --hero-text: var(--lp-color-text-primary);
+  --text: var(--lp-color-text-secondary);
+  --text-secondary: var(--lp-color-text-secondary);
+  --muted-text: var(--lp-color-text-muted);
+  --background: var(--lp-color-bg-page);
+  --card-background: var(--lp-color-bg-card);
+  --background-highlight: var(--lp-color-bg-subtle);
+  --border: var(--lp-color-border-default);
+  --button-text: var(--lp-color-on-accent);
+  --page-header-description-color: var(--lp-color-text-secondary);
+  --arbitrum: var(--lp-color-arbitrum);
 }
 
 .dark {
-  /* Dark Mode Colors */
-  --accent: #2b9a66;
-  --accent-dark: #18794e;
-  --hero-text: #e0e4e0;
-  --text: #a0a4a0;
-  --muted-text: #6b7280;
-  --background: #0d0d0d;
-  --card-background: #1a1a1a;
-  --border: #333333;
-  --button-text: #ffffff;
-  --background-highlight: rgba(255, 255, 255, 0.1);
+  --lp-color-accent: #2b9a66;
+  --lp-color-accent-strong: #18794e;
+  --lp-color-accent-soft: #3cb540;
+  --lp-color-accent-bright: #5dd662;
+  --lp-color-accent-brightest: #7fe584;
+  --lp-color-text-primary: #e0e4e0;
+  --lp-color-text-secondary: #a0a4a0;
+  --lp-color-text-muted: #6b7280;
+  --lp-color-bg-page: #0d0d0d;
+  --lp-color-bg-card: #1a1a1a;
+  --lp-color-bg-elevated: #141a16;
+  --lp-color-bg-subtle: rgba(255, 255, 255, 0.1);
+  --lp-color-bg-overlay: rgba(0, 0, 0, 0.5);
+  --lp-color-border-default: #333333;
+  --lp-color-border-strong: rgba(255, 255, 255, 0.3);
+  --lp-color-border-inverse: rgba(255, 255, 255, 0.5);
+  --lp-color-on-accent: #ffffff;
+  --lp-color-link: #5dd662;
+  --lp-color-link-hover: #a0f0a5;
+  --lp-color-brand-github: #f0f0f0;
+
+  /* Legacy aliases maintained during migration */
+  --accent: var(--lp-color-accent);
+  --accent-dark: var(--lp-color-accent-strong);
+  --hero-text: var(--lp-color-text-primary);
+  --text: var(--lp-color-text-secondary);
+  --text-secondary: var(--lp-color-text-secondary);
+  --muted-text: var(--lp-color-text-muted);
+  --background: var(--lp-color-bg-page);
+  --card-background: var(--lp-color-bg-card);
+  --background-highlight: var(--lp-color-bg-subtle);
+  --border: var(--lp-color-border-default);
+  --button-text: var(--lp-color-on-accent);
+  --page-header-description-color: var(--lp-color-text-secondary);
+  --arbitrum: var(--lp-color-arbitrum);
+}
+
+/* MDX utility classes used to replace page-local inline styles. */
+.lp-title-accent-tight {
+  color: var(--accent);
+  margin-bottom: -1rem;
+}
+
+.lp-columns-spaced {
+  margin: 2rem 0;
+}
+
+.lp-roadmap-frame {
+  width: 100%;
+  height: 1500px;
+  border: none;
+  border-radius: 12px;
+}
+
+.lp-dashboard-frame {
+  border: none;
+  border-radius: 8px;
+}
+
+.lp-ecosystem-frame {
+  border: 3px solid var(--lp-color-accent);
+  border-radius: 8px;
+}
+
+.lp-tweet-frame-small {
+  border: 2px solid var(--accent);
+  border-radius: 2.5%;
+  width: 100%;
+  max-width: 550px;
+  overflow-x: hidden;
+  height: 350px;
+  background-color: var(--text);
+}
+
+.lp-tweet-frame-large {
+  display: flex;
+  justify-content: left !important;
+  border: none;
+  border-radius: 2.5%;
+  width: 70%;
+  max-width: 550px;
+  overflow-x: hidden;
+  height: 650px;
+  background-color: var(--text);
+}
+
+.lp-table-row-accent {
+  background-color: var(--accent);
+  color: var(--lp-color-on-accent);
+}
+
+.lp-table-row-card {
+  background-color: var(--card-background);
+}
+
+.lp-table-heading-cell {
+  padding: 12px 16px;
+  font-weight: 600;
+  color: var(--lp-color-on-accent);
+}
+
+.lp-table-section-cell {
+  padding: 10px 16px;
+  font-weight: 700;
+  color: var(--lp-color-on-accent);
+}
+
+.lp-table-note-cell {
+  padding: 8px 16px;
+  font-style: italic;
+  color: var(--muted-text);
+}
+
+.lp-social-links-tight {
+  margin-top: 1rem;
+  margin-bottom: -1rem;
 }
 /* ============================================ */
 
@@ -108,10 +281,33 @@ a.nav-tabs-item[href="/pages/08_help/README"] {
   justify-content: flex-start;
 }
 
-/* Make the nav-tabs container full width */
-.nav-tabs {
-  width: 100%;
-  justify-content: flex-start;
+/* Fix Mintlify content width and centering.
+   Regular pages: balance padding + widen inner cap.
+   Portal/frame pages: balance padding (smaller) + widen inner cap for full-width hero. */
+@media (min-width: 1024px) {
+  /* Regular pages */
+  #content-container:not(:has(.frame-mode-hero-full)):not(
+      :has(.frame-mode-container)
+    ) {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+  #content-container:not(:has(.frame-mode-hero-full)):not(
+      :has(.frame-mode-container)
+    )
+    > .max-w-5xl {
+    max-width: 72rem !important;
+  }
+  /* Portal/frame pages — tighter balanced padding, wider inner cap */
+  #content-container:has(.frame-mode-hero-full),
+  #content-container:has(.frame-mode-container) {
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+  #content-container:has(.frame-mode-hero-full) > .max-w-5xl,
+  #content-container:has(.frame-mode-container) > .max-w-5xl {
+    max-width: 80rem !important;
+  }
 }
 
 #navbar > div.z-10.mx-auto.relative > div.hidden.lg\:flex.px-12.h-12 > div {
@@ -135,9 +331,9 @@ a.nav-tabs-item[href*='/internal/'] {
 
 /* Push Resource HUB to the right and style as outlined button */
 a.nav-tabs-item[href$='/resources/redirect'],
-a.nav-tabs-item[href$='/resources/resources-portal'],
+a.nav-tabs-item[href$='/resources/portal'],
 a.nav-tabs-item[href$='/07_resources/redirect'],
-a.nav-tabs-item[href$='/07_resources/resources-portal'] {
+a.nav-tabs-item[href$='/07_resources/portal'] {
   margin-left: auto;
   background-color: transparent;
   border: 1px solid var(--accent) !important;
@@ -156,9 +352,9 @@ a.nav-tabs-item[href$='/07_resources/resources-portal'] {
 
 /* Shrink & color the icon */
 a.nav-tabs-item[href$='/resources/redirect'] svg,
-a.nav-tabs-item[href$='/resources/resources-portal'] svg,
+a.nav-tabs-item[href$='/resources/portal'] svg,
 a.nav-tabs-item[href$='/07_resources/redirect'] svg,
-a.nav-tabs-item[href$='/07_resources/resources-portal'] svg,
+a.nav-tabs-item[href$='/07_resources/portal'] svg,
 a.nav-tabs-item[href$='/07_resources/resources_hub'] svg {
   height: 0.75rem;
   width: 0.75rem;
@@ -167,9 +363,9 @@ a.nav-tabs-item[href$='/07_resources/resources_hub'] svg {
 
 /* Hide the underline on the button */
 a.nav-tabs-item[href$='/resources/redirect'] > div:last-child,
-a.nav-tabs-item[href$='/resources/resources-portal'] > div:last-child,
+a.nav-tabs-item[href$='/resources/portal'] > div:last-child,
 a.nav-tabs-item[href$='/07_resources/redirect'] > div:last-child,
-a.nav-tabs-item[href$='/07_resources/resources-portal'] > div:last-child,
+a.nav-tabs-item[href$='/07_resources/portal'] > div:last-child,
 a.nav-tabs-item[href$='/07_resources/resources_hub'] > div:last-child {
   display: none;
 }
@@ -333,7 +529,7 @@ img[alt="US"][src*="flags/US.svg"]::before {
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  background-image: url("/snippets/assets/united-kingdom-flag-icon.svg") !important;
+  background-image: url("/snippets/assets/media/images/site/united-kingdom-flag-icon.svg") !important;
   background-size: cover !important;
   background-position: center !important;
   border-radius: 50% !important;
@@ -345,6 +541,46 @@ img[alt="US"][src*="flags/US.svg"]::before {
 #table-of-contents-layout:empty,
 #content-side-layout:has(#table-of-contents-layout:empty) {
   display: none;
+}
+
+/* DynamicTable: force fixed layout so columnWidths prop values take effect.
+   Mintlify's Tailwind prose resets table-layout to auto — !important required. */
+[data-docs-dynamic-table] {
+  table-layout: fixed !important;
+}
+
+/* StyledTable should sit flush inside its own border shell.
+   Mint wraps rendered tables in a scroll container with vertical padding,
+   which creates a false gap above/below the header row. */
+[data-docs-styled-table-shell] > div {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* BorderedBox should own its internal spacing.
+   Trim default block margins on the first/last rendered child so headings
+   and paragraphs do not add a false gap inside the padded shell. */
+[data-docs-bordered-box] > :first-child {
+  margin-top: 0 !important;
+}
+
+[data-docs-bordered-box] > :last-child {
+  margin-bottom: 0 !important;
+}
+
+[data-docs-bordered-box][data-accent-bar]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background-color: var(--accent-bar-color);
+  border-radius: inherit;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 /* Frame mode container - 80% of #content-container width, centered */
@@ -442,3 +678,68 @@ img[alt="US"][src*="flags/US.svg"]::before {
   top: 0.75rem;
   right: 0.75rem;
 } */
+
+/* ============================================
+   ACCESSIBILITY — Focus indicators
+   ============================================ */
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ACCESSIBILITY — Responsive breakpoints
+   ============================================ */
+
+@media (max-width: 767px) {
+  .frame-mode-hero-full {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  #content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES — inline element styling
+   Used where components can't replace inline spans
+   (e.g., inside Mintlify <Tip>, <Info> components)
+   ============================================ */
+
+.lp-inline-flex {
+  display: flex;
+  align-items: center;
+}
+
+.lp-text-muted {
+  color: var(--lp-color-text-secondary);
+}
+
+.lp-text-italic-muted {
+  font-style: italic;
+  color: var(--lp-color-text-secondary);
+}
+
+.lp-inline-flex-gap {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.lp-link-underline {
+  border-bottom: 1.5px solid var(--lp-color-text-primary);
+  color: var(--lp-color-text-primary);
+  padding-bottom: 0.25rem;
+}

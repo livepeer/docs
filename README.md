@@ -1,228 +1,189 @@
-# Livepeer Documentation Repository
+# Livepeer Documentation
 
-This repository powers the Livepeer documentation experience and docs operations stack. It contains:
+Source repository for [docs.livepeer.org](https://docs.livepeer.org). Built on [Mintlify](https://mintlify.com/) (MDX).
 
-- public docs content and navigation
-- component/data/snippet infrastructure
-- CLI, hooks, checks, and CI workflows
-- automation pipelines for content freshness
-- internal governance documentation
+> **Looking for the full overview?** Read the canonical docs-as-infrastructure page at **[docs.livepeer.org/docs-guide](https://docs.livepeer.org/docs-guide)** (mirrored at [`docs-guide/index.mdx`](docs-guide/index.mdx)). It covers the philosophy, the IA tree, every feature, the contributor quickstart, ownerless governance, and the community-help index in one place.
 
-Live site: [docs.livepeer.org](https://docs.livepeer.org)
+This is more than a docs site — it is a **self-remediating, ownerless documentation operating system**. The repo ships its own component library, 34 local AI skills (53 portable templates), 11 active GitHub workflows (post-2026-05-22 4-tier composable refactor), 321 typed scripts, six native agent adapters, an AI-first distribution surface (`llms.txt`, AI-enriched sitemap, hosted MCP), 13 frameworks, 18 policies, 5 standards, **32 locked decisions across 3 registries** (D-NAV-01, D-ACT-01..10 + D-GOV-01..08, D-DG-01..13), a `lpd` CLI that wraps the whole contributor lifecycle, and a self-documenting governance spine. Drift is detected, named, and either auto-repaired or filed as backlog.
 
-## 5-Minute Overview
+Counts below are live as of 2026-05-23.
 
-If you only have a few minutes, this is the model:
+## Features
 
-1. `v2/pages/` + `snippets/` are the primary docs content system.
-2. `docs.json` controls navigation/routes.
-3. `lpd` is the maintainer CLI for setup/dev/test/hooks/scripts.
-4. `.githooks/`, `tests/`, and CI workflows enforce quality gates.
-5. `docs-guide/` is the internal source of truth for navigating all repo capabilities.
-
-## Quick Start
-
-### Prerequisites
-
-- Node.js 22+ for local checks/CI parity
-- Mintlify CLI for local docs runtime
-
-```bash
-npm i -g mintlify
-```
-
-### Bootstrap + run
-
-```bash
-bash lpd setup --yes
-lpd dev
-```
-
-If `lpd` is not on PATH yet:
-
-```bash
-bash lpd dev
-```
-
-### Quick local validation
-
-```bash
-lpd test --staged
-lpd test --staged --wcag
-lpd test --staged --link-audit-external
-```
-
-## Hot Reload Troubleshooting
-
-If `mint dev` stops hot-reloading all pages, use this flow:
-
-```bash
-bash tools/scripts/dev/ensure-mint-watcher-patch.sh --check
-bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply
-```
-
-Known trigger:
-
-- a repo path that includes `[` / `]` can break chokidar watch events if Mint watcher globbing is not disabled.
-
-Recovery:
-
-1. Use `lpd dev` (or `bash tools/scripts/mint-dev.sh`) so the launcher applies the patch preflight and uses a watcher-safe path fallback.
-2. Re-run `bash tools/scripts/dev/ensure-mint-watcher-patch.sh --apply` after `mint update`.
-
-## Core Capabilities (At a Glance)
-
-### Frontend Docs Platform
-
-- Mintlify-driven docs UI and routing
-- componentized page system via `snippets/components/`
-- structural/style enforcement through automated checks
-
-### Backend-Like Docs Operations Layer
-
-- unified CLI (`lpd`) for setup/dev/test/hooks/script execution
-- enforcement scripts for style, MDX, links/imports, navigation, and script docs
-- GitHub issue templates and PR templates for governance quality
-- pre-commit checks and CI checks including browser validations
-
-### AI / Automation / Pipelines
-
-- GitHub Actions + n8n assets for automated updates
-- showcase and trending/community content pipelines
-- automated maintenance scripts (indexing, SEO/AEO support, glossary support)
-
-### Product and Technical Documentation System
-
-- role-based IA across developers, gateways, orchestrators, delegators, resources
-- product-focused content layer plus deep technical guides
-- references, APIs, and integration data surfaces
-
-## Where Details Live (Canonical Internal Map)
-
-`docs-guide/` is the canonical internal navigation source of truth for repository features and functionality.
-
-| Need | Canonical doc |
+| Capability | How it works |
 |---|---|
-| Start here + update rules | [`docs-guide/README.mdx`](docs-guide/README.mdx) |
-| Source-of-truth boundaries | [`docs-guide/source-of-truth-policy.mdx`](docs-guide/source-of-truth-policy.mdx) |
-| Full feature inventory | [`docs-guide/feature-guides/feature-map.mdx`](docs-guide/feature-guides/feature-map.mdx) |
-| System/data/control flow | [`docs-guide/feature-guides/architecture-map.mdx`](docs-guide/feature-guides/architecture-map.mdx) |
-| CLI commands and runbooks | [`docs-guide/lpd.mdx`](docs-guide/lpd.mdx) |
-| Validation + enforcement gates | [`docs-guide/quality-testing/quality-gates.mdx`](docs-guide/quality-testing/quality-gates.mdx) |
-| Automation pipelines map | [`docs-guide/feature-guides/automation-pipelines.mdx`](docs-guide/feature-guides/automation-pipelines.mdx) |
-| Content system and IA model | [`docs-guide/feature-guides/content-system.mdx`](docs-guide/feature-guides/content-system.mdx) |
-| APIs and data integrations | [`docs-guide/feature-guides/data-integrations.mdx`](docs-guide/feature-guides/data-integrations.mdx) |
-| Generated pages tree inventory | [`docs-guide/indexes/pages-index.mdx`](docs-guide/indexes/pages-index.mdx) |
-| Generated components inventory | [`docs-guide/indexes/components-index.mdx`](docs-guide/indexes/components-index.mdx) |
-| Generated script inventory | [`docs-guide/indexes/scripts-index.mdx`](docs-guide/indexes/scripts-index.mdx) |
-| Generated workflow inventory | [`docs-guide/indexes/workflows-index.mdx`](docs-guide/indexes/workflows-index.mdx) |
-| Generated issue/PR template inventory | [`docs-guide/indexes/templates-index.mdx`](docs-guide/indexes/templates-index.mdx) |
+| **Multi-tab IA (10 tabs)** | Audience-anchored content split across Home, About, Developers, Gateways, Orchestrators, Delegators, Community, Solutions, Resources, Internal. Each tab has its own navigation. |
+| **Canonical wrapper pattern** | Canonical content lives once at `snippets/composables/pages/canonical/*.mdx`. Audience tabs and the Resource HUB list thin wrapper MDX files that import and render the canonical. Edit once, propagate everywhere. |
+| **Self-remediating pipeline** | 55 validators detect drift, 37 remediators repair it, 31 generators rebuild derived artefacts, 25 audits surface the rest as backlog. 102 dispatchers + 8 interfaces complete the 4-tier composable architecture (D-GOV-08). Five-stage control loop: detect → explain → repair → verify → record. |
+| **Ownerless governance contract** | Every governed surface declares a canonical source, a deterministic validator, an exact repair command, and a single gate layer. 8 surfaces formally ownerless-ready; 28 in the broader registry. **Honest framing: "ownerless" covers routine drift, not policy authorship or destructive operations.** |
+| **Three decision registries** | 32 locked decisions across `D-DG-01..13` (docs-guide structure), `D-ACT-01..10 + D-GOV-01..08` (workflow governance), and `D-NAV-01` (content nav). Cross-indexed at `docs-guide/decisions/registry.md`. |
+| **AI distribution surface** | [`llms.txt`](llms.txt) (188 entries), [`sitemap-ai.xml`](sitemap-ai.xml) (181 URLs, 6 of 10 tabs), hosted MCP at `docs.livepeer.org/mcp`, Mintlify chat assistant configured by [`.mintlify/Assistant.md`](.mintlify/Assistant.md), `docs-index.json` (532 entries), per-page AI companion JSON. |
+| **6 native agent adapters** | Claude (`.claude/`), Cursor (`.cursor/`), Windsurf (`.windsurf/`), Augment (`.augment/`), Codex (`.codex/`), GitHub Copilot (`.github/copilot-instructions.md`). All root in the single [`AGENTS.md`](AGENTS.md) baseline (119 lines) per locked D-DG-11. |
+| **34 local + 53 portable AI skills** | Reusable workflows (thread, pm, research, design, build, iterate, close, propagate, audit-orchestrator) under `ai-tools/ai-skills/`. 53 portable templates exported to every agent via the cross-agent packager. 9 of 34 catalogued in `skill-catalog.json`. |
+| **Generated content pipelines** | Contract addresses, OpenAPI references, SDK references, changelogs, glossary, social feeds, exchange data, showcase. All generated by scripts under `operations/scripts/generators/` and `operations/scripts/integrators/` from canonical data sources. |
+| **Contracts pipeline (gold-standard)** | Daily cron + shadow workflow. Bytecode-verified against Arbitrum One and Ethereum Mainnet. Health-check artefacts, automated incident issues, publish gate requiring both `--write` success and a follow-up `--check` rerun. |
+| **Styles governance** | `--lp-*` CSS tokens, pre-commit enforcement, `--verify` regression check. Fleet-wide remediation cut violations from 3,986 to 0 on non-mermaid code. |
+| **132-component governed library** | 35 active JSX + 24 archived under `snippets/components/`. Six categories, 7-tag JSDoc, auto-generated catalog, 312 VS Code snippets generated from the registry. |
+| **Voice and copy enforcement** | UK English, banned words/phrases, no em-dashes, per-audience register. Zone-aware remediators handle frontmatter block scalars and per-key zoning. |
+| **`lpd` CLI** | Unified Bash entry point (13 subcommands + 5 group shorthands). Setup, doctor, scoped dev preview, staged tests, repair, governed page moves, hooks management. |
+| **Scoped Mintlify preview** | `lpd dev --scoped --scope-tab <Tab>` boots a filtered preview against a 1,128-page nav in ~2 seconds (vs ~10 minutes cold). Fuzzy tab matching. |
+| **4 VS Code extensions** | `lpd-mdx-preview` renders the full Livepeer component library without running Mintlify. Plus `authoring-tools`, `components` (registry-driven picker), `markdown-list`. Installs in VS Code, Cursor, and Windsurf via the same `.vsix` packages. |
+| **Quality gates** | 5 tiers: pre-commit (≤60s budget), pre-push (Codex contract), PR CI (blocking, changed-file scope), scheduled CI (broad sweeps), manual dispatch (repair waves). |
+| **Local dev with scoped restart** | `node operations/scripts/dispatch/governance/server-lifecycle.js restart v2/<tab>` boots a scoped Mintlify dev server in ~2 minutes (vs ~10 minutes cold). |
 
-## Contributing (Quick Path)
+The canonical wrapper pattern is foundational. Reference exemplar: [`snippets/composables/pages/canonical/livepeer-contract-addresses.mdx`](snippets/composables/pages/canonical/livepeer-contract-addresses.mdx) with consumer wrappers at [`v2/about/resources/reference/livepeer-contract-addresses.mdx`](v2/about/resources/reference/livepeer-contract-addresses.mdx) and three other paths.
 
-1. Read style and component standards:
-   - [`v2/resources/documentation-guide/style-guide.mdx`](v2/resources/documentation-guide/style-guide.mdx)
-   - [`v2/resources/documentation-guide/component-library.mdx`](v2/resources/documentation-guide/component-library.mdx)
-2. Install/update hooks:
+## Quick start
 
-```bash
-./.githooks/install.sh
-```
-
-3. Create a branch, make changes, run `lpd dev`, commit, and open a PR.
-
-### Codex Branch Contract (`codex/*`)
-
-For agent implementation branches, use:
-
-- branch name: `codex/<issue-id>-<slug>`
-- task contract file: `.codex/task-contract.yaml`
-- required PR sections: `Scope`, `Validation`, `Follow-up Tasks`
-
-Enforcement runs on `codex/*` only via:
-
-- `.githooks/pre-push` (contract + scope + non-fast-forward block by default)
-- `tests/run-pr-checks.js` (CI contract + PR body checks)
-
-To auto-fill PR sections from task contract metadata:
+There is no root `package.json`. The `lpd` CLI handles all dependency installation.
 
 ```bash
-node tools/scripts/create-codex-pr.js --create
+git clone https://github.com/livepeer/docs.git && cd docs
+git checkout docs-v2
+
+bash tools/lpd setup --yes        # installs deps, hooks, PATH link
+lpd doctor                        # verify environment
+lpd dev --scoped --scope-tab Developers  # boot a scoped preview
 ```
 
-This generates `.codex/pr-body.generated.md` and calls `gh pr create --body-file ...`.
-Codex PR CI also requires the generated marker in the PR body, so manual bodies without the marker fail contract validation.
+Mintlify is opt-in during setup. To include it: `bash tools/lpd setup --yes --with-mintlify` (or `npm i -g mintlify` manually).
 
-Contributor deep docs:
+## Branch structure
 
-- [`contribute/CONTRIBUTING/README.md`](contribute/CONTRIBUTING/README.md)
-- [`contribute/CONTRIBUTING/GIT-HOOKS.md`](contribute/CONTRIBUTING/GIT-HOOKS.md)
+| Branch | Role |
+|---|---|
+| `docs-v2` | Deploy branch (production) — `docs.livepeer.org` deploys from here |
+| `docs-v2-dev` | Working / test branch — in-flight maintainer work |
+| `codex/<issue-id>-<slug>` | AI agent task branches (hook-enforced isolation) |
 
-## Quality Gates Summary
+External contributors fork the repo, branch from `docs-v2`, and PR back against `docs-v2`. This repo does not deploy from `main`.
 
-### Local (pre-commit)
+## Repo layout
 
-- `.githooks/pre-commit` runs structure/style verification and staged checks
-- includes script docs enforcement and pages index synchronization
-- includes staged WCAG accessibility audit with conservative autofix for common raw-tag issues
-- docs-guide source-of-truth checks currently run in advisory mode
+```
+v2/                  1,128 published MDX pages (active docs) across 10 tabs
+v1/                  279 frozen legacy pages
+snippets/            132 component registry exports (35 active + 24 archived JSX files), 37 templates, 8 Tier-1 composables, data, assets
+operations/scripts/  321 active JS/SH/Py scripts + 38 archived (102 dispatch, 58 integrators, 55 validators, 37 remediators, 31 generators, 25 audits, 8 interfaces)
+operations/tests/    integration + unit + render-verify harnesses + pipeline-smoke-test (66/66 dispatchers passing)
+.github/workflows/   11 active dispatchers (6 dispatch-{concern}.yml + 5 interface-governance-*) post-2026-05-22 4-tier refactor; 61 archived in workflows/x-archive/
+ai-tools/            34 local SKILL.md + 53 portable templates + cross-agent packager + agent-packs
+tools/               lpd CLI, scoped preview, 4 VS Code extensions, shared JS libs
+api/                 5 OpenAPI specs (Studio, Gateway, AI Worker, AI Runner, CLI) — currently 67 days stale; fetcher covers 2 of 5
+docs-guide/          The docs-as-infrastructure spine: index, standards, frameworks, policies, decisions, contributing, reference, catalogs
+docs.json            Mintlify navigation and routing config (source of truth, hand-edited) — 686 v2 routes + 475 redirects
+AGENTS.md            Cross-agent baseline (119 lines); every native adapter points here per D-DG-11
+llms.txt             AI-first root artefact for LLM crawlers and assistants (188 entries)
+sitemap-ai.xml       AI-enriched sitemap with per-URL freshness and tags (181 URLs)
+.mintlify/           Mintlify chat assistant configuration
+```
 
-### CI (GitHub Actions)
+Root governance is explicit. Only approved root contracts and subsystem roots belong at repo root. `ai-tools/` is an intentionally governed root subsystem; the ratified AI-first public root artefacts are `docs-index.json`, `llms.txt`, and `sitemap-ai.xml`.
 
-- changed-file quality suite: `.github/workflows/test-suite.yml`
-- v2 browser sweep: `.github/workflows/test-v2-pages.yml`
-- broken links check currently advisory while cleanup is ongoing
+- Live root inventory: [`docs-guide/repo-ops/config/root-governance-map.mdx`](docs-guide/repo-ops/config/root-governance-map.mdx)
+- Root policy: [`docs-guide/policies/root-allowlist-governance.mdx`](docs-guide/policies/root-allowlist-governance.mdx)
 
-Deep matrix:
+## Contributing
 
-- [`tests/WHEN-TESTS-RUN.md`](tests/WHEN-TESTS-RUN.md)
-- [`tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md`](tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md)
+1. Read the [authoring guide](v2/resources/documentation-guide/copy-style/authoring-guide.mdx) and [style guide](v2/resources/documentation-guide/copy-style/style-guide.mdx).
+2. Install hooks: `bash lpd setup --yes` (or `bash .githooks/install.sh` to install just the hooks).
+3. Branch from `docs-v2`, run `lpd dev --scoped --scope-tab <Tab>` to preview, then open a PR against `docs-v2`.
 
-## Repository Orientation
+Full contributing flow:
 
-High-level directory map:
+- Public quickstart: [`v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx`](v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx)
+- Canonical maintainer flow: [`docs-guide/contributing/contributing.mdx`](docs-guide/contributing/contributing.mdx)
+- The full docs-as-infrastructure overview: [`docs-guide/index.mdx`](docs-guide/index.mdx)
+- Community-help opportunities: [`docs-guide/contributing/community-help.mdx`](docs-guide/contributing/community-help.mdx)
 
-- `v2/pages/` active docs pages
-- `v1/` legacy/frozen docs
-- `snippets/` components, data, automations, shared assets
-- `tools/scripts/` operational/generation scripts
-- `tests/` unit/integration checks and runners
-- `.githooks/` local hook scripts
-- `.github/workflows/` CI and scheduled automations
-- `api/` OpenAPI and related specs
-- `docs-guide/` internal docs navigation source of truth
+## Quality gates
 
-## Automation Summary
+### Pre-commit (5 hard gates)
 
-Key automation categories:
+The `.githooks/pre-commit` hook blocks commits that fail MDX render checks, `docs.json` redirect integrity, `.allowlist` and `v1/` protection, no-deletion enforcement, and Codex branch isolation. Budget: ≤60 seconds.
 
-- content freshness (forum/blog/youtube/releases/showcase)
-- CI quality and browser validation
-- issue intake/labeling and review tooling
-- docs maintenance scripts and generated catalogs
+### Pre-push (Codex branches only)
 
-Automation deep docs:
+For `codex/*` branches, `.githooks/pre-push` enforces the task contract, lock-file overlap detection, and stash-policy.
 
-- [`docs-guide/feature-guides/automation-pipelines.mdx`](docs-guide/feature-guides/automation-pipelines.mdx)
-- [`v2/resources/documentation-guide/automations-workflows.mdx`](v2/resources/documentation-guide/automations-workflows.mdx)
+### PR CI (blocking, changed-file scope)
 
-## AI and Maintainer Guidance
+Pull requests trigger validator workflows: render, broken links, browser sweeps, OpenAPI reference, docs-guide catalogs, governance map sync, copy standards.
 
-- AI assistant rules and safety: `tools/ai-rules/`
-- repository AI guidance files: `.github/AGENTS.md`, `.cursorrules`
+### Scheduled CI (broad sweeps)
 
-## Source-of-Truth Contract (Short Form)
+Workspace retention, content freshness, external links, page integrity, AI sitemap regeneration, social feeds.
 
-- Code/tests are source of truth for behavior.
-- `docs-guide/` is source of truth for internal capability navigation.
-- `README.md` is high-level orientation and link hub.
-- Generated indexes must be regenerated, not hand-edited.
+Deep references:
 
-Regenerate docs-guide generated indexes:
+- [`docs-guide/policies/quality-gates.mdx`](docs-guide/policies/quality-gates.mdx)
+- [`operations/tests/WHEN-TESTS-RUN.md`](operations/tests/WHEN-TESTS-RUN.md)
+- [`operations/tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md`](operations/tests/PR-CI-TESTS-AND-SCRIPT-RUN-MATRIX.md)
+
+## Internal docs
+
+`docs-guide/` is the canonical engineering navigation layer. Start with the master overview:
+
+| Need | File |
+|---|---|
+| **Full docs-as-infrastructure overview (recommended starting point)** | [`docs-guide/index.mdx`](docs-guide/index.mdx) |
+| Locked architectural decisions | [`docs-guide/decisions/docs-guide-structure.md`](docs-guide/decisions/docs-guide-structure.md) (D-DG-01..D-DG-13) |
+| Source-of-truth boundaries | [`docs-guide/policies/source-of-truth-policy.mdx`](docs-guide/policies/source-of-truth-policy.mdx) |
+| Ownerless governance contract | [`docs-guide/policies/ownerless-governance.mdx`](docs-guide/policies/ownerless-governance.mdx) |
+| Full feature inventory | [`docs-guide/features/feature-map.mdx`](docs-guide/features/feature-map.mdx) |
+| Implementation backlog | [`docs-guide/features/gap-analysis.mdx`](docs-guide/features/gap-analysis.mdx) |
+| CLI commands and runbooks | [`docs-guide/tooling/lpd-cli.mdx`](docs-guide/tooling/lpd-cli.mdx) |
+| Validation and enforcement gates | [`docs-guide/policies/quality-gates.mdx`](docs-guide/policies/quality-gates.mdx) |
+| Generated artefact governance | [`docs-guide/policies/generated-artifact-and-hook-governance.mdx`](docs-guide/policies/generated-artifact-and-hook-governance.mdx) |
+| AI features and skills | [`docs-guide/features/ai-features.mdx`](docs-guide/features/ai-features.mdx) |
+| UI authoring system | [`docs-guide/features/ui-system.mdx`](docs-guide/features/ui-system.mdx) |
+| GitHub Actions and automations | [`docs-guide/features/automations.mdx`](docs-guide/features/automations.mdx) |
+| Data integrations | [`docs-guide/features/data-integrations.mdx`](docs-guide/features/data-integrations.mdx) |
+| Adaptive architecture / self-remediation | [`docs-guide/features/adaptive-architecture.mdx`](docs-guide/features/adaptive-architecture.mdx) |
+| Contributor toolchain | [`docs-guide/features/contributor-tools.mdx`](docs-guide/features/contributor-tools.mdx) |
+
+## AI agent setup
+
+[`AGENTS.md`](AGENTS.md) is the cross-agent baseline. Every native adapter points back to it.
+
+Native adapters:
+
+- Claude Code: [`.claude/CLAUDE.md`](.claude/CLAUDE.md)
+- Cursor: [`.cursor/rules/repo-governance.mdc`](.cursor/rules/repo-governance.mdc)
+- Windsurf: [`.windsurf/rules/repo-governance.md`](.windsurf/rules/repo-governance.md)
+- Augment: [`.augment/rules/`](.augment/rules/)
+- Codex: [`.github/AGENTS.md`](.github/AGENTS.md) + [`.codex/`](.codex/) (task-contract.yaml, lock files)
+- GitHub Copilot: [`.github/copilot-instructions.md`](.github/copilot-instructions.md)
+- Mintlify chat assistant: [`.mintlify/Assistant.md`](.mintlify/Assistant.md)
+
+Governance policy: [`docs-guide/policies/agent-governance-framework.mdx`](docs-guide/policies/agent-governance-framework.mdx).
+
+## Source-of-truth contract
+
+- Code and tests under `operations/`, `snippets/`, and `tools/` are source of truth for runtime behaviour.
+- `docs-guide/` is source of truth for internal capability navigation and governance.
+- Public docs UX and content live at `v2/` (under `docs.livepeer.org`).
+- `README.md` (this file) is high-level orientation. Deep detail lives in `docs-guide/`.
+- Generated indexes must be regenerated, not hand-edited:
 
 ```bash
-node tools/scripts/generate-docs-guide-indexes.js --write
-node tools/scripts/generate-docs-guide-pages-index.js --write
-node tools/scripts/generate-docs-guide-components-index.js --write
-node tests/unit/script-docs.test.js --write --rebuild-indexes
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write
+node operations/tests/unit/script-docs.test.js --write --rebuild-indexes
 ```
+
+## Community help wanted
+
+The full opportunity index lives at [`docs-guide/contributing/community-help.mdx`](docs-guide/contributing/community-help.mdx). Top six high-leverage items:
+
+1. **Wire `llms.txt` + `sitemap-ai.xml` regen to CI** — P0, single highest-impact AI freshness fix.
+2. **Cherry-pick contract-addresses workflow to `docs-v2`** — P0, open since 2026-03-31.
+3. **Fix the cron-is-dry-run-by-default bug** — P0 systemic. Every `dispatch-{concern}.yml` scheduled job runs in dry-run because cron physically cannot pass `inputs.dry_run = false`. Single fix to 6 workflow files unblocks 6 stale data pipelines (contracts 19-day staleness, llms.txt + sitemap-ai.xml 47-day staleness, OG-images, SEO).
+4. **Backfill the 45 retired-`@category` + 4 retired-`@domain` JSDoc script headers** — excellent first PR. Live as of 2026-05-23 (much smaller than the previously-documented "218" figure; JSDoc compliance is now ~100% on `@purpose`). Run `repair-script-inventory.js`.
+5. **Promote an advisory surface to ownerless-ready** — the most repeatable contribution path; 20 candidates available in `repo-governance-surfaces.json`.
+6. **Execute the gateways v2 cleanup move-wave** — 199 of 307 documented recommendations in the cleanup matrix.
+
+## Licence
+
+[MIT](LICENSE)

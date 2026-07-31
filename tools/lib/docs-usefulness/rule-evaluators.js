@@ -1,4 +1,59 @@
 'use strict';
+/**
+ * @script            rule-evaluators
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Evaluates individual rubric rules against page content.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluateRule } = require('../lib/docs-usefulness/rule-evaluators');
+ */
+/**
+ * @script            rule-evaluators
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Evaluates individual rubric rules against page content.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluateRule } = require('../lib/docs-usefulness/rule-evaluators');
+ */
+/**
+ * @script            rule-evaluators
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Evaluates individual rubric rules against page content.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluateRule } = require('../lib/docs-usefulness/rule-evaluators');
+ */
+/**
+ * @script            rule-evaluators
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Evaluates individual rubric rules against page content.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluateRule } = require('../lib/docs-usefulness/rule-evaluators');
+ */
+/**
+ * @script            rule-evaluators
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Evaluates individual rubric rules against page content.
+ * @pipeline          indirect -- library module
+ * @usage             const { evaluateRule } = require('../lib/docs-usefulness/rule-evaluators');
+ */
 
 function toText(value) {
   return String(value || '').toLowerCase();
@@ -6,6 +61,107 @@ function toText(value) {
 
 function countMatches(content, re) {
   return (String(content || '').match(re) || []).length;
+}
+
+const OPENING_BOILERPLATE_PATTERNS = [
+  /\bthis page (?:covers|explains|shows|describes)\b/i,
+  /\bthis guide (?:covers|explains|shows|walks through)\b/i,
+  /\bin this guide\b/i,
+  /\bin this page\b/i,
+  /\bthis section explains\b/i,
+  /\bthis tutorial (?:covers|shows|walks through)\b/i
+];
+
+const FILLER_MARKETING_REGEX = /\b(simply|just|seamless|robust|powerful|leverage|unlock|easy|intuitive|best-in-class)\b/gi;
+
+const NEGATION_DEFINITION_PATTERNS = [
+  /\bis\s+[^.\n]{0,120}?,\s*not\s+(?:an?|the)\s+[a-z]/gi,
+  /\bis\s+[^.\n]{0,120}\s+not\s+(?:an?|the)\s+[a-z]/gi
+];
+
+function stripFrontmatter(content) {
+  return String(content || '').replace(/^---\s*\r?\n[\s\S]*?\r?\n---\s*(?:\r?\n)?/, '');
+}
+
+function isProseLine(line) {
+  const trimmed = String(line || '').trim();
+  if (!trimmed) return false;
+  if (
+    trimmed.startsWith('import ') ||
+    trimmed.startsWith('export ') ||
+    trimmed.startsWith('{/*') ||
+    trimmed.startsWith('<') ||
+    trimmed.startsWith('#') ||
+    trimmed.startsWith('```') ||
+    /^\d+\.\s+/.test(trimmed) ||
+    /^[-*+]\s+/.test(trimmed) ||
+    trimmed.startsWith('[//]:')
+  ) {
+    return false;
+  }
+
+  return /[A-Za-z]/.test(trimmed);
+}
+
+function getOpeningParagraph(content) {
+  const body = stripFrontmatter(content);
+  const lines = body.split('\n');
+  let inJsxComment = false;
+  let inCodeBlock = false;
+  const paragraph = [];
+
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim();
+
+    if (trimmed.startsWith('```')) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+
+    if (inCodeBlock) {
+      continue;
+    }
+
+    if (inJsxComment) {
+      if (trimmed.includes('*/}')) {
+        inJsxComment = false;
+      }
+      continue;
+    }
+
+    if (trimmed.startsWith('{/*')) {
+      if (!trimmed.includes('*/}')) {
+        inJsxComment = true;
+      }
+      continue;
+    }
+
+    if (paragraph.length === 0) {
+      if (isProseLine(rawLine)) {
+        paragraph.push(trimmed);
+      }
+      continue;
+    }
+
+    if (!trimmed || !isProseLine(rawLine)) {
+      break;
+    }
+
+    paragraph.push(trimmed);
+  }
+
+  return paragraph.join(' ').trim();
+}
+
+function countFillerMarketingTerms(text) {
+  return (String(text || '').match(FILLER_MARKETING_REGEX) || []).length;
+}
+
+function countNegationDefinitions(text) {
+  return NEGATION_DEFINITION_PATTERNS.reduce(
+    (total, pattern) => total + (String(text || '').match(pattern) || []).length,
+    0
+  );
 }
 
 function getSignalValue(page, signal) {
@@ -72,6 +228,26 @@ const BOOLEAN_CHECKS = {
 
   all_internal_links_resolve(page) {
     return !(page.flags || []).includes('broken_links');
+  },
+
+  opening_not_boilerplate(page) {
+    const opening = getOpeningParagraph(page.content || '');
+    if (!opening) return true;
+    return !OPENING_BOILERPLATE_PATTERNS.some((pattern) => pattern.test(opening));
+  },
+
+  low_filler_marketing_language(page) {
+    const text = String(page.textContent || '');
+    const wordCount = text.split(/\s+/).filter(Boolean).length;
+    const fillerCount = countFillerMarketingTerms(text);
+    if (wordCount === 0) return true;
+    if (wordCount < 120) return fillerCount <= 1;
+    return fillerCount <= Math.max(2, Math.floor(wordCount / 180));
+  },
+
+  limited_negation_definitions(page) {
+    const text = String(page.textContent || '');
+    return countNegationDefinitions(text) <= 1;
   }
 };
 

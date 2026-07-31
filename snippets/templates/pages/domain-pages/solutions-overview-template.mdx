@@ -1,0 +1,220 @@
+---
+title: '[PRODUCT_NAME]'
+description: >-
+  [One-sentence description of what the product does and its relationship to
+  Livepeer.]
+keywords:
+  - livepeer
+  - solutions
+  - [product-slug]
+  - overview
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: platform-builder
+lastVerified: YYYY-MM-DD
+purpose: overview
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CustomCardTitle } from "/snippets/components/elements/text/Text.jsx";
+import { SocialLinks } from "/snippets/components/elements/links/Links.jsx";
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { CenteredContainer } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { YouTubeVideo, Video } from "/snippets/components/displays/video/Video.jsx";
+import { BadgeWrapper, IconBadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+export const productBadges = [
+  { color: 'blue', label: '[Category Badge]' },
+  { color: 'green', label: '[Status Badge]' },
+]
+
+export const productInfra = [
+  { icon: 'server', label: '[Infra Tag]' },
+  { icon: 'sparkles', label: '[Capability Tag]' },
+]
+
+export const productSocials = [
+  { icon: 'globe', href: 'https://__PRODUCT_URL__', label: '[PRODUCT_NAME] Website' },
+  { icon: 'github', href: 'https://github.com/__ORG__/__REPO__', label: '[PRODUCT_NAME] GitHub' },
+  { icon: 'discord', href: '__DISCORD_URL__', label: '[PRODUCT_NAME] Discord' },
+]
+
+{/*
+  BADGES & INFRA TAGS — DO NOT INVENT THESE.
+  Copy the exact values from the SolutionCard for this product in v2/solutions/portal.mdx.
+  Replace the stub exports above after copying this template into a routable page.
+*/}
+
+<IconBadgeWrapper style={{ margin: "-1rem 0 1rem 0" }} iconColor="var(--accent)" size={16} items={productInfra} />
+<BadgeWrapper style={{margin: "0 0 1rem 0"}} badges={productBadges} />
+
+{/* socials links */}
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox style={{margin: 0, padding: "0.5rem 1rem 1rem 1rem"}} variant="accent">
+    <SocialLinks iconColor="var(--text)" links={productSocials} />
+  </BorderedBox>
+</CenteredContainer>
+
+<Info>
+  This page is maintained by the [PRODUCT_NAME] Team. Help & support available via the [PRODUCT_NAME Discord]([DISCORD_URL]).
+</Info>
+
+{/*
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MEDIA — CHECK ALL OF THESE BEFORE WRITING ANYTHING HERE
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Sources to check IN ORDER:
+    1. snippets/assets/media/videos/         — mp4 files already in repo
+    2. community.mdx for this product        — existing YouTubeVideo embeds
+    3. Product homepage                      — hero video, demo video
+    4. YouTube channel                       — demos, tutorials, conference talks
+    5. X / Twitter (@handle)                 — pinned posts, product videos
+    6. Bluesky (@handle)                     — especially for web3/AT Protocol products
+    7. GitHub README                         — GIFs, screenshots, demo links
+
+  OPTIONS (use whichever fits):
+    <Video src="..." href="..." />                  — mp4 in repo or external URL
+    <YouTubeVideo embedUrl="..." title="..." />     — YouTube embed
+    <iframe src="..." />                            — embed the product itself (e.g. live dashboard)
+    IMAGE/GIF                                       — from README or product site if nothing else
+*/}
+
+<Video src="/snippets/assets/media/videos/[product-hero].mp4" alt="[PRODUCT_NAME] Hero Video" href="https://[product-url]"/>
+{/* ALT: <YouTubeVideo embedUrl="https://www.youtube.com/embed/[ID]" title="..." /> */}
+{/* ALT: <iframe src="https://[product-url]" width="100%" height="600px" frameBorder="0" allowFullScreen title="..." /> */}
+
+{/*
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  TWO PARAGRAPHS REQUIRED. DO NOT MERGE. DO NOT SKIP.
+  Reference: v2/solutions/daydream/overview.mdx
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  PARAGRAPH 1 — explains the product (developer audience first):
+  What the product IS and what it does for builders.
+  Lead with the product name + bold descriptor. 1-2 sentences.
+  State concrete capabilities — not "provides tools to", not "enables".
+
+  PARAGRAPH 2 — explains connection to Livepeer:
+  How this product uses the Livepeer network. 1 sentence.
+  Pattern: "[Product] runs on Livepeer's decentralised GPU network.
+  It uses the [X gateway] to route [job type] to the network."
+*/}
+
+{/* explains the product */}
+[PRODUCT_NAME] is **[bold descriptor]** for [use case]. [What it concretely does for the developer — no filler, no "provides tools to".]
+
+{/* explains connection to Livepeer */}
+[PRODUCT_NAME] runs on Livepeer's decentralised GPU network. It uses the [[X] gateway]([GATEWAY_URL]) to route [job type] to the network.
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+{/* product features — preferably with a video, embedded content, or blog post */}
+## Key Features
+- **[Feature 1]** - [One-line description.]
+- **[Feature 2]** - [One-line description.]
+- **[Feature 3]** - [One-line description.]
+- **[Feature 4]** - [One-line description.]
+
+{/* Remove if no video available */}
+<YouTubeVideo
+  embedUrl="https://www.youtube.com/embed/[VIDEO_ID]"
+  title="[Video title]"
+  caption="[Caption text]"
+/>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+{/*
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  GET STARTED — OPTIONAL. Include if the product has clear
+  onboarding steps (try the app, use the API, run infra).
+  Use StyledSteps/StyledStep. Reference: daydream/overview.mdx
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*/}
+
+## Get Started
+
+<StyledSteps>
+  <StyledStep title="[Try the app / Use the product]" icon="wand-magic-sparkles">
+    1. [Go to product URL.]
+    2. [First action.]
+    3. [Second action.]
+    4. [See the result.]
+
+    [One sentence: how this connects to Livepeer's network.]
+  </StyledStep>
+
+  <StyledStep title="Build with the [PRODUCT_NAME] API" icon="code">
+    1. Read the [[PRODUCT_NAME] docs]([DOCS_URL]) for setup and authentication.
+    2. Get the required API keys or credentials.
+    3. Use the API or SDK to [do the core thing].
+
+    <Info>
+      Exact endpoints, SDK usage, and pipeline options are documented in the [[PRODUCT_NAME] documentation]([DOCS_URL]).
+    </Info>
+  </StyledStep>
+
+  <StyledStep title="[Run infrastructure / Connect a gateway]" icon="server">
+    [One paragraph: how to operate infrastructure for this product on the Livepeer network, with link to relevant gateway or operator docs.]
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Try [PRODUCT_NAME]
+{/*
+  Link to actual try-me / use-me / dev references — NOT links already in socials.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
+
+<CardGroup cols={2}>
+  <Card title={<CustomCardTitle icon="book-open" title="Get Started Guide" />} href="[GETTING_STARTED_URL]" arrow>
+    [One-line: what the reader will learn or do.]
+  </Card>
+  <Card title={<CustomCardTitle icon="bolt-lightning" title="Quickstart" />} href="[QUICKSTART_URL]" arrow>
+    [One-line: what they can run or connect in minutes.]
+  </Card>
+  <Card title={<CustomCardTitle icon="wand-magic-sparkles" title="Try the App" />} href="https://app.[product-url]/" arrow>
+    [One-line: what they can try immediately.]
+  </Card>
+  <Card title={<CustomCardTitle icon="diagram-project" title="Explore [Content type]" />} href="[EXPLORE_URL]" arrow>
+    [One-line: what they can browse or discover.]
+  </Card>
+</CardGroup>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## [PRODUCT_NAME] Resources
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox style={{margin: "0 0 1rem 0", padding: "0.5rem 1rem 1rem 1rem"}} variant="accent">
+      <SocialLinks iconColor="var(--text)" links={productSocials} />
+  </BorderedBox>
+</CenteredContainer>
+{/*
+  At least 2 dev items (docs, GitHub, website) + main comms/support channel (Discord) + one other dev-focused item.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
+
+<CardGroup cols={2}>
+  <Card title={<CustomCardTitle title="[PRODUCT_NAME] docs" icon="newspaper"/>} href="https://docs.[product-url]/" arrow>
+    Full documentation: setup, API reference, and guides.
+  </Card>
+  <Card title={<CustomCardTitle title="GitHub" icon="github"/>} href="https://github.com/[org]/[repo]" arrow>
+    [One-line: what lives in the repo.]
+  </Card>
+  <Card title={<CustomCardTitle title="Discord" icon="discord"/>} href="[DISCORD_URL]" arrow>
+    Community and support.
+  </Card>
+  <Card title={<CustomCardTitle title="[PRODUCT_NAME] blog" icon="pencil-line"/>} href="https://blog.[product-url]/" arrow>
+    Tutorials, stories, and updates.
+  </Card>
+</CardGroup>

@@ -1,0 +1,176 @@
+---
+title: "Network Tools and Metrics"
+sidebarTitle: "Tools and Metrics"
+description: >-
+  How to read the Livepeer Network from the outside. Covers the five public observability surfaces -
+  Explorer, subgraph, dashboards, leaderboard, and capabilities API - plus how to embed live network
+  data in an external site.
+lifecycleStage: discover
+complexity: intermediate
+keywords:
+  - livepeer explorer
+  - subgraph
+  - grafana
+  - leaderboard
+  - capabilities api
+  - metrics embed
+  - network observability
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+purpose: learn
+audience: general
+lastVerified: "2026-05-06"
+---
+
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<Quote>
+The Livepeer Network is observable from five public surfaces. Each surface answers a different class of question - on-chain state, historical activity, real-time performance, capability availability, or governance outcomes. Knowing which surface to read is half the work.
+</Quote>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+
+## Why a guide on observability
+
+The protocol stores its rules and balances on Arbitrum One. The network's actual work happens off-chain across Orchestrators, Gateways, and pipelines that the chain never sees. Reading the network well requires combining on-chain state with off-chain signal - and knowing which signal each surface gives you.
+
+A founder evaluating Livepeer needs different data than an Orchestrator monitoring its own performance, or a developer integrating a metrics widget into their site. This guide maps the available surfaces to the questions they answer.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## The five public surfaces
+
+<DynamicTableV2
+  headerList={["Surface", "What it shows", "Update cadence", "Best for"]}
+  itemsList={[
+    { "Surface": "Livepeer Explorer", "What it shows": "On-chain state - active set, bonded supply, inflation, votes, treasury balance", "Update cadence": "Per Arbitrum block (~1 second)", "Best for": "Holders, voters, evaluators" },
+    { "Surface": "Subgraph", "What it shows": "Indexed historical on-chain events with structured queries", "Update cadence": "Per block, with indexer lag (seconds to minutes)", "Best for": "Analytics, dashboards, custom integrations" },
+    { "Surface": "Network dashboards (Grafana)", "What it shows": "Off-chain network performance - throughput, latency, success rates per pipeline", "Update cadence": "Real-time", "Best for": "Network operators, SPE leads, performance-sensitive integrators" },
+    { "Surface": "Performance leaderboard", "What it shows": "Per-orchestrator quality metrics - score, success rate, regional latency", "Update cadence": "Periodic, off-chain", "Best for": "Gateways selecting orchestrators, delegators choosing where to bond" },
+    { "Surface": "Capabilities API", "What it shows": "Live orchestrator advertisements - which capabilities are available, at what price, with what availability", "Update cadence": "Real-time, polled per gateway", "Best for": "Gateways, integrators, BYOC pipeline developers" },
+  ]}
+/>
+
+Each surface has a strict scope. The Explorer cannot tell you whether an Orchestrator is currently online. The Grafana dashboards cannot tell you who voted on a LIP. The capabilities API cannot tell you historical revenue. Use the surface that matches the question.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Livepeer Explorer
+
+The Explorer is the canonical view of on-chain protocol state. Everything the protocol contracts hold is queryable here.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Active set and bonded supply" icon="layer-group">
+    The full active Orchestrator set, sorted by total bonded stake, with self-bond, delegated stake, and round status visible per Orchestrator.
+  </StyledStep>
+  <StyledStep title="Inflation and rewards" icon="chart-line">
+    Per-round inflation rate, total LPT supply, treasury balance, and reward distribution. The bonded share is shown against the protocol's target.
+  </StyledStep>
+  <StyledStep title="Governance" icon="ballot-check">
+    Active and historical proposals, on-chain vote tallies, voter participation, and time remaining on open votes.
+  </StyledStep>
+  <StyledStep title="Per-account view" icon="user">
+    Bonded balance, unbonding locks, claimable earnings, voting history. Connect a wallet to see your own state and to act on it.
+  </StyledStep>
+</StyledSteps>
+
+<Tip>
+The Explorer is the surface to use for any answer that depends on what is actually committed on-chain - not what an Orchestrator says it can do, not what historical analytics report. If a question can be answered by reading a contract, use the Explorer.
+</Tip>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Subgraph and historical analytics
+
+The Livepeer subgraph indexes every on-chain event into a queryable schema. It is the right surface for time-series questions, custom dashboards, and any analysis that needs more than current state.
+
+Common analytics patterns:
+
+- **Network usage** - segments transcoded, AI inference calls, total minutes per period.
+- **Fee revenue** - ETH redeemed by Orchestrators per period, demand-side fees per Gateway.
+- **Orchestrator performance** - per-Orchestrator round-by-round reward calls, fee earnings, stake changes.
+- **Governance participation** - votes cast per LIP, quorum trajectories, Orchestrator vs Delegator participation rates.
+- **Treasury activity** - treasury inflows from inflation, outflows from passed proposals, balance trajectories.
+
+The subgraph is queried directly with GraphQL, and is the data source behind most public dashboards. For one-off analysis, query it directly. For embedded data products, use it as the backend.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Network dashboards and the leaderboard
+
+Off-chain network performance is published through Grafana dashboards and a performance leaderboard. These surfaces answer questions the chain cannot - latency, throughput, success rate per pipeline, geographical distribution of work.
+
+<DynamicTableV2
+  headerList={["Surface", "Source", "What it surfaces"]}
+  itemsList={[
+    { "Surface": "Grafana - network operations", "Source": "Off-chain telemetry from orchestrators and gateways", "What it surfaces": "Live throughput per workload class, segment success rate, pipeline latency, error trends" },
+    { "Surface": "Performance leaderboard", "Source": "Periodic public benchmarks against orchestrators", "What it surfaces": "Per-orchestrator score, regional latency, recent success rate, capability mix" },
+    { "Surface": "Per-orchestrator transparency reports", "Source": "Self-published by SPEs and operators", "What it surfaces": "Operational changes, incident reports, upgrade plans" },
+  ]}
+/>
+
+These surfaces have a structural blind spot: they only see what their telemetry covers. An Orchestrator that does not publish telemetry is invisible to the dashboards even when it is serving production traffic. Combine off-chain dashboards with on-chain data to see the full picture.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Capabilities API
+
+Each Orchestrator publishes its current capabilities as a real-time advertisement: video transcoding profiles, AI inference pipelines, BYOC containers, real-time AI sessions, and the prices for each. Gateways read this advertisement to assemble a working set per job.
+
+For an external observer or integrator, the capabilities API is the surface to use to answer:
+
+- Which Orchestrators currently advertise a given AI pipeline.
+- What prices Orchestrators are quoting for transcoding profiles.
+- Where the network has spare capacity for a specific workload.
+- Whether a BYOC container is being run by anyone in the Active Set.
+
+Capability advertisements are bitstrings, not free-form text. The list is governed - new capabilities require a registration that propagates to Gateways. The advertisement structure is stable enough to query programmatically.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Embedding live network data
+
+Several of the surfaces above are designed to be embedded in external sites - a portfolio tracker, an Orchestrator's transparency page, a public ecosystem dashboard.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Embed a metrics widget" icon="chart-line">
+    The repository provides components that render live Livepeer data - bonded supply, inflation rate, active Orchestrator count, treasury balance - as standalone widgets backed by the subgraph.
+  </StyledStep>
+  <StyledStep title="Embed a Grafana panel" icon="gauge-high">
+    Grafana panels can be exposed as iframes for read-only embedding. Use this for off-chain throughput, success rate, and pipeline-specific dashboards.
+  </StyledStep>
+  <StyledStep title="Render an Explorer link" icon="link">
+    For state that updates per block, a contextual link to the Explorer is more current than any cached widget. Live state should resolve to the Explorer.
+  </StyledStep>
+  <StyledStep title="Build a custom integration" icon="code">
+    For analytics that no public surface answers directly - custom segmentation, Orchestrator cohort comparison, treasury allocation analysis - query the subgraph and render in your own UI.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="chart-line" title="Network Metrics Reference" />} href="/v2/about/guides/network-metrics" horizontal arrow>
+    Every Explorer metric explained, with formulas for institutional analysis.
+  </Card>
+  <Card title={<CustomCardTitle icon="eye" title="Network Observability" />} href="/v2/about/network/observability" horizontal arrow>
+    Read paths, surface trade-offs, and off-chain blind spots in detail.
+  </Card>
+  <Card title={<CustomCardTitle icon="globe" title="Livepeer Explorer" />} href="https://explorer.livepeer.org/" horizontal arrow>
+    Live on-chain state, governance proposals, and per-Orchestrator data.
+  </Card>
+  <Card title={<CustomCardTitle icon="diagram-project" title="Subgraph" />} href="https://thegraph.com/explorer/subgraphs?search=livepeer" horizontal arrow>
+    Indexed historical events for custom analytics and embedded dashboards.
+  </Card>
+</Columns>

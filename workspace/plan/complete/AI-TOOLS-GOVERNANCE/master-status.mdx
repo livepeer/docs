@@ -1,0 +1,79 @@
+---
+title: AI-TOOLS-GOVERNANCE — Master Status
+lastAudited: 2026-03-24
+---
+
+## Purpose
+
+Govern the `ai-tools/` directory: registry integrity, skill system structure, agent instructions, AI discoverability (llms.txt, companions), and agentskills.io standard alignment. Includes: path accuracy fixes, duplicate cleanup, skill category enforcement, VS Code schema warning resolution, and registry sync to 227 artifacts.
+
+## Verified Done
+
+All phases and open items confirmed complete per `plan.md` (dated 2026-03-22) and two completion reports in `_Project-Management_/completion-reports.md`:
+
+**Phases 1–9 (original buildout):** Full AI-tools governance buildout — registry, skill system, rules, agent instructions. Complete.
+
+**Open-items Phase 1 — Path accuracy:** AGENTS.md validator paths corrected, ai-tools/README.md script path corrected, copilot-instructions.md archived.
+
+**Open-items Phase 2 — AI discoverability:** CDA-6 CI check confirmed active. 7 llms.txt duplicate URLs removed.
+
+**Open-items Phase 3 — ai-tools nav:** Setup guides confirmed in docs.json. AGENT-INSTRUCTIONS.md reduced to 7-line pointer.
+
+**Open-items Phase 4 — ai-skills structural integrity:** Category fields confirmed on all 19 skills. `validateFolderStructure()` in test suite. `content-pipeline` added as 6th valid category. Agent packs regenerated.
+
+**agentskills.io standard alignment:** All 61 governed skill files migrated (19 local SKILL.md files + 42 templates). `invoke_when` removed, `metadata:` block added. Test suite rewritten. VS Code schema warnings resolved. Registry: 222 → 227 artifacts.
+
+**Safe cleanup:** docs-guide/.DS_Store removed. Stale backup files confirmed already gone. `_workspace/` structure populated.
+
+**`structure.md`:** Updated with new schema fields, `content-pipeline` category, correct paths.
+
+Validated test results (per completion report):
+- `skill-docs.test.js`: 62 targets, 0 errors.
+- `ai-tools-registry.test.js`: 227 artifacts, 0 errors.
+- `codex-skill-sync.test.js`: 6 cases, pass.
+- `export-portable-skills.test.js`: 4 cases, pass.
+- `check-agent-docs-freshness.test.js`: 2 cases, pass.
+
+## Claimed Done — Unverified or Incomplete
+
+- `AI-DISCOVERABILITY/plan.md` and `AI-DISCOVERABILITY/sub-plan-execution.md` exist as a subfolder — these were not read in full. They may represent a separate sub-plan with its own completion state. Needs verification.
+- `client-side-component-audit.md` — present in folder root. Appears to be a standalone audit artefact. Its relationship to this plan is unclear.
+- `plan2.md` — present. The `plan.md` says "plan2.md is now a pointer to this file" but plan2.md was not read to confirm it is actually a pointer.
+
+## In Progress
+
+Minor cleanup: `completion-report.md` recommendation R4 (says "Add content-pipeline to invoke_when" — but `invoke_when` no longer exists). Noted as needing update. Low priority.
+
+## Not Started / Still To Do
+
+**Decision gates still open (per `plan.md`):**
+- **Gate 3.1** — `docs-guide/` restructure. Deferred. Tracked in `REPO-STRUCTURE-GOV/` plan.
+- **Gate 3.2** — Skill consolidation (4 skills → 2). Two pairs of potential merge candidates. Human decision gate.
+- **Gate 3.3** — `generate-ai-tools-inventory.js` import bug (`validateFullRegistry` not exported). Inventory stale at 215 rows (now 227 in registry). Fix the generator, then regenerate.
+
+**Other deferred items:**
+- Resource HUB placeholder groups in docs.json (7 stubs using placeholder paths) — causes llms.txt duplicate accumulation on next regeneration.
+- `llms.txt` regeneration (ESM `unified` package not resolvable locally).
+- CDA-5: CoinGecko snapshot auto-generation (external API, CI cron).
+- CDA-7: Tier 2 component page template guidance.
+- `.github/AGENTS.md` stale content (checkpoint branch fiction, stale paths).
+
+## Blockers
+
+- Gate 3.2 (skill consolidation) — human decision needed.
+- Gate 3.1 (docs-guide restructure) — deferred to REPO-STRUCTURE-GOV.
+- llms.txt regeneration — blocked by ESM resolution issue in local toolchain.
+
+## File Inventory Flags
+
+- `AI-DISCOVERABILITY/` subfolder with `plan.md` and `sub-plan-execution.md` — not audited in detail. Likely a sub-initiative within this plan. Verify status.
+- `client-side-component-audit.md` in plan root — unclear if this belongs to AI-TOOLS-GOVERNANCE or was misplaced from COMPONENT-GOVERNANCE.
+- `plan2.md` — confirm it is genuinely just a pointer to `plan.md` and not a parallel plan with different status.
+- `completion-report.md` R4 is obsolete (references `invoke_when` which no longer exists) — needs a struck line or update.
+
+## Audit Notes
+
+- The all-plans-audit-2026-03-24.md rates this "95% / Maintenance mode / PARK." This matches the plan.md which says "core governance done, 3 decision gates open."
+- The test results in the completion report are highly specific (commit hashes, exact counts) — this is evidence of genuine execution, not claimed status.
+- The agentskills.io standard alignment was a non-trivial piece of work: 61 files migrated, test suite rewritten, 9 `tier: "3"` bugs fixed, 6 missing registry entries added. All confirmed via test counts.
+- The skill consolidation decision (Gate 3.2) has been pending since March 2026. It is the highest-value unresolved decision in this plan.

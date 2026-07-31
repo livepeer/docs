@@ -1,6 +1,10 @@
 ---
 name: cross-agent-packager
-description: Generate consistent skill packs for Codex, Cursor, Claude Code, and Windsurf from one shared catalog.
+description: >-
+  Generate consistent multi-agent skill packs from one canonical catalog so Codex, Cursor, Claude Code, and Windsurf stay aligned on shared workflow definitions. Use when packaging skills for multiple agents, syncing cross-agent skill packs, or generating agent pack outputs from the catalog.
+metadata:
+  version: "1.2"
+  category: meta
 ---
 
 SKILL: Cross-Agent Packager
@@ -10,7 +14,7 @@ Provide one packaging path so contributors can install and run the same audit sk
 
 Command
 ```bash
-node tools/scripts/cross-agent-packager.js --agent-pack all
+node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack all
 ```
 
 Outputs

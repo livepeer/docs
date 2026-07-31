@@ -10,11 +10,11 @@
 **Report generated:** 2026-02-21  
 **Status:** v2 live and deployed; finalisation in progress (EoW)
 
----
+<CustomDivider />
 
 > **Note on data sources.** This audit synthesises evidence from six sources: (1) the live deployed v2 documentation site at docs.livepeer.org/v2; (2) the docs-v2 branch repository files provided (README.md, docs-guide/\*, retrospective draft, claim verification matrix, plan audit); (3) Google Drive documents found via search (Milestone 1 & 2 report, Stakeholder WG meeting notes); (4) the Livepeer community forum RFP thread; (5) Notion workspace data; and (6) Google Calendar. Where a source did not return data or was inaccessible, this is noted explicitly. Alison should supplement this report with actual weekly hours worked per period and any Notion/internal documents not surfaced here.
 
----
+<CustomDivider />
 
 ## Part 1: Engagement Overview
 
@@ -73,7 +73,7 @@ The original proposal was intentionally modest in how it described outputs, fram
 
 The engagement also ran significantly longer than the originally proposed 10-week timeline, extending from late 2024 through February 2026. This reflects both the genuine complexity of the work and the expanded scope that emerged through stakeholder engagement.
 
----
+<CustomDivider />
 
 ## Part 2: Stakeholder Engagement and Communication
 
@@ -133,7 +133,7 @@ All Wonderland posts on forum.livepeer.org identified in the RFP thread:
 
 > **Note:** Additional Wonderland posts in other forum categories (watercooler, governance, general) were not accessible via the available APIs at the time of this audit. Alison should supplement this list with any additional forum posts beyond the RFP thread.
 
----
+<CustomDivider />
 
 ## Part 3: Discovery and Strategy Work
 
@@ -201,13 +201,13 @@ Three IA options were developed and evaluated:
 2. **Job-type-first navigation** — build / operate / stake / reference
 3. **System Map + Reference Bible** — DeepWiki-inspired approach with a comprehensive anchor-stable heading structure
 
-The deployed IA (confirmed live) is a persona-first model with the following top-level structure: Home, About, Platforms, Developers, Gateways, GPU Nodes, LP Token, Community, Resource HUB — directly mapping to the identified stakeholder groups.
+The deployed IA (confirmed live) is a persona-first model with the following top-level structure: Home, About, Platforms, Developers, Gateways, GPU Nodes, Delegators, Community, Resource HUB — directly mapping to the identified stakeholder groups.
 
 ### 3.5 Brand Strategy Analysis
 
 A comprehensive brand strategy analysis was conducted examining Livepeer's messaging framework, voice, positioning, and competitive advantage. This work informed the copy and positioning throughout the v2 documentation, including the "Mission Control" framing, the product positioning as "Open AI-Infrastructure for Real-Time Interactive Video," and the stakeholder-oriented hero card navigation on the homepage.
 
----
+<CustomDivider />
 
 ## Part 4: Complete Work Delivered — RFP Deliverables
 
@@ -215,7 +215,7 @@ A comprehensive brand strategy analysis was conducted examining Livepeer's messa
 
 **Proposed:** Present a new documentation strategy with stakeholder-oriented navigation.
 
-**Delivered:** A fully deployed information architecture at docs.livepeer.org/v2 with nine top-level sections (Home, About, Platforms, Developers, Gateways, GPU Nodes, LP Token, Community, Resource HUB), each corresponding to a stakeholder persona or functional area. The v2 IA includes:
+**Delivered:** A fully deployed information architecture at docs.livepeer.org/v2 with nine top-level sections (Home, About, Platforms, Developers, Gateways, GPU Nodes, Delegators, Community, Resource HUB), each corresponding to a stakeholder persona or functional area. The v2 IA includes:
 
 - Clear version boundaries between v1/ and v2/ with version switcher in the navigation bar
 - Reorganised navigation hierarchy around roles, journeys, and products
@@ -239,7 +239,7 @@ A comprehensive brand strategy analysis was conducted examining Livepeer's messa
 - Developers section: Building on Livepeer, real-time video streaming, AI inference and AI pipelines, builder opportunities, developer programs
 - Gateways portal and gateway operational documentation
 - GPU Nodes / Orchestrators portal
-- LP Token portal
+- Delegators portal
 - Community portal
 - Resource HUB
 
@@ -263,7 +263,7 @@ Content was rewritten to be zero-to-hero accessible for each persona, product-fo
 
 **Delivered:** SEO and Answer Engine Optimisation were treated structurally, not cosmetically. In-repo tooling was built for ongoing maintenance:
 
-- `tools/scripts/snippets/generate-seo.js` — metadata generation script for MDX frontmatter, runnable at any time with a context file for additional direction
+- `operations/scripts/snippets/generate-seo.js` — metadata generation script for MDX frontmatter, runnable at any time with a context file for additional direction
 - AEO logic embedded in the SEO generator
 - Consistent frontmatter and metadata patterns established across pages
 - URL and navigation consistency improvements through the v2 architecture
@@ -313,7 +313,7 @@ Two PR templates also exist: `.github/pull_request_template.md` and `.github/pul
 
 **Status:** Verified.
 
----
+<CustomDivider />
 
 ## Part 5: Above and Beyond — Work Delivered Beyond the Original RFP Scope
 
@@ -325,7 +325,7 @@ This is the most significant section of the audit. The work delivered extends fa
 
 **Structural and style enforcement.** Automated checks enforce style guide compliance, MDX validity, and import correctness on every commit and every pull request. This converts documentation authoring from a manually-reviewed process into a repeatable, tooling-validated system.
 
-**Navigation management.** `docs.json` controls all routing and navigation. `tools/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders plus the root aggregate index — ensuring navigation never drifts from actual page content.
+**Navigation management.** `docs.json` controls all routing and navigation. `operations/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders plus the root aggregate index — ensuring navigation never drifts from actual page content.
 
 **v2 section organisation.** The `v2/pages/` directory is structured with numbered prefixes (`00_home`, `01_about`, `02_community`, etc.) for deterministic ordering and clear maintainer navigation.
 
@@ -335,7 +335,7 @@ This is substantial software engineering work delivered as part of the documenta
 
 **The `lpd` CLI.** A unified command-line interface for all repository operations: `lpd setup`, `lpd dev`, `lpd test`, `lpd ci`, `lpd hooks`, `lpd scripts`. The CLI provides setup bootstrapping, local development, test orchestration, hook management, and script execution. It is the primary operator interface for the entire repository.
 
-Runbooks documented in `docs-guide/lpd.mdx` cover first-time setup, local docs development, test entrypoints, hook management, and script discovery. The CLI includes a `.lpdignore` pattern system for excluding scripts from discovery.
+Runbooks documented in `docs-guide/tooling/lpd-cli.mdx` cover first-time setup, local docs development, test entrypoints, hook management, and script discovery. The CLI includes a `.lpdignore` pattern system for excluding scripts from discovery.
 
 **Pre-commit enforcement system.** The `.githooks/pre-commit` hook runs a comprehensive set of checks before every commit, including:
 
@@ -361,9 +361,9 @@ A dedicated `pre-commit-no-deletions` hook prevents accidental bulk deletions.
 - Integration tests: `tests/integration/browser.test.js` (Puppeteer), `tests/integration/domain-pages-audit.js`, `tests/integration/v2-link-audit.js`
 - Test runners: `tests/run-all.js`, `tests/run-pr-checks.js`
 
-**Source-of-truth policy.** A documented and enforced source-of-truth policy (`docs-guide/source-of-truth-policy.mdx`) defines canonical ownership boundaries across README, docs-guide, tests, and Mintlify pages — preventing documentation drift. The policy is enforced via `tests/unit/docs-guide-sot.test.js` and `tools/scripts/generate-docs-guide-indexes.js --check`.
+**Source-of-truth policy.** A documented and enforced source-of-truth policy (`docs-guide/policies/source-of-truth-policy.mdx`) defines canonical ownership boundaries across README, docs-guide, tests, and Mintlify pages — preventing documentation drift. The policy is enforced via `tests/unit/docs-guide-sot.test.js` and `operations/scripts/generate-docs-guide-indexes.js --check`.
 
-**Repo evidence (full script inventory):** See `docs-guide/indexes/scripts-index.mdx` for all 58 scripts catalogued with summary, usage, and owner. Key entries include `.githooks/pre-commit`, `.githooks/verify.sh`, `tests/unit/script-docs.test.js`, `tests/run-pr-checks.js`, `tools/scripts/generate-pages-index.js`.
+**Repo evidence (full script inventory):** See `docs-guide/catalog/scripts-catalog.mdx` for all 58 scripts catalogued with summary, usage, and owner. Key entries include `.githooks/pre-commit`, `.githooks/verify.sh`, `tests/unit/script-docs.test.js`, `tests/run-pr-checks.js`, `operations/scripts/generate-pages-index.js`.
 
 ### 5c. AI, Automations, and Community Pipelines
 
@@ -373,14 +373,14 @@ A multi-source automation layer was built providing ongoing content freshness an
 
 | Workflow                      | Trigger                      | Output                                           |
 | ----------------------------- | ---------------------------- | ------------------------------------------------ |
-| `update-forum-data.yml`       | Schedule + manual            | `snippets/automations/forum/forumData.jsx`       |
-| `update-ghost-blog-data.yml`  | Schedule + manual            | `snippets/automations/blog/ghostBlogData.jsx`    |
-| `update-youtube-data.yml`     | Schedule + manual            | `snippets/automations/youtube/youtubeData.jsx`   |
+| `update-forum-data.yml`       | Schedule + manual            | `snippets/data/social-feeds/forumData.jsx`       |
+| `update-ghost-blog-data.yml`  | Schedule + manual            | `snippets/data/social-feeds/ghostBlogData.jsx`    |
+| `update-youtube-data.yml`     | Schedule + manual            | `snippets/data/social-feeds/youtubeData.jsx`   |
 | `update-livepeer-release.yml` | Schedule + manual            | `snippets/automations/globals/globals.mdx`       |
-| `project-showcase-sync.yml`   | Schedule + manual + dispatch | `snippets/automations/showcase/showcaseData.jsx` |
+| `project-showcase-sync.yml`   | Schedule + manual + dispatch | `snippets/data/showcase-feed/showcaseData.jsx` |
 | `update-blog-data.yml`        | Schedule + manual            | Forum + blog data combined                       |
 
-**n8n workflow assets.** Parallel n8n pipeline assets exist in `snippets/automations/scripts/n8n/` providing operational flexibility: simple updates can remain repo-native while complex multi-step flows can be delegated to n8n. This redundant architecture is a strategic asset — the documentation can be maintained without dependency on any single automation platform.
+**n8n workflow assets.** Parallel n8n pipeline assets exist in `snippets/assets/data/n8n/` providing operational flexibility: simple updates can remain repo-native while complex multi-step flows can be delegated to n8n. This redundant architecture is a strategic asset — the documentation can be maintained without dependency on any single automation platform.
 
 **Forum data ingestion.** `.github/scripts/fetch-forum-data.js` fetches and normalises Livepeer forum data, feeding the `forumData.jsx` snippet used in the Trending Topics surface.
 
@@ -388,7 +388,7 @@ A multi-source automation layer was built providing ongoing content freshness an
 
 **YouTube data ingestion.** `.github/scripts/fetch-youtube-data.js` fetches YouTube data (filtering Shorts), feeding the `youtubeData.jsx` snippet.
 
-**Project Showcase pipeline.** `.github/scripts/project-showcase-sync.js` syncs ecosystem project data into `snippets/automations/showcase/showcaseData.jsx`. The showcase is searchable and sortable, and the pipeline is architected to be extensible — additional curation sources can be added without restructuring the pipeline.
+**Project Showcase pipeline.** `.github/scripts/project-showcase-sync.js` syncs ecosystem project data into `snippets/data/showcase-feed/showcaseData.jsx`. The showcase is searchable and sortable, and the pipeline is architected to be extensible — additional curation sources can be added without restructuring the pipeline.
 
 **Governance and intake automation:**
 
@@ -397,33 +397,33 @@ A multi-source automation layer was built providing ongoing content freshness an
 - `build-review-assets.yml`, `generate-review-table.yml`, `update-review-template.yml` — automated review workflow tooling
 - `auto-assign-docs-reviewers.yml` — automatic reviewer assignment
 
-**Full workflow inventory:** 17 workflows documented in `docs-guide/indexes/workflows-index.mdx`.
+**Full workflow inventory:** 17 workflows documented in `docs-guide/catalog/workflows-catalog.mdx`.
 
-**Repo evidence:** `.github/scripts/fetch-forum-data.js`, `.github/scripts/fetch-ghost-blog-data.js`, `.github/scripts/fetch-youtube-data.js`, `.github/scripts/project-showcase-sync.js`, `.github/workflows/project-showcase-sync.yml`, `.github/workflows/update-*.yml`, `snippets/automations/scripts/n8n/`, `snippets/automations/forum/forumData.jsx`, `snippets/automations/blog/ghostBlogData.jsx`, `snippets/automations/youtube/youtubeData.jsx`, `snippets/automations/showcase/showcaseData.jsx`
+**Repo evidence:** `.github/scripts/fetch-forum-data.js`, `.github/scripts/fetch-ghost-blog-data.js`, `.github/scripts/fetch-youtube-data.js`, `.github/scripts/project-showcase-sync.js`, `.github/workflows/project-showcase-sync.yml`, `.github/workflows/update-*.yml`, `snippets/assets/data/n8n/`, `snippets/data/social-feeds/forumData.jsx`, `snippets/data/social-feeds/ghostBlogData.jsx`, `snippets/data/social-feeds/youtubeData.jsx`, `snippets/data/showcase-feed/showcaseData.jsx`
 
 ### 5d. Future-Proof Maintenance Automation Scripts
 
 A suite of maintenance scripts was built to ensure the documentation system remains maintainable without manual overhead.
 
-**SEO and AEO generation.** `tools/scripts/snippets/generate-seo.js` generates SEO metadata for all MDX pages. The script accepts a context file for additional direction and can be run at any time to refresh metadata across the entire site.
+**SEO and AEO generation.** `operations/scripts/snippets/generate-seo.js` generates SEO metadata for all MDX pages. The script accepts a context file for additional direction and can be run at any time to refresh metadata across the entire site.
 
-**Glossary generation.** `tools/scripts/snippets/generate-data/scripts/generate-glossary.js` automatically extracts and classifies terminology from the repository, with optional LLM-assisted classification. Generated term data is output to `tools/scripts/snippets/generate-data/data/glossary-terms.json`. `terminology-search.js` provides discovery and search across generated terms.
+**Glossary generation.** `operations/scripts/snippets/generate-data/scripts/generate-glossary.js` automatically extracts and classifies terminology from the repository, with optional LLM-assisted classification. Generated term data is output to `operations/scripts/snippets/generate-data/data/glossary-terms.json`. `terminology-search.js` provides discovery and search across generated terms.
 
-**Pages index generation.** `tools/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders and the root aggregate index.
+**Pages index generation.** `operations/scripts/generate-pages-index.js` generates and verifies section-style `index.mdx` files for all `v2/pages/` folders and the root aggregate index.
 
-**Docs-guide index generation.** `tools/scripts/generate-docs-guide-indexes.js` generates the script catalog, workflow catalog, and template catalog in `docs-guide/` — ensuring the internal maintainer documentation stays in sync with the actual repository contents.
+**Docs-guide index generation.** `operations/scripts/generate-docs-guide-indexes.js` generates the script catalog, workflow catalog, and template catalog in `docs-guide/` — ensuring the internal maintainer documentation stays in sync with the actual repository contents.
 
-**Script self-documentation enforcement.** `tests/unit/script-docs.test.js` enforces a required header schema on all scripts (summary, usage, owner), keeps group script indexes in sync, and builds the aggregate script index. This means any new script added to the repository is automatically catalogued and validated. `tools/scripts/new-script.js` creates new scripts prefilled with the required docs header template.
+**Script self-documentation enforcement.** `tests/unit/script-docs.test.js` enforces a required header schema on all scripts (summary, usage, owner), keeps group script indexes in sync, and builds the aggregate script index. This means any new script added to the repository is automatically catalogued and validated. `operations/scripts/new-script.js` creates new scripts prefilled with the required docs header template.
 
-**Script audit tooling.** `tools/scripts/audit-scripts.js` audits the full repository for executable scripts, categorises usage and overlap, and overwrites SCRIPT_AUDIT reports.
+**Script audit tooling.** `operations/scripts/audit-scripts.js` audits the full repository for executable scripts, categorises usage and overlap, and overwrites SCRIPT_AUDIT reports.
 
-**Component documentation.** `tools/scripts/snippets/update-component-library.sh` automatically creates and updates component library documentation.
+**Component documentation.** `operations/scripts/snippets/update-component-library.sh` automatically creates and updates component library documentation.
 
-**Docs status generation.** `tools/scripts/snippets/generate-docs-status.js` generates documentation coverage and status reports.
+**Docs status generation.** `operations/scripts/snippets/generate-docs-status.js` generates documentation coverage and status reports.
 
-**API documentation generation.** `tools/scripts/snippets/generate-api-docs.sh` and `tools/scripts/snippets/fetch-openapi-specs.sh` handle OpenAPI spec fetching and API documentation generation.
+**API documentation generation.** `operations/scripts/snippets/generate-api-docs.sh` and `operations/scripts/snippets/fetch-openapi-specs.sh` handle OpenAPI spec fetching and API documentation generation.
 
-**Repo evidence:** All 58 scripts catalogued in `docs-guide/indexes/scripts-index.mdx`.
+**Repo evidence:** All 58 scripts catalogued in `docs-guide/catalog/scripts-catalog.mdx`.
 
 ### 5e. AI-Ready Architecture
 
@@ -457,9 +457,9 @@ The depth of technical content in the v2 documentation significantly exceeds wha
 
 **OpenAPI and API specifications.** Full OpenAPI spec integration with multiple API specification files: `api/openapi.yaml`, `api/openapi.json`, `api/studio.yaml`, `api/gateway.openapi.yaml`, `api/ai-worker.yaml`, `api/cli-http.yaml`. API documentation generation scripts are in place and operational.
 
-**LPT exchange data integration.** `tools/scripts/snippets/fetch-lpt-exchanges.sh` fetches LPT exchange data. `snippets/data/` contains domain data modules including exchange and reference data surfaces.
+**LPT exchange data integration.** `operations/scripts/snippets/fetch-lpt-exchanges.sh` fetches LPT exchange data. `snippets/data/` contains domain data modules including exchange and reference data surfaces.
 
-**External docs integration.** `tools/scripts/snippets/fetch-external-docs.sh` provides automated fetching of external documentation sources.
+**External docs integration.** `operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh` provides automated fetching of external documentation sources.
 
 **SDK documentation.** Automated SDK generation is handled by `sdk_generation.yaml` (GitHub Actions), which runs on schedule and produces PRs with updated SDK documentation.
 
@@ -471,27 +471,27 @@ The docs-guide system comprises eight canonical manual files plus three generate
 
 | File                                 | Contents                                                              |
 | ------------------------------------ | --------------------------------------------------------------------- |
-| `docs-guide/README.mdx`               | Source-of-truth model, start-here index, update rules                 |
-| `docs-guide/feature-guides/feature-map.mdx`          | Complete repository capability map across 8 feature areas             |
-| `docs-guide/feature-guides/architecture-map.mdx`     | Data and control flow, execution layers, key contract edges           |
-| `docs-guide/lpd.mdx`                  | CLI behavior, operator runbooks for all command groups                |
-| `docs-guide/quality-testing/quality-gates.mdx`        | Full matrix of local and CI enforcement with blocking/advisory status |
-| `docs-guide/feature-guides/automation-pipelines.mdx` | All automation surfaces, pipeline coverage, operational controls      |
-| `docs-guide/feature-guides/content-system.mdx`       | IA model, content layers, copy and quality principles                 |
-| `docs-guide/feature-guides/data-integrations.mdx`    | API specifications, external feeds, internal data layers              |
-| `docs-guide/indexes/scripts-index.mdx`        | Generated: all 58 scripts with summary, usage, owner                  |
-| `docs-guide/indexes/workflows-index.mdx`      | Generated: all 17 workflows with triggers, purpose, blocking policy   |
-| `docs-guide/indexes/templates-index.mdx`      | Generated: all 10 issue and PR templates with labels and ownership    |
+| `docs-guide/overview.mdx`               | Source-of-truth model, start-here index, update rules                 |
+| `docs-guide/features/feature-map.mdx`          | Complete repository capability map across 8 feature areas             |
+| `docs-guide/features/architecture-map.mdx`     | Data and control flow, execution layers, key contract edges           |
+| `docs-guide/tooling/lpd-cli.mdx`                  | CLI behavior, operator runbooks for all command groups                |
+| `docs-guide/policies/quality-gates.mdx`        | Full matrix of local and CI enforcement with blocking/advisory status |
+| `docs-guide/features/automations.mdx` | All automation surfaces, pipeline coverage, operational controls      |
+| `docs-guide/frameworks/content-system.mdx`           | IA model, content layers, copy and quality principles                 |
+| `docs-guide/features/data-integrations.mdx`    | API specifications, external feeds, internal data layers              |
+| `docs-guide/catalog/scripts-catalog.mdx`      | Generated: all 58 scripts with summary, usage, owner                  |
+| `docs-guide/catalog/workflows-catalog.mdx`    | Generated: all 17 workflows with triggers, purpose, blocking policy   |
+| `docs-guide/catalog/templates-catalog.mdx`    | Generated: all 10 issue and PR templates with labels and ownership    |
 
-The source-of-truth policy enforced through `docs-guide/source-of-truth-policy.mdx` defines canonical ownership boundaries and change management rules — ensuring that as the documentation system evolves, it does so without introducing drift or duplication.
+The source-of-truth policy enforced through `docs-guide/policies/source-of-truth-policy.mdx` defines canonical ownership boundaries and change management rules — ensuring that as the documentation system evolves, it does so without introducing drift or duplication.
 
----
+<CustomDivider />
 
 ## Part 6: Time Spent Matrix and Estimates
 
 > **How to read this section.** Every discrete work item in this audit has been independently estimated using three inputs: (1) the complexity and depth of the artifact or output as evidenced in the repo and deployed site; (2) professional benchmarks for comparable work (technical writing, DevRel, software engineering, product management); and (3) the engagement duration and meeting cadence. Estimates are presented as Low–High ranges. The "Actuals" column is for Alison to populate. All figures are in **hours**.
 
----
+<CustomDivider />
 
 ### 6.1 Budgeted Hours (From Proposal)
 
@@ -505,7 +505,7 @@ The source-of-truth policy enforced through `docs-guide/source-of-truth-policy.m
 | Actual engagement length                        | ~20 weeks (Oct 2024 – Feb 2025)     |
 | Actual engagement length (incl. strategy phase) | ~22–24 weeks (Sept 2024 – Feb 2025) |
 
----
+<CustomDivider />
 
 ### 6.2 Meeting and Synchronous Time Matrix
 
@@ -523,7 +523,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | M8  | Meeting follow-up (action items, Notion updates, summaries) | Per meeting         | 20 min avg           | —                  | ~40 sessions         | 13      | 18        | \_\_    |
 |     |                                                             |                     |                      |                    | **MEETING SUBTOTAL** | **69**  | **104.5** | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.3 Phase 0 — Onboarding and Project Setup
 
@@ -537,7 +537,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | P0.6 | Engagement planning (timeline, milestones, risk mapping) | Detailed work plan for all 4 phases                                           | 4       | 6        | \_\_    |
 |      |                                                          | **PHASE 0 SUBTOTAL**                                                          | **20**  | **33**   | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.4 Phase 1 — Foundational Analysis and Strategy
 
@@ -599,7 +599,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | A5.4 | "Mission Control" framing and product positioning | Developing the "Open AI-Infrastructure for Real-Time Interactive Video" positioning | 3       | 6        | \_\_    |
 |      |                                                   | **BRAND STRATEGY SUBTOTAL**                                                         | **15**  | **25**   | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.5 Phase 2 — Community Engagement
 
@@ -623,7 +623,7 @@ Every confirmed and estimated meeting is itemised below. Duration reflects the m
 | C16 | Automation pipeline design (9 pipeline concepts)      | Designing auto-update and aggregation pipeline architecture                | 4       | 7        | \_\_    |
 |     |                                                       | **PHASE 2 SUBTOTAL**                                                       | **61**  | **108**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.6 Phase 3 — Implementation: Content
 
@@ -645,7 +645,7 @@ Content rewrites are estimated per section based on the number of pages, depth o
 | W12 | Gateways — portal, overview, operational guides                   | Portal + runbook pages                 | Very high — operational infrastructure knowledge | 16      | 28       | \_\_    |
 | W13 | Gateways — AI gateway quickstart and agent runbook                | Quickstart + agent-oriented page       | High — novel format requiring deep research      | 8       | 14       | \_\_    |
 | W14 | GPU Nodes / Orchestrators — portal + operational docs             | Portal + multiple runbook pages        | Very high — node operations expertise            | 15      | 25       | \_\_    |
-| W15 | LP Token — portal + staking/delegation docs                       | Portal + multiple pages                | Medium–high — DeFi/on-chain knowledge            | 10      | 16       | \_\_    |
+| W15 | Delegators — portal + staking/delegation docs                       | Portal + multiple pages                | Medium–high — DeFi/on-chain knowledge            | 10      | 16       | \_\_    |
 | W16 | Resource HUB — portal, docs guide, style guide, component library | Portal + 4+ guide pages                | Medium — documentation-about-documentation       | 10      | 16       | \_\_    |
 | W17 | Resource HUB — automations and workflows page                     | Technical automation guide             | High — requires full system knowledge            | 6       | 10       | \_\_    |
 | W18 | Resource HUB — governance and internal docs                       | Governance page + internal pages       | Medium                                           | 6       | 10       | \_\_    |
@@ -656,7 +656,7 @@ Content rewrites are estimated per section based on the number of pages, depth o
 | W23 | Brand voice and positioning integration throughout                | Embedding brand strategy into all copy | Medium — woven through all content               | 8       | 14       | \_\_    |
 |     |                                                                   |                                        | **CONTENT SUBTOTAL**                             | **237** | **390**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.7 Phase 3 — Implementation: Infrastructure and Engineering
 
@@ -743,11 +743,11 @@ This section covers all software engineering, automation, and tooling work — t
 | S2  | `.github/scripts/fetch-ghost-blog-data.js`                           | Ghost blog data fetch and write                      | 3       | 5        | \_\_    |
 | S3  | `.github/scripts/fetch-youtube-data.js`                              | YouTube data fetch (Shorts filtering) and write      | 4       | 7        | \_\_    |
 | S4  | `.github/scripts/project-showcase-sync.js`                           | Ecosystem showcase sync script                       | 5       | 9        | \_\_    |
-| S5  | `snippets/automations/scripts/n8n/` — n8n workflow assets            | Parallel n8n pipeline assets (JSON workflow configs) | 6       | 12       | \_\_    |
-| S6  | `snippets/automations/forum/forumData.jsx`                           | Forum data component                                 | 2       | 4        | \_\_    |
-| S7  | `snippets/automations/blog/ghostBlogData.jsx`                        | Blog data component                                  | 2       | 4        | \_\_    |
-| S8  | `snippets/automations/youtube/youtubeData.jsx`                       | YouTube data component                               | 2       | 4        | \_\_    |
-| S9  | `snippets/automations/showcase/showcaseData.jsx`                     | Showcase data component (searchable, sortable)       | 4       | 8        | \_\_    |
+| S5  | `snippets/assets/data/n8n/` — n8n workflow assets                    | Parallel n8n pipeline assets (JSON workflow configs) | 6       | 12       | \_\_    |
+| S6  | `snippets/data/social-feeds/forumData.jsx`                           | Forum data component                                 | 2       | 4        | \_\_    |
+| S7  | `snippets/data/social-feeds/ghostBlogData.jsx`                        | Blog data component                                  | 2       | 4        | \_\_    |
+| S8  | `snippets/data/social-feeds/youtubeData.jsx`                       | YouTube data component                               | 2       | 4        | \_\_    |
+| S9  | `snippets/data/showcase-feed/showcaseData.jsx`                     | Showcase data component (searchable, sortable)       | 4       | 8        | \_\_    |
 | S10 | `snippets/automations/globals/globals.mdx`                           | Global variables and release state                   | 2       | 4        | \_\_    |
 | S11 | `scripts/archive/placeholders/embed-table.js`, `scripts/archive/placeholders/gen-table.js`, `scripts/archive/placeholders/gen-textareas.js` | Archived CI placeholder scripts (no active workflow wiring) | 1       | 2        | \_\_    |
 |     |                                                                      | **AUTOMATION SCRIPTS SUBTOTAL**                      | **36**  | **68**   | \_\_    |
@@ -756,27 +756,27 @@ This section covers all software engineering, automation, and tooling work — t
 
 | #   | Work item                                                                                                                 | Description                                                  | Low hrs | High hrs | Actuals |
 | --- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ------- | -------- | ------- |
-| M1  | `tools/scripts/snippets/generate-seo.js`                                                                                  | SEO metadata generator with context file support             | 5       | 9        | \_\_    |
-| M2  | `tools/scripts/dev/seo-generator-safe.js` + `test-seo-generator.js`                                                       | SEO generator dev/test variants                              | 2       | 4        | \_\_    |
-| M3  | `tools/scripts/snippets/generate-data/scripts/generate-glossary.js`                                                       | Glossary term extraction and generation                      | 5       | 9        | \_\_    |
-| M4  | `tools/scripts/snippets/generate-data/scripts/terminology-search.js`                                                      | Terminology discovery and search                             | 3       | 5        | \_\_    |
-| M5  | `tools/scripts/snippets/generate-data/data/glossary-terms.json`                                                           | Generated glossary data artifact                             | 1       | 2        | \_\_    |
-| M6  | `tools/scripts/generate-pages-index.js`                                                                                   | Section-level index.mdx generator                            | 4       | 7        | \_\_    |
-| M7  | `tools/scripts/generate-docs-guide-indexes.js`                                                                            | Docs-guide catalog generator (scripts, workflows, templates) | 4       | 7        | \_\_    |
-| M8  | `tools/scripts/new-script.js`                                                                                             | New script template creator with enforced header             | 2       | 4        | \_\_    |
-| M9  | `tools/scripts/audit-scripts.js`                                                                                          | Full-repo script audit and SCRIPT_AUDIT report generator     | 3       | 6        | \_\_    |
-| M10 | `tools/scripts/snippets/update-component-library.sh`                                                                      | Component library documentation updater                      | 2       | 4        | \_\_    |
-| M11 | `tools/scripts/snippets/generate-docs-status.js`                                                                          | Documentation coverage and status reporter                   | 3       | 5        | \_\_    |
-| M12 | `tools/scripts/snippets/fetch-openapi-specs.sh`                                                                           | OpenAPI spec fetcher                                         | 2       | 4        | \_\_    |
-| M13 | `tools/scripts/snippets/generate-api-docs.sh`                                                                             | API documentation generator                                  | 3       | 5        | \_\_    |
-| M14 | `tools/scripts/snippets/fetch-lpt-exchanges.sh`                                                                           | LPT exchange data fetcher                                    | 2       | 4        | \_\_    |
-| M15 | `tools/scripts/snippets/fetch-external-docs.sh`                                                                           | External docs fetcher                                        | 2       | 4        | \_\_    |
-| M16 | `tools/scripts/snippets/test-scripts.sh`                                                                                  | Script test runner                                           | 1       | 2        | \_\_    |
+| M1  | `operations/scripts/snippets/generate-seo.js`                                                                                  | SEO metadata generator with context file support             | 5       | 9        | \_\_    |
+| M2  | `tools/dev/seo-generator-safe.js` + `test-seo-generator.js`                                                       | SEO generator dev/test variants                              | 2       | 4        | \_\_    |
+| M3  | `operations/scripts/snippets/generate-data/scripts/generate-glossary.js`                                                       | Glossary term extraction and generation                      | 5       | 9        | \_\_    |
+| M4  | `operations/scripts/snippets/generate-data/scripts/terminology-search.js`                                                      | Terminology discovery and search                             | 3       | 5        | \_\_    |
+| M5  | `operations/scripts/snippets/generate-data/data/glossary-terms.json`                                                           | Generated glossary data artifact                             | 1       | 2        | \_\_    |
+| M6  | `operations/scripts/generate-pages-index.js`                                                                                   | Section-level index.mdx generator                            | 4       | 7        | \_\_    |
+| M7  | `operations/scripts/generate-docs-guide-indexes.js`                                                                            | Docs-guide catalog generator (scripts, workflows, templates) | 4       | 7        | \_\_    |
+| M8  | `operations/scripts/new-script.js`                                                                                             | New script template creator with enforced header             | 2       | 4        | \_\_    |
+| M9  | `operations/scripts/audit-scripts.js`                                                                                          | Full-repo script audit and SCRIPT_AUDIT report generator     | 3       | 6        | \_\_    |
+| M10 | `operations/scripts/snippets/update-component-library.sh`                                                                      | Component library documentation updater                      | 2       | 4        | \_\_    |
+| M11 | `operations/scripts/snippets/generate-docs-status.js`                                                                          | Documentation coverage and status reporter                   | 3       | 5        | \_\_    |
+| M12 | `operations/scripts/snippets/fetch-openapi-specs.sh`                                                                           | OpenAPI spec fetcher                                         | 2       | 4        | \_\_    |
+| M13 | `operations/scripts/snippets/generate-api-docs.sh`                                                                             | API documentation generator                                  | 3       | 5        | \_\_    |
+| M14 | `operations/scripts/snippets/fetch-lpt-exchanges.sh`                                                                           | LPT exchange data fetcher                                    | 2       | 4        | \_\_    |
+| M15 | `operations/scripts/integrators/content/data/fetching/fetch-external-docs.sh`                                                                           | External docs fetcher                                        | 2       | 4        | \_\_    |
+| M16 | `operations/scripts/snippets/test-scripts.sh`                                                                                  | Script test runner                                           | 1       | 2        | \_\_    |
 | M17 | OG image tooling (`dev/update-og-image.js`, `batch-update-og-image.sh`, `replace-og-image.py`, `update-all-og-images.js`) | Open Graph image management tooling                          | 4       | 8        | \_\_    |
-| M18 | `tools/scripts/test-v2-pages.js`, `test-all-pages-browser.js`, `test-all-pages-comprehensive.js`                          | Page testing scripts                                         | 4       | 7        | \_\_    |
-| M19 | `tools/scripts/verify-all-pages.js`, `verify-pages.js`, `final-verification.js`                                           | Page verification scripts                                    | 3       | 5        | \_\_    |
-| M20 | `tools/scripts/audit-all-v2-pages.js`, `audit-component-usage.js`, `check-component-errors.js`                            | Audit and check scripts                                      | 3       | 6        | \_\_    |
-| M21 | `tools/scripts/inspect-page.js`, `inspect-video-page.js`, `find-correct-url.js`, `debug-mint-dev.js`                      | Debug and inspection utilities                               | 2       | 4        | \_\_    |
+| M18 | `operations/scripts/test-v2-pages.js`, `test-all-pages-browser.js`, `test-all-pages-comprehensive.js`                          | Page testing scripts                                         | 4       | 7        | \_\_    |
+| M19 | `operations/scripts/verify-all-pages.js`, `verify-pages.js`, `final-verification.js`                                           | Page verification scripts                                    | 3       | 5        | \_\_    |
+| M20 | `operations/scripts/audit-all-v2-pages.js`, `audit-component-usage.js`, `check-component-errors.js`                            | Audit and check scripts                                      | 3       | 6        | \_\_    |
+| M21 | `operations/scripts/inspect-page.js`, `inspect-video-page.js`, `find-correct-url.js`, `debug-mint-dev.js`                      | Debug and inspection utilities                               | 2       | 4        | \_\_    |
 | M22 | `tasks/scripts/` (9 task-scoped audit scripts)                                                                            | Task-scoped audit tooling                                    | 3       | 6        | \_\_    |
 |     |                                                                                                                           | **MAINTENANCE SCRIPTS SUBTOTAL**                             | **63**  | **117**  | \_\_    |
 
@@ -784,18 +784,18 @@ This section covers all software engineering, automation, and tooling work — t
 
 | #   | Work item                                   | Description                                                  | Low hrs | High hrs | Actuals |
 | --- | ------------------------------------------- | ------------------------------------------------------------ | ------- | -------- | ------- |
-| D1  | `docs-guide/README.mdx`                      | Source-of-truth model, index, update rules                   | 2       | 4        | \_\_    |
-| D2  | `docs-guide/feature-guides/feature-map.mdx`                 | Complete 8-area capability map                               | 3       | 5        | \_\_    |
-| D3  | `docs-guide/feature-guides/architecture-map.mdx`            | Data flow, execution layers, contract edges, Mermaid diagram | 3       | 5        | \_\_    |
-| D4  | `docs-guide/lpd.mdx`                         | CLI behaviour and operator runbooks for all command groups   | 4       | 7        | \_\_    |
-| D5  | `docs-guide/quality-testing/quality-gates.mdx`               | Gate matrix — local, PR, browser; blocking vs advisory       | 3       | 5        | \_\_    |
-| D6  | `docs-guide/feature-guides/automation-pipelines.mdx`        | All automation surfaces and pipeline coverage                | 3       | 5        | \_\_    |
-| D7  | `docs-guide/feature-guides/content-system.mdx`              | IA model, content layers, copy principles                    | 2       | 4        | \_\_    |
-| D8  | `docs-guide/feature-guides/data-integrations.mdx`           | API specs, external feeds, internal data layers              | 2       | 4        | \_\_    |
-| D9  | `docs-guide/source-of-truth-policy.mdx`      | Canonical ownership boundaries and change management rules   | 3       | 5        | \_\_    |
-| D10 | `docs-guide/indexes/scripts-index.mdx` (generated)   | 58-script catalog — generated and validated                  | 2       | 3        | \_\_    |
-| D11 | `docs-guide/indexes/workflows-index.mdx` (generated) | 17-workflow catalog — generated and validated                | 2       | 3        | \_\_    |
-| D12 | `docs-guide/indexes/templates-index.mdx` (generated) | 10-template catalog — generated and validated                | 1       | 2        | \_\_    |
+| D1  | `docs-guide/overview.mdx`                      | Source-of-truth model, index, update rules                   | 2       | 4        | \_\_    |
+| D2  | `docs-guide/features/feature-map.mdx`                 | Complete 8-area capability map                               | 3       | 5        | \_\_    |
+| D3  | `docs-guide/features/architecture-map.mdx`            | Data flow, execution layers, contract edges, Mermaid diagram | 3       | 5        | \_\_    |
+| D4  | `docs-guide/tooling/lpd-cli.mdx`                         | CLI behaviour and operator runbooks for all command groups   | 4       | 7        | \_\_    |
+| D5  | `docs-guide/policies/quality-gates.mdx`               | Gate matrix — local, PR, browser; blocking vs advisory       | 3       | 5        | \_\_    |
+| D6  | `docs-guide/features/automations.mdx`        | All automation surfaces and pipeline coverage                | 3       | 5        | \_\_    |
+| D7  | `docs-guide/frameworks/content-system.mdx`                 | IA model, content layers, copy principles                    | 2       | 4        | \_\_    |
+| D8  | `docs-guide/features/data-integrations.mdx`           | API specs, external feeds, internal data layers              | 2       | 4        | \_\_    |
+| D9  | `docs-guide/policies/source-of-truth-policy.mdx`      | Canonical ownership boundaries and change management rules   | 3       | 5        | \_\_    |
+| D10 | `docs-guide/catalog/scripts-catalog.mdx` (generated)   | 58-script catalog — generated and validated                  | 2       | 3        | \_\_    |
+| D11 | `docs-guide/catalog/workflows-catalog.mdx` (generated) | 17-workflow catalog — generated and validated                | 2       | 3        | \_\_    |
+| D12 | `docs-guide/catalog/templates-catalog.mdx` (generated) | 10-template catalog — generated and validated                | 1       | 2        | \_\_    |
 |     |                                             | **DOCS-GUIDE SUBTOTAL**                                      | **30**  | **52**   | \_\_    |
 
 #### 6.7h Governance, Templates, and CODEOWNERS
@@ -842,7 +842,7 @@ This section covers all software engineering, automation, and tooling work — t
 | X7  | LinkedIn video download utilities             | `download-linkedin-video.sh`, `download-linkedin-with-cookies.sh` | 1       | 2        | \_\_    |
 |     |                                               | **API & DATA SUBTOTAL**                                           | **14**  | **28**   | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.8 Phase 4 — Reporting, Documentation, and Project Management
 
@@ -864,7 +864,7 @@ This section covers all software engineering, automation, and tooling work — t
 | PM14 | This audit report                                                  | Comprehensive engagement audit                          | 6       | 10       | \_\_    |
 |      |                                                                    | **REPORTING & PM SUBTOTAL**                             | **59**  | **104**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.9 Complete Time Summary Matrix
 
@@ -895,7 +895,7 @@ This section covers all software engineering, automation, and tooling work — t
 | **Proposed hours (RFP)**                     |      | **250**  | **250**   | —       |
 | **Estimated overdelivery ratio**             |      | **3.8x** | **6.8x**  | \_\_    |
 
----
+<CustomDivider />
 
 ### 6.10 Market Rate Valuation of Work Delivered
 
@@ -919,7 +919,7 @@ The following table applies standard market rates for the type of work delivered
 
 > The market rate valuation uses blended Sydney / remote rates for professional services in 2024–2025. Even at the low end of both hours and rates, the market value of work delivered is approximately **3.4x** the contracted fee. At the high end it is nearly **9x**. The contracted rate of $100/hour (implied) is well below market for the combination of technical writing, software engineering, product strategy, and DevRel expertise required.
 
----
+<CustomDivider />
 
 ### 6.11 Hours Overdelivery Summary
 
@@ -937,7 +937,7 @@ The following table applies standard market rates for the type of work delivered
 
 > **Action for Alison:** Fill in the "Actuals" column throughout Section 6 with your real hours per work item. Even rough weekly logs broken down by category (e.g., "week of Oct 14: ~8 hrs content, ~6 hrs CLI, ~4 hrs meetings") will substantially improve the precision of this section and make the overdelivery case more concrete and verifiable.
 
----
+<CustomDivider />
 
 ## Part 7: RFP Completion Matrix
 
@@ -946,7 +946,7 @@ The following table applies standard market rates for the type of work delivered
 | Present new documentation strategy   | ✅ Complete                     | Milestone 1 & 2 Report (Google Doc, Nov 26 2024); Watercooler presentation (Nov 25 2024); forum update posts | Delivered as formal milestone with community-facing presentation                                    |
 | Rewrite documentation                | ✅ Complete                     | Live at docs.livepeer.org/v2; 9 top-level sections deployed; last modified Feb 20, 2026                      | All primary sections live; final polish in progress EoW                                             |
 | v1 documentation live with redirects | ✅ Complete                     | docs.livepeer.org/v1 live; version switcher in navigation; `docs.json:17`, `docs.json:3173`                  | v1 fully preserved and accessible                                                                   |
-| SEO/AEO                              | ⚠️ Partial                      | `tools/scripts/snippets/generate-seo.js`; AEO logic in generator; consistent frontmatter patterns            | Tooling built and deployable; full sitewide enforcement gate not yet in CI. Completion task exists. |
+| SEO/AEO                              | ⚠️ Partial                      | `operations/scripts/snippets/generate-seo.js`; AEO logic in generator; consistent frontmatter patterns            | Tooling built and deployable; full sitewide enforcement gate not yet in CI. Completion task exists. |
 | WCAG accessibility                   | ⚠️ Partial — needs Alison input | Mintlify platform has accessibility defaults; no explicit WCAG audit evidence in repo                        | Alison to confirm if WCAG audit was conducted                                                       |
 | Analytics                            | ⚠️ Partial — needs Alison input | Mintlify analytics available; no evidence of custom analytics integration or reporting setup                 | Alison to confirm analytics configuration                                                           |
 | i18n foundations                     | ⚠️ Partial — needs Alison input | Language switcher present in live nav (English / US flag visible); full i18n implementation not evidenced    | Language switcher is live; Alison to confirm translation pipeline status                            |
@@ -955,31 +955,31 @@ The following table applies standard market rates for the type of work delivered
 | Ownership handoff model              | ✅ Complete                     | `.github/CODEOWNERS`; `v2/pages/09_internal/governance.mdx`; docs-guide SoT policy                           | Codified in repo and documentation                                                                  |
 | Ticketing / triage model             | ✅ Complete                     | 8 GitHub issue templates with labels and automation; `issue-auto-label.yml`                                  | Fully operational                                                                                   |
 
----
+<CustomDivider />
 
 ## Part 8: Above and Beyond Matrix
 
 | Work Item                             | Category            | Description                                                                                   | Repo Evidence                                                                                | Estimated Scope             |
 | ------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | --------------------------- |
-| `lpd` CLI                             | Back-end ops        | Unified maintainer CLI for all repo operations (setup, dev, test, hooks, scripts)             | `lpd`, `docs-guide/lpd.mdx`                                                                   | Large (20–30 hrs)           |
+| `lpd` CLI                             | Back-end ops        | Unified maintainer CLI for all repo operations (setup, dev, test, hooks, scripts)             | `lpd`, `docs-guide/tooling/lpd-cli.mdx`                                                                   | Large (20–30 hrs)           |
 | Pre-commit hook system                | Back-end ops        | Structure, style, MDX, links, spelling, script docs, pages index — all enforced pre-commit    | `.githooks/pre-commit`, `.githooks/verify.sh`                                                | Medium (10–15 hrs)          |
-| CI test suite (17 workflows)          | Back-end ops / CI   | Full GitHub Actions workflow suite for PR validation, browser testing, link checking          | `.github/workflows/*.yml`; `docs-guide/indexes/workflows-index.mdx`                                   | Large (20–30 hrs)           |
-| 58-script test and ops infrastructure | Back-end ops        | Unit, integration, and browser tests; run-all and run-pr-checks orchestrators                 | `docs-guide/indexes/scripts-index.mdx`; `tests/`                                                      | Very large (30–45 hrs)      |
+| CI test suite (17 workflows)          | Back-end ops / CI   | Full GitHub Actions workflow suite for PR validation, browser testing, link checking          | `.github/workflows/*.yml`; `docs-guide/catalog/workflows-catalog.mdx`                                 | Large (20–30 hrs)           |
+| 58-script test and ops infrastructure | Back-end ops        | Unit, integration, and browser tests; run-all and run-pr-checks orchestrators                 | `docs-guide/catalog/scripts-catalog.mdx`; `tests/`                                                    | Very large (30–45 hrs)      |
 | Componentised UI system               | Front-end           | Reusable MDX component library; structural style enforcement                                  | `snippets/components/`; `v2/resources/documentation-guide/component-library.mdx`    | Medium (20–30 hrs)          |
 | Forum data ingestion pipeline         | Automation          | Automated scheduled fetch and normalisation of Livepeer forum data                            | `.github/scripts/fetch-forum-data.js`; `update-forum-data.yml`                               | Medium                      |
 | Ghost blog data ingestion pipeline    | Automation          | Automated scheduled fetch of Livepeer blog content                                            | `.github/scripts/fetch-ghost-blog-data.js`; `update-ghost-blog-data.yml`                     | Medium                      |
 | YouTube data ingestion pipeline       | Automation          | Automated scheduled fetch of YouTube data (Shorts filtered)                                   | `.github/scripts/fetch-youtube-data.js`; `update-youtube-data.yml`                           | Medium                      |
-| Project Showcase pipeline             | Automation          | Searchable, sortable ecosystem project showcase with sync automation; extensible architecture | `.github/scripts/project-showcase-sync.js`; `snippets/automations/showcase/showcaseData.jsx` | Medium                      |
+| Project Showcase pipeline             | Automation          | Searchable, sortable ecosystem project showcase with sync automation; extensible architecture | `.github/scripts/project-showcase-sync.js`; `snippets/data/showcase-feed/showcaseData.jsx` | Medium                      |
 | Release version tracking              | Automation          | Automated release version and global state updates                                            | `update-livepeer-release.yml`; `snippets/automations/globals/globals.mdx`                    | Small                       |
-| n8n workflow assets                   | Automation          | Parallel n8n pipeline assets providing platform-independent automation                        | `snippets/automations/scripts/n8n/`                                                          | Medium                      |
+| n8n workflow assets                   | Automation          | Parallel n8n pipeline assets providing platform-independent automation                        | `snippets/assets/data/n8n/`                                                                  | Medium                      |
 | Governance and intake automation      | Automation          | Discord issue intake, auto-labelling, review asset generation, reviewer assignment            | `discord-issue-intake.yml`; `issue-auto-label.yml`; review workflows                         | Medium                      |
-| SEO/AEO generator                     | Maintenance scripts | Runnable script generating SEO metadata and AEO structure across all pages                    | `tools/scripts/snippets/generate-seo.js`                                                     | Small–medium                |
+| SEO/AEO generator                     | Maintenance scripts | Runnable script generating SEO metadata and AEO structure across all pages                    | `operations/scripts/snippets/generate-seo.js`                                                     | Small–medium                |
 | Glossary generation tooling           | Maintenance scripts | Automated terminology extraction, classification, and JSON data generation                    | `generate-glossary.js`; `terminology-search.js`; `glossary-terms.json`                       | Medium                      |
-| Pages index generator                 | Maintenance scripts | Generates section-level index.mdx files and root aggregate index                              | `tools/scripts/generate-pages-index.js`                                                      | Small                       |
-| Docs-guide index generator            | Maintenance scripts | Generates script, workflow, and template catalogs in docs-guide/                              | `tools/scripts/generate-docs-guide-indexes.js`                                               | Small                       |
-| Script self-documentation system      | Maintenance scripts | Enforces script header schema; auto-generates script index; `new-script.js` template creator  | `tests/unit/script-docs.test.js`; `tools/scripts/new-script.js`                              | Medium                      |
+| Pages index generator                 | Maintenance scripts | Generates section-level index.mdx files and root aggregate index                              | `operations/scripts/generate-pages-index.js`                                                      | Small                       |
+| Docs-guide index generator            | Maintenance scripts | Generates script, workflow, and template catalogs in docs-guide/                              | `operations/scripts/generate-docs-guide-indexes.js`                                               | Small                       |
+| Script self-documentation system      | Maintenance scripts | Enforces script header schema; auto-generates script index; `new-script.js` template creator  | `tests/unit/script-docs.test.js`; `operations/scripts/new-script.js`                              | Medium                      |
 | Internal docs-guide system            | Governance          | 8 canonical internal maintainer documents + 3 generated indexes                               | `docs-guide/*.md`                                                                            | Medium (20–30 hrs)          |
-| Source-of-truth policy                | Governance          | Canonical ownership boundaries, change management rules, enforced via CI                      | `docs-guide/source-of-truth-policy.mdx`; `tests/unit/docs-guide-sot.test.js`                  | Small                       |
+| Source-of-truth policy                | Governance          | Canonical ownership boundaries, change management rules, enforced via CI                      | `docs-guide/policies/source-of-truth-policy.mdx`; `tests/unit/docs-guide-sot.test.js`                  | Small                       |
 | AI-ready content structure            | AI-readiness        | Semantic headings, consistent frontmatter, component-driven construction for LLM parsing      | Site-wide                                                                                    | Embedded in content work    |
 | `llms.txt` documentation guidance     | AI-readiness        | Structured guidance for LLM discoverability of the Livepeer docs estate                       | `tools/ai-rules/llms.txt.information.md`                                                     | Small                       |
 | AI assistant integration              | AI-readiness        | Mintlify AI assistant integrated; test surface created                                        | `v2/pages/00_home/test.mdx`; `README.md:245`                                                 | Small                       |
@@ -996,7 +996,7 @@ The following table applies standard market rates for the type of work delivered
 | Product-forward copy and positioning  | Content             | Mission Control framing, "Open AI-Infrastructure" positioning, zero-to-hero paths             | Live site; docs.json                                                                         | Large (embedded in content) |
 | Framer landing page prototype         | Content             | New Livepeer website landing page V1 prototyped                                               | External — Alison to confirm URL                                                             | Small–medium                |
 
----
+<CustomDivider />
 
 ## Part 9: Notion Documents Found
 
@@ -1076,7 +1076,7 @@ All sessions recorded via Fireflies.ai. Attendees: Rich, Rick, Mehrdad, Nick, Al
 
 > **Action for Alison:** Review this list and add any Notion pages, databases, or Miro boards not captured here. The Notion meeting database likely contains additional session records beyond the 8 confirmed above.
 
----
+<CustomDivider />
 
 ## Part 10: Google Drive and Email Documents Found
 
@@ -1098,7 +1098,7 @@ Email search was conducted across all accessible accounts. Specific email thread
 
 > **Action for Alison:** Please review your email for Livepeer-related threads (particularly to/from rich@livepeer.org, rick@livepeer.org, mehrdad@livepeer.foundation) and add subject lines, dates, and brief summaries to this section for completeness.
 
----
+<CustomDivider />
 
 ## Part 11: Calendar Audit
 
@@ -1124,7 +1124,7 @@ February 3, 2025 — Docs Stakeholder WG (launch timeline)
 
 > **Action for Alison:** Please export your calendar events from September 2024 to February 2025 and add to this section. The full calendar review (including categorisation of non-Livepeer events) will be completed once calendar data is accessible. Mark all meetings as CONFIRMED LIVEPEER, LIKELY LIVEPEER, or UNRELATED per your review.
 
----
+<CustomDivider />
 
 ## Part 12: Summary — The Strategic Case for This Work
 
@@ -1144,6 +1144,117 @@ The v2 documentation at docs.livepeer.org is now:
 
 The original RFP budget of $25,000 for a 250-hour engagement did not price this scope of work. The infrastructure, automation, and AI-readiness layers alone would constitute a separate substantial engagement. The time investment evidenced in this audit conservatively represents 3–5x the originally proposed hours, with scope that is 2–3x broader than what was specified in the RFP.
 
----
+<CustomDivider />
 
 _End of audit. This document should be treated as a living record. Alison Haire should supplement the calendar section, the email section, and the time accounting section with actuals. The Notion section should be reviewed for completeness and any missing pages added._
+
+<CustomDivider />
+
+## Part 13: Addendum — Updates 2026-02-21 → 2026-05-22
+
+**Author:** Alison Haire / Wonderland
+**Generated:** 2026-05-22
+**Status:** Append-only addendum. The historical Parts 1–12 above are the 2026-02-21 audit and are preserved intact for the contractual record.
+
+This addendum exists because the repository has moved on substantially in the three months since the original audit. Every quantitative count in Parts 4–6 is now stale. Several deliverable rows graded "Cancelled" or "Incomplete" in the 2026-02-21 record have since been delivered. Substantial new infrastructure was shipped that the original RFP did not commission. This addendum captures those changes without rewriting the historical record above.
+
+### 13.1 Numbers refresh
+
+| Claim in Parts 1–12 | 2026-02 value | 2026-05-22 value | Evidence |
+| --- | ---: | ---: | --- |
+| Operations scripts | 58-script test and maintenance suite | **320** active JS/SH/Py files under `operations/scripts/` (343 including archive lanes) | `find operations/scripts \( -name "*.js" -o -name "*.sh" -o -name "*.py" \) -not -path "*/x-archive/*" -not -path "*/archive/*" \| wc -l` |
+| GitHub Actions workflows | 17 workflows | **11 active workflows + governance interfaces** (4-tier composable refactor completed 2026-05-22) | `.github/workflows/`; D-GOV-08 lock |
+| AI skills | not mentioned in Parts 1–12 | **34** canonical `SKILL.md` workflows under `ai-tools/ai-skills/` | `find ai-tools/ai-skills -name "SKILL.md" \| wc -l` |
+| Active v2 .mdx files | not stated | **1,128** (excluding `_workspace/`, `x-archived/`, `x-deprecated/`) | `find v2 -name "*.mdx"` with exclusions |
+| docs.json registered v2 routes | not stated | **686** | `grep -c '"v2/' docs.json` |
+| Active JSX components | not stated | **35** active + 24 archived (59 file count); **132** registry exports | `find snippets/components -name "*.jsx"` + `docs-guide/config/component-registry.json` |
+| Top-level tabs | 9 (Home, About, Platforms, Developers, Gateways, GPU Nodes, Delegators, Community, Resource HUB) | **10** (home, about, community, delegators, developers, gateways, internal, orchestrators, resources, solutions) | `find v2 -maxdepth 1 -type d` |
+| v2 information architecture | "numbered prefix system 00_home → 09_internal" | Flat tab-named (`v2/home/`, `v2/about/`, ...). Numbered prefixes removed. | Live tree |
+| Governance frameworks (manual files) | "8 manual + 3 generated" | **13** frameworks + **5** standards + **18** policies + **18** GOVERNANCE.md markers + unified decision registry | `docs-guide/` |
+
+### 13.2 Substantial work delivered after handover (2026-02-22 → 2026-05-22)
+
+The original RFP did not commission the items below. They were delivered as ongoing stewardship between the February 2026 audit submission and this addendum.
+
+**Ownerless governance spine**
+- 13 published frameworks under `docs-guide/frameworks/`, 5 standards under `docs-guide/standards/`, 18 policies under `docs-guide/policies/`, 18 GOVERNANCE.md markers at canonical roots.
+- Unified decisions registry at `docs-guide/decisions/registry.md` (D-NAV, D-DG, D-GOV, D-ACT decision logs cross-indexed).
+- Locked decisions D-DG-01 through D-DG-13 (2026-05-04) establish the canonical docs-guide structure with `reference/` migration plan.
+- Ownerless surface manifest at `operations/governance/config/ownerless-governance-surfaces.json` (8 surfaces under the four-part contract; 28 more in the broader registry).
+- Governance map generator at `operations/scripts/generators/governance/reports/generate-repo-governance-status.js`.
+
+**AI agent infrastructure**
+- 34 canonical AI skills under `ai-tools/ai-skills/` covering session lifecycle (thread, pm, research, design, build, iterate, dispatch, agent-brief, diagnose, close, propagate), content pipelines, audits, and governance creation.
+- Native agent adapters extended to `.codex/` and `.augment/` alongside `.claude/`, `.cursor/`, `.windsurf/`, `.github/copilot-instructions.md`.
+- Cross-agent packager at `operations/scripts/integrators/ai/agents/cross-agent-packager.js` exports portable skills per agent.
+- `AGENTS.md` cross-agent baseline with native adapter index, source-of-truth order, response contract.
+- Codex task-isolation contract at `.codex/task-contract.yaml` plus lock files and preflight/finalise/cleanup scripts.
+
+**Script and component governance**
+- 11-tag JSDoc script standard codified at `docs-guide/frameworks/script-framework.mdx` and `docs-guide/policies/script-governance.mdx`.
+- 7-tag JSDoc component standard codified at `docs-guide/frameworks/component-framework-canonical.mdx`.
+- Script footprint and usage audit (`operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js`) baselines compliance.
+- Component registry at `docs-guide/config/component-registry.json` with 132 exports; generator regenerates registry, catalogs, and VS Code snippets from JSDoc headers.
+
+**Quality and content pipelines**
+- Styles governance pipeline (audit + remediator with `--verify` regression check + CI workflow). Repository-wide remediation reduced non-mermaid style-token violations from 3,986 to 0.
+- UK spelling and em-dash zone-aware remediators (`operations/scripts/remediators/content/style/`) covering frontmatter block scalars and per-key zoning.
+- `/propagate` skill and move-detect hook for file renames with reference rewrites.
+- Asset Pipeline (PR #851): 19 assets migrated with 3-layer verification gate.
+- Changelog Pipeline: 24 targets registered, 19 resource pages populated, nav grouped into 5 categories.
+
+**Contributor toolchain**
+- `lpd` Bash CLI as the unified contributor entry point (13 subcommands + 5 group shorthands, JSON envelope, dry-run, repo-root auto-detection, risk-gated execution).
+- Four in-repo VS Code extensions: `lpd-mdx-preview` (full component library rendering, Mermaid, hot-reload), `authoring-tools`, `components` (registry-driven picker), `markdown-list`.
+- 312 governed VS Code snippets across five `.code-snippets` files, generated from `component-registry.json`.
+- Scoped Mintlify preview (`tools/dev/preview/generate-mint-dev-scope.js`) boots filtered nav in seconds rather than ten minutes.
+- `.githooks/` pipeline: pre-commit hard gates (MDX syntax, docs.json integrity, no-deletion, .allowlist/v1 protection, Codex branch isolation) and pre-push contract enforcement.
+
+**Data integration deepening**
+- Contracts pipeline reached gold-standard maturity: daily cron at `02:00 UTC`, shadow workflow for verification-only runs, bytecode verification against Arbitrum One and Ethereum Mainnet, controller-log historical replay, branch-watch state across four upstream repos, health-check artefacts, incident issue creation on failure.
+- Release globals integrator: `snippets/data/globals/latestRelease.jsx` tracks `go-livepeer` releases with `--dry-run` support.
+- Configuration flags integrator: `snippets/data/gateways/configuration-flags.jsx` powers the configuration flags search table.
+- Exchange data integrator: CoinGecko ticker data with classification and trust scoring.
+
+**Reliability and infrastructure**
+- GitHub Actions Governance refactor (completed 2026-05-22): 53 dispatchers → 11 active workflows (6 `dispatch-{concern}.yml` + 5 governance interfaces) under a 4-tier composable architecture. 65 pipeline + meta dispatchers under `operations/scripts/dispatch/`. ~190 atomic scripts + 8 new remediators. D-GOV-08 wires "every folder governed, prevention at earliest layer" across layers 1–5. Smoke test: 66/66 passing.
+- Zombie-process prevention: 158 zombie processes killed (MCP servers, Puppeteer, stale sweeps). SessionStart cleanup expanded, SessionEnd hook added, UserPromptSubmit Chrome reaper.
+- Docs Library at `docs-guide/docs-library/index.mdx`: 8 pages with pipeline diagrams and gap analysis covering content quality, governance compliance, component health, discoverability, data integration, and copy/brand concerns.
+
+### 13.3 RFP completion matrix — rows re-graded since 2026-02-21
+
+The original `StyledTable` in `v2/internal/rfp/report.mdx` should reflect the following status changes:
+
+| Item | 2026-02-21 status | 2026-05-22 status | Reason |
+| --- | --- | --- | --- |
+| Consolidation of multiple changelogs | Cancelled (Foundation to manage) | **Partial — automated pipeline shipped, content ownership remains with Foundation** | Changelog Pipeline thread active with 24 targets registered and 19 resource pages populated; nav grouped into 5 categories. |
+| Goal-based tutorials | Incomplete | **Completed in shape, ongoing refinement** | Gateways Verify, Monitor, and Connect quickstart threads built or shipping. Cross-tab graduation paths defined. |
+| WCAG accessibility | Needs Alison input | **Audited and partially repaired** | WCAG audit at `v2/internal/reports/quality-accessibility/v2-wcag-audit.md`. Styles Governance shipped focus-visible enforcement and responsive CSS. |
+| Multilingual readiness and analytics tracking | Completed (3 translations available) | **To re-verify** | Confirm published translations against live site; analytics dashboards to be re-listed. |
+| Migration guides for Studio users | Blocked (Migration to where?) | **Likely resolvable** | Platforms/Studio relationship stabilised; Solutions tab established as the canonical home for Studio integration paths. |
+
+### 13.4 New gaps surfaced after handover
+
+These gaps did not exist in the 2026-02-21 audit because the surfaces they describe did not yet exist or had not been measured.
+
+- **218 operations scripts pending the 11-tag JSDoc backfill.** The framework was published; the legacy population has not been backfilled. Repair script (`repair-script-inventory.js`) exists. Graduated execution required.
+- **307-row v2 folder cleanup matrix.** 235 `_workspace` candidates + 72 `x-deprecated` candidates from the V2 Folder Governance audit. `gateways` carries 199 of the 307 rows. Pipeline mature; execution unstarted.
+- **OpenAPI fetcher covers 2 of 5 specs.** Studio, CLI, and the main `openapi.yaml` are not refreshed by `fetch-openapi-specs.sh`. No scheduled workflow. All five specs in `api/` were last touched 2026-03-18.
+- **Manual-only generators flagged P0.** `generate-og-images.js` (2026-03-30 flag) and `generate-seo.js` (2026-03-30 flag) have no CI workflow despite the generator workflows existing in `.github/workflows/`.
+- **`update-contract-addresses.yml` has never been dispatched.** Workflow exists only on `docs-v2-dev`; GitHub Actions only indexes workflows on the default branch. P0 flag from 2026-03-31.
+- **Luma social feed silently dead since 2026-03-18.** Other six feeds in `snippets/data/social-feeds/` refreshed together on 2026-04-14; Luma did not.
+- **Stale governance map.** `generate-repo-governance-status.js --check` self-detects `docs-guide/repo-ops/config/repo-governance-map.mdx` as stale. System flags itself; no auto-run repairs.
+- **Three duplicate v2 directories.** `v2/developers/`, `v2/developers1/`, `v2/developers2/` exist in the live tree. Gap analysis demands an IA migration plan before action.
+- **`tasks-retention.yml` is a stub.** Workspace TTL policy (30/90 days) is documented; enforcement workflow is not implemented.
+
+### 13.5 Honest framing for the Foundation
+
+The repository as of 2026-05-22 ships substantially more than the original RFP commissioned and substantially more than what was audited on 2026-02-21. It also has more visible gaps than the original audit named — not because the repository regressed, but because the new gaps describe surfaces that did not exist before this work created them. Every gap above has a documented file path and acceptance criterion and is contributor-grade work.
+
+The model the repository now operates under is honest about its limits: ownerless for routine drift, not for policy authorship or destructive operations. Eight surfaces are formally ownerless-ready. Twenty more are in the wider registry awaiting promotion. Each promotion is bounded, documented, and contributor-grade.
+
+The contractual deliverable in 2026-02-21 was a documentation restructure. What exists today is a self-remediating documentation operating system. The Foundation should expect ongoing stewardship work of the kind summarised in Sections 13.2 and 13.4 to continue under any future engagement framing.
+
+For the live audit backlog with file paths and acceptance criteria, see [`docs-guide/features/gap-analysis.mdx`](/docs-guide/features/gap-analysis). For the consolidated audit + product narratives, see `workspace/thread-outputs/repo-docs-consolidation/00-SYNTHESIS.md`.
+
+_End of Part 13 addendum. 2026-05-22._

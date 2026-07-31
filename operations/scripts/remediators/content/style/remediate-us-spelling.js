@@ -1,0 +1,528 @@
+#!/usr/bin/env node
+/**
+ * @script      remediate-us-spelling
+ * @type        remediator
+ * @concern     brand
+ * @niche       spelling
+ * @purpose     Convert US English spellings to UK English (en-GB) in v2 MDX content per the CLAUDE.md voice rule "UK English (-ise, -our, -re)" — reads rules from tools/config/quality/language-rules.json
+ * @description Default direction: US → UK. Use --language en-us to reverse. Skips frontmatter, code blocks, inline code, JSX comments, import/export lines, URLs, and JSX attribute values. --verify re-runs the spelling check after write and reverts any file that still has US forms. Pairs with dispatch-spelling.js.
+ * @mode        repair
+ * @pipeline    P6 (self-heal via dispatch-spelling.js --mode scheduled), manual via --files
+ * @scope       v2/ (published routable MDX pages, excluding _workspace, x-archived, x-deprecated, locales)
+ * @usage       node operations/scripts/remediators/content/style/remediate-us-spelling.js [--dry-run|--write] [--verify] [--language en-gb|en-us] [--staged] [--files path,path]
+ * @policy      D-GOV-03 (paired remediator with --verify gate)
+ */
+
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const { atomicWrite } = require('../../../../../tools/lib/bootstrap/safe-io');
+
+const REPO_ROOT = process.cwd();
+const V2_ROOT = path.join(REPO_ROOT, 'v2');
+
+const EXCLUDED_SEGMENTS = new Set(['_workspace', 'x-archived', 'x-deprecated', 'cn', 'es', 'fr']);
+
+// ── Load rules from shared data file ───
+function loadLanguageRules() {
+  const rulesPath = path.join(REPO_ROOT, 'tools', 'config', 'quality', 'language-rules.json');
+  try {
+    return JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
+  } catch (err) {
+    console.error(`Failed to load language rules from ${rulesPath}: ${err.message}`);
+    process.exit(1);
+  }
+}
+
+function buildCompiledRules(language) {
+  const data = loadLanguageRules();
+  const pairs = data.pairs.map((p) => {
+    if (language === 'en-gb') {
+      return [p.us, p.uk];
+    }
+    return [p.uk, p.us];
+  });
+
+  // Sort by length descending so longer matches get tried first
+  pairs.sort((a, b) => b[0].length - a[0].length);
+
+  return pairs.map(([from, to]) => ({
+    from,
+    to,
+    regex: new RegExp(`\\b${from}\\b`, 'gi'),
+  }));
+}
+
+// ── Args ────────────────────────────────
+function parseArgs(argv) {
+  const args = { mode: 'dry-run', verify: false, help: false, language: 'en-gb', stagedOnly: false, files: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const token = argv[i];
+    if (token === '--write') { args.mode = 'write'; continue; }
+    if (token === '--dry-run') { args.mode = 'dry-run'; continue; }
+    if (token === '--verify') { args.verify = true; continue; }
+    if (token === '--help' || token === '-h') { args.help = true; continue; }
+    if (token === '--language' && i + 1 < argv.length) {
+      args.language = argv[++i];
+      if (args.language !== 'en-gb' && args.language !== 'en-us') {
+        console.error(`Invalid language: ${args.language}. Use en-gb or en-us.`);
+        process.exit(1);
+      }
+      continue;
+    }
+    if (token.startsWith('--language=')) {
+      args.language = token.slice('--language='.length);
+      if (args.language !== 'en-gb' && args.language !== 'en-us') {
+        console.error(`Invalid language: ${args.language}. Use en-gb or en-us.`);
+        process.exit(1);
+      }
+      continue;
+    }
+    if (token === '--staged') { args.stagedOnly = true; continue; }
+    if (token === '--files' && i + 1 < argv.length) {
+      args.files = argv[++i].split(',').map((f) => f.trim()).filter(Boolean);
+      continue;
+    }
+    if (token.startsWith('--files=')) {
+      args.files = token.slice('--files='.length).split(',').map((f) => f.trim()).filter(Boolean);
+      continue;
+    }
+  }
+  return args;
+}
+
+function printHelp() {
+  const data = loadLanguageRules();
+  console.log([
+    'Usage:',
+    '  node operations/scripts/remediators/content/style/remediate-us-spelling.js [flags]',
+    '',
+    'Modes:',
+    '  --dry-run       Show spelling replacements without modifying files (default).',
+    '  --write         Apply spelling replacements to published v2 MDX files.',
+    '',
+    'Language:',
+    '  --language en-gb  Convert US to UK English (default).',
+    '  --language en-us  Convert UK to US English.',
+    '',
+    'Scope:',
+    '  --staged        Only process staged files.',
+    '  --files a,b,c   Only process specified files (comma-separated).',
+    '  (default)       Process all routable v2 MDX files.',
+    '',
+    'Safety:',
+    '  - Replaces only in prose content text.',
+    '  - Skips frontmatter, fenced code blocks, inline code, JSX comments,',
+    '    import/export lines, URLs, and JSX attribute values.',
+    '  - JSX props like color=, backgroundColor=, etc. are never touched.',
+    '',
+    'Flags:',
+    '  --verify    After --write, re-run detection on affected files. If any',
+    '              source-language spellings remain, revert and exit non-zero.',
+    '',
+    'Word map: ' + data.pairs.length + ' bidirectional rules loaded.',
+  ].join('\n'));
+}
+
+// ── File walker ─────────────────────────
+function toPosix(filePath) {
+  return String(filePath || '').split(path.sep).join('/');
+}
+
+function isExcluded(relPath) {
+  const segments = toPosix(relPath).split('/');
+  return segments.some(s => EXCLUDED_SEGMENTS.has(s) || /^x-/.test(s) || s.startsWith('_'));
+}
+
+function walkMdxFiles(dirPath, out = []) {
+  let entries;
+  try {
+    entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  } catch (_) {
+    return out;
+  }
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    const relPath = toPosix(path.relative(REPO_ROOT, fullPath));
+    if (isExcluded(relPath)) continue;
+    if (entry.isDirectory()) {
+      walkMdxFiles(fullPath, out);
+    } else if (entry.isFile() && /\.mdx$/i.test(entry.name)) {
+      out.push({ fullPath, relPath });
+    }
+  }
+  return out;
+}
+
+function getStagedMdxFiles() {
+  const { execSync } = require('child_process');
+  try {
+    const output = execSync('git diff --cached --name-only --diff-filter=ACM', {
+      cwd: REPO_ROOT, encoding: 'utf8',
+    });
+    return output.trim().split('\n')
+      .filter((f) => f && /\.mdx$/i.test(f) && f.startsWith('v2/') && !isExcluded(f))
+      .map((relPath) => ({ fullPath: path.join(REPO_ROOT, relPath), relPath }));
+  } catch (_) {
+    return [];
+  }
+}
+
+function resolveTargetFiles(args) {
+  if (args.files.length > 0) {
+    return args.files.map((f) => {
+      const abs = path.isAbsolute(f) ? f : path.join(REPO_ROOT, f);
+      return { fullPath: abs, relPath: toPosix(path.relative(REPO_ROOT, abs)) };
+    }).filter((f) => /\.mdx$/i.test(f.relPath));
+  }
+  if (args.stagedOnly) {
+    return getStagedMdxFiles();
+  }
+  return walkMdxFiles(V2_ROOT);
+}
+
+// ── Zone detection ──────────────────────
+function buildZoneMap(content) {
+  const zones = [];
+  let m;
+
+  // Frontmatter — zone everything except user-facing keys
+  // (title, sidebarTitle, description, keywords). Block scalars (>-, |) and
+  // array continuations are exposed for remediation.
+  const CHECKED_FM_KEYS_LOCAL = /^(title|sidebarTitle|description|keywords)\s*:/;
+  if (content.startsWith('---')) {
+    const close = content.indexOf('---', 3);
+    if (close > 0) {
+      const fmEnd = close + 3;
+      const fmLines = content.slice(0, fmEnd).split('\n');
+      let offset = 0;
+      let exposeIndent = -1; // when >=0, expose continuation lines indented past this
+      for (const line of fmLines) {
+        const lineEnd = offset + line.length;
+        const indent = line.length - line.trimStart().length;
+        const trimmed = line.trimStart();
+        if (exposeIndent >= 0) {
+          if (trimmed === '' || indent > exposeIndent) {
+            offset = lineEnd + 1;
+            continue;
+          }
+          exposeIndent = -1;
+        }
+        if (CHECKED_FM_KEYS_LOCAL.test(trimmed)) {
+          const colonPos = line.indexOf(':');
+          let valueStart = offset + colonPos + 1;
+          while (valueStart < lineEnd && content[valueStart] === ' ') valueStart++;
+          zones.push({ start: offset, end: valueStart, type: 'frontmatter' });
+          const afterColon = line.slice(colonPos + 1).trim();
+          if (/^[>|][-+]?\s*$/.test(afterColon) || afterColon === '') {
+            exposeIndent = indent;
+          }
+        } else {
+          zones.push({ start: offset, end: lineEnd, type: 'frontmatter' });
+        }
+        offset = lineEnd + 1;
+      }
+    }
+  }
+
+  // Fenced code blocks
+  const codeRegex = /^[ \t]*```[^\n]*$/gm;
+  const codeStarts = [];
+  while ((m = codeRegex.exec(content)) !== null) {
+    codeStarts.push(m.index);
+  }
+  for (let i = 0; i < codeStarts.length - 1; i += 2) {
+    const endIdx = content.indexOf('\n', codeStarts[i + 1]);
+    zones.push({ start: codeStarts[i], end: endIdx > 0 ? endIdx : codeStarts[i + 1] + 3, type: 'code' });
+  }
+
+  // JSX comments {/* ... */}
+  const jsxCommentRegex = /\{\/\*[\s\S]*?\*\/\}/g;
+  while ((m = jsxCommentRegex.exec(content)) !== null) {
+    zones.push({ start: m.index, end: m.index + m[0].length, type: 'jsx-comment' });
+  }
+
+  // Inline code `...`
+  const inlineCodeRegex = /`[^`\n]+`/g;
+  while ((m = inlineCodeRegex.exec(content)) !== null) {
+    zones.push({ start: m.index, end: m.index + m[0].length, type: 'inline-code' });
+  }
+
+  // JSX template literals
+  const templateLitRegex = /=\{`[\s\S]*?`\}/g;
+  while ((m = templateLitRegex.exec(content)) !== null) {
+    zones.push({ start: m.index, end: m.index + m[0].length, type: 'template-literal' });
+  }
+
+  // URLs
+  const urlRegex = /\bhttps?:\/\/[^\s<`)"'\]]+/g;
+  while ((m = urlRegex.exec(content)) !== null) {
+    zones.push({ start: m.index, end: m.index + m[0].length, type: 'url' });
+  }
+
+  // JSX attribute values
+  const attrDoubleRegex = /\b\w+="[^"]*"/g;
+  while ((m = attrDoubleRegex.exec(content)) !== null) {
+    const eqPos = m[0].indexOf('="');
+    zones.push({ start: m.index + eqPos + 1, end: m.index + m[0].length, type: 'jsx-attr' });
+  }
+  const attrSingleRegex = /\b\w+='[^']*'/g;
+  while ((m = attrSingleRegex.exec(content)) !== null) {
+    const eqPos = m[0].indexOf("='");
+    zones.push({ start: m.index + eqPos + 1, end: m.index + m[0].length, type: 'jsx-attr' });
+  }
+
+  // JSX tags
+  const jsxTagRegex = /<\/?[A-Z][A-Za-z0-9.]*(?:\s[^>]*)?\/?>/g;
+  while ((m = jsxTagRegex.exec(content)) !== null) {
+    zones.push({ start: m.index, end: m.index + m[0].length, type: 'jsx-tag' });
+  }
+
+  return zones;
+}
+
+function isInZone(zones, index) {
+  return zones.some(z => index >= z.start && index < z.end);
+}
+
+function isOnImportExportLine(content, index) {
+  const lineStart = content.lastIndexOf('\n', index - 1) + 1;
+  const lineText = content.slice(lineStart, lineStart + 20);
+  return /^(import |export )/.test(lineText);
+}
+
+function isInJsxTag(content, index) {
+  const searchStart = Math.max(0, index - 500);
+  const before = content.slice(searchStart, index + 1);
+  const lastOpen = before.lastIndexOf('<');
+  const lastClose = before.lastIndexOf('>');
+  if (lastOpen < 0) return false;
+  if (lastOpen > lastClose) {
+    const afterOpen = before.slice(lastOpen + 1);
+    return /^[A-Za-z\/]/.test(afterOpen);
+  }
+  return false;
+}
+
+function isCodeIdentifierReference(content, index, matchedWord) {
+  const lineStart = content.lastIndexOf('\n', index - 1) + 1;
+  const lineEnd = content.indexOf('\n', index);
+  const line = content.slice(lineStart, lineEnd > 0 ? lineEnd : content.length);
+  const lower = matchedWord.toLowerCase();
+  const backtickRegex = /`([^`]+)`/g;
+  let bm;
+  while ((bm = backtickRegex.exec(line)) !== null) {
+    if (bm[1].toLowerCase().includes(lower)) return true;
+  }
+  return false;
+}
+
+// ── Case matching ───────────────────────
+function matchCase(original, replacement) {
+  if (original === original.toUpperCase()) return replacement.toUpperCase();
+  if (original[0] === original[0].toUpperCase()) {
+    return replacement[0].toUpperCase() + replacement.slice(1);
+  }
+  return replacement;
+}
+
+// ── Core ────────────────────────────────
+function processFile(content, compiledRules) {
+  const zones = buildZoneMap(content);
+  const replacements = [];
+
+  for (const rule of compiledRules) {
+    const regex = new RegExp(rule.regex.source, rule.regex.flags);
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+      const idx = match.index;
+      if (isInZone(zones, idx)) continue;
+      if (isOnImportExportLine(content, idx)) continue;
+      if (isInJsxTag(content, idx)) continue;
+      if (isCodeIdentifierReference(content, idx, match[0])) continue;
+
+      const lineNum = content.slice(0, idx).split('\n').length;
+      const lineStart = content.lastIndexOf('\n', idx - 1) + 1;
+      const lineEnd = content.indexOf('\n', idx);
+      const line = content.slice(lineStart, lineEnd > 0 ? lineEnd : content.length);
+
+      replacements.push({
+        index: idx,
+        length: match[0].length,
+        from: match[0],
+        to: matchCase(match[0], rule.to),
+        lineNum,
+        line: line.trim(),
+      });
+    }
+  }
+
+  // Deduplicate overlapping replacements
+  replacements.sort((a, b) => a.index - b.index);
+  const deduped = [];
+  let lastEnd = -1;
+  for (const r of replacements) {
+    if (r.index >= lastEnd) {
+      deduped.push(r);
+      lastEnd = r.index + r.length;
+    }
+  }
+
+  return deduped;
+}
+
+function applyReplacements(content, replacements) {
+  const sorted = [...replacements].sort((a, b) => b.index - a.index);
+  let result = content;
+  for (const r of sorted) {
+    result = result.slice(0, r.index) + r.to + result.slice(r.index + r.length);
+  }
+  return result;
+}
+
+// ── Run (programmatic API) ──────────────
+function run(options = {}) {
+  const args = options.args || parseArgs([]);
+  const quiet = options.quiet === true;
+  const compiledRules = buildCompiledRules(args.language);
+
+  const files = Array.isArray(options.files) && options.files.length > 0
+    ? options.files.map((f) => {
+        const abs = path.isAbsolute(f) ? f : path.join(REPO_ROOT, f);
+        return { fullPath: abs, relPath: toPosix(path.relative(REPO_ROOT, abs)) };
+      })
+    : resolveTargetFiles(args);
+
+  let totalReplacements = 0;
+  let filesChanged = 0;
+  const report = [];
+  const affectedFiles = [];
+
+  for (const { fullPath, relPath } of files) {
+    let content;
+    try {
+      content = fs.readFileSync(fullPath, 'utf8');
+    } catch (_) {
+      continue;
+    }
+    const replacements = processFile(content, compiledRules);
+    if (replacements.length === 0) continue;
+
+    totalReplacements += replacements.length;
+    filesChanged++;
+
+    report.push({
+      file: relPath,
+      count: replacements.length,
+      samples: replacements.slice(0, 8).map(r => ({
+        lineNum: r.lineNum,
+        from: r.from,
+        to: r.to,
+        line: r.line.slice(0, 120),
+      })),
+    });
+
+    if (args.mode === 'write') {
+      affectedFiles.push({ fullPath, relPath, originalContent: content });
+      const updated = applyReplacements(content, replacements);
+      atomicWrite(fullPath, updated);
+    }
+  }
+
+  const direction = args.language === 'en-gb' ? 'US \u2192 UK' : 'UK \u2192 US';
+
+  if (!quiet) {
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`${direction} spelling remediation \u2014 ${args.mode === 'write' ? 'APPLIED' : 'DRY RUN'}`);
+    console.log(`${'='.repeat(60)}\n`);
+
+    for (const entry of report) {
+      console.log(`  ${entry.file} (${entry.count} replacement${entry.count > 1 ? 's' : ''})`);
+      for (const s of entry.samples) {
+        console.log(`    L${s.lineNum}: "${s.from}" \u2192 "${s.to}"  |  ${s.line}`);
+      }
+      if (entry.count > 8) console.log(`    ... and ${entry.count - 8} more`);
+    }
+
+    console.log(`\nTotal: ${totalReplacements} replacements in ${filesChanged} files`);
+
+    if (args.mode === 'dry-run') {
+      console.log('Run with --write to apply changes.');
+    }
+  }
+
+  // Verify step
+  let reverted = 0;
+  if (args.verify && args.mode === 'write' && affectedFiles.length > 0) {
+    if (!quiet) {
+      console.log(`\n${'\u2500'.repeat(40)}`);
+      console.log('Verify: re-running detection on affected files...');
+    }
+
+    const failures = [];
+    for (const { fullPath, relPath } of affectedFiles) {
+      const updatedContent = fs.readFileSync(fullPath, 'utf8');
+      const remaining = processFile(updatedContent, compiledRules);
+      if (remaining.length > 0) {
+        failures.push({ file: relPath, count: remaining.length, samples: remaining.slice(0, 3) });
+      }
+    }
+
+    if (failures.length > 0) {
+      const regressedFiles = new Set(failures.map(f => f.file));
+      if (!quiet) {
+        console.error('\n\u274c VERIFY FAILED \u2014 source-language spellings still present:');
+        for (const f of failures) {
+          console.error(`  ${f.file} (${f.count} remaining)`);
+          for (const s of f.samples) {
+            console.error(`    L${s.lineNum}: "${s.from}" still present`);
+          }
+        }
+      }
+
+      for (const af of affectedFiles) {
+        if (regressedFiles.has(af.relPath)) {
+          atomicWrite(af.fullPath, af.originalContent);
+          reverted++;
+        }
+      }
+      if (!quiet) {
+        console.error(`\nReverted ${reverted} regressed file(s). Kept ${affectedFiles.length - reverted} successful fix(es).`);
+      }
+    } else if (!quiet) {
+      console.log(`\u2705 Verify passed \u2014 0 source-language spellings remaining in ${affectedFiles.length} affected files.`);
+    }
+  }
+
+  return {
+    remediator: 'remediate-us-spelling',
+    mode: args.mode,
+    language: args.language,
+    direction,
+    filesScanned: files.length,
+    filesFixed: filesChanged,
+    totalFixes: totalReplacements,
+    reverted,
+    report,
+  };
+}
+
+// ── Main (CLI entry) ────────────────────
+function main() {
+  const args = parseArgs(process.argv.slice(2));
+  if (args.help) { printHelp(); process.exit(0); }
+
+  const result = run({ args });
+
+  if (args.mode === 'write' && result.reverted > 0) {
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
+if (require.main === module) {
+  main();
+}
+
+module.exports = { parseArgs, run, buildZoneMap, isInZone, isOnImportExportLine, isInJsxTag, isCodeIdentifierReference, matchCase };

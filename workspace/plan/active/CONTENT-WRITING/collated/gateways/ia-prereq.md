@@ -1,0 +1,1 @@
+/Users/alisonhaire/Documents/Livepeer/Docs-v2-dev/workspace/plan/active/CONTENT-WRITING/context-packs/gateways-ia-prereq.md

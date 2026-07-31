@@ -1,18 +1,17 @@
 ---
 title: 'All Pages Comprehensive Browser Report'
 sidebarTitle: 'Browser Report'
-description: 'Generated browser report from tools/scripts/test-all-pages-comprehensive.js.'
+description: 'Generated browser report from operations/scripts/archive/legacy/test-all-pages-comprehensive.js.'
 keywords: ["livepeer","internal","reports","page-audits","test-all-pages-comprehensive"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-03-03T09:45:28.411Z`
-Last Generated (UTC Human): `March 03, 2026 09:45 UTC`
-Generator Script: `tools/scripts/test-all-pages-comprehensive.js`
-What It Does: Generated browser report from tools/scripts/test-all-pages-comprehensive.js.
+Last Generated (UTC ISO): `2026-04-14T04:31:05.401Z`
+Last Generated (UTC Human): `April 14, 2026 04:31 UTC`
+Generator Script: `operations/scripts/archive/legacy/test-all-pages-comprehensive.js`
+What It Does: Generated browser report from operations/scripts/archive/legacy/test-all-pages-comprehensive.js.
 Audited Scope: `tools/scripts`
 Outputs:
-- tasks/reports/page-audits/browser-test-report.json
-- tasks/reports/page-audits/browser-test-report.md
+- _Not documented in script header._
 # Browser Test Report
 
 Generated: 2026-02-16T11:50:35.428Z
@@ -24,5 +23,5 @@ Generated: 2026-02-16T11:50:35.428Z
 
 ## Source
 
-- Data source: `tasks/reports/page-audits/browser-test-report.json`
+- Data source: `workspace/reports/page-audits/browser-test-report.json`
 - Note: This markdown file was derived from the current JSON report snapshot.

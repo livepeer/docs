@@ -1,0 +1,95 @@
+---
+title: "Trickle ingress and egress"
+sidebarTitle: "Ingress and Egress"
+description: >-
+  Frame format, media packaging, and session lifecycle for trickle publish
+  and subscribe endpoints in live-video-to-video sessions.
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - trickle ingress
+  - trickle egress
+  - frame format
+  - media packaging
+  - publish subscribe
+  - segment format
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Trickle segments carry raw frames or encoded media. PyTrickle's MediaPublish and MediaOutput handle serialisation and deserialisation automatically.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+A trickle session carries media between a producer and consumer over HTTP. The frame format depends on the pipeline: video frames are typically raw RGB tensors or JPEG-encoded images; audio is PCM or encoded chunks.
+
+<CustomDivider />
+
+## Publishing frames (ingress)
+
+The publisher POSTs segments to the publish URL. Each segment carries one frame or chunk:
+
+```python
+from livepeer_gateway.lv2v import start_lv2v, StartJobRequest
+
+job = start_lv2v(orch_url=orch, req=StartJobRequest(model_id="streamdiffusion-sdxl-v2v"))
+
+# Start publishing
+media = job.start_media(config)
+await media.publish_frame(frame_bytes)
+```
+
+PyTrickle's `MediaPublish` serialises frames into segments with sequence numbers, content-type headers, and PTS (presentation timestamp). The publish URL accepts `POST` requests with:
+
+- `Content-Type`: typically `image/jpeg`, `image/raw`, or `application/octet-stream`
+- Query parameter `seq`: monotonically increasing segment number
+- Body: the frame data
+
+<CustomDivider />
+
+## Subscribing to output (egress)
+
+The subscriber opens a long-lived `GET` to the subscribe URL. Segments arrive as they are produced:
+
+```python
+output = job.media_output(
+    start_seq=-2,            # start from latest
+    max_retries=5,
+    on_lag='latest',         # skip to newest on lag
+)
+
+async with output as o:
+    async for packet in o.packets():
+        # packet.kind: 'video' or 'audio'
+        # packet.pts_time: presentation timestamp
+        # packet.data: raw frame bytes
+        process(packet)
+```
+
+The `start_seq` parameter controls where playback begins: `-2` for the latest available segment, `-1` for the next segment, or a positive integer for a specific sequence.
+
+<CustomDivider />
+
+## Session lifecycle
+
+1. **Start:** `start_lv2v` POSTs to the orchestrator's `/live-video-to-video` endpoint. The response contains `publish_url`, `subscribe_url`, and `control_url`.
+2. **Publish:** The gateway pushes frames to `publish_url` at the pipeline's expected rate (typically 25-30 FPS for video).
+3. **Process:** The orchestrator's pipeline reads frames from the internal subscribe side, processes them, and writes results to the internal publish side.
+4. **Subscribe:** The gateway reads processed frames from `subscribe_url`.
+5. **Close:** The gateway stops publishing. The trickle server closes the subscribe connection after a timeout.
+
+The `control_url` accepts parameter updates during the session (prompt changes, style adjustments) without restarting the pipeline.
+
+<CustomDivider />
+
+The [trickle protocol](/v2/developers/guides/transport/trickle-protocol) page covers the HTTP publish/subscribe model. The [PyTrickle quickstart](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/pytrickle-quickstart) walks through a complete session from start to close.

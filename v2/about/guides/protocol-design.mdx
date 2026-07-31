@@ -1,0 +1,147 @@
+---
+title: "How the Livepeer Protocol Functions"
+sidebarTitle: "Protocol Design"
+description: >-
+  A walk-through of how the Livepeer Protocol functions and the design decisions behind each
+  mechanism - delegated proof-of-stake, probabilistic micropayments, on-chain governance, and
+  the protocol-network boundary.
+lifecycleStage: discover
+complexity: intermediate
+keywords:
+  - livepeer
+  - protocol design
+  - protocol tradeoffs
+  - delegated proof of stake
+  - probabilistic micropayments
+  - on-chain governance
+  - arbitrum
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+purpose: learn
+audience: general
+lastVerified: "2026-05-06"
+---
+
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { Quote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<Quote>
+The Livepeer Protocol is a set of rules, not a service. It coordinates an open marketplace for video and AI compute by aligning incentives, settling payments, and securing honest participation - then leaves the actual work to the off-chain Network.
+</Quote>
+
+<CustomDivider style={{ margin: 0, marginBottom: "-2rem" }} />
+
+## What the protocol is responsible for
+
+The protocol does four things, and only four things. Understanding the boundary is the first step in understanding the design.
+
+<StyledSteps iconColor="var(--accent)" titleColor="var(--accent)">
+  <StyledStep title="Coordinate participation" icon="building-columns">
+    Define the rules under which Orchestrators, Delegators, and Gateways enter the network, take on responsibility, and exit.
+  </StyledStep>
+  <StyledStep title="Secure honest behaviour" icon="shield-halved">
+    Hold economic stake against operators in a way that makes dishonest action more costly than honest work.
+  </StyledStep>
+  <StyledStep title="Settle payments" icon="ticket">
+    Move ETH from Gateways to Orchestrators reliably, at low overhead, for work performed off-chain at production volume.
+  </StyledStep>
+  <StyledStep title="Govern openly" icon="scale-balanced">
+    Allow LPT holders to propose and vote on protocol upgrades, parameter changes, and treasury allocations through on-chain voting.
+  </StyledStep>
+</StyledSteps>
+
+The protocol does not transcode video. It does not run AI inference. It does not select which Orchestrator handles a given job. Those are the Network's responsibilities. The protocol's role is to make those activities legible, payable, and accountable.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Five foundational design decisions
+
+Each mechanism in the protocol resolves a specific tension. The decisions below are the ones that shape every downstream behaviour.
+
+### 1. Delegated proof-of-stake, not proof-of-work
+
+The protocol needed a way to admit a permissionless pool of GPU operators while still putting economic security behind their behaviour. Proof-of-work would have priced out small operators and added energy overhead with no security benefit for media work. A non-delegated stake model would have concentrated participation among capital holders who do not run hardware.
+
+Delegated proof-of-stake separates the two roles. Orchestrators bring hardware and operational expertise. Delegators bring stake. Both share in rewards, both share in slashing risk, and both have a vote. The Active Set is sorted by total bonded stake, which couples capital weight to selection probability without requiring Delegators to operate nodes.
+
+### 2. Off-chain execution with on-chain anchoring
+
+A fully on-chain protocol would have to settle every video segment and every inference call as a transaction. At production volume that is impossible. A fully off-chain protocol would lose the ability to enforce honesty without a trusted intermediary.
+
+Livepeer's protocol resolves this by encoding only the rules and the settlement points on-chain. Orchestrator selection, capability discovery, and per-segment delivery happen off-chain across the Network. The chain holds the Active Set, the bonded stake, the round timer, and the payment infrastructure. Off-chain participants compete on a stable, agreed-upon view of who is eligible to do work and who has been paid for it.
+
+### 3. Probabilistic Micropayments over per-job billing
+
+Per-job on-chain billing would consume more gas than the work itself for sub-cent video segments. Off-chain accumulation with periodic settlement would create credit risk between Gateways and Orchestrators.
+
+The [TicketBroker contract](/v2/about/protocol/blockchain-contracts#TicketBroker) implements Probabilistic Micropayments: Gateways issue off-chain tickets to Orchestrators with each job, only a small fraction of which are winning tickets that settle on-chain. Expected value matches the work performed. Gas cost amortises across thousands of jobs. The settlement guarantee remains as strong as a direct on-chain transfer because every ticket is cryptographically committed and either redeemable or losing - never disputed.
+
+### 4. On-chain governance, not foundation control
+
+A foundation-led model would have moved faster but concentrated control. A purely off-chain governance model would have let participants disagree about which version of the rules was canonical.
+
+Livepeer encoded governance directly into the protocol. Any LPT holder with at least 100 LPT can submit a Livepeer Improvement Proposal (LIP) on-chain. Voting is stake-weighted across all bonded LPT, with Delegators voting through their Orchestrator by default and able to override on any specific proposal. A proposal passes only if at least 33% of bonded stake participates and a majority of cast votes are in favour. Approved proposals execute through the [Governor contract](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/governance/Governor.sol) without a separate execution layer.
+
+### 5. Arbitrum One, not Ethereum mainnet
+
+The protocol originally deployed on Ethereum mainnet. As gas costs rose, the per-round work of inflation accounting, ticket redemption, and round progression became a structural drag on participation - particularly for smaller Orchestrators and for high-volume Gateway settlement.
+
+The [Confluence upgrade](https://livepeer.org/blog/confluence-upgrade) (LIP-73) migrated the active protocol to Arbitrum One while keeping the LPT token contract on Ethereum, with paired LPTGateway contracts handling the bridge. Arbitrum gives the protocol low fees and Ethereum-anchored security in a single move, and removes gas-cost as a barrier to running an Orchestrator or operating a Gateway.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where each decision lives in the contracts
+
+The five decisions above map to specific contracts. Reading the code alongside the design notes is the most direct route to understanding the protocol.
+
+<DynamicTableV2
+  headerList={["Decision", "Primary contract", "Function"]}
+  itemsList={[
+    { "Decision": "Delegated proof-of-stake", "Primary contract": "BondingManager", "Function": "Active set ranking, bond/unbond/rebond, reward distribution" },
+    { "Decision": "Round-based execution", "Primary contract": "RoundsManager", "Function": "Round progression, eligibility checkpoints" },
+    { "Decision": "Probabilistic micropayments", "Primary contract": "TicketBroker", "Function": "Deposit and reserve management, winning ticket redemption" },
+    { "Decision": "Inflation and rewards", "Primary contract": "Minter", "Function": "Per-round LPT issuance, inflation rate adjustment" },
+    { "Decision": "On-chain governance", "Primary contract": "LivepeerGovernor + Governor", "Function": "Proposal submission, voting, execution" },
+    { "Decision": "Token economics", "Primary contract": "LivepeerToken", "Function": "ERC-20 with bridge to Arbitrum One" },
+  ]}
+/>
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## What the protocol intentionally does not do
+
+A surprising amount of design discipline is in what the protocol leaves out.
+
+- **It does not pick Orchestrators for a job.** Gateways do, off-chain, using the Active Set as a starting point and applying their own price, latency, and reliability criteria.
+- **It does not verify transcoding output.** The slashing function exists in the BondingManager, but the Verifier role is currently set to the null address, leaving slashing inoperative until governance reactivates it. Verification is presently economic: stake at risk, plus reputation-driven Gateway selection.
+- **It does not coordinate AI inference work.** AI workloads use the same actor roles and economic primitives, but their job dispatch and capability advertisement happen entirely off-chain.
+- **It does not store media.** All video and inference data flows directly between Gateway and Orchestrator. The chain holds only the right to be paid and the obligation to behave honestly.
+
+Each omission is deliberate. The protocol is the smallest set of rules that makes the marketplace possible. The Network does the work.
+
+<CustomDivider style={{ margin: "-1rem 0 -2rem 0" }} />
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title={<CustomCardTitle icon="diagram-project" title="Protocol Design Reference" />} href="/v2/about/protocol/design" horizontal arrow>
+    The canonical reference: protocol purpose, design, and implementation.
+  </Card>
+  <Card title={<CustomCardTitle icon="cogs" title="Core Mechanisms" />} href="/v2/about/protocol/mechanisms" horizontal arrow>
+    Rounds, staking, rewards, payments, upgrades - each protocol primitive in detail.
+  </Card>
+  <Card title={<CustomCardTitle icon="circle-nodes" title="Network Design" />} href="/v2/about/network/design" horizontal arrow>
+    Where the protocol's rules end and the off-chain marketplace begins.
+  </Card>
+  <Card title={<CustomCardTitle icon="file-code" title="Blockchain Contracts" />} href="/v2/about/protocol/blockchain-contracts" horizontal arrow>
+    Every contract, every function. BondingManager, TicketBroker, Minter, and the rest.
+  </Card>
+</Columns>

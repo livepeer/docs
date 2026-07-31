@@ -1,0 +1,118 @@
+---
+title: 'Workflow Visual Library'
+kind: 'catalog'
+status: 'active'
+concern: 'repo-ops'
+last_verified: '2026-04-05'
+description: 'Canonical visual library for repository GitHub workflows.'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Workflow Visual Library
+
+Tracks 50 workflow file pages under `.github/workflows` and keeps the canonical visual source under `ai-tools/registry/workflows`.
+
+## Cleanup Summary
+
+### Cleanup Decisions
+
+| Value | Count |
+| --- | ---: |
+| `consolidate` | 9 |
+| `keep` | 13 |
+| `merge` | 20 |
+| `needs-investigation` | 6 |
+| `retire` | 2 |
+
+### Workflow Families
+
+| Value | Count |
+| --- | ---: |
+| `ai-runtime-artifacts` | 6 |
+| `content-publication` | 6 |
+| `data-refresh` | 9 |
+| `docs-catalog-governance` | 6 |
+| `governance-maintenance` | 5 |
+| `issue-intake-and-triage` | 3 |
+| `placeholder-backlog` | 3 |
+| `review-event-automation` | 3 |
+| `validation-sweeps` | 9 |
+
+## Catalog
+
+| Workflow | Family | Decision | Usage | Process Fit | Concern | Risk | Dispatcher | Trigger Mode | Target |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| [Auto Assign Docs Reviewers](./auto-assign-docs-reviewers.mdx) | `review-event-automation` | `keep` | `active` | `core-shipping` | `review` | `high` | `review-fix` | `pull_request` | `dispatcher:review-fix` |
+| [Check Broken Links](./broken-links.mdx) | `validation-sweeps` | `consolidate` | `active-advisory` | `core-shipping` | `validation` | `medium` | `review-fix` | `pull_request + workflow_dispatch` | `dispatcher:review-fix` |
+| [Build Review Assets](./build-review-assets.mdx) | `placeholder-backlog` | `retire` | `placeholder` | `legacy-or-unclear` | `review` | `low` | `review-fix` | `workflow_dispatch` | `none` |
+| [Check AI Companion Files](./check-ai-companions.mdx) | `ai-runtime-artifacts` | `merge` | `active` | `handover-support` | `agent-runtime` | `low` | `handover-readiness` | `pull_request + push + workflow_dispatch` | `future:ai-runtime-artifacts-workflow` |
+| [Check Docs Guide Catalogs](./check-docs-guide-catalogs.mdx) | `docs-catalog-governance` | `merge` | `compatibility-wrapper` | `core-shipping` | `repo-ops` | `low` | `review-fix` | `pull_request + push + workflow_dispatch` | `future:docs-catalog-governance-workflow` |
+| [Check Docs Index](./check-docs-index.mdx) | `docs-catalog-governance` | `merge` | `compatibility-wrapper` | `core-shipping` | `repo-ops` | `low` | `review-fix` | `pull_request + push + workflow_dispatch` | `future:docs-catalog-governance-workflow` |
+| [Close Linked Issues (docs-v2 Merge)](./close-linked-issues-docs-v2.mdx) | `review-event-automation` | `keep` | `active` | `core-shipping` | `review` | `low` | `review-fix` | `pull_request` | `dispatcher:review-fix` |
+| [Codex Governance](./codex-governance.mdx) | `governance-maintenance` | `keep` | `active` | `handover-support` | `agent-runtime` | `medium` | `handover-readiness` | `pull_request` | `dispatcher:handover-readiness` |
+| [Content Health Check](./content-health.mdx) | `validation-sweeps` | `consolidate` | `active-advisory` | `core-shipping` | `validation` | `medium` | `review-fix` | `schedule + workflow_dispatch` | `dispatcher:review-fix` |
+| [Data Refresh Governance](./data-refresh-governance.mdx) | `data-refresh` | `keep` | `active` | `core-shipping` | `repo-ops` | `high` | `review-fix` | `workflow_call + workflow_dispatch` | `data-refresh-governance` |
+| [Discord Issue Intake](./discord-issue-intake.mdx) | `issue-intake-and-triage` | `keep` | `active` | `supporting-infra` | `review` | `medium` | `research-review-packet` | `repository_dispatch` | `dispatcher:research-review-packet` |
+| [Docs Catalog Governance](./docs-catalog-governance.mdx) | `docs-catalog-governance` | `keep` | `active` | `core-shipping` | `repo-ops` | `high` | `review-fix` | `workflow_call + workflow_dispatch` | `docs-catalog-governance` |
+| [Docs v2 Issue Indexer](./docs-v2-issue-indexer.mdx) | `issue-intake-and-triage` | `keep` | `active` | `supporting-infra` | `review` | `medium` | `research-review-packet` | `issues + schedule + workflow_dispatch` | `dispatcher:research-review-packet` |
+| [Pipeline Freshness Monitor](./freshness-monitor.mdx) | `validation-sweeps` | `consolidate` | `active-advisory` | `core-shipping` | `validation` | `medium` | `review-fix` | `schedule + workflow_dispatch` | `dispatcher:review-fix` |
+| [Generate AI Companion Files](./generate-ai-companions.mdx) | `ai-runtime-artifacts` | `merge` | `active-mutating` | `handover-support` | `agent-runtime` | `high` | `handover-readiness` | `push + workflow_dispatch` | `future:ai-runtime-artifacts-workflow` |
+| [Generate AI Sitemap](./generate-ai-sitemap.mdx) | `ai-runtime-artifacts` | `merge` | `active-mutating` | `handover-support` | `agent-runtime` | `high` | `handover-readiness` | `push + workflow_dispatch` | `future:ai-runtime-artifacts-workflow` |
+| [Generate Component Registry](./generate-component-registry.mdx) | `docs-catalog-governance` | `merge` | `compatibility-wrapper` | `core-shipping` | `repo-ops` | `low` | `review-fix` | `push + workflow_dispatch` | `future:docs-catalog-governance-workflow` |
+| [Generate Docs Guide Catalogs](./generate-docs-guide-catalogs.mdx) | `docs-catalog-governance` | `merge` | `compatibility-wrapper` | `core-shipping` | `repo-ops` | `low` | `page-ship` | `push + workflow_dispatch` | `future:docs-catalog-governance-workflow` |
+| [Generate Docs Index](./generate-docs-index.mdx) | `docs-catalog-governance` | `merge` | `compatibility-wrapper` | `core-shipping` | `repo-ops` | `low` | `page-ship` | `push + workflow_dispatch` | `future:docs-catalog-governance-workflow` |
+| [Generate llms.txt](./generate-llms-files.mdx) | `ai-runtime-artifacts` | `merge` | `active-mutating` | `handover-support` | `agent-runtime` | `high` | `handover-readiness` | `push + workflow_dispatch` | `future:ai-runtime-artifacts-workflow` |
+| [Generate Review Table](./generate-review-table.mdx) | `placeholder-backlog` | `consolidate` | `placeholder` | `legacy-or-unclear` | `review` | `low` | `page-ship` | `workflow_dispatch` | `dispatcher:page-ship` |
+| [Governance sync (post-merge)](./governance-sync.mdx) | `governance-maintenance` | `merge` | `active-mutating` | `handover-support` | `repo-ops` | `high` | `repo-cleanup-handover` | `push` | `future:governance-maintenance-workflow` |
+| [Issue Auto Label](./issue-auto-label.mdx) | `review-event-automation` | `keep` | `active` | `core-shipping` | `review` | `low` | `review-fix` | `issues` | `dispatcher:review-fix` |
+| [OpenAPI Reference Validation](./openapi-reference-validation.mdx) | `validation-sweeps` | `keep` | `active-mutating` | `core-shipping` | `repo-ops` | `high` | `review-fix` | `pull_request + push + schedule + workflow_dispatch` | `dispatcher:review-fix` |
+| [Page Integrity Health](./page-integrity-health.mdx) | `validation-sweeps` | `consolidate` | `active-advisory` | `core-shipping` | `validation` | `medium` | `review-fix` | `schedule + workflow_dispatch` | `dispatcher:review-fix` |
+| [Project Showcase Sync](./project-showcase-sync.mdx) | `issue-intake-and-triage` | `needs-investigation` | `active-mutating` | `legacy-or-unclear` | `review` | `high` | `research-review-packet` | `repository_dispatch + schedule + workflow_dispatch` | `dispatcher:research-review-packet` |
+| [Governance Repair](./repair-governance.mdx) | `governance-maintenance` | `merge` | `active-mutating` | `handover-support` | `repo-ops` | `high` | `repo-cleanup-handover` | `schedule + workflow_dispatch` | `future:governance-maintenance-workflow` |
+| [Generate](./sdk_generation.mdx) | `content-publication` | `needs-investigation` | `active-mutating` | `legacy-or-unclear` | `authoring` | `high` | `page-ship` | `schedule + workflow_dispatch` | `dispatcher:page-ship` |
+| [SEO Metadata Refresh](./seo-refresh.mdx) | `content-publication` | `consolidate` | `active-mutating` | `core-shipping` | `authoring` | `high` | `page-ship` | `workflow_dispatch` | `dispatcher:page-ship` |
+| [EN-GB Style Homogenisation](./style-homogenise.mdx) | `validation-sweeps` | `needs-investigation` | `active-mutating` | `legacy-or-unclear` | `validation` | `high` | `review-fix` | `workflow_dispatch` | `dispatcher:review-fix` |
+| [Sync Large Assets](./sync-large-assets.mdx) | `governance-maintenance` | `needs-investigation` | `active-mutating` | `legacy-or-unclear` | `repo-ops` | `high` | `repo-cleanup-handover` | `push + schedule + workflow_dispatch` | `dispatcher:repo-cleanup-handover` |
+| [workspace/ retention enforcement](./tasks-retention.mdx) | `governance-maintenance` | `needs-investigation` | `placeholder` | `handover-support` | `repo-ops` | `medium` | `repo-cleanup-handover` | `schedule + workflow_dispatch` | `dispatcher:repo-cleanup-handover` |
+| [Docs CI - Content Quality Suite](./test-suite.mdx) | `validation-sweeps` | `keep` | `active-advisory` | `core-shipping` | `validation` | `high` | `review-fix` | `pull_request + push + workflow_dispatch` | `dispatcher:review-fix` |
+| [Docs CI - V2 Browser Sweep](./test-v2-pages.mdx) | `validation-sweeps` | `keep` | `active-advisory` | `core-shipping` | `validation` | `high` | `review-fix` | `pull_request + push + workflow_dispatch` | `dispatcher:review-fix` |
+| [Docs Translation Pipeline](./translate-docs.mdx) | `content-publication` | `needs-investigation` | `active-mutating` | `legacy-or-unclear` | `authoring` | `high` | `page-ship` | `workflow_dispatch` | `dispatcher:page-ship` |
+| [Update Blog and Forum Data](./update-blog-data.mdx) | `data-refresh` | `consolidate` | `active-advisory` | `core-shipping` | `authoring` | `high` | `page-ship` | `workflow_dispatch` | `future:data-refresh-dispatcher` |
+| [Update Changelogs](./update-changelogs.mdx) | `content-publication` | `keep` | `active-advisory` | `core-shipping` | `authoring` | `high` | `page-ship` | `repository_dispatch + schedule + workflow_dispatch` | `dispatcher:page-ship` |
+| [Update Contract Addresses Shadow](./update-contract-addresses-shadow.mdx) | `content-publication` | `consolidate` | `active-advisory` | `core-shipping` | `authoring` | `medium` | `page-ship` | `repository_dispatch + schedule + workflow_dispatch` | `dispatcher:page-ship` |
+| [Update Contract Addresses](./update-contract-addresses.mdx) | `content-publication` | `keep` | `active-advisory` | `core-shipping` | `authoring` | `high` | `page-ship` | `repository_dispatch + schedule + workflow_dispatch` | `dispatcher:page-ship` |
+| [Update Discord Announcements Data](./update-discord-data.mdx) | `data-refresh` | `merge` | `compatibility-wrapper` | `core-shipping` | `authoring` | `medium` | `page-ship` | `schedule + workflow_dispatch` | `data-refresh-governance` |
+| [Update Forum Data](./update-forum-data.mdx) | `data-refresh` | `merge` | `compatibility-wrapper` | `core-shipping` | `authoring` | `medium` | `page-ship` | `schedule + workflow_dispatch` | `data-refresh-governance` |
+| [Update Ghost Blog Data](./update-ghost-blog-data.mdx) | `data-refresh` | `merge` | `compatibility-wrapper` | `core-shipping` | `authoring` | `medium` | `page-ship` | `schedule + workflow_dispatch` | `data-refresh-governance` |
+| [Update GitHub Discussions & Releases Data](./update-github-data.mdx) | `data-refresh` | `merge` | `compatibility-wrapper` | `core-shipping` | `authoring` | `medium` | `page-ship` | `schedule + workflow_dispatch` | `data-refresh-governance` |
+| [Update Livepeer Release Version](./update-livepeer-release.mdx) | `data-refresh` | `merge` | `compatibility-wrapper` | `core-shipping` | `release` | `medium` | `page-ship` | `repository_dispatch + schedule + workflow_dispatch` | `data-refresh-governance` |
+| [Update Review Template](./update-review-template.mdx) | `placeholder-backlog` | `retire` | `placeholder` | `legacy-or-unclear` | `review` | `low` | `page-ship` | `workflow_dispatch` | `none` |
+| [Update RSS Blog Data](./update-rss-blog-data.mdx) | `data-refresh` | `merge` | `compatibility-wrapper` | `core-shipping` | `authoring` | `medium` | `page-ship` | `schedule + workflow_dispatch` | `data-refresh-governance` |
+| [Update YouTube Data](./update-youtube-data.mdx) | `data-refresh` | `merge` | `compatibility-wrapper` | `core-shipping` | `authoring` | `medium` | `page-ship` | `schedule + workflow_dispatch` | `data-refresh-governance` |
+| [V2 External Link Audit (Advisory)](./v2-external-link-audit.mdx) | `validation-sweeps` | `consolidate` | `active-advisory` | `core-shipping` | `validation` | `medium` | `review-fix` | `schedule + workflow_dispatch` | `dispatcher:review-fix` |
+| [Verify AI Sitemap](./verify-ai-sitemap.mdx) | `ai-runtime-artifacts` | `merge` | `active` | `handover-support` | `agent-runtime` | `low` | `handover-readiness` | `pull_request + push + workflow_dispatch` | `future:ai-runtime-artifacts-workflow` |
+| [Verify llms.txt Files](./verify-llms-files.mdx) | `ai-runtime-artifacts` | `merge` | `active` | `handover-support` | `agent-runtime` | `low` | `handover-readiness` | `pull_request + push + workflow_dispatch` | `future:ai-runtime-artifacts-workflow` |
+
+## Visual Overview
+
+```mermaid
+flowchart LR
+  events["GitHub events"] --> workflows["Workflow pages"]
+  workflows --> checks["Validation and delivery checks"]
+  workflows --> updates["Content/data updates"]
+  workflows --> governance["Governance and agent runtime"]
+```

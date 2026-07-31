@@ -1,0 +1,132 @@
+---
+title: 'Local Development'
+sidebarTitle: 'Overview'
+description: >-
+  Running Livepeer components locally for development: options for local gateways,
+  local orchestrators, and test networks.
+keywords:
+  - livepeer
+  - local development
+  - local gateway
+  - local orchestrator
+  - devnet
+  - test network
+  - go-livepeer
+  - development setup
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>For most development tasks, the community Gateway at dream-Gateway.Livepeer.cloud removes the need to run any local infrastructure. A local Gateway or Orchestrator is necessary only when you need network-level control or are testing node software itself.</Tip>
+</CenteredContainer>
+
+---
+
+Most developer tasks (calling AI pipelines, uploading assets, testing playback) require only an API key or a Gateway endpoint. A full local Livepeer stack is necessary when developing node software, testing custom BYOC containers against a real Orchestrator, or working through payment flows without spending real ETH.
+
+<CustomDivider />
+
+## Choosing a Development Path
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Scenario</TableCell>
+      <TableCell header>Recommended path</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>Calling AI pipelines or video APIs from application code</TableCell>
+      <TableCell>Community Gateway at `dream-gateway.livepeer.cloud` (no local setup)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Testing a BYOC container or PyTrickle service</TableCell>
+      <TableCell>Local Orchestrator with `aiModels.json` registration + community Gateway for routing</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Developing or testing go-livepeer Gateway logic</TableCell>
+      <TableCell>Local Gateway in broadcaster mode connected to mainnet Orchestrators</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>End-to-end protocol testing without real ETH</TableCell>
+      <TableCell>Local devnet with a local Gateway + local Orchestrator</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Testing remote signer or payment flows</TableCell>
+      <TableCell>Local Gateway + local signer + local Orchestrator on devnet</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Community Gateway (No Setup)
+
+The public community Gateway at `https://dream-gateway.livepeer.cloud` accepts unauthenticated AI inference requests for development. It routes requests to active mainnet Orchestrators; no account or deposit is required.
+
+```bash
+curl -X POST "https://dream-gateway.livepeer.cloud/text-to-image" \
+  -H "Content-Type: application/json" \
+  -d '{"model_id": "ByteDance/SDXL-Lightning", "prompt": "a blue house"}'
+```
+
+This is appropriate for prototyping and initial integration testing. For sustained development load, run a local Gateway to avoid rate limiting.
+
+<CustomDivider />
+
+## Installing go-livepeer
+
+Download a pre-built binary from the go-livepeer releases page:
+
+```bash
+# Linux x86-64 (replace RELEASE_VERSION with the latest release tag)
+wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-linux-amd64.tar.gz
+tar -zxvf livepeer-linux-amd64.tar.gz
+mv livepeer-linux-amd64/* /usr/local/bin/
+
+# GPU-accelerated build (NVIDIA)
+wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-linux-gpu-amd64.tar.gz
+tar -zxvf livepeer-linux-gpu-amd64.tar.gz
+mv livepeer-linux-gpu-amd64/* /usr/local/bin/
+```
+
+macOS (Apple Silicon):
+
+```bash
+wget https://github.com/livepeer/go-livepeer/releases/download/<RELEASE_VERSION>/livepeer-darwin-arm64.tar.gz
+tar -zxvf livepeer-darwin-arm64.tar.gz
+mv livepeer-darwin-arm64/* /usr/local/bin/
+```
+
+After installation, verify with `livepeer --version` and `livepeer_cli --version`.
+
+<CustomDivider />
+
+Most developers start with the community Gateway and never need local infrastructure. If you do need it, [local Gateway](/v2/developers/guides/local-development/local-Gateway) is the next step.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Local Gateway" icon="server" href="/v2/developers/guides/local-development/local-gateway" arrow horizontal>
+    Running a go-livepeer broadcaster node locally connected to mainnet.
+  </Card>
+  <Card title="Local Orchestrator" icon="cpu" href="/v2/developers/guides/local-development/local-orchestrator" arrow horizontal>
+    Running a local Orchestrator for testing BYOC containers and payment flows.
+  </Card>
+  <Card title="Tooling and Metrics" icon="chart" href="/v2/developers/guides/observability-and-debugging/tooling-and-metrics" arrow horizontal>
+    Prometheus metrics and the Livepeer/monitor container for local node observation.
+  </Card>
+</CardGroup>

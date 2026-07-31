@@ -1,88 +1,141 @@
 # Components Library
 
-These components are organised **By Function/Purpose**.
-
-Additionally some items are organised by **Domain** where domain-specific
-components are extracted to their own folder (e.g., callouts, code strings used
-on multiple pages).
+Components are organised by functional category with PascalCase filenames.
+Superseded files are staged in `x-archive/` pending cleanup; legacy sources
+remain in `_archive/`.
 
 ## Folder Structure
 
 ```
 components/
-├── primitives/      # Basic UI elements
-├── layout/          # Custom layouts for multiple items
-├── display/         # Display elements for media or embeds
-├── content/         # Content & Data Display Groups
-├── integrations/    # External service integrations
-└── domain/          # Domain-specific components
+├── elements/        # Smallest visual atoms — no children, no fetching, no arrangement
+│   ├── a11y/        buttons/  callouts/  icons/  images/
+│   ├── links/       math/     social/    spacing/  text/
+├── wrappers/        # Holds, groups, or spatially arranges other components
+│   ├── accordions/  cards/    containers/  grids/
+│   ├── lists/       steps/    tables/
+├── displays/        # Renders authored content into a specific visual format
+│   ├── code/        diagrams/  quotes/  response-fields/  video/
+├── scaffolding/     # One-per-page structural skeleton
+│   ├── frame-mode/  heroes/  page-containers/  portals/
+├── integrators/     # Fetches, embeds, or binds to external/third-party data
+│   ├── blog/        embeds/  feeds/  video-data/
+├── config/          # Non-component config objects
+├── x-archive/       # Superseded files (pending cleanup)
+└── _archive/        # Legacy sources retained for review
 ```
+
+**Browsable catalog**: `docs-guide/catalog/components-catalog.mdx` — auto-generated on every push to main. That file is the authoritative component listing; do not maintain manual catalog files here.
+
+## Decision Rules
+
+| Category | Rule |
+|---|---|
+| `elements/` | "Is it a single visual piece that doesn't wrap, arrange, or fetch anything?" |
+| `wrappers/` | "Does it exist to hold, group, or arrange other things?" |
+| `displays/` | "Does it take content and present it in a formatted way?" |
+| `scaffolding/` | "Is it part of the page's outer structure, typically used once?" |
+| `integrators/` | "Does the content come from outside the repo?" |
+| `config/` | "Is it a non-component config/theme object?" |
 
 ---
 
 ## Component Reference
 
-### primitives/
+### elements/
 
-| File          | Exports                                                                                                       | Description                    |
-| ------------- | ------------------------------------------------------------------------------------------------------------- | ------------------------------ |
-| `buttons.jsx` | `BasicBtn`, `DownloadButton`                                                                                  | Button components              |
-| `divider.jsx` | `CustomDivider`                                                                                               | Divider/separator              |
-| `icons.jsx`   | `LivepeerSVG`, `LivepeerIconOld`, `LivepeerIconFlipped`, `LivepeerIcon`                                       | Livepeer brand icons           |
-| `links.jsx`   | `CustomCallout`, `BlinkingIcon`, `BlinkingTerminal`, `DoubleIconLink`, `GotoLink`, `GotoCard`, `TipWithArrow` | Link and navigation components |
+| File | Sub-niche | Key Exports | Description |
+|---|---|---|---|
+| `A11y.jsx` | a11y | `FocusableScrollRegions` | Accessibility helpers |
+| `Buttons.jsx` | buttons | `DownloadButton` | Button components |
+| `PreviewCallouts.jsx` | callouts | `ComingSoonCallout`, `PreviewCallout`, `ReviewCallout` | Status callout banners |
+| `Icons.jsx` | icons | `LivepeerSVG`, `LivepeerIcon` | Brand icons |
+| `Image.jsx` | images | `Image`, `LinkImage` | Static image display |
+| `Links.jsx` | links | `CustomCallout`, `BlinkingIcon`, `GotoLink`, `GotoCard`, `TipWithArrow`, `LinkArrow` | Navigation and link elements |
+| `Math.jsx` | math | `MathBlock`, `MathInline` | Mathematical notation |
+| `SocialLinks.jsx` | social | `SocialLinks` | Social media links |
+| `Divider.jsx` | spacing | `CustomDivider` | Divider/separator |
+| `Spacer.jsx` | spacing | `Spacer` | Vertical/horizontal spacer |
+| `CustomCardTitle.jsx` | text | `CustomCardTitle` | Card title component |
+| `Text.jsx` | text | `Subtitle`, `CopyText`, `CardTitleTextWithArrow`, `AccordionTitleWithArrow` | Text display primitives |
 
-### layout/
+### wrappers/
 
-| File            | Exports                                                                             | Description             |
-| --------------- | ----------------------------------------------------------------------------------- | ----------------------- |
-| `cards.jsx`     | `PostCard`, `CardColumnsPostLayout`, `BlogCard`, `CardBlogDataLayout`               | Card layouts            |
-| `lists.jsx`     | `BasicList`, `IconList`, `StepList`, `StepLinkList`, `UpdateList`, `UpdateLinkList` | List layouts            |
-| `list-steps.jsx` | `ListSteps`                                                                         | Step list component     |
-| `steps.jsx`     | `StyledSteps`, `StyledStep`                                                         | Styled step components  |
-| `table.jsx`     | `DynamicTable`                                                                      | Dynamic table component |
+| File | Sub-niche | Key Exports | Description |
+|---|---|---|---|
+| `AccordionGroupList.jsx` | accordions | `AccordionGroupList` | Grouped accordions |
+| `AccordionLayout.jsx` | accordions | `AccordionLayout` | Accordion layout wrapper |
+| `CustomCards.jsx` | cards | `DisplayCard`, `WidthCard`, `InlineImageCard` | Card layout helpers |
+| `ShowcaseCards.jsx` | cards | `InteractiveCard`, `InteractiveCards`, `ShowcaseCards` | Interactive card layouts |
+| `Containers.jsx` | containers | `BorderedBox`, `CenteredContainer`, `FullWidthContainer` | Generic spatial containers |
+| `Layout.jsx` | containers | `FlexContainer`, `GridContainer`, `Spacer` | Flex/grid layout containers |
+| `ScrollBox.jsx` | containers | `ScrollBox` | Scrollable container |
+| `CardCarousel.jsx` | grids | `CardCarousel` | Card carousel layout |
+| `QuadGrid.jsx` | grids | `QuadGrid` | Four-column grid layout |
+| `ListSteps.jsx` | lists | `ListSteps` | Step list component |
+| `Lists.jsx` | lists | `StepList`, `StepLinkList`, `UpdateLinkList` (stable); `BasicList`, `IconList`, `UpdateList` (planned) | List layouts |
+| `Steps.jsx` | steps | `StyledSteps`, `StyledStep` | Styled step components |
+| `ApiBaseUrlsTable.mdx` | tables | API base URL table | MDX-defined table |
+| `SearchTable.jsx` | tables | `SearchTable` | Searchable table |
+| `Table.jsx` | tables | `DynamicTable` | Dynamic table component |
+| `Tables.jsx` | tables | `StyledTable`, `TableRow`, `TableCell` | Styled table components |
 
-### display/
+### displays/
 
-| File                   | Exports                                             | Description                 |
-| ---------------------- | --------------------------------------------------- | --------------------------- |
-| `embed.jsx`            | `MarkdownEmbed`, `EmbedMarkdown`                    | Markdown embed components   |
-| `image.jsx`            | `Image`, `LinkImage`                                | Image display components    |
-| `video.jsx`            | `YouTubeVideo`, `YouTubeVideoDownload`, `CardVideo` | Video embed components      |
-| `zoomable-diagram.jsx` | `ScrollableDiagram`                                 | Zoomable/scrollable diagram |
+| File | Sub-niche | Key Exports | Description |
+|---|---|---|---|
+| `Code.jsx` | code | `CustomCodeBlock`, `CodeComponent`, `ComplexCodeBlock`, `CodeSection` | Code display components |
+| `ScrollableDiagram.jsx` | diagrams | `ScrollableDiagram` | Zoomable/scrollable diagram |
+| `Quote.jsx` | quotes | `Quote`, `FrameQuote` | Quote components |
+| `ResponseField.jsx` | response-fields | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
+| `Video.jsx` | video | `Video`, `TitledVideo`, `ShowcaseVideo`, `CardVideo`, `YouTubeVideo`, `YouTubeVideoDownload` | Video and media components |
 
-### content/
+### scaffolding/
 
-| File                   | Exports                                                                                                                | Description                   |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
-| `code.jsx`             | `CustomCodeBlock`, `CodeComponent`, `ComplexCodeBlock`, `CodeSection`                                                  | Code display components       |
-| `external-content.jsx` | `ExternalContent`                                                                                                      | External content loader       |
-| `release.jsx`          | `LatestVersion`                                                                                                        | Version display component     |
-| `response-field.jsx`    | `ValueResponseField`, `CustomResponseField`, `ResponseFieldExpandable`, `ResponseFieldAccordion`, `ResponseFieldGroup` | API response field components |
+| File | Sub-niche | Key Exports | Description |
+|---|---|---|---|
+| `FrameMode.jsx` | frame-mode | `PageHeader`, `H1`–`H6`, `P`, `Divider` | Frame mode heading overrides |
+| `StarfieldCanvas.jsx` | heroes | `Starfield` | Hero animation |
+| `Portals.jsx` | portals | `HeroSectionContainer`, `HeroContentContainer`, `PortalHeroContent`, `PortalCardsHeader`, `PortalSectionHeader`, `LogoHeroContainer` | Portal page layout components |
 
-### integrations/
+### integrators/
 
-| File            | Exports              | Description                     |
-| --------------- | -------------------- | ------------------------------- |
-| `coingecko.jsx` | `CoinGeckoExchanges` | CoinGecko exchange data display |
+| File | Sub-niche | Key Exports | Description |
+|---|---|---|---|
+| `Data.jsx` | blog | `BlogCard`, `PostCard`, `CardColumnsPostLayout`, `ForumLatestLayout`, `DiscordAnnouncements`, `LumaEvents` | Blog/feed data renderers |
+| `DataEmbed.jsx` | embeds | `MarkdownEmbed`, `PdfEmbed`, `TwitterTimeline` | Third-party embed components |
+| `ExternalContent.jsx` | embeds | `ExternalContent` | External content loader |
+| `Coingecko.jsx` | feeds | `CoinGeckoExchanges` | CoinGecko exchange data |
+| `Release.jsx` | feeds | `LatestVersion` | Version data display |
+| `ShowcaseCards.jsx` | feeds | `ShowcaseCards` | Project showcase feed |
+| `VideoData.jsx` | video-data | `YouTubeVideoData` | YouTube data cards |
 
-### domain/04_GATEWAYS/
+### config/
 
-| File                 | Exports                                                                                                                               | Description               |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
-| `callouts.jsx`       | `GatewayOffChainWarning`, `GatewayOnChainWarning`, `GatewayOnChainTTestnetNote`, `OrchAddrNote`, `TestVideoDownload`, `FfmpegWarning` | Gateway-specific callouts |
-| `quickstartTabs.jsx` | `QuickStartTabs`, `QuickStartSteps`                                                                                                   | Gateway quickstart UI     |
+| File | Description |
+|---|---|
+| `MermaidColours.jsx` | Mermaid diagram colour theme config |
 
 ---
 
 ## Usage
 
-Import components in MDX files using absolute paths from `/snippets/`:
+Import components using absolute paths with PascalCase filenames:
 
 ```jsx
-import { YouTubeVideo } from "/snippets/components/display/video.jsx";
-import { GotoCard, GotoLink } from "/snippets/components/primitives/links.jsx";
-import { CustomCodeBlock } from "/snippets/components/content/code.jsx";
+import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
+import { GotoCard, GotoLink } from "/snippets/components/elements/links/Links.jsx";
+import { CustomCodeBlock } from "/snippets/components/displays/code/Code.jsx";
+import { PdfEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx";
+import { PageHeader } from "/snippets/components/scaffolding/frame-mode/FrameMode.jsx";
 ```
 
 **Note:** Mintlify provides `React`, `Frame`, `Card`, `Icon`, and other
-primitives globally - do not import them.
+primitives globally — do not import them.
+
+## Governance
+
+- **Naming**: PascalCase for all `.jsx`/`.mdx` component files
+- **JSDoc**: Every export requires `@type`, `@subniche`, `@component`, `@status`, `@description`, `@accepts` (plus `@dataSource` for integrators)
+- **Validation**: `node operations/scripts/generators/components/library/generate-component-registry.js --strict`
+- **Import scanning**: `node operations/scripts/audits/components/library/scan-component-imports.js --verify`

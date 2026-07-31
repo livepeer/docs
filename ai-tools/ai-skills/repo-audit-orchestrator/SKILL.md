@@ -1,6 +1,10 @@
 ---
 name: repo-audit-orchestrator
-description: Run the full docs-as-infrastructure audit pipeline, aggregate stage reports, and emit one prioritized scorecard.
+description: >-
+  Run the docs-as-infrastructure audit pipeline, aggregate stage results, and emit one prioritised scorecard that maintainers can use to sequence repository fixes. Use when running the full docs audit pipeline, aggregating repo audit stages, or producing a single repo audit scorecard.
+metadata:
+  version: "1.2"
+  category: meta
 ---
 
 SKILL: Repo Audit Orchestrator
@@ -11,16 +15,16 @@ Run all static audit stages in the defined order and produce one canonical score
 Inputs
 - `ai-tools/ai-skills/catalog/skill-catalog.json`
 - `ai-tools/ai-skills/catalog/execution-manifest.json`
-- repository source and existing reports under `tasks/reports/`
+- repository source and existing reports under `workspace/reports/`
 
 Command
 ```bash
-node tools/scripts/repo-audit-orchestrator.js --mode static --scope full
+node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full
 ```
 
 Outputs
-- `tasks/reports/repo-ops/repo-audit-summary.md`
-- `tasks/reports/repo-ops/repo-audit-summary.json`
+- `workspace/reports/repo-ops/repo-audit-summary.md`
+- `workspace/reports/repo-ops/repo-audit-summary.json`
 
 Guardrails
 - Default to static mode for first pass.

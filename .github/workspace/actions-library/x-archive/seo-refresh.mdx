@@ -1,0 +1,82 @@
+---
+title: 'SEO Metadata Refresh'
+sidebarTitle: 'SEO Metadata Refresh'
+description: 'SEO Metadata Refresh'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - remediator
+  - discoverability
+  - seo-refresh
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/seo-refresh.yml` |
+| **New name** | `remediator-discoverability-repair-seo-metadata.yml` |
+| **Type** | `remediator` |
+| **Concern** | `discoverability` |
+| **Pipeline tag** | Manual (workflow_dispatch) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["workflow_dispatch"] --> WF["seo-refresh"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `workflow_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `operations/scripts/remediators/content/seo/generate-seo.js`
+
+<CustomDivider />
+
+## Known Issues
+
+- CRITICAL: No auto-commit — non-dry-run writes go nowhere
+
+**Review flags:** P0: no commit step
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Stays separate |
+| **Dry-run** | Yes |
+| **Concurrency** | No |
+| **Error reporting** | none |
+| **Auto-commit** | No |

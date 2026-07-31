@@ -1,0 +1,50 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Codex: Rename Latest VS Code Chat",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/tools/dev/rename-vscode-codex-chat.js",
+        "--workspace",
+        "${workspaceFolder}",
+        "--title",
+        "${input:codexChatTitle}"
+      ],
+      "presentation": {
+        "clear": true,
+        "panel": "dedicated",
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Codex: List Recent VS Code Chats",
+      "type": "shell",
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/tools/dev/rename-vscode-codex-chat.js",
+        "--workspace",
+        "${workspaceFolder}",
+        "--list",
+        "--limit",
+        "15"
+      ],
+      "presentation": {
+        "clear": true,
+        "panel": "dedicated",
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "codexChatTitle",
+      "type": "promptString",
+      "description": "New title for the latest Codex VS Code chat",
+      "default": "Untitled Codex chat"
+    }
+  ]
+}

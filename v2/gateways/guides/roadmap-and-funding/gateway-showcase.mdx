@@ -1,0 +1,265 @@
+---
+title: Gateway Showcase
+sidebarTitle: Gateway Showcase
+description: >-
+  Commercial products, community tools, and infrastructure projects built on Livepeer Gateways - a living directory of
+  the ecosystem.
+lifecycleStage: operate
+complexity: intermediate
+pageType: guide
+audience: gateway
+purpose: operate
+status: current
+lastVerified: "2026-03-15"
+keywords:
+  - livepeer
+  - ecosystem
+  - gateway projects
+  - community projects
+  - Daydream
+  - Livepeer Studio
+  - Livepeer Cloud
+  - NaaP
+  - AI video
+  - gateway examples
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+{/* TODO:
+Terminology Validation:
+- Ensure the terminology and definitions used in this page is consistent with the resources/glossary terminology
+Verify:
+- Mermaid diagrams use theme colours (but must be hardcoded - see snippets/components/config/MermaidColours.jsx)
+- Fontawesome icons are used on accordions and tabs
+- Tables use StyledTable component
+- No em-dashes are used (instead use standard -)
+- UK spelling is used
+- Headers are concise and technical - no long headers or questions (aim for max 3 words)
+- CustomDivider is used with <CustomDivider style={{margin: "-1rem 0 -1rem 0"}} /> for all --- separator breaks
+- Placeholders for Media & Video Resources are in comments with a TODO for a human.
+- REVIEW flags are in JSX flags for a human.
+*/}
+
+{/*
+  PURPOSE:
+  Journey step: "What have others built?"
+  Showcase of real projects, community tools, and ecosystem applications
+  built on Livepeer gateways. Provides inspiration and practical examples
+  for new gateway operators.
+
+  SECTION HOME: Guides → Opportunities
+
+  JOURNEY POSITION:
+  1. Operator Opportunities Overview  - "Why is this an opportunity?"
+  2. NaaP & Multi-Tenancy  - "The platform business model"
+  3. SPE & Grant Models  - "Treasury-funded gateways"
+  4. Community Projects & Ecosystem (this page)  - "What others have built"
+
+  RELATED FILES (draw from):
+  - all-resources/v2-opcons--ecosystem-projects.mdx            - PRIMARY (90%): 211 lines.
+  - all-resources/v2-guidesres--community-guides.mdx           - PRIMARY (50%): 18 lines.
+  - all-resources/v2-guidesres--community-projects.mdx         - SECONDARY (30%).
+  - all-resources/v1--ai-builders-showcase.mdx                 - SECONDARY (40%).
+  - all-resources/v1--ai-builders-gateways.mdx                 - SECONDARY (30%).
+  - all-resources/v1--ai-builders-get-started.mdx              - SECONDARY (20%).
+
+  CROSS-REFS:
+  - Opportunities Overview (this section)  - business models these projects implement
+  - SPE & Grant Models (this section)  - some projects are grant-funded
+  - Resources → Gateway Providers  - provider pages for major gateways
+  - Concepts → Capabilities  - what capabilities these projects use
+*/}
+
+import { CustomDivider } from "/snippets/components/elements/spacing/Divider.jsx"
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+The Livepeer Gateway ecosystem is active and growing. This page is a living directory of commercial products, community tools, and infrastructure projects built on Livepeer Gateways - demonstrating what operators and developers are building on the network today.
+
+For the full directory of public Gateway operators with badges and status, see <LinkArrow href="/v2/gateways/guides/operator-considerations/production-gateways" label="Production Gateways" newline={false} />.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Commercial products and platforms
+
+### Daydream
+
+**What it is:** An AI video creation platform for creators and builders. Daydream lets users apply AI models to live video streams with low-latency style transfer, motion effects, and generative overlays.
+
+**Gateway role:** Daydream runs its own AI Gateway to route inference jobs to Livepeer AI workers. The Gateway handles model selection, pricing, and result delivery. Daydream's developers work directly with the Livepeer Foundation and are active contributors to the remote signer architecture.
+
+[//]: # (REVIEW: Add the current Daydream product link and confirm its commercial Gateway role.)
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### Livepeer Studio
+
+**What it is:** A developer API and dashboard for video streaming and video-on-demand. Livepeer Studio provides SDKs, an API, and a web console for video workflows  - live streaming, transcoding, clip storage, analytics.
+
+**Gateway role:** Livepeer Studio operates a video Gateway that routes RTMP transcoding jobs to Orchestrators. Developers who use the Studio API are paying Studio's service margin; Studio pays Orchestrators on their behalf.
+
+- Website: [Livepeer.studio](https://livepeer.studio)
+- Studio powers video workflows for games, social apps, creator tools, and live event platforms
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### Livepeer Cloud (Cloud SPE)
+
+**What it is:** A public Gateway service operated by the Livepeer Cloud SPE  - a treasury-funded Special Purpose Entity focused on ecosystem adoption. Cloud provides free RTMP and AI inference Gateways for developers evaluating Livepeer.
+
+**Gateway role:** Livepeer Cloud operates multiple public Gateways: a video transcoding Gateway (RTMP) and an AI inference Gateway. These are intentionally accessible without setup cost to drive developer onboarding.
+
+- Website: [Livepeer.cloud](https://livepeer.cloud)
+- Blog and tutorials at [Livepeer.cloud/blog](https://livepeer.cloud/blog)  - includes Gateway setup guides
+- Getting started guide: [livepeer.cloud/how-to-run-a-livepeer-Gateway-node](https://livepeer.cloud/how-to-run-a-livepeer-gateway-node)
+
+[//]: # (REVIEW: Confirm that the Livepeer.cloud URLs on this page remain current and accessible.)
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### Embody Avatars
+
+**What it is:** An AI avatar and digital human platform. Embody uses Livepeer AI inference for real-time avatar animation and video generation.
+
+**Gateway role:** Runs AI inference jobs through Livepeer Gateway infrastructure.
+
+[//]: # (REVIEW: Confirm whether Embody operates its own Gateway or uses a public provider.)
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Infrastructure and tooling projects
+
+### NaaP  - Network as a Platform
+
+**What it is:** An in-development clearinghouse reference implementation. NaaP (Network as a Platform) provides JWT-based authentication, Developer API Keys, and per-user usage tracking on top of a Livepeer Gateway.
+
+**What it enables:** Multi-tenant Gateway access  - you operate a Gateway, issue API keys to developers, track their usage, and handle billing. Developers never interact with Ethereum or Livepeer contracts directly.
+
+- Repository: [github.com/Livepeer/naap](https://github.com/livepeer/naap)
+- Status: Active development, not yet stable API
+
+[//]: # (REVIEW: Confirm NaaP public availability and current status.)
+
+For a deep-dive on the NaaP architecture, see [NaaP & Multi-Tenancy](/v2/Gateways/guides/roadmap-and-funding/naap-multi-tenancy).
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### livepeer-python-Gateway (j0sh)
+
+**What it is:** A Python implementation of the Livepeer Gateway client. Enables AI/ML engineers to route Livepeer inference jobs natively from Python without running a Go binary.
+
+**What it enables:** Python-native Gateway integration for ML pipelines, Jupyter notebooks, and Python web applications. Uses the remote signer architecture to handle ETH payments without requiring a Go Gateway binary.
+
+- Repository: [github.com/j0sh/livepeer-python-Gateway](https://github.com/j0sh/livepeer-python-gateway)
+- Examples: `github.com/j0sh/livepeer-python-gateway/tree/main/examples`
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### Community remote signer (Elite Encoder)
+
+**What it is:** A publicly hosted remote signer endpoint maintained by community operator Elite Encoder. Provides a free ETH signing service for off-chain Gateway operators who do not want to manage their own Ethereum infrastructure.
+
+**What it enables:** Any developer can run an off-chain Gateway without holding any ETH, by pointing at this community signer.
+
+- Endpoint: `https://signer.eliteencoder.net/`
+- Cost: Free (as of community Discord confirmation)
+
+[//]: # (REVIEW: Confirm that signer.eliteencoder.net remains operational and free.)
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### tools.Livepeer.cloud
+
+**What it is:** A community dashboard for monitoring the Livepeer AI network. Shows active Orchestrators, their capabilities, pricing, and performance metrics.
+
+**What it enables:** Gateway operators can use this to identify and filter Orchestrators for their workloads, check current market pricing, and monitor network-wide AI capacity.
+
+- Site: [tools.Livepeer.cloud](https://tools.livepeer.cloud)
+
+<Note>
+`livepeer.tools` was previously the community monitoring site but is currently showing an nginx default page. The active tool is `tools.livepeer.cloud`.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### Owncast integration
+
+**What it is:** Owncast is an open-source, self-hosted live streaming platform. It supports RTMP input from OBS and other encoders, and can route transcoding through a Livepeer Gateway.
+
+**What it enables:** Self-hosted streamers can use Livepeer for transcoding without cloud provider costs. Owncast + Livepeer Gateway is a common setup in the self-hosted streaming community.
+
+- Owncast: [owncast.online](https://owncast.online)
+- Livepeer + Owncast integration: documented on Livepeer.cloud blog
+
+[//]: # (REVIEW: Add the direct Livepeer plus Owncast tutorial link once it is confirmed.)
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Foundation programmes for builders
+
+### AI Video Startup Programme
+
+The Livepeer Foundation runs a programme for startups and teams building AI-powered video products on Livepeer. Accepted teams receive network resources, technical support, and investor introductions.
+
+If you are building a product that routes AI inference through Livepeer (and running a Gateway is the operational model), this programme is specifically for you.
+
+[//]: # (REVIEW: Confirm the current programme name, application process, and URL.)
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+### SPE (Special Purpose Entity) grants
+
+Multiple Gateway operators are funded through treasury proposals to the Livepeer governance process. The pattern is:
+
+1. Identify a gap in Gateway capacity, capability, or adoption
+2. Write a proposal describing the work, timeline, and requested budget
+3. Submit to Livepeer governance for token holder vote
+4. Execute and report on milestones
+
+Funded SPEs in the Gateway operator space include Livepeer Cloud SPE (public Gateways), LLM SPE (LLM inference routing), and NaaP (Network as a Platform).
+
+Forum proposals and active SPE discussions: [forum.livepeer.org](https://forum.livepeer.org)
+
+For the full SPE grant process, see [SPE & Grant Models](/v2/Gateways/guides/roadmap-and-funding/spe-grant-model).
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Community channels
+
+| Channel | What it's for |
+|---------|--------------|
+| `#local-gateways` Discord | Primary channel for Gateway operators. Remote signer, off-chain mode, SDK development, operational questions. Foundation engineers active. |
+| `#gateway` Discord | Secondary Gateway channel. Common errors, community workarounds. |
+| [Livepeer Forum](https://forum.livepeer.org) | Long-form questions, SPE proposals, governance. |
+| [go-livepeer GitHub](https://github.com/livepeer/go-livepeer) | Source code, issues, PRs. File issues here for confirmed bugs. |
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Video tutorials
+
+[//]: # (REVIEW: Add a current Titan Node Gateway tutorial if one is available.)
+
+[//]: # (REVIEW: Add a current Livepeer Foundation Gateway or AI video tutorial if one is available.)
+
+Community tutorials and video content will be added here as they are identified. If you have created a tutorial or walkthrough for running a Livepeer Gateway, share it in the `#local-gateways` Discord channel for consideration.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Opportunities Overview" icon="chart-line" href="/v2/gateways/guides/roadmap-and-funding/operator-support">
+    Revenue models, business patterns, and who is running Gateways today.
+  </Card>
+  <Card title="SPE Grant Model" icon="coins" href="/v2/gateways/guides/roadmap-and-funding/spe-grant-model">
+    How to get treasury funding for Gateway infrastructure.
+  </Card>
+  <Card title="Choose your setup path" icon="arrow-right" href="/v2/gateways/guides/deployment-details/setup-options">
+    Video Gateway, AI Gateway, dual, or SDK-based  - find the right quickstart.
+  </Card>
+</CardGroup>

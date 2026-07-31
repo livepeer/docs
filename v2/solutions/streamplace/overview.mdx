@@ -1,80 +1,196 @@
 ---
-title: 'Streamplace Overview'
-description: 'What Streamplace is, why it exists, and how it fits into the Livepeer Network.'
-sidebarTitle: 'Streamplace Overview'
-keywords: ["livepeer", "developers", "developer platforms", "streamplace", "overview", "exists"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+title: About Stream.Place
+sidebarTitle: About Stream.Place
+description: "Open-source, decentralised video layer for social networks and Web3 apps, built on Livepeer."
+lifecycleStage: discover
+complexity: beginner
+keywords:
+  - livepeer
+  - solutions
+  - streamplace
+  - overview
+  - decentralised
+  - open source
+  - social video
+  - web3
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: platform-builder
+lastVerified: 2026-03-25T00:00:00.000Z
+purpose: overview
 ---
 
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CustomCardTitle } from "/snippets/components/elements/text/Text.jsx";
+import { SocialLinks } from "/snippets/components/elements/links/Links.jsx";
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { CenteredContainer } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { BadgeWrapper, IconBadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx'
+import { streamplaceBadges } from "./data/badges.jsx"
+import { streamplaceInfra } from "./data/infra.jsx"
+import { streamplaceSocials } from "./data/socials.jsx"
 
+<IconBadgeWrapper margin="-1rem 0 1rem 0" iconColor="var(--accent)" size={16} items={streamplaceInfra} />
+<BadgeWrapper margin="0 0 1rem 0" badges={streamplaceBadges} />
 
+{/* socials links */}
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox margin="0" padding="0.5rem 1rem 1rem 1rem" variant="accent">
+    <SocialLinks iconColor="var(--text)" links={streamplaceSocials} />
+  </BorderedBox>
+</CenteredContainer>
 
-Streamplace is a **Special Purpose Entity (SPE)** in the Livepeer ecosystem responsible for building a **public-goods, open-source decentralized video layer** for social networks, livestreaming platforms, and Web3-native apps.
+<Info>
+  This page is maintained by the Streamplace Team. Help & support available via the [Streamplace Discord]('https://discord.com/invite/EdtZv4UTMU').
+</Info>
 
-It provides:
+<Frame>
+    <iframe src="https://stream.place" width="100%" height="700px" frameBorder="0" allowFullScreen title="Streamplace  -  live streams" />
+</Frame>
 
-- A **livestream ingest + VOD pipeline**
-- **C2PA + Ethereum-based provenance** for every video segment
-- A **metadata schema** for rights, content warnings, and distribution policies
-- A **node + SDK** for easy integration into decentralized apps
-- A bridge into **Livepeer’s decentralized GPU network**
+{/* explains the product */}
+Streamplace is a **public-goods, open-source decentralised video layer** for social networks, livestreaming platforms, and Web3-native apps. It is a Livepeer Special Purpose Entity (SPE).
 
----
+{/* explains connection to Livepeer */}
+Streamplace routes video ingest and processing through Livepeer's decentralised GPU network, providing censorship-resistant, verifiable infrastructure for any platform that embeds it.
 
-## ✨ Why Streamplace Exists
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
 
-Centralized video platforms own:
+## Key Features
 
-- Identity
-- Audience
-- Distribution
-- Monetization
+- **Livestream and VOD pipeline** - Ingest, transcode, and serve live and on-demand video through a decentralised stack.
+- **C2PA and Ethereum provenance** - Cryptographically signed metadata for every video segment: who created it, when, and on what terms.
+- **Rights and distribution metadata** - A schema for content warnings, rights, and distribution policy, attached to every piece of content.
+- **Node and SDK** - Run a Streamplace node or use the SDK to add decentralised video to any app.
+- **AT Protocol and Fediverse ready** - Built for integration with Bluesky, Mastodon, and other open social protocols.
 
-Streamplace inverts that model with open, verifiable, permissionless infrastructure built for:
+<YouTubeVideo embedUrl="https://www.youtube.com/embed/-xjd_iaULT0?start=63" title="Streamplace: Eli Mallon, founder"/>
 
-- AT Protocol clients
-- Fediverse social apps
-- Web3 creators
-- Community-run video platforms
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
 
----
-
-## 🎥 Videos
-
-No Streamplace-dedicated YouTube channel was found. For Livepeer ecosystem and SPE coverage:
-
-- [Livepeer YouTube](https://www.youtube.com/@livepeer) - Protocol and ecosystem updates.
-
----
-
-## 📰 Blog & media
+## Try Streamplace
+{/*
+  Link to actual try-me / use-me / dev references  -  NOT links already in socials.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
 
 <CardGroup cols={2}>
-  <Card title="Streamplace: Building the Video Backbone of Decentralized Social" icon="pencil-line" href="https://blog.livepeer.org/livepeer-onchain-builders-streamplace-building-the-video-backbone-of-decentralized-social/" arrow>
- Livepeer Onchain Builders post on Streamplace and decentralized social video.
+  <Card title={<CustomCardTitle icon="download" title="Download the node" />} href="https://stream.place/download" img="/snippets/assets/media/heros/solutions/streamplace/Streamplace_Hero_Run-Node.png">
+    Run a Streamplace node for self-hosted video infrastructure.
   </Card>
-  <Card title="Livepeer Blog" icon="pencil-line" href="https://blog.livepeer.org/" arrow>
- Ecosystem news, SPEs, and protocol updates.
+  <Card title={<CustomCardTitle icon="tower-broadcast" title="Live dashboard" />} href="https://stream.place/live" img="/snippets/assets/media/heros/solutions/streamplace/Streamplace_Hero_Dashboard.png">
+    Browse live streams running on the Streamplace network.
+  </Card>
+  <Card title={<CustomCardTitle icon="book-open" title="Developer docs" />} href="https://stream.place/docs/" img="/snippets/assets/media/heros/solutions/streamplace/Streamplace_Hero_Docs.png">
+    Integration guides, API reference, and node setup.
+  </Card>
+  <Card title={<CustomCardTitle icon="diagram-project" title="Integration guide" />} href="/solutions/streamplace/introduction/streamplace-integration" img="/snippets/assets/media/heros/solutions/streamplace/Streamplace_Hero_Integrate.png">
+    How to embed Streamplace into decentralised social apps and Web3 platforms.
   </Card>
 </CardGroup>
 
----
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
 
-## 🔗 Socials & resources
+## Get Started
+Get started with [Stream.place](https://stream.place) by visiting the website and starting a live stream!
 
-- [Stream.place](https://stream.place/) - Home and live streams.
-- [What's Streamplace?](https://stream.place/about) - About and Discord (join link on page).
-- [Documentation](https://stream.place/docs/) - Guides, API, and reference.
-- [Download](https://stream.place/download) - Node and apps.
-- [Live Dashboard](https://stream.place/live) - Live stream directory.
-- [GitHub](https://github.com/streamplace/overview) - Open-source repo.
+<StyledSteps>
 
----
+  <StyledStep title="Install the Streamplace node">
 
-## 📚 Related Pages
+    ```bash
+    curl -s https://get.stream.place/install | bash
+    ```
 
-- [How Streamplace Works](/solutions/streamplace/introduction/streamplace-guide)
-- [Architecture](/solutions/streamplace/introduction/streamplace-architecture)
-- [Provenance & Metadata](/solutions/streamplace/introduction/streamplace-provenance)
-- [SPE Funding Model](/solutions/streamplace/introduction/streamplace-funding-model)
-- [Developer Integration Guide](/solutions/streamplace/introduction/streamplace-integration)
+    Installs the Streamplace node binary and CLI. The node handles ingest, segmentation, provenance signing, and transcoding dispatch to the Livepeer Network.
+
+  </StyledStep>
+
+  <StyledStep title="Start a livestream">
+
+    ```bash
+    streamplace stream start --source webcam
+    ```
+
+    The node accepts WHIP/WHEP, RTMP, or browser WebRTC as input. Swap `--source webcam` for `--source rtmp` to ingest from an existing RTMP feed.
+
+  </StyledStep>
+
+  <StyledStep title="Configure metadata and rights">
+
+    ```json
+    {
+      "contentRights": "CC-BY-4.0",
+      "contentWarnings": ["flashing lights"],
+      "distributionPolicy": {
+        "retainSegments": true,
+        "allowSyndication": true
+      }
+    }
+    ```
+
+    Metadata is embedded into every 1-second MP4 segment alongside a C2PA manifest and Ethereum signature. Rights and distribution policy travel with the content through transcoding and playback.
+
+  </StyledStep>
+
+  <StyledStep title="Integrate with the SDK">
+
+    ```ts
+    import { StreamplaceClient } from '@streamplace/sdk'
+
+    const sp = new StreamplaceClient()
+    const stream = await sp.createStream()
+    ```
+
+    Use `StreamplacePlayer` to surface provenance in your UI:
+
+    ```jsx
+    <StreamplacePlayer src={stream.manifestUrl} showProvenance={true} />
+    ```
+
+    The player exposes C2PA manifests, Ethereum signatures, and rights metadata to viewers automatically.
+
+  </StyledStep>
+
+</StyledSteps>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Streamplace Resources
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox margin="0 0 1rem 0" padding="0.5rem 1rem 1rem 1rem" variant="accent">
+      <SocialLinks iconColor="var(--text)" links={streamplaceSocials} />
+  </BorderedBox>
+</CenteredContainer>
+{/*
+  At least 2 dev items (docs, GitHub, website) + main comms/support channel (Discord) + one other dev-focused item.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
+
+<CardGroup cols={2}>
+  <Card title={<CustomCardTitle title="Streamplace docs" icon="newspaper"/>} href="https://stream.place/docs/" arrow>
+    Full documentation: node setup, API, and integration guides.
+  </Card>
+  <Card title={<CustomCardTitle title="GitLab" icon="gitlab"/>} href="https://git.stream.place/streamplace/streamplace" arrow>
+    Primary source: open-source Streamplace node and SDK.
+  </Card>
+  <Card title={<CustomCardTitle title="GitHub" icon="github"/>} href="https://github.com/streamplace/streamplace" arrow>
+    GitHub mirror of the Streamplace repository.
+  </Card>
+  <Card title={<CustomCardTitle title="Architecture" icon="sitemap"/>} href="/solutions/streamplace/introduction/streamplace-architecture" arrow>
+    How Streamplace's decentralised video stack is structured.
+  </Card>
+  <Card title={<CustomCardTitle title="Provenance and metadata" icon="shield-check"/>} href="/solutions/streamplace/introduction/streamplace-provenance" arrow>
+    C2PA signing, Ethereum attestation, and content metadata schema.
+  </Card>
+</CardGroup>

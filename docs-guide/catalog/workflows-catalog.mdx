@@ -1,0 +1,49 @@
+---
+title: 'Workflows Catalog'
+sidebarTitle: 'Workflows Catalog'
+description: 'Aggregate catalog of repository GitHub workflows'
+consumer: [human, agent]
+maintenance: generated
+status: active
+generator: 'operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js'
+lastVerified: 2026-05-27
+keywords:
+  [
+    'livepeer',
+    'workflows catalog',
+    'aggregate inventory',
+    'repository',
+    'github',
+    'workflows',
+  ]
+---
+
+{/*
+generated-file-banner: generated-file-banner:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js
+Purpose: Workflow inventory for docs-guide maintenance.
+Run when: GitHub workflows are added, removed, or changed.
+Run command: node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js`. <br/>
+**Purpose**: Workflow inventory for docs-guide maintenance. <br/>
+**Run when**: GitHub workflows are added, removed, or changed. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write`. <br/>
+</Note>
+
+| Workflow | File | Triggers | Purpose | Blocking Policy | Outputs | Owner |
+|---|---|---|---|---|---|---|
+| Brand Pipeline | `.github/workflows/dispatch-brand.yml` | pull_request, schedule, workflow_dispatch | Brand Pipeline | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Copy Pipeline | `.github/workflows/dispatch-copy.yml` | pull_request, schedule, workflow_dispatch | Copy Pipeline | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Discoverability Pipeline | `.github/workflows/dispatch-discoverability.yml` | pull_request, push, schedule, workflow_dispatch | Discoverability Pipeline | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Governance Pipeline | `.github/workflows/dispatch-governance.yml` | pull_request, push, schedule, workflow_dispatch | Governance Pipeline | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Health Pipeline | `.github/workflows/dispatch-health.yml` | pull_request, schedule, workflow_dispatch | Health Pipeline | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Maintenance Pipeline | `.github/workflows/dispatch-maintenance.yml` | pull_request, push, schedule, workflow_dispatch | Maintenance Pipeline | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Auto Assign Docs Reviewers | `.github/workflows/interface-governance-assign-reviewers.yml` | pull_request | Auto Assign Docs Reviewers | blocking by default (subject to branch protection) | PR comments/metadata | docs |
+| Close Linked Issues (docs-v2 Merge) | `.github/workflows/interface-governance-close-linked-issues.yml` | pull_request | Close Linked Issues (docs-v2 Merge) | blocking by default (subject to branch protection) | workflow logs | docs |
+| Docs v2 Issue Indexer | `.github/workflows/interface-governance-index-issues.yml` | schedule, workflow_dispatch | Docs v2 Issue Indexer | blocking by default (subject to branch protection) | workflow logs | docs |
+| Discord Issue Intake | `.github/workflows/interface-governance-intake-discord-issues.yml` | repository_dispatch | Discord Issue Intake | blocking by default (subject to branch protection) | workflow logs | docs |
+| Issue Auto Label | `.github/workflows/interface-governance-label-issues.yml` | pull_request | Issue Auto Label | blocking by default (subject to branch protection) | workflow logs | docs |
+| Secret Scan | `.github/workflows/interface-governance-secret-scan.yml` | pull_request, push | Secret Scan | blocking by default (subject to branch protection) | workflow logs | docs |

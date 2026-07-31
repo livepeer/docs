@@ -1,0 +1,124 @@
+---
+title: 'Update Blog and Forum Data'
+kind: 'workflow'
+status: 'active'
+concern: 'authoring'
+source_path: '.github/workflows/update-blog-data.yml'
+trigger_mode: 'workflow_dispatch'
+risk_level: 'high'
+consolidation_flag: 'review for alignment with `page-ship` while preserving current workflow_dispatch trigger behavior'
+dispatcher_candidate: 'page-ship'
+workflow_family: 'data-refresh'
+cleanup_decision: 'consolidate'
+usage_status: 'active-advisory'
+process_fit: 'core-shipping'
+consolidation_target: 'future:data-refresh-dispatcher'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Update Blog and Forum Data
+
+## Summary
+
+Update Blog and Forum Data runs on workflow_dispatch and primarily produces generated or refreshed repository data.
+
+## Why It Exists
+
+Govern the `.github/workflows/update-blog-data.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- workflow_dispatch: default event configuration
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `update-data` | update-data | `ubuntu-latest` | none | 8 |
+
+### update-data
+
+- `Checkout repository` | uses actions/checkout@v4
+- `Fetch Ghost blog data` | runs `curl -f -o ghost-data.json "https://livepeer.org/ghost/api/content/posts/?key=YOUR_CONTENT_API_KEY&limit=all&include=...`
+- `Fetch Forum data` | runs `curl -f -o forum-data.json "https://forum.livepeer.org/latest.json" || echo "[]" > forum-data.json`
+- `Update Ghost data file` | runs `echo "export const ghostData = " > snippets/data/social-feeds/ghostBlogData.jsx`
+- `Update Forum data file` | runs `echo "export const forumData = " > snippets/data/social-feeds/forumData.jsx`
+- `Check for changes` | runs `git diff --exit-code snippets/data/social-feeds/ghostBlogData.jsx snippets/data/social-feeds/forumData.jsx || echo "c...`
+- `Commit and push if changed` | runs `git config --global user.name 'github-actions[bot]'`
+- `Cleanup` | runs `rm -f ghost-data.json forum-data.json`
+
+## Inputs
+
+- No explicit workflow inputs declared.
+
+## Second Pass Assessment
+
+- Workflow family: `data-refresh`
+- Usage status: `active-advisory`
+- Cleanup decision: `consolidate`
+- Process fit: `core-shipping`
+- Consolidation target: `future:data-refresh-dispatcher`
+- Recommended engineering action: Consolidate this workflow under `future:data-refresh-dispatcher` and keep the script or validator layer as the reusable implementation boundary.
+
+## Outputs
+
+- Generated or refreshed repository data
+- Repository commits or branch updates
+
+## Dependencies
+
+- action:actions/checkout@v4
+- secret:GITHUB_TOKEN
+- snippets/data/social-feeds/forumData.jsx
+- snippets/data/social-feeds/ghostBlogData.jsx
+
+## Dependants
+
+- dispatcher:page-ship
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: workflow_dispatch"]
+  workflow["Workflow: Update Blog and Forum Data"]
+  trigger --> workflow
+  job1["Job: update-data"]
+  workflow --> job1
+  outputs["Outputs: Generated or refreshed repository data, Repository commits or branch updates"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- Contains advisory steps with `continue-on-error`, so failures may be softened rather than fully blocking.
+- Mutates repository state from CI, which raises coordination and safety risk.
+- Depends on secrets, so runtime behavior cannot be fully reasoned about from repo state alone.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `page-ship`. Second-pass target: `future:data-refresh-dispatcher`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This belongs to a repeating data-refresh pattern and should not stay as an uncoordinated top-level workflow forever.
+- This workflow is advisory-shaped, which is useful for audits but can also hide unresolved failures.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

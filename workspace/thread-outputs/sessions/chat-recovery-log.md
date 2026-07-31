@@ -1,0 +1,99 @@
+# Chat Recovery Log — 2026-03-27 03:29
+
+## Diagnosis
+- agentSessions.model.cache: 79 claude-code sessions (titles, IDs, metadata)
+- agentSessions.state.cache: 0 claude-code sessions (UI read/archive state)
+- **Bug: model.cache has sessions, state.cache has ZERO claude-code entries**
+- On reload, extension reads state.cache, finds nothing, shows empty list
+
+## Fix: Injecting 79 claude-code entries into state.cache
+- Added: CONTENT-WRITING reconstruction → claude-code:/a070d422-52d9-4189-a004-449
+- Added: Read claude.md and initiate thread → claude-code:/96393d37-f9bb-492f-b957-124
+- Added: Build solutions tab interface → claude-code:/4b90ffd5-de7a-4eae-a694-019
+- Added: DOCUMENTATION THREAD → claude-code:/cd422b80-9242-4f88-b080-2df
+- Added: Replace solutions section and verify links → claude-code:/7d528035-dec5-4ed1-ab48-772
+- Added: REFINING PAGE REVIEWS → claude-code:/c988cdda-d9ed-454b-b7db-f09
+- Added: Orchestrators - review pipeline → claude-code:/5eeeb1c3-ea1c-4d8e-b383-4f0
+- Added: Investigate missing Claude chat history → claude-code:/224cfe73-97ae-4d34-b1ac-2bc
+- Added: Run lpd with scoped flag → claude-code:/58061144-7b28-4129-81e7-eec
+- Added: FULL REVIEW-WRITE PROCESS → claude-code:/e4b45d1d-6dcf-4572-b0c3-826
+- Added: Full Content Review Pipeline → claude-code:/d2ae94df-7d22-45d1-b6ea-335
+- Added: Fix iframe URL from comments → claude-code:/94fbe3e1-ce80-4f45-a5ea-208
+- Added: CLAUDE CO-WORKING THREAD → claude-code:/2d2f7e0d-d8bd-4b92-a1da-6b1
+- Added: Registry thread for backlog management → claude-code:/5f1c770c-87b9-4e78-a909-9a7
+- Added: PLANS MASTER STATUS → claude-code:/48ce0bd5-17e3-40a9-ab37-ab8
+- Added: Diagnose full site style margin issues in docs-v2- → claude-code:/5341cf19-19ce-47bb-9193-3e0
+- Added: Integrate Livepeer player into StyledSteps → claude-code:/b410f311-898a-449b-8b23-5ce
+- Added: CHANGELOGS → claude-code:/ab1baa21-d823-4bfe-9b7f-bb6
+- Added: Check LPD CLI tool multi-tab scope support → claude-code:/f7655241-935d-4ecb-ac3c-c9c
+- Added: literally no preview on this file at all... → claude-code:/37abcb76-58a4-4eca-b33c-00e
+- Added: [USEFUL] Claude-mem:mem-search what did we work on → claude-code:/2db65fa2-5aa2-485e-a79a-d96
+- Added: Start new coding session → claude-code:/72b9c9f7-0821-4144-a663-c80
+- Added: Implement Claude code best practices and optimizat → claude-code:/3b075361-4bca-49ac-955d-4a7
+- Added: SCORING PAGE CONTENT → claude-code:/69c3c912-31bf-459c-9d47-eb9
+- Added: Consolidate frontmatter script architecture and ta → claude-code:/fe08ce4c-e928-4b47-93d1-955
+- Added: Fix git push secret scanning error → claude-code:/f51e3094-2060-47f5-9ab6-ea8
+- Added: Plan folder migration with link updates and testin → claude-code:/28f25057-aca7-458e-8909-268
+- Added: FIXING orch pages → claude-code:/52b19376-a952-485f-8402-52e
+- Added: Check GIF support in Mintlify Card images → claude-code:/54a75594-fa3a-4805-943f-87f
+- Added: Fix invalid settings key in hooks configuration → claude-code:/4dc42289-1ce8-402f-8bce-329
+- Added: Plan Livepeer solutions social data integration → claude-code:/6853e68e-7b65-47a2-ad75-848
+- Added: Kill any mint dev running process → claude-code:/6c4a293f-79aa-4614-943d-dd2
+- Added: resume → claude-code:/e3e509f4-1c3c-4b8b-810f-37f
+- Added: resume → claude-code:/3968bbd9-ce67-4125-8815-2bd
+- Added: Build orchestrators registry with memory hook → claude-code:/8b5d5ec5-e2b8-485c-b88e-f29
+- Added: Component Organise → claude-code:/26791d3e-a31e-4924-8b46-67c
+- Added: Fix MDX parsing errors in documentation files → claude-code:/78e2fe24-a94b-4e3a-acba-a58
+- Added: Scripts Organise → claude-code:/7ceef5b5-812e-469e-93d3-f23
+- Added: Summarize FlashDocs.flash-mintlify usage → claude-code:/ed900b50-7207-4977-80f8-9ca
+- Added: Create handoff generator pipeline plan → claude-code:/0d71fbe7-352d-4263-8509-f3f
+- Added: Plan content restructuring for handoff resources → claude-code:/5ece71cf-d0ff-499c-a2bf-055
+- Added: Find repository structure plan file → claude-code:/37dcf535-611b-45d1-980d-07f
+- Added: Create glossary of terms for v2 repo pages → claude-code:/589c197c-1d43-44cf-a5c7-436
+- Added: Audit ai-tools/ai-skills package implementation → claude-code:/acfe4e5c-c367-48cc-a404-17b
+- Added: Complete all documentation tabs in 30 minutes → claude-code:/6e945b58-a2ed-4864-be78-901
+- Added: v2 COMPOSABLE PAGES → claude-code:/0880f40b-f327-4bea-a797-ea2
+- Added: Add changelog and contract pipeline → claude-code:/bdef2399-b598-4b81-9682-5e1
+- Added: Design collaboration framework for co-creator role → claude-code:/b3630e34-34dd-474b-851e-d37
+- Added: Generate folder tree structure for orchestrators d → claude-code:/7af91119-911d-442f-aa7f-4ad
+- Added: Standardize information architecture across v2 doc → claude-code:/bbca947b-c028-4065-8640-841
+- Added: Work through review guide collaboratively → claude-code:/5043b4bb-78da-4d19-9d12-713
+- Added: Audit script workflows and pipelines by concern → claude-code:/9078b735-7c0d-4da9-89f8-a4b
+- Added: Create comprehensive documentation quality review  → claude-code:/c1bd1064-04db-49a8-811a-37d
+- Added: Review and fix Livepeer docs v2 claims → claude-code:/3369f366-b4a8-426e-9ff7-491
+- Added: Fix mermaid diagrams to use theme colours → claude-code:/ed45264b-36ec-4973-941f-1eb
+- Added: Audit documentation content, copy, and styling gui → claude-code:/7435f828-2c54-46d7-95ec-a6c
+- Added: Establish project workflow and governance standard → claude-code:/cc7e8101-d7f9-495a-8a9c-bfe
+- Added: Prioritize content completion and repo management → claude-code:/aed8dbfd-7be4-49fe-856d-135
+- Added: Fix broken content workflow and IA → claude-code:/e1072ed6-efa0-4ab3-827f-712
+- Added: Extract taxonomy framework and voice rules → claude-code:/52a58445-4db3-4d42-9f4f-de8
+- Added: Spawn agents for task execution → claude-code:/da380479-7726-46bb-858b-4eb
+- Added: Audit content standards and decision documentation → claude-code:/d53b744a-6f19-4889-9d7b-b58
+- Added: Sync v2 docs structure to docs-v2 branch → claude-code:/3b303efa-1125-408f-bdae-ab5
+- Added: i see only one fucking chat item on most of these → claude-code:/cb021a17-fea5-4cda-b118-984
+- Added: Claude Chat Resync → claude-code:/a92e4f7e-9488-4de6-ade6-c59
+- Added: Fix git commit syntax error → claude-code:/93ab3d21-3438-405f-8194-5e9
+- Added: Plan page templates and composable content system → claude-code:/1849a2a1-7052-4191-afed-038
+- Added: claude --resume 72eb0761-e3c0-4b02-8ec2-8538e96836 → claude-code:/72eb0761-e3c0-4b02-8ec2-853
+- Added: Gateways ? → claude-code:/281d0e05-303c-4b33-998e-704
+- Added: Tabstronaut → claude-code:/20fc40f0-1f92-4439-b198-d0b
+- Added: Page Templates Options & Redirects → claude-code:/ad7ce9fc-60fb-4d29-8c36-586
+- Added: Create Github Issues from Claude → claude-code:/4d05eb7e-cbc3-4bb9-a46e-7bb
+- Added: Discord Chat Loss → claude-code:/4835e31b-6fab-4e64-9b28-51a
+- Added: Watercooler Prep → claude-code:/b420e9a0-980f-4e18-876f-fb4
+- Added: Content Strategy Skill → claude-code:/b3d007ed-bde7-4f7c-92f7-1ce
+- Added: Orchestrator Guides → claude-code:/ab371606-ed96-47c0-b113-37d
+- Added: FILE IT ASSHOLE → claude-code:/eb7f3595-3f1e-4240-803b-74d
+- Added: whats the difference between these 2 files? "v2/or → claude-code:/598aed63-846f-4b79-96b6-2d6
+- Added: can you separate this file into the tasks? separat → claude-code:/8934948a-3dc2-4b3b-953c-2ce
+
+## Result
+- Previous state.cache entries: 25
+- New claude-code entries added: 79
+- Total merged entries: 104
+- Backup: /Users/alisonhaire/Library/Application Support/Code/User/workspaceStorage/037ec7ad625e14c50d909078ee7849d3/state.vscdb.backup-20260327-032901
+- **state.cache updated successfully**
+
+## Next step
+- VSCode needs to re-read this database
+- Extension must reload to pick up new state.cache entries

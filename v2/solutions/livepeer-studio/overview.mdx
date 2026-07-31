@@ -1,61 +1,223 @@
 ---
-title: "Livepeer Studio overview"
-description: "Add live and on-demand video to your app with Livepeer Studio-APIs, dashboard, SDKs, and billing in one place."
+title: About Livepeer Studio
+sidebarTitle: About Studio
+description: Developer platform for live streaming and video-on-demand on the Livepeer network.
+lifecycleStage: discover
+complexity: beginner
+keywords:
+  - livepeer
+  - solutions
+  - livepeer studio
+  - overview
+  - livestream
+  - vod
+  - video
+  - api
+  - sdk
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: platform-builder
+lastVerified: 2026-03-25T00:00:00.000Z
+purpose: overview
 ---
 
-Livepeer Studio is a developer-friendly gateway and hosted platform for the Livepeer Network. Use it to add **live streaming** and **video-on-demand (VOD)** to your application with minimal setup.
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CustomCardTitle } from "/snippets/components/elements/text/Text.jsx";
+import { SocialLinks } from "/snippets/components/elements/links/Links.jsx";
+import { BorderedBox } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { CenteredContainer } from "/snippets/components/wrappers/containers/Containers.jsx";
+import { Video, YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
+import { BadgeWrapper, IconBadgeWrapper } from '/snippets/components/wrappers/badges/Badges.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+import { studioBadges } from "./data/badges.jsx"
+import { studioInfra } from "./data/infra.jsx"
+import { studioSocials } from "./data/socials.jsx"
+
+<IconBadgeWrapper margin="-1rem 0 1rem 0" iconColor="var(--accent)" size={16} items={studioInfra} />
+<BadgeWrapper margin="0 0 1rem 0" badges={studioBadges} />
+
+{/* socials links */}
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox margin="0" padding="0.5rem 1rem 1rem 1rem" variant="accent">
+    <SocialLinks iconColor="var(--text)" links={studioSocials} />
+  </BorderedBox>
+</CenteredContainer>
 
 <Info>
- For Livepeer's hosted real-time StreamDiffusion AI platform **Daydream**, see [Daydream](https://pipelines.livepeer.org/docs) and the [Daydream product page](/solutions/daydream/overview).
+  This page is maintained by the Livepeer Studio Team. Help & support available via the [Livepeer Discord]('https://discord.gg/livepeer').
 </Info>
 
-## What you can do
+<Video src="https://raw.githubusercontent.com/livepeer/docs/docs-v2-assets/snippets/assets/media/videos/studio-hero-video.mp4" alt="Livepeer Studio" href="https://livepeer.studio/" />
+
+{/* explains the product */}
+Livepeer Studio is a hosted API platform for building **live streaming** and **video-on-demand** applications. It provides a REST API, TypeScript, Go, and Python SDKs, a React player and Broadcast component, and a dashboard for managing streams, assets, and billing.
+
+{/* explains connection to Livepeer */}
+Studio operates as a Gateway on the Livepeer Network, routing transcoding and delivery workloads to the decentralised Orchestrator pool.
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Key Features
 
 - **Livestream** - Create streams, ingest via RTMP or WebRTC, play back with low-latency WebRTC or HLS, record sessions, and multistream to other platforms.
-- **Video on demand** - Upload assets (TUS or PUT), transcode, play back with the Livepeer Player or any HLS/MP4 player, and optionally use encrypted assets.
-- **Access control** - Gate playback with webhooks or JWTs (e.g. subscriptions, token-gating).
-- **Events and analytics** - Use webhooks for stream/asset events and the viewership API for engagement and performance metrics.
+- **Video on demand** - Upload assets (TUS or PUT), transcode, and play back with the Livepeer Player or any HLS/MP4 player.
+- **Access control** - Gate playback with webhooks or JWTs for subscriptions or token-gating.
+- **Events and analytics** - Webhooks for stream and asset events, and a viewership API for engagement and performance metrics.
+- **SDKs** - TypeScript, Go, and Python server SDKs, plus a React Player and Broadcast component.
 
-## Get started
+<YouTubeVideo
+  embedUrl="https://www.youtube.com/embed/Q4xIbubnqRI"
+  title="Livepeer Studio  -  developer platform for live and on-demand video"
+/>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Try Livepeer Studio
+{/*
+  Link to actual try-me / use-me / dev references  -  NOT links already in socials.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
 
 <CardGroup cols={2}>
-  <Card title="Quickstart" icon="bolt-lightning" href="/solutions/livepeer-studio/quickstart">
- Create an account, get an API key, and play your first stream or asset in minutes.
+  <Card title={<CustomCardTitle icon="bolt-lightning" title="Quickstart" />} href="/solutions/livepeer-studio/docs/quickstart" img="/snippets/assets/media/heros/solutions/studio/Studio_Hero_Quickstart.png">
+    Create an account, get an API key, and stream or upload your first asset.
   </Card>
-  <Card title="Studio CLI" icon="rectangle-terminal" href="/solutions/livepeer-studio/get-started/studio-cli">
- Scaffold a new Livepeer app with `npx @livepeer/create`.
+  <Card title={<CustomCardTitle icon="rectangle-terminal" title="Studio CLI" />} href="/solutions/livepeer-studio/docs/get-started/studio-cli" img="/snippets/assets/media/heros/solutions/studio/Studio_Hero_Studio-CLI.png">
+    Scaffold a new Livepeer app with `npx @livepeer/create`.
+  </Card>
+  <Card title={<CustomCardTitle icon="grid" title="Studio dashboard" />} href="https://livepeer.studio/dashboard" img="/snippets/assets/media/heros/solutions/studio/Studio_Hero_Dashboard.png">
+    Manage streams, assets, API keys, and billing.
+  </Card>
+  <Card title={<CustomCardTitle icon="code" title="API reference" />} href="/solutions/livepeer-studio/docs/reference/api" img="/snippets/assets/media/heros/solutions/studio/Studio_Hero_Studio-API.png">
+    REST API for streams, assets, playback, webhooks, and more.
   </Card>
 </CardGroup>
 
-## Guides by use case
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Get Started
+Get started with Livepeer Studio by creating an account, an API key, and then using the SDK to play a video (e.g. An asset you uploaded in the dashboard).
+
+<StyledSteps>
+  <StyledStep title="Create an account and API key" icon="key">
+    1. Go to [Livepeer Studio](https://livepeer.studio) and create an account.
+    2. Open the **Developers** area and click **Create API Key**.
+    3. Store the API key securely (e.g. In environment variables). Use it from your **backend** when calling the Livepeer Studio API.
+
+    <Warning>
+     **CORS-enabled API keys** are not recommended and will be deprecated. Make requests to the Livepeer Studio API from your backend and never expose your secret API key in the browser.
+    </Warning>
+
+    <Info>
+     Use separate accounts or [projects](/solutions/livepeer-studio/docs/reference/managing-projects) for development and production to keep environments isolated.
+    </Info>
+  </StyledStep>
+
+  <StyledStep title="Install the SDK" icon="download">
+    This example uses the JavaScript SDK and the Livepeer React library:
+
+    ```bash icon="terminal"
+    npm install livepeer @livepeer/react
+    ```
+  </StyledStep>
+
+  <StyledStep title="Set up the client" icon="gear">
+    Add your API key to environment variables, then create the Livepeer client (e.g. In a backend or server context):
+
+    ```tsx icon="terminal"
+    import Livepeer from "livepeer";
+
+    const livepeer = new Livepeer({
+      apiKey: process.env.LIVEPEER_API_KEY,
+    });
+    ```
+  </StyledStep>
+
+  <StyledStep title="Get playback info" icon="circle-info">
+    Use the client to fetch playback info for an asset (for example, one you uploaded in the dashboard). You need the asset’s **playback ID**:
+
+    ```ts icon="terminal"
+    import { getSrc } from "@livepeer/react/external";
+
+    const playbackId = "f5eese9wwl88k4g8"; // replace with your playback ID
+
+    export async function getPlaybackSource() {
+      const playbackInfo = await livepeer.playback.get(playbackId);
+      return getSrc(playbackInfo.playbackInfo);
+    }
+    ```
+  </StyledStep>
+
+  <StyledStep title="Play the asset" icon="play">
+    Use the Livepeer Player to play the video. Fetch the source on the server (e.g. In a React Server Component or API route), then pass it to the Player:
+
+    ```tsx icon="terminal"
+    import { PauseIcon, PlayIcon } from "@livepeer/react/assets";
+    import { getSrc } from "@livepeer/react/external";
+    import * as Player from "@livepeer/react/player";
+
+    export function DemoPlayer({ src }: { src: Src[] | null }) {
+      return (
+        <Player.Root src={src}>
+          <Player.Container>
+            <Player.Video title="Video" />
+            <Player.Controls className="flex items-center justify-center">
+              <Player.PlayPauseTrigger className="w-10 h-10">
+                <Player.PlayingIndicator asChild matcher={false}>
+                  <PlayIcon />
+                </Player.PlayingIndicator>
+                <Player.PlayingIndicator asChild>
+                  <PauseIcon />
+                </Player.PlayingIndicator>
+              </Player.PlayPauseTrigger>
+            </Player.Controls>
+          </Player.Container>
+        </Player.Root>
+      );
+    }
+    ```
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider style={{margin: "-0.5rem 0 -2.5rem 0"}} />
+
+## Livepeer Studio Resources
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox margin="0 0 1rem 0" padding="0.5rem 1rem 1rem 1rem" variant="accent">
+      <SocialLinks iconColor="var(--text)" links={studioSocials} />
+  </BorderedBox>
+</CenteredContainer>
+{/*
+  At least 2 dev items (docs, GitHub, website) + main comms/support channel (Discord) + one other dev-focused item.
+  Use 2 cards if only 2 available.
+  Use 3 cards with the first card full-width if only 3 available.
+  Use 4 cards (cols=2) when 4 are available.
+*/}
 
 <CardGroup cols={2}>
-  <Card title="Livestream" icon="tower-broadcast" href="/solutions/livepeer-studio/livestream/overview">
- Create streams, broadcast via OBS or browser, multistream, and monitor health.
+  <Card title={<CustomCardTitle title="Studio docs" icon="newspaper"/>} href="https://livepeer.studio/docs" arrow>
+    Full documentation: API reference, SDKs, and product guides.
   </Card>
-  <Card title="Video on demand" icon="video" href="/solutions/livepeer-studio/video-on-demand/overview">
- Upload assets, play back, use thumbnails, and transcode with the Transcode API.
+  <Card title={<CustomCardTitle title="GitHub" icon="github"/>} href="https://github.com/livepeer/studio" arrow>
+    Open-source Studio platform and SDK code.
   </Card>
-  <Card title="Access control" icon="lock" href="/solutions/livepeer-studio/access-control/overview">
- Restrict playback with webhooks or JWTs.
+  <Card title={<CustomCardTitle title="Discord" icon="discord"/>} href="https://discord.gg/livepeer" arrow>
+    Livepeer community: builders, operators, and ecosystem contributors.
   </Card>
-  <Card title="Events & analytics" icon="chart-line" href="/solutions/livepeer-studio/analytics/webhooks">
- Webhooks for events and viewership/engagement APIs.
+  <Card title={<CustomCardTitle title="Client use cases" icon="diagram-project"/>} href="/v2/solutions/livepeer-studio/overview" arrow>
+    Platforms and products built on Livepeer Studio.
   </Card>
 </CardGroup>
 
-## SDKs and API
+{/*
+OTHER MEDIA:
+https://youtu.be/XLY5S1V8EjA?si=QcYYbKdS_Rq-iOn3
+https://youtu.be/Y0bWTVOVAKo?si=ML0kAhONs2fGZhbS
 
-- **Server SDKs** - [TypeScript/JavaScript](https://www.npmjs.com/package/livepeer), [Go](https://pkg.go.dev/github.com/livepeer/livepeer-go), [Python](https://pypi.org/project/livepeer/) for calling the Livepeer Studio API.
-- **React** - [@livepeer/react](https://www.npmjs.com/package/@livepeer/react): Player and Broadcast components for playback and in-browser streaming.
-- **API** - REST API for streams, assets, playback, webhooks, multistream, and more. See [API overview](/solutions/livepeer-studio/reference/api) and the [Livepeer Studio API docs](https://livepeer.studio/docs).
-
-## Using Studio as a gateway
-
-To use Livepeer Studio as the gateway to the Livepeer Network (e.g. For AI or transcoding), see [Using the Livepeer Studio Gateway](/gateways/using-gateways/gateway-providers/livepeer-studio-gateway) in the Gateways section.
-
-## Resources
-
-- [Livepeer Studio](https://livepeer.studio) - Dashboard, API keys, billing.
-- [Livepeer Studio docs](https://livepeer.studio/docs) - Full API and product documentation.
-- [Client use cases](/solutions/livepeer-studio/client-use-cases) - Platforms using Livepeer Studio.
+*/}

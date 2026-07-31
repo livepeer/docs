@@ -1,0 +1,138 @@
+---
+title: 'Tooling and Metrics'
+sidebarTitle: 'Tooling and Metrics'
+description: >-
+  Prometheus metrics, Grafana dashboards, and the livepeer monitor Docker
+  container for observing go-livepeer nodes in production.
+keywords:
+  - livepeer
+  - Prometheus
+  - Grafana
+  - monitoring
+  - metrics
+  - go-livepeer
+  - livepeer monitor
+  - observability
+  - port 7935
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>go-livepeer exposes Prometheus metrics on the same port as livepeer_cli (port 7935 by default). Start the Livepeer/monitor Docker container pointed at that port for a ready-made Prometheus + Grafana stack.</Tip>
+</CenteredContainer>
+
+---
+
+go-livepeer emits Prometheus metrics when started with the `-metrics` flag. The `livepeer/monitor` Docker image bundles Prometheus, Grafana, and starter dashboard templates for monitoring both broadcaster (Gateway) and Orchestrator nodes.
+
+<CustomDivider />
+
+## Enabling Prometheus Metrics
+
+Start go-livepeer with `-metrics` to expose the metrics endpoint:
+
+```bash
+livepeer -broadcaster \
+  -metrics \
+  -cliAddr 127.0.0.1:7935 \
+  ...
+```
+
+The metrics endpoint is available at `http://<cliAddr>/metrics`. With the default `-cliAddr 127.0.0.1:7935`, metrics are at `http://127.0.0.1:7935/metrics`.
+
+When running both a broadcaster and an Orchestrator on the same host, assign different `-cliAddr` ports to each:
+
+```bash
+livepeer -broadcaster -metrics -cliAddr 127.0.0.1:7935 ...
+livepeer -orchestrator -transcoder -metrics -cliAddr 127.0.0.1:7936 ...
+```
+
+<CustomDivider />
+
+## Livepeer Monitor Docker Container
+
+The `livepeer/monitor` container starts a Prometheus + Grafana stack pre-configured for go-livepeer. Point it at the metrics endpoints of your nodes via environment variables:
+
+```bash
+docker run \
+  -e LP_PROM_BROADCASTERS=http://host.docker.internal:7935/metrics \
+  -e LP_PROM_ORCHESTRATORS=http://host.docker.internal:7936/metrics \
+  -p 3000:3000 \
+  livepeer/monitor
+```
+
+Grafana is available at `http://localhost:3000` after startup. The bundled dashboards include panels for segment success rate, transcoding latency, session counts, and node health.
+
+For Kubernetes deployments, the container supports automatic Prometheus service discovery via the `LP_PROM_KUBE_SCRAPE_VALUE` environment variable, which sets the `prometheus.io/scrape` label matcher.
+
+<CustomDivider />
+
+## Key Prometheus Metrics
+
+go-livepeer exposes metrics with the `livepeer_` prefix. Useful metrics include:
+
+| Metric | Type | Description |
+|---|---|---|
+| `livepeer_broadcaster_segments_sent_total` | Counter | Total segments sent to Orchestrators |
+| `livepeer_broadcaster_segments_emerged_total` | Counter | Transcoded segments received back |
+| `livepeer_broadcaster_upload_time_seconds` | Histogram | Time to upload a segment to an Orchestrator |
+| `livepeer_broadcaster_download_time_seconds` | Histogram | Time to receive a transcoded segment back |
+| `livepeer_broadcaster_transcode_score` | Gauge | Ratio of segments received to segments sent (1.0 = perfect) |
+| `livepeer_broadcaster_sessions_active` | Gauge | Active transcoding/AI sessions |
+| `livepeer_orchestrator_segments_transcoded_total` | Counter | Total segments transcoded |
+| `livepeer_monitor_num_orchestrators` | Gauge | Orchestrators in the active selection pool |
+
+The full metric list is available at `/metrics` on any running go-livepeer node.
+
+<CustomDivider />
+
+## Manual Prometheus Configuration
+
+To scrape go-livepeer with an existing Prometheus installation, add a scrape job to `prometheus.yml`:
+
+```yaml
+scrape_configs:
+  - job_name: livepeer-broadcaster
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+          - 127.0.0.1:7935
+        labels:
+          livepeer_node_type: broadcaster
+
+  - job_name: livepeer-orchestrator
+    scrape_interval: 5s
+    static_configs:
+      - targets:
+          - 127.0.0.1:7936
+        labels:
+          livepeer_node_type: orchestrator
+```
+
+The `livepeer_node_type` label is used by the bundled Grafana dashboard templates to distinguish node types. Including it when using custom Prometheus keeps dashboards compatible with the official templates.
+
+<CustomDivider />
+
+The `livepeer/monitor` Docker container is the fastest path to a working monitoring stack. Point it at your node's metrics endpoint and Grafana dashboards appear at `localhost:3000`.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Orchestrator Monitoring" icon="activity" href="/v2/developers/guides/observability-and-debugging/orchestrator-monitoring" arrow horizontal>
+    Orchestrator-specific health signals, AI inference metrics, and alerting.
+  </Card>
+  <Card title="Local Development" icon="terminal" href="/v2/developers/guides/local-development/overview" arrow horizontal>
+    Running go-livepeer locally for development without the full network.
+  </Card>
+</CardGroup>

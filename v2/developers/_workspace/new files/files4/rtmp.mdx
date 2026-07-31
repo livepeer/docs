@@ -1,0 +1,147 @@
+---
+title: 'RTMP'
+sidebarTitle: 'RTMP'
+description: >-
+  RTMP ingest configuration in go-livepeer: flags, stream URLs, stream keys,
+  session limits, and RTMP webhook authentication.
+keywords:
+  - livepeer
+  - RTMP
+  - ingest
+  - go-livepeer
+  - rtmpAddr
+  - stream key
+  - maxSessions
+  - webhook authentication
+  - broadcaster
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/primitives/links.jsx'
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>go-livepeer accepts RTMP on port 1935 by default. The stream name is the first path segment of the RTMP URL; the HLS manifest appears at the same name on port 8935.</Tip>
+</CenteredContainer>
+
+---
+
+go-livepeer's broadcaster node includes an RTMP server for live stream ingest. OBS, FFmpeg, and any RTMP-capable encoder can push to it. The node segments the stream, routes segments to the Livepeer network for transcoding, and serves the transcoded output as HLS.
+
+<CustomDivider />
+
+## Stream URLs
+
+The RTMP ingest URL follows this structure:
+
+```
+rtmp://<host>:<rtmpPort>/<streamName>
+# or
+rtmp://<host>:<rtmpPort>/stream/<streamName>
+```
+
+Both forms are equivalent. The HLS output manifest appears at:
+
+```
+http://<host>:<httpPort>/stream/<streamName>.m3u8
+```
+
+Example with defaults:
+
+```bash
+# Push to broadcaster
+ffmpeg -re -i input.mp4 \
+  -c:v libx264 -b:v 2000k -c:a aac \
+  -f flv rtmp://localhost:1935/stream/my-event
+
+# Play back
+ffplay http://localhost:8935/stream/my-event.m3u8
+```
+
+If no stream name is provided, go-livepeer generates a random name.
+
+<CustomDivider />
+
+## Flags
+
+| Flag | Default | Description |
+|---|---|---|
+| `-rtmpAddr` | `127.0.0.1:1935` | RTMP listen address and port. Use `0.0.0.0:1935` to accept external connections. |
+| `-httpAddr` | `127.0.0.1:8935` | HTTP (HLS) listen address and port |
+| `-maxSessions` | `10` | Maximum concurrent RTMP sessions |
+| `-currentManifest` | off | When set, exposes the latest stream at `/stream/current.m3u8` |
+| `-authWebhookUrl` | none | URL called on each stream publish event for authentication |
+
+<CustomDivider />
+
+## Stream Keys
+
+By default, an RTMP stream is playable by anyone who knows the stream name. To protect ingest from unauthorised publishers and playback from unauthorised viewers, append a stream key to the RTMP URL:
+
+```
+# Ingest URL with stream key
+rtmp://localhost:1935/stream/my-event/SecretKey
+
+# HLS output URL (stream name only; key not in playback URL)
+http://localhost:8935/stream/my-event.m3u8
+```
+
+The stream name is `my-event`; `SecretKey` is the stream key. The HLS output URL uses only the stream name, but RTMP playback of the stream requires the full URL including the key.
+
+<CustomDivider />
+
+## RTMP Authentication Webhook
+
+The `-authWebhookUrl` flag points go-livepeer at an HTTP endpoint that is called on each incoming RTMP connection. The node POSTs the stream URL to the webhook; the webhook returns 200 to allow the stream or a non-200 response to reject it.
+
+```bash
+livepeer -broadcaster \
+  -authWebhookUrl https://your-app.example.com/rtmp-auth \
+  ...
+```
+
+The webhook request body contains the stream URL. The webhook response body may override transcoding profiles and manifest ID:
+
+```json
+{
+  "manifestID": "custom-id",
+  "profiles": [
+    {
+      "name": "720p",
+      "width": 1280,
+      "height": 720,
+      "bitrate": 3000000,
+      "fps": 30,
+      "profile": "H264Main"
+    }
+  ]
+}
+```
+
+The `manifestID` field sets the HLS output path: `/stream/<manifestID>.m3u8`. The `bitrate` field is in bits per second. The `gop` field sets GOP length in seconds; omitting it uses the encoder default; `"intra"` forces all-intra frames.
+
+The webhook URL can also be used for discovery authentication: when provided, go-livepeer calls the webhook on each `GetOrchestratorInfo` request, allowing the webhook to return a custom price configuration.
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Transport Overview" icon="grid" href="/v2/developers/guides/transport/overview" arrow horizontal>
+    All transport protocols used in Livepeer and when each applies.
+  </Card>
+  <Card title="HLS" icon="film" href="/v2/developers/guides/transport/hls" arrow horizontal>
+    HLS output format and ABR playback manifest structure.
+  </Card>
+  <Card title="Ingest" icon="broadcast" href="/v2/developers/build/video/ingest" arrow horizontal>
+    Managed stream creation and RTMP ingest via the Livepeer SDK.
+  </Card>
+</CardGroup>

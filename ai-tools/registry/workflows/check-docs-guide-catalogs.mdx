@@ -1,0 +1,112 @@
+---
+title: 'Check Docs Guide Catalogs'
+kind: 'workflow'
+status: 'active'
+concern: 'repo-ops'
+source_path: '.github/workflows/check-docs-guide-catalogs.yml'
+trigger_mode: 'pull_request + push + workflow_dispatch'
+risk_level: 'low'
+consolidation_flag: 'review for alignment with `review-fix` while preserving current pull_request + push + workflow_dispatch trigger behavior'
+dispatcher_candidate: 'review-fix'
+workflow_family: 'docs-catalog-governance'
+cleanup_decision: 'merge'
+usage_status: 'compatibility-wrapper'
+process_fit: 'core-shipping'
+consolidation_target: 'future:docs-catalog-governance-workflow'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Check Docs Guide Catalogs
+
+## Summary
+
+Check Docs Guide Catalogs runs on pull_request, push, workflow_dispatch and primarily produces workflow logs and job status.
+
+## Why It Exists
+
+Govern the `.github/workflows/check-docs-guide-catalogs.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- pull_request: branches=docs-v2
+- push: branches=docs-v2
+- workflow_dispatch: default event configuration
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `check-docs-guide-catalogs` | check-docs-guide-catalogs | n/a | none | 0 |
+
+### check-docs-guide-catalogs
+
+- No steps parsed.
+
+## Inputs
+
+- No explicit workflow inputs declared.
+
+## Second Pass Assessment
+
+- Workflow family: `docs-catalog-governance`
+- Usage status: `compatibility-wrapper`
+- Cleanup decision: `merge`
+- Process fit: `core-shipping`
+- Consolidation target: `future:docs-catalog-governance-workflow`
+- Recommended engineering action: Merge this workflow with its sibling family into `future:docs-catalog-governance-workflow` so one workflow owns both check and write modes.
+
+## Outputs
+
+- Workflow logs and job status
+
+## Dependencies
+
+- No direct dependencies identified in current repo scan.
+
+## Dependants
+
+- dispatcher:review-fix
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: pull_request + push + workflow_dispatch"]
+  workflow["Workflow: Check Docs Guide Catalogs"]
+  trigger --> workflow
+  job1["Job: check-docs-guide-catalogs"]
+  workflow --> job1
+  outputs["Outputs: Workflow logs and job status"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- No local repo dependencies were detected automatically; verify whether this is truly standalone.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `review-fix`. Second-pass target: `future:docs-catalog-governance-workflow`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This family already has obvious check/generate pairings that likely want one governed workflow with mode flags.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

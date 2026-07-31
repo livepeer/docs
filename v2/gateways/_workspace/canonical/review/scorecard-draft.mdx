@@ -1,0 +1,1157 @@
+---
+title: 'Page Quality Scorecard'
+sidebarTitle: 'Scorecard'
+description: 'Comprehensive page-level quality scorecard for Livepeer docs v2 review passes'
+status: draft
+lastVerified: '2026-03-24'
+---
+
+# Page Quality Scorecard — Livepeer Docs v2
+
+Every criterion below traces to a named source file. An agent or human reviewer applying this scorecard to a single MDX page needs no external context beyond the listed sources.
+
+Sources this scorecard is derived from:
+
+- `v2/orchestrators/_workspace/canonical/Frameworks.mdx` — taxonomy, voice, naming, section structure, Definition of Good
+- `v2/orchestrators/_workspace/canonical/checks.mdx` — per-category check tables, reporting rules, severity definitions
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/content-pass.md` — content pass phases, mode definitions, quality gates
+- `workspace/plan/active/CONTENT-WRITING/Prompts/Prompts-By-Phase/3-content-pass/pack-guide.md` — pre-flight, running order, failure modes
+- `workspace/plan/active/CONTENT-WRITING/Prompts/voice-rules.md` — universal and per-audience voice rules
+- `workspace/plan/active/CONTENT-WRITING/plan-canonical.md` — pipeline architecture, phase ordering, Definition of Good
+- `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md` — locked structural decisions
+- `workspace/plan/active/CONTENT-WRITING/decisions/terminology-tracking.md` — locked and open terminology decisions
+- `workspace/plan/active/ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` — orchestrators copywriting standards, terminology lock
+- `v2/orchestrators/_workspace/canonical/REVIEW-REGISTRY.md` — real session findings (pattern recognition)
+- `.claude/CLAUDE.md` — headings, banned words, banned constructions, voice summary
+
+---
+
+## 1. Pre-Conditions
+
+Before applying this scorecard to any page, confirm all of the following. Missing pre-conditions produce invalid or incomplete scores.
+
+**Source: `content-pass.md` — Pre-flight block; `pack-guide.md` — Pre-flight (Human Steps)**
+
+| # | Pre-condition | Required for |
+|---|---------------|-------------|
+| P1 | `TAB` is identified — which of the 5 tabs owns this page | All dimensions |
+| P2 | `AUDIENCE` token is identified from the 7-value enum — even if not yet in frontmatter | D2, D3, D4 |
+| P3 | `PAGE_PATH` is known — absolute path from repo root | D7, D8 |
+| P4 | `PREV_PAGE` is known — title + one sentence: what it covers, what reader leaves able to do | D6 |
+| P5 | `NEXT_PAGE` is known — title + one sentence: what reader is expected to arrive knowing | D6 |
+| P6 | The page's position in the tab journey is confirmed: is it entry, depth, or exit? | D6, D9 |
+| P7 | `pageType` has been assessed (even if frontmatter disagrees) — this drives component expectations | D5 |
+| P8 | Phase 1 canonical audience design output is available for this tab | D2 |
+| P9 | If the page carries a `generated-file-banner:v1` block, the generation script has been read first | All dimensions |
+
+If P4 or P5 are unknown, D6 (Adjacency) scores N/A. If P8 is unavailable, D2 (Persona Fit) is degraded — flag this in the output.
+
+---
+
+## 2. Scoring Dimensions
+
+---
+
+### D1 — Frontmatter Completeness and Correctness
+
+**Source: `checks.mdx` §1; `Frameworks.mdx` §1.1–1.7; `Frameworks.mdx` — Locked Enums**
+
+**Weight: 3 (Critical)**
+
+Frontmatter errors break downstream systems and pipeline classification. They are non-negotiable.
+
+**What to check:**
+
+Check all required fields — the 10 required by `checks.mdx §1.1` plus `veracityStatus` (required per `checks.mdx §1.8`). For each, check presence, non-emptiness, and canonical enum value.
+
+| Field | Required | Canonical values |
+|-------|----------|-----------------|
+| `title` | Yes | Free text; must name the thing, not describe it |
+| `sidebarTitle` | Yes | 1–3 words; shorter than `title` |
+| `description` | Yes | Subject-first, ≤160 chars, no "This page", UK English |
+| `keywords` | Yes | ≥3 relevant terms; lowercase; specific to page content; no duplicates |
+| `pageType` | Yes | `navigation`, `concept`, `tutorial`, `guide`, `instruction`, `reference`, `resource` |
+| `pageVariant` | If present | `overview`, `specification`, `compendium`, `changelog`, `knowledge-hub`, `quickstart`, `troubleshooting` |
+| `audience` | Yes | `founder`, `builder`, `developer`, `gateway`, `orchestrator`, `delegator`, `community` |
+| `purpose` | Yes | `orient`, `explain`, `learn`, `choose`, `evaluate`, `start`, `build`, `configure`, `operate`, `troubleshoot`, `verify`, `integrate`, `optimise`, `reference`, `update` |
+| `complexity` | Yes | `beginner`, `intermediate`, `advanced` |
+| `lifecycleStage` | Yes | `discover`, `evaluate`, `setup`, `build`, `operate`, `troubleshoot`, `optimise` |
+| `veracityStatus` | Yes | `verified`, `unverified`, `stale` — default for AI-generated or unreviewed content is `unverified` |
+| `industry` | If present | Max 2 entries from: `technical`, `finance`, `economics`, `business`, `marketing`, `governance`, `broadcast`, `AI`, `livepeer` |
+| `niche` | If present | From: `web3`, `protocol`, `tokenomics`, `AI`, `video`, `streaming`, `hardware`, `infrastructure` |
+| OG image block | Yes | All 5 OG fields present with correct fallback path |
+
+**Deprecated values that must never appear in frontmatter:**
+
+| Deprecated | Correct replacement |
+|------------|---------------------|
+| `pageType: landing` | `pageType: navigation` |
+| `pageType: how_to` | `pageType: instruction` |
+| `pageType: quickstart` | `pageType: instruction` + `pageVariant: quickstart` |
+| `pageType: faq` | `pageType: reference` + `pageVariant: compendium` |
+| `pageType: troubleshooting` | `pageType: instruction` + `pageVariant: troubleshooting` |
+| `pageType: changelog` | `pageType: reference` + `pageVariant: changelog` |
+| `pageType: glossary` | `pageType: reference` + `pageVariant: compendium` |
+| `pageType: overview` | Migrate to correct type; `overview` is a `pageVariant`, never a `pageType` |
+| `purpose: orientation` | `purpose: orient` |
+| `purpose: concept` | `purpose: explain` |
+| `purpose: decision` | `purpose: choose` |
+| `purpose: setup` | `purpose: configure` |
+| `purpose: optimization` | `purpose: optimise` |
+| `purpose: comparison` | `purpose: evaluate` |
+| `purpose: guide` | Migrate to correct purpose enum value |
+| `audience: general` | Use the specific 7-token value |
+| `audience: everyone` | Use the specific 7-token value |
+| `audience: gateway-operator` | `audience: gateway` |
+| `audience: platform-builder` | `audience: builder` |
+
+**`veracityStatus` rule:** `verified` is only valid if ALL sections pass their information-type veracity standard AND zero `{/* REVIEW: */}` flags remain. If any section at `very high` or `high` standard is unverified, page status must be `unverified`.
+
+**Pass criteria:** All 10 required fields present, non-empty, canonical values only. No deprecated aliases.
+
+**Fail criteria:** Any missing required field. Any deprecated enum value. `veracityStatus: verified` with unresolved REVIEW flags. `description` opening with "This page". `description` over 160 characters.
+
+---
+
+### D2 — Purpose and Audience Fit
+
+**Source: `content-pass.md` §Pre-flight, §Phase 2, §Phase 3; `Frameworks.mdx` §1.2, §1.3; `checks.mdx` §4.1–4.2**
+
+**Weight: 3 (Critical)**
+
+A page serving the wrong audience or failing to deliver its stated purpose fails regardless of voice quality.
+
+**What to check:**
+
+1. **One-sentence purpose test**: Can you complete "This page lets the [AUDIENCE] [concrete action]"? If not, PURPOSE is wrong or scope is too broad.
+2. **One job test**: Does the page serve exactly one reader doing exactly one thing? If it serves two purposes equally, flag as scope problem requiring split.
+3. **Audience match**: Does every major section serve the stated audience's arriving question and motivation? Are there sections serving a different audience?
+4. **Knowledge level match**: Does the page's language match `complexity`?
+   - `beginner`: no assumed prior domain knowledge, terms defined on first use
+   - `intermediate`: domain-familiar reader, standard prerequisites assumed
+   - `advanced`: deep operational experience, minimal hand-holding
+5. **Purpose delivery**: Does the section sequence lead the reader to the stated `purpose` outcome before the end of the page?
+
+| Purpose | Reader can do this after reading |
+|---------|----------------------------------|
+| `orient` | Navigate to the correct next destination |
+| `explain` | Describe how the mechanism works |
+| `learn` | Apply the terminology or concept correctly |
+| `choose` | Make a specific named decision between options |
+| `evaluate` | Assess fit of this option against their situation |
+| `start` | Complete a first successful run |
+| `build` | Create or implement a named thing |
+| `configure` | Apply specific parameters or settings correctly |
+| `operate` | Run and manage the system in practice |
+| `troubleshoot` | Identify and resolve a named failure mode |
+| `verify` | Confirm correct state or expected output |
+| `integrate` | Connect this system with a named external system |
+| `optimise` | Improve a named metric by a concrete method |
+| `reference` | Look up a specific fact, value, or specification |
+| `update` | Know what changed and what action is required |
+
+**Pass criteria:** One-sentence purpose statement completes without "and". All sections serve the stated audience. Knowledge level consistent throughout. Reader achieves the stated purpose before end of page.
+
+**Fail criteria:** Two or more reader outcomes in one page. Sections serving different audiences. Complexity mismatch (content assumes too much or over-explains). Stated purpose not achievable from page content.
+
+---
+
+### D3 — Voice and Register
+
+**Source: `voice-rules.md` — Universal Rules; `Frameworks.mdx` §2.1–2.2; `content-pass.md` §Phase 5.1–5.4; `.claude/CLAUDE.md` — Voice section; `checks.mdx` §2.3–2.11**
+
+**Weight: 3 (Critical)**
+
+Voice errors are hard blocks. Zero tolerance on banned words, phrases, and constructions regardless of audience.
+
+#### Universal rules (all pages, all audiences)
+
+**Base voice identity (source: `pack-guide.md` — Dos; `content-pass.md` §2.3):**
+- Knowledgeable colleague — not a professor, not a marketer
+- Transparent: state what works, what doesn't, what's missing
+- Candid: honest about trade-offs and costs. Do not oversell.
+- Performant: dense with useful information. No filler.
+- Inclusive: accessible to people not already Livepeer insiders
+- Second person ("you") for instructions. Third person for system descriptions. Never first person plural ("we believe", "our network") — except Community tab only.
+
+**Opening order (source: `voice-rules.md` — Universal Rules; `Frameworks.mdx` §2.1):**
+- Value or outcome before mechanism
+- Fact before caveat
+- Reader benefit before system description
+- First sentence states the most useful fact for this audience at this lifecycle stage
+- No conditional in sentence 1 (`if you have`, `depending on your setup`, `whether you`)
+- No question as opener
+
+**Paragraph discipline (source: `voice-rules.md` — Universal Rules; `content-pass.md` §5.3):**
+- One paragraph = one job
+- Lead sentence states the fact; remaining sentences extend or evidence it
+- Final sentence ends on a fact, number, or next step — never a hedge or restatement
+- Tables stand alone — no prose restating a table row
+- High-value commands and URLs visible in body copy, not buried in accordions or notes
+
+#### Banned words (source: `Frameworks.mdx` §3.1; `voice-rules.md` — Universal Rules; `.claude/CLAUDE.md` — Banned words)
+
+Remove; do not soften. Zero tolerance.
+
+`effectively` | `essentially` | `basically` | `meaningful` | `significant` (as intensifier) | `real` (as intensifier) | `various` | `several` | `obviously` | `clearly`
+
+*`simply` and `just` (as minimisers) are audience-specific prohibited words, not universal banned words — see gateway and developer per-audience sections below. Source: `voice-rules.md` per-audience rules.*
+
+#### Banned phrases (source: `Frameworks.mdx` §3.2; `voice-rules.md` — Universal Rules; `content-pass.md` §5.1; `.claude/CLAUDE.md` — Delete these sentences)
+
+| Phrase | Why |
+|--------|-----|
+| "This section covers" | Filler opening — start with the content |
+| "This page covers / explains / walks you through" | Self-referential |
+| "Use this page to..." | Self-referential |
+| "Understanding X is essential" | Reader decides what is essential |
+| "It is important to note" | If important, just say it |
+| "it should be noted" | Filler |
+| "As mentioned above" | Docs navigated non-linearly |
+| "and so on" / "etc." | List the items or don't mention them |
+| "rather than" | Passive avoidance; state the direct rule |
+| "what it takes" | Vague — say what is required |
+| "not just X" | Vague framing — state what it is |
+| "can generate" / "may produce" in value claims | Assert directly |
+| "The reason is straightforward" | Often isn't; condescending |
+| "among other factors" | List the factors |
+| "low but not zero" | Quantify or remove |
+| "once X is stable" | Undefined condition |
+| "depends on various" | List what it depends on |
+| "not preference" | Unclear; state the requirement |
+| Opens with "This page" | Delete — open with content |
+| Describes what the following content does | Delete |
+| Bridges sections with commentary | Delete |
+| Announces a concept instead of stating it | Delete |
+| Restates a table or diagram | Delete |
+
+#### Banned constructions (source: `Frameworks.mdx` §3.2; `voice-rules.md` — Banned constructions; `.claude/CLAUDE.md` — Banned constructions)
+
+| Construction | Rule |
+|--------------|------|
+| `not [X]` as primary statement | State positively |
+| `if [condition]` in body prose | Resolve the condition; state threshold directly (exception: code blocks, exact config conditions, troubleshooting contexts) |
+| `This page [verb]` | Delete self-reference, open with content |
+| `can/may [verb]` in value claims | Assert directly or delete |
+| `rather than` | Delete contrast, state positive |
+| `That means` / `This shows` | Delete — trust the reader |
+| No unquantified value claims | "Cost-effective" → "70% lower than AWS MediaConvert for 1080p" |
+
+**Scan for modal verbs:** List every sentence containing `can`, `may`, `could`, `might`, `should`. Classify each as: `value-claim` (flag) / `procedural` (ok) / `conditional caveat` (ok) / `rhetorical` (ok).
+
+#### Per-audience prohibited phrases (source: `voice-rules.md` — Per-Audience Voice Extensions; `Frameworks.mdx` §2.2)
+
+**`orchestrator` — node operator register:**
+- "Your orchestrator will automatically..." (unless it actually does — verify first)
+- "The network rewards you for..." (too vague — state the actual reward mechanism)
+- "Easy to set up" / "Simple configuration"
+- Any sentence that hedges earnings without stating the mechanism
+- Register: operational and technical, performance and economics focused, hardware-aware
+- Lead with earnings, performance, operational outcomes; use hardware-specific language freely (VRAM, CPU cores, NVLink, NVENC, CUDA); quantify always
+
+**`gateway` — infrastructure operator register:**
+- "Don't worry, this is easy to configure"
+- "As a gateway operator, you will..."
+- "This document will guide you through"
+- "Remember that..." / "Keep in mind that..."
+- "simply", "just", "easy", "straightforward"
+- Questions as section headings
+- Register: peer-to-peer technical, operator-to-operator, precision over warmth
+
+**`developer` — code-first register:**
+- "Easily integrated with your existing..."
+- "With just a few lines of code..."
+- "The SDK makes it simple to..."
+- "Don't worry about the details..."
+- "As you may know..."
+- `simply`, `just` (as minimisers) — prohibited. Source: `voice-rules.md` developer section
+- Register: code-first, minimal prose, show the thing then explain; error states and edge cases in main content
+
+**`builder` — integration-focused register:**
+- "As you know, Livepeer is a decentralised..."
+- "Built on blockchain technology..."
+- Any opening that explains the network before the integration value
+- "You can also..." when there is a clearly preferred path
+- Register: outcome-before-mechanism, API-centric, full request/response cycle shown
+
+**`delegator` — accessible, decision-support register:**
+- "Simply stake your tokens to..."
+- "As a delegator, you will automatically..."
+- Any claim about earnings without stating the dependency (orchestrator performance, reward cut, protocol inflation rate)
+- Register: accessible plain-language, decision-support; no code blocks or CLI commands; no hardware terminology
+
+**`community` — social/governance register:**
+- "Join our thriving community!"
+- "Livepeer has a passionate and growing..."
+- "Together, we can..."
+- "The community is the heart of..."
+- "Exciting opportunity to contribute"
+- "thriving community", "passionate contributors", "vibrant ecosystem"
+- Register: inclusive, participatory, substantive; real information not motivation-poster content
+
+**`founder` — business-executive register:**
+- "Powered by blockchain technology..."
+- "The future of decentralised..."
+- Any sentence requiring web3 understanding to evaluate the product
+- "Our ecosystem partners include..." without names and specific integrations
+- Register: executive summary, outcome and economics before mechanism, numbers over adjectives
+
+**Pass criteria:** Zero banned words, phrases, or constructions. Opening leads with value/outcome. Paragraphs follow discipline. Register matches stated audience. All per-audience prohibited phrases absent.
+
+**Fail criteria:** Any banned word present. Any banned phrase present. Any banned construction present. Self-referential opener. Hedge as final sentence. Passive value claims. Wrong register for stated audience.
+
+---
+
+### D4 — UK English Compliance
+
+**Source: `Frameworks.mdx` §2.3; `voice-rules.md` — UK English Reference; `checks.mdx` §2.1; `content-pass.md` §5.1**
+
+**Weight: 2 (Standard)**
+
+**What to check:** Scan all visible text — headings, link text, prose, card descriptions, table cells.
+
+| US spelling | UK spelling |
+|-------------|-------------|
+| optimize | optimise |
+| organize | organise |
+| customize | customise |
+| recognize | recognise |
+| analyze | analyse |
+| behavior | behaviour |
+| color | colour |
+| center | centre |
+| labeled | labelled |
+| canceled | cancelled |
+| traveling | travelling |
+| -ize endings | -ise endings (where both are standard) |
+| license (noun) | licence (noun) / license (verb) |
+| practice (verb) | practise (verb) / practice (noun) |
+
+No em dashes — rewrite or use hyphens. (Source: `.claude/CLAUDE.md` — Voice)
+
+**Pass criteria:** Zero US spellings in all visible text. No em dashes.
+
+**Fail criteria:** Any US spelling. Em dashes used as em dashes.
+
+---
+
+### D5 — Heading Quality
+
+**Source: `Frameworks.mdx` §4.1; `checks.mdx` §3.1–3.7; `.claude/CLAUDE.md` — Headings**
+
+**Weight: 2 (Standard)**
+
+**What to check:** Score every heading (H1/H2/H3) on the 5-dimension rubric. Show per-dimension scores.
+
+#### Scoring rubric (per heading)
+
+| Dimension | 5 (best) | 1 (worst) |
+|-----------|----------|-----------|
+| **Precision** | Names the exact concept; matches real content | Could mean anything |
+| **Depth** | Names the governing concept, not just visible examples | Surface-level label |
+| **Stability** | Survives content changes; survives section expansion | Breaks if examples change |
+| **Clarity** | Instantly understood by target audience without reading the section | Requires reading the section to understand |
+| **Conciseness** | Minimal words, maximum signal | Wordy or padded |
+
+**Pass threshold:** Every heading ≥ 20/25 total.
+
+**Banned heading forms (source: `.claude/CLAUDE.md` — Headings; `checks.mdx` §3.2–3.3):**
+- Questions as headings
+- Generic descriptors as standalone headings: `Types`, `Profiles`, `Modes`, `Overview`, `Basics`, `Details`, `Information`, `Getting Started`
+- Literal contrast labels: `X vs Y` — name the governing concept instead
+- 3–6 words is the target range; maximum 8 words
+
+**Label class hierarchy (source: `Frameworks.mdx` §4.1):**
+
+| Class | Status |
+|-------|--------|
+| Governing-concept label | Ideal |
+| Content descriptor | Preferred |
+| Generic descriptor | Penalise |
+| Literal label | Penalise |
+| Comparator label | Reject |
+| Taxonomy mismatch | Reject |
+
+**Winner filter — all must be yes (source: `Frameworks.mdx` §4.1):**
+1. Names the real governing concept, not just the examples
+2. Is a content descriptor, not a literal label
+3. Is at the right conceptual layer
+4. Would still work if more examples were added later
+5. Reader scanning navigation understands the subject area
+6. Term used at its correct meaning
+7. Fits the `pageType`
+8. Fits the `purpose`
+9. Fits the `audience`
+10. Sounds like an expert editorial choice, not a safe generic label
+
+**Weak-label penalties:** `types`, `profiles`, `modes`, `models`, `overview`, `guide`, `basics`, `essentials`, `foundations`
+
+**Examples from `.claude/CLAUDE.md`:**
+- BAD: "Three Viability Questions" → GOOD: "Viability Check"
+- BAD: "Is reward calling profitable?" → GOOD: "Reward Call Threshold"
+- BAD: "What Orchestrators Earn" → GOOD: "Revenue Streams"
+- BAD: "Video vs AI: Starting Workload" → GOOD: "Video vs AI"
+
+**Pass criteria:** All headings ≥ 20/25. No question-form headings. No generic descriptors. No literal contrast labels. All winner filter items pass for every heading.
+
+**Fail criteria:** Any heading below 20/25. Question-form heading. Generic standalone descriptor. Heading that can only be understood by reading the section.
+
+---
+
+### D6 — Adjacency and Navigation
+
+**Source: `checks.mdx` §4.3–4.10; `content-pass.md` §Pre-flight, §Phase 7.2; `Frameworks.mdx` §4.4**
+
+**Weight: 2 (Standard)**
+
+**What to check:**
+
+1. **PREV_PAGE knowledge gap**: Does the reader arriving from PREV_PAGE have everything they need to use this page? Name any gap.
+2. **NEXT_PAGE handoff**: Does the reader leaving for NEXT_PAGE know why they're going there and what they'll need to know? Is the final CTA specific (not "see related pages")?
+3. **Dead end test**: Does the page have a clear next step? A page with no forward path is a dead end.
+4. **Prerequisites**: All prerequisite knowledge explicitly stated at the top or linked. Reader achieves purpose without external context.
+5. **No pre-emption**: No section covers content from NEXT_PAGE.
+6. **No repetition**: No section repeats content from PREV_PAGE.
+7. **Cross-tab links** (section-level check): At least 3 cross-tab links where audience journeys intersect.
+8. **Tab entry portal routing**: Tab root page links to every section within the tab.
+
+**Pass criteria:** No knowledge gaps at entry. Clear handoff to next page. Every section has a forward path. Prerequisites stated. No PREV_PAGE content repeated. No NEXT_PAGE content pre-empted.
+
+**Fail criteria:** Reader cannot start the page without going elsewhere first (undeclared dependency). No final CTA or next step. Dead-end page. Content repeated from adjacent pages.
+
+---
+
+### D7 — Deprecated Terms
+
+**Source: `Frameworks.mdx` §3.4; `checks.mdx` §2.11; `ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` §9; `decisions/terminology-tracking.md`**
+
+**Weight: 2 (Standard)**
+
+**What to check — deprecated role terms that must never appear in new content:**
+
+| Banned term | Use instead | Notes |
+|-------------|-------------|-------|
+| Broadcaster | Gateway (operator) | Appears in Whitepaper and go-livepeer codebase — ignore there; never in documentation |
+| Pool worker | Pool node | Define "pool node" at first use on every page |
+| Combined mode | Dual mode / Dual-workload configuration | — |
+| Hybrid | Dual mode | — |
+| Transcoder (as synonym for Orchestrator) | Orchestrator | "Transcoder" is the worker process in O-T split — a specific technical meaning; not a synonym |
+
+**Deprecated pageType terms in frontmatter** — see D1.
+
+**High-staleness terms requiring verification before use (source: `Frameworks.mdx` §3.4):**
+
+| Term | Why it can change | Where to verify |
+|------|-------------------|-----------------|
+| Active set size (100) | Could change via governance | Explorer |
+| Unbonding period | Set by governance | Explorer (BondingManager) |
+| Target bonding rate (50%) | Set by governance | Delegator yield guide + LIPs |
+| Inflation adjustment rate (0.00005% per round) | Set by governance | Delegator yield guide + LIPs |
+| Treasury reward cut rate | Set by governance (LIP-92) | LIPs repo |
+| AI pipeline types and model IDs | Change with releases | go-livepeer releases + AI docs |
+| CLI flag names and defaults | Change between releases | CLI reference + latest tagged release |
+
+**Locked terminology (source: `ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` §9; `decisions/terminology-tracking.md`):**
+
+| Term | Definition | Notes |
+|------|------------|-------|
+| BYOC | Bring Your Own Container | Locked 2026-03-23 |
+| NaaP | Network-as-a-Product | Provisional — style guide confirmation pending |
+| LIP-92 | Treasury Contribution Percentage | Locked 2026-03-23 |
+| go-livepeer | The software binary | Always lowercase, hyphenated |
+| pool node | GPU operator contributing to a pool | Define at first use on every page |
+| probabilistic micropayment / PM | Lottery-based payment mechanism | Define at first use on every page |
+| active set | Top-ranked orchestrators by bonded stake | Define at first use on every page |
+| reward cut | % of LPT inflation orchestrator retains before distributing to delegators | Never "commission" |
+| fee cut | % of ETH service fees orchestrator retains before distributing to delegators | Never "commission" |
+| on-chain / off-chain | Payment MODE — never workload type | Dual = workload config; not a payment type |
+
+**Terms to avoid with generic use:**
+
+| Never | Instead |
+|-------|---------|
+| "tokens", "crypto" | LPT |
+| "miner", "node" generically | orchestrator |
+| "API gateway" | gateway |
+| "top orchestrators" | active set |
+| "commission" | reward cut / fee cut |
+| "payments" generically | probabilistic micropayments |
+| "Network Participant" | Use specific role labels (Orchestrator, Gateway, Delegator, Developer) |
+| DePIN undefined | Define: Decentralized Physical Infrastructure Networks |
+
+**Pass criteria:** Zero deprecated role terms. All high-staleness terms flagged with REVIEW or verified. Locked terminology used in canonical form. Domain terms defined at first use on every page.
+
+**Fail criteria:** "Broadcaster", "pool worker", "combined mode", "hybrid" appearing in content. Deprecated pageType terms in frontmatter. High-staleness numbers used without verification flag. "Commission" instead of reward cut / fee cut.
+
+---
+
+### D8 — Factual Claim Status (Veracity)
+
+**Source: `checks.mdx` §6; `Frameworks.mdx` §1.7, §4.5; `content-pass.md` §Phase 6; `ORCHS/01-CORE-NEEDS-AND-STANDARDS.md` §10**
+
+**Weight: 3 (Critical)**
+
+**What to check:**
+
+For every section, identify the information type and its veracity standard.
+
+| Information type | Veracity standard | "Verified" means |
+|-----------------|-------------------|------------------|
+| `factual` | Very high | Every claim citable against primary source |
+| `technical` | Very high | Code tested against live system, current codebase |
+| `procedural` | Very high | Every step executed in correct environment, produces stated output |
+| `change` | Very high | Every entry confirmed against release notes, migration guides |
+| `evaluative` | High | Evidence is real, sourced, labelled if approximate |
+| `structural` | High | Accurately reflects current site structure |
+| `analytical` | Medium | Reasoning internally consistent with documented behaviour |
+| `conceptual` | Medium | Mental model consistent with documented behaviour |
+| `narrative` | Lower | Value framing consistent with foundation communications |
+
+**For every factual, technical, procedural, or change section:**
+1. List the specific claims requiring verification
+2. For each claim: name the authoritative source to check against
+3. For claims that cannot be verified: flag with `{/* REVIEW: [specific claim] — verify with: [named source] */}`
+
+**Source trust order (source: `Frameworks.mdx` §4.5):**
+1. Protocol contracts, API specs, official changelogs (Primary)
+2. go-livepeer, GitHub repos, live API endpoints (Primary)
+3. Livepeer Docs v2, AI Documentation, API Reference (Primary)
+4. Foundation Blog, Forum, livepeer.org (Acceptable)
+5. Forum threads, community dashboards (Acceptable)
+6. External domain authorities: NVIDIA docs, Hugging Face (Acceptable)
+7. Discord: not permitted (ephemeral, unverifiable)
+
+**Pipeline blocking rule:** `unverified` or `stale` at very high or high standard blocks publication. Medium or lower requires human sign-off but does not hard-block.
+
+**`veracityStatus` must reflect the weakest section.** If any section at very high or high standard is unverified, page status must be `unverified`.
+
+**Code and commands:** Every code block, CLI command, and procedure must be labelled `TESTED:` or `NOT-TESTED:`. "REVIEW — verify this" is not an acceptable veracity finding format.
+
+**Numbers:** Every number (earnings, percentages, VRAM requirements, latency figures) must be sourced and current. No "approximately" without a range. No unquantified comparatives.
+
+**Glossary authority (source: `checks.mdx` §6.7; `plan-canonical.md`):**
+- `v2/resources/glossary.mdx` — human-reviewed, authoritative
+- `v2/resources/compendium/glossary.mdx` — AI-generated, unverified — must be cross-checked before trusting
+
+**Pass criteria:** Every factual/technical/procedural/change claim has a named source or a REVIEW flag. All REVIEW flags are specific (claim + named source). `veracityStatus` matches the weakest section. No "approximately" without a range. Information sourced from fast-changing sources (API responses, contract state, SDK versions, on-chain parameters) carries a staleness-risk flag or is linked to a live source.
+
+**Fail criteria:** Unverified factual claims with no REVIEW flag. Vague REVIEW flags ("check this"). `veracityStatus: verified` with unresolved REVIEW flags. Numbers presented as current without source. Code blocks not labelled TESTED/NOT-TESTED. Fast-changing source data (on-chain parameters, SDK versions, API endpoints) used as current fact with no staleness flag and no link to a live source.
+
+---
+
+### D9 — Section Structure and Information Architecture
+
+**Source: `checks.mdx` §4.1–4.10; `content-pass.md` §Phase 4, §Phase 7; `Frameworks.mdx` §1.6**
+
+**Weight: 2 (Standard)**
+
+**What to check:**
+
+1. **Information type per section**: For each section, identify the information type. Check it is a permitted type for the page's `purpose`.
+
+| Purpose | Primary types | Secondary types |
+|---------|---------------|-----------------|
+| `orient` | structural, narrative | conceptual |
+| `explain` | conceptual, technical | factual, analytical |
+| `learn` | conceptual, factual | procedural |
+| `choose` | evaluative, analytical | factual, conceptual |
+| `evaluate` | evaluative, analytical, factual | technical, conceptual |
+| `start` | procedural, factual | conceptual |
+| `build` | procedural, technical | factual, conceptual |
+| `configure` | procedural, technical, factual | conceptual |
+| `operate` | procedural, factual | technical |
+| `troubleshoot` | procedural, analytical | technical, factual |
+| `verify` | procedural, factual | technical |
+| `integrate` | procedural, technical | factual, conceptual |
+| `optimise` | analytical, procedural | technical, evaluative, factual |
+| `reference` | factual, technical | structural |
+| `update` | change, factual | procedural |
+
+2. **Opening orientation**: Does the page open with an orientation that names what the page delivers, who it is for, and what the reader leaves with? (Exception: `navigation` pages — orientation is in card value propositions, not a prose paragraph.)
+
+3. **Section sequence**: Does the section sequence follow the reader's journey toward PURPOSE? Not editor convenience or system chronology.
+
+4. **No orphan sections**: Every section can state what it delivers to the reader. A section that can be removed without breaking the path to PURPOSE is an orphan.
+
+5. **No duplication**: Content not repeated from neighbouring pages or sections.
+
+6. **Required sections by pageType (source: `checks.mdx` §5.2):**
+
+| pageType | Required sections |
+|----------|-------------------|
+| `navigation` | Portal/routing |
+| `concept` | Overview |
+| `tutorial` | Prerequisites, Steps, Next Steps |
+| `guide` | Overview, Steps or H2 sections |
+| `instruction` | Prerequisites, Steps |
+| `reference` | Reference (structured lookup) |
+| `resource` | Overview or H2 |
+
+**Pass criteria:** Information types match permitted types for the purpose. Opening paragraph orients the reader without self-reference. Section sequence follows reader journey. No orphan sections. No repeated content from adjacent pages. Required sections for pageType present.
+
+**Fail criteria:** Section with information type not permitted for the stated purpose. Opening paragraph describes what the page does instead of doing it. Section removable without affecting reader progress. Same content in adjacent pages.
+
+---
+
+### D10 — Components and Template Compliance
+
+**Source: `checks.mdx` §5.1–5.10; `Frameworks.mdx` §4.2**
+
+**Weight: 2 (Standard)**
+
+**Pass A note (content pass):** Score D10 as **N/A** during content pass (Pass A). Generate component suggestions only — do not produce PASS/FAIL verdicts. PASS/FAIL applies at Layout Pass (Pass B) only. *Source: `content-pass.md` line 6 — "Content layer only. Do not apply MDX components, frontmatter, or layout — that is Pass B."*
+
+**What to check:**
+
+1. **Correct template for pageType:** Page structure matches the template for its type.
+
+| pageType | Template |
+|----------|----------|
+| `navigation` | `navigation-page.mdx` / `portal-page.mdx` |
+| `concept` | `overview-page.mdx` |
+| `instruction` | `how-to-page.mdx` |
+| `tutorial` | `tutorial-page.mdx` |
+| `reference` | `reference-page.mdx` |
+| `resource` | (resource layout) |
+
+2. **Component matrix compliance:**
+
+| pageType | Preferred components | Avoid |
+|----------|---------------------|-------|
+| `navigation` | Card, CardGroup | Content components |
+| `concept` | Accordion, AccordionGroup, CodeGroup, Tabs, Note, Info, Tip | TODO/TBD |
+| `tutorial` | Steps, Step, CodeGroup, Tip, Warning, Check | Coming Soon |
+| `guide` | Steps, Step, CodeGroup, Note, Info, Tip, Card, CardGroup | Coming Soon, PreviewCallout |
+| `instruction` | Steps, Step, CodeGroup, Warning, Check, Tip | Coming Soon, PreviewCallout |
+| `reference` | ParamField, ResponseField, CodeGroup, Tabs, Table | TODO/TBD/Coming Soon |
+| `resource` | Card, CardGroup, Table, Accordion, AccordionGroup, Note | TODO/TBD |
+
+3. **Information type → component mapping (source: `Frameworks.mdx` §4.2):**
+
+| Information type | Component |
+|-----------------|-----------|
+| `procedural` | Steps |
+| `conceptual` | prose / Note |
+| `reference` | table / ParamField |
+| `multi-path` | Tabs |
+
+4. **No prohibited placeholders in published content:** No TODO/TBD, no "Coming Soon", no placeholder text.
+5. **MDX renders clean:** No JSX errors, no unclosed tags, no missing component imports.
+6. **CSS uses custom properties only:** No hardcoded hex colours, no inline JS theme switching. Uses `var(--accent)`, `var(--text)`.
+7. **Component naming conventions:** PascalCase, correct imports.
+
+**Note on `component-layout-profile.json` (source: `content-pass.md` §4b):** This file uses deprecated pageType names. Do not treat it as authoritative without cross-checking against the canonical 7-type schema.
+
+**Pass criteria:** Correct structural template used. Components match Preferred column for pageType. No TODO/TBD/Coming Soon in published content. Page renders without error. No old-schema frontmatter surviving.
+
+**Fail criteria:** Wrong structural template. Unapproved components. Placeholder text in published content. Render errors.
+
+---
+
+### D11 — Navigation and File Governance
+
+**Source: `checks.mdx` §7.1–7.9; `Frameworks.mdx` §4.4**
+
+**Weight: 2 (Standard)**
+
+**What to check:**
+
+1. **docs.json presence:** File path matches a docs.json navigation entry. No orphaned files. No phantom nav entries pointing to missing files.
+2. **Correct file lane (source: `checks.mdx` §7.7):**
+   - Publishable content: `v2/<section>/`
+   - Non-publishable (working files): `_workspace/`
+   - Deprecated: `x-deprecated/` or `x-archived/`
+3. **File naming conventions (source: `checks.mdx` §7.8):**
+   - `s-` prefix: setup files
+   - `r-` prefix: reference files
+   - `rs-` prefix: reference + setup
+   - `rcs-` prefix: reference + config + setup
+   - `x-` prefix: deprecated/experimental
+   - `dep-` prefix: deprecated
+   - No `-index.mdx` suffix
+4. **Every page reachable:** Reachable from at least one navigation path. No structural orphans.
+5. **Audience journey complete:** Entry → depth → exit with no missing steps for the tab's primary audience.
+6. **Cross-tab graduation paths (source: `checks.mdx` §7.6):**
+   - Founder → About → Builder → Developers/Gateways
+   - Builder → Developer
+   - Delegator → About
+   - Orchestrator → Gateway
+
+**Pass criteria:** Page in docs.json. File in correct lane for its status. Naming convention followed. Page reachable from navigation. No dead ends in audience journey.
+
+**Fail criteria:** File in `v2/<section>/` not in docs.json. Publishable content in `_workspace/`. Deprecated content without `x-` or `dep-` prefix. Orphaned page (reachable only by direct URL).
+
+---
+
+### D12 — Links and Rendering
+
+**Source: `checks.mdx` §8.1–8.6**
+
+**Weight: 1 (Minor — table stakes, not content quality)**
+
+**What to check:**
+
+1. All internal links resolve — every `[text](/path)` points to an existing page
+2. All external links live — no 404s, no redirect chains
+3. All snippet imports resolve — every `<Snippet file="..." />` points to an existing file
+4. All images load — paths resolve, files ≤2MB, PNGs >500KB reviewed for WebP
+5. No TODO/TBD/Coming Soon in published content
+6. Page renders without error on `npx mintlify dev`
+
+**Verification:** Use `operations/scripts/validators/content/structure/check-docs-path-sync.js` for internal links. For pages with many links, verify at minimum 20%.
+
+**Pass criteria:** All links resolve. All images load. Page renders clean. No placeholder text.
+
+**Fail criteria:** Any broken internal link. External 404s. Missing images. Render errors.
+
+---
+
+### D13 — Process and Governance
+
+**Source: `checks.mdx` §9; `workspace/plan/active/CONTENT-WRITING/decisions/decision-registry.md`; `workspace/plan/active/CONTENT-WRITING/decisions/tab-status.md`**
+
+**Weight: 2 (Standard)**
+
+Process failures are orthogonal to content quality — a well-written page can still fail D13 if it shipped without proper gates or has no traceable provenance.
+
+**What to check:**
+
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 9.1 | **Human sign-off recorded** | Page explicitly approved by a human. Agent self-reporting does not count. |
+| 9.2 | **Consuming decisions in registry** | Any structural decision the page depends on exists in `decisions/decision-registry.md` with date and sign-off. |
+| 9.3 | **Gate prerequisites met** | Page did not skip gates: IA Approved → Terminology Locked → Content Scan Done → Structure Approved → Content Pass Open → Veracity Done → Layout Done. Check `decisions/tab-status.md`. |
+| 9.4 | **Phase ordering respected** | Phase 8 (naming) ran before Phase 7 (veracity). No orphaned veracity markers from post-naming heading changes. |
+| 9.5 | **Findings gathered before fixes** | Page went through structured review (findings report → scope approval → execution). Not fixed ad hoc. |
+| 9.6 | **Feedback routed** | Any corrections found during review are routed through `decisions/feedback-routing-map.md` — not just fixed locally. |
+
+**Pass criteria:** All 6 checks confirmed. Human sign-off on record. No skipped gates. All consuming decisions in the registry.
+
+**Fail criteria:** No human sign-off. Skipped gate (e.g. terminology not locked before content pass). Structural decision the page depends on not recorded in the registry. Ad hoc fixes not logged.
+
+---
+
+## 3. Scoring Methodology
+
+**Source: `checks.mdx` — Verdict scale, Severity Definitions; `content-pass.md` — Quality Gates; `Frameworks.mdx` §4.4**
+
+### Dimension weights
+
+| Weight | Value | Meaning |
+|--------|-------|---------|
+| 3 | Critical | Fails block page from shipping. Fix before any further work. |
+| 2 | Standard | Incorrect but does not prevent shipping if isolated. Fix before publication. |
+| 1 | Minor | Style preference or table-stakes mechanical check. Fix in next pass. |
+
+### Critical dimensions (weight 3)
+
+D1 (Frontmatter), D2 (Purpose/Audience Fit), D3 (Voice/Register), D8 (Veracity)
+
+A fail on any critical dimension = **REWRITE REQUIRED** or **BLOCKED**.
+
+### Standard dimensions (weight 2)
+
+D4 (UK English), D5 (Headings), D6 (Adjacency), D7 (Deprecated Terms), D9 (Section Structure), D10 (Components), D11 (Navigation)
+
+### Minor dimensions (weight 1)
+
+D12 (Links/Rendering)
+
+### Standard dimensions (weight 2) — full list
+
+D4 (UK English), D5 (Headings), D6 (Adjacency), D7 (Deprecated Terms), D9 (Section Structure), D10 (Components), D11 (Navigation), D13 (Process/Governance)
+
+### Overall verdict
+
+| Verdict | Criteria |
+|---------|----------|
+| **PASS** | All critical dimensions pass. No more than 2 standard dimensions at FAIL. Zero critical severity findings. |
+| **NEEDS WORK** | All critical dimensions pass. One or more standard dimensions fail. Specific fixes identified — patch without full rewrite. |
+| **REWRITE REQUIRED** | Any critical dimension fails. Or: multiple standard dimensions fail in a pattern indicating structural scope problem. State the one structural problem that makes patching insufficient. |
+| **BLOCKED** | Page cannot be scored: missing pre-conditions (P1–P9). Or: `veracityStatus: verified` with unresolved REVIEW flags (dishonest status). |
+
+### Severity definitions (source: `checks.mdx` — Severity Definitions)
+
+| Severity | Meaning | Action |
+|----------|---------|--------|
+| **CRITICAL** | Breaks downstream phase, produces structurally wrong output, or fails on common page type | Fix before any further work |
+| **HIGH** | Incorrect/incomplete on specific cases but does not break downstream | Fix recommended before shipping |
+| **MEDIUM** | Inconsistent but does not break downstream consumption | Monitor; fix in next pass |
+| **INFO** | Expected variation or minor style preference | Document; no action required |
+
+### Partial compliance (D3, D4, D5, D7, D8 only)
+
+| Score | Definition | Use when |
+|-------|-----------|----------|
+| **PARTIAL** | Criterion met in ≥60% of instances. Specific failures identified. Fixable without structural change. | Multiple instances of the same rule but not zero compliance. A page with 2 banned words passes PARTIAL; a page with 20 fails. |
+
+`PARTIAL` is not available for D1, D2, D6, D8 structural checks, D9, D10, D11, D12 — these are binary by nature. Reserve `FAIL` for zero compliance or structural failure.
+
+---
+
+## 4. Output Format
+
+**Source: `checks.mdx` — Mandatory Report Format; `content-pass.md` — Output REVIEW mode**
+
+Every page review must produce this output. Nothing silently skipped — every dimension appears as PASS, FAIL, or N/A with reason.
+
+```
+PAGE: [absolute path from repo root]
+TAB:  [tab name]
+DATE: [YYYY-MM-DD]
+VERDICT: PASS / NEEDS WORK / REWRITE REQUIRED / BLOCKED
+
+---
+
+## Assessed Frontmatter
+
+| Field | Present? | Value | Pass/Fail | Notes |
+|-------|----------|-------|-----------|-------|
+| title | | | | |
+| sidebarTitle | | | | |
+| description | | | | |
+| pageType | | | | |
+| audience | | | | |
+| purpose | | | | |
+| complexity | | | | |
+| lifecycleStage | | | | |
+| veracityStatus | | | | |
+| industry | | | | |
+| niche | | | | |
+| OG image block | | | | |
+
+---
+
+## Dimension Scores
+
+| Dimension | Weight | Score | Notes |
+|-----------|--------|-------|-------|
+| D1 Frontmatter | 3 | PASS/FAIL | |
+| D2 Purpose/Audience | 3 | PASS/FAIL | |
+| D3 Voice/Register | 3 | PASS/PARTIAL/FAIL | |
+| D4 UK English | 2 | PASS/PARTIAL/FAIL | |
+| D5 Headings | 2 | PASS/PARTIAL/FAIL | |
+| D6 Adjacency | 2 | PASS/FAIL/N/A | |
+| D7 Deprecated Terms | 2 | PASS/PARTIAL/FAIL | |
+| D8 Veracity | 3 | PASS/PARTIAL/FAIL | |
+| D9 Section Structure | 2 | PASS/FAIL | |
+| D10 Components | 2 | N/A (Pass A) / PASS/FAIL (Pass B) | |
+| D11 Navigation/Files | 2 | PASS/FAIL | |
+| D12 Links/Rendering | 1 | PASS/FAIL | |
+| D13 Process/Governance | 2 | PASS/FAIL | |
+
+---
+
+## Issues (priority order, most blocking first)
+
+1. [SEVERITY] D[N] — [Issue] — [Impact on reader] — [Fix: exact value, line, or action]
+2. ...
+
+---
+
+## Heading Score Table
+
+| Heading | Precision | Depth | Stability | Clarity | Conciseness | Total | Pass? |
+|---------|-----------|-------|-----------|---------|-------------|-------|-------|
+
+---
+
+## Modal Verb Scan
+
+| Line | Sentence | Word | Classification | Flag? |
+|------|----------|------|----------------|-------|
+
+Classification: value-claim (flag) / procedural (ok) / conditional caveat (ok) / rhetorical (ok)
+
+---
+
+## Veracity Flags
+
+| Claim | Section | Information type | Standard | Source to verify | Status |
+|-------|---------|-----------------|----------|-----------------|--------|
+
+---
+
+## Component Matrix
+
+| Component | Used? | Appropriate for [pageType]? | Notes |
+|-----------|-------|----------------------------|-------|
+
+---
+
+## Cross-Category Connections
+
+When findings in different dimensions share a root cause, log once here and cross-reference from each dimension.
+
+Root Cause [N]: [description]
+Affects: D[X] + D[Y]
+Fix: [single concrete fix]
+
+---
+
+## Approved Sections (NEEDS WORK only)
+
+[Sections that pass all checks — list by heading]
+
+---
+
+## Blocking Decision (when applicable)
+
+When page purpose, audience, or scope is ambiguous, state this first. All other findings are conditional on the decision.
+
+Blocking Decision: [question]
+Options: [A] / [B]
+If A: [fixes that apply]
+If B: [fixes that apply]
+```
+
+### Reporting rules (source: `checks.mdx` — Reporting Rules)
+
+- **Fixes must be executable.** No "add appropriate X". No "or as appropriate". Specify the exact value, line, or action. Another agent must be able to execute with zero additional context.
+- **Veracity findings: TESTED or NOT-TESTED.** Every code block, command, or factual claim must be labelled — not "REVIEW — verify this".
+- **Deduplication.** Log each finding once in the most specific dimension. Cross-reference from others.
+- **Dead imports.** Do not flag. Not a content quality issue.
+- **Pre-conditions missing.** State the missing pre-condition and its effect on the score. Do not attempt to score a dimension where the required context is unavailable.
+
+---
+
+## 5. Known Gaps from the Prior Review Session (REVIEW-REGISTRY.md)
+
+**Source: `v2/orchestrators/_workspace/canonical/REVIEW-REGISTRY.md` — full session findings**
+
+The `8b5d5ec5` session used an ad-hoc scorecard. These are patterns it caught and gaps it did not catch — both are informative.
+
+### What the prior session caught well
+
+- **Deprecated pageType values:** Systematically found and corrected `landing`, `how_to`, `overview`, `quickstart` across 15+ pages.
+- **Deprecated role terms:** Found "broadcaster", "pool worker", "hybrid" across 30+ instances.
+- **Banned words:** Found "significantly" (3 instances in operator-rationale), "meaningfully" (1 instance in gateway-relationships).
+- **Self-referential openers:** Found and fixed "Use this page to...", "This page explains...", "This quickstart covers..." across all sections.
+- **Purpose enum deprecations:** Fixed `purpose: orientation` → `orient`, `purpose: setup` → `configure`, `purpose: guide` → correct intent-based value.
+
+### Gaps the prior session missed or explicitly deferred
+
+**1. Purpose field missing — high frequency (source: REVIEW-REGISTRY.md — multiple sections)**
+Multiple pages had no `purpose` field at all (configure.mdx, connect-and-activate.mdx, AI-prompt-start.mdx, llm-pipeline-setup.mdx, audio-and-vision-pipelines.mdx, model-hosting.mdx, funding-and-support.mdx, orchestrator-profiles.mdx, all 6 Tutorial pages, 4 Config/Optimisation pages). The prior session flagged these but did not score their absence consistently. **Fix for this scorecard:** D1 explicitly requires `purpose` as one of the 10 required fields; its absence is a D1 FAIL.
+
+**2. Modal verb scan not performed (source: `checks.mdx` — Banned Construction Scan)**
+The prior session caught `can/may` in value claims only when prose review surfaced them. A systematic modal verb scan was not run. **Fix:** D3 now requires explicit modal verb scan for every sentence containing `can`, `may`, `could`, `might`, `should` with classification.
+
+**3. `if [condition]` exemption not codified**
+The prior session flagged `if [condition]` constructions but noted ambiguity about whether troubleshooting contexts and code blocks were exempt. Multiple flags added "(lower priority, evaluation context)". **Fix:** D3 explicitly states the exemption: code blocks, exact config conditions, troubleshooting contexts are exempt.
+
+**4. VRAM inconsistencies across pages — no cross-page check (source: REVIEW-REGISTRY.md — S7 flags)**
+SAM2 (6 GB vs 12-24 GB), audio-to-text (3 GB vs 12 GB), RTX 2060 (6 GB vs 8 GB). A single-page scorecard cannot catch cross-page inconsistencies. **Fix:** D8 (Veracity) flags these as REVIEW items at the `factual` information type standard; human must resolve. The scorecard's D7 (High-staleness terms) table includes AI pipeline specs as a verification requirement.
+
+**5. Content overlap not treated as a structural issue**
+payments.mdx and payment-receipts.mdx heavy content overlap was flagged as a human decision rather than a D9 (Section Structure) finding. **Fix:** D9 explicitly includes "No content duplication from adjacent sections" — same information appearing twice means one instance is wrong.
+
+**6. Missing `status` field not caught**
+Several pages were missing `status` field entirely (video-transcoding-operations.mdx, troubleshooting.mdx). The prior session noted this but `status` was not in the 10-field checklist. **Fix:** `status` is not in the canonical 10 required fields from `checks.mdx` §1.1 — it is a workflow field, not a taxonomy field. The prior session flagged it separately. This scorecard treats it as INFO-level (D11 notes) rather than a D1 failure, consistent with the canonical field list.
+
+**7. Heading scoring not applied systematically**
+The prior session assessed headings qualitatively ("could be tighter") without the 5-dimension rubric. No per-heading score was recorded. **Fix:** D5 requires full scoring table for every heading, with per-dimension breakdown and total.
+
+**8. Dead-end stubs not caught as D6 failures**
+funding-and-support.mdx and orchestrator-profiles.mdx were stub pages with no content. The prior session scored them "2/10" but did not identify them as D6 failures (dead ends — no next step, no forward path). **Fix:** D6 explicitly checks for dead ends: every page must have a clear next step.
+
+**9. Orphan page handling not in the scorecard**
+16 orphan pages (not in IA, not in navigation) were identified but the scoring approach for them was unclear. **Fix:** D11 explicitly checks docs.json presence; orphaned files score D11 FAIL. The prior session's decision to take no action on `x-` and `dep-` prefixed orphans is correct and consistent with D11's file governance rules.
+
+**10. Per-audience prohibited phrases not checked systematically**
+The prior session checked universal banned words/phrases but did not systematically check audience-specific prohibited phrases (e.g. orchestrator: "The network rewards you for...", "Easy to set up"). **Fix:** D3 now includes a per-audience prohibited phrases table requiring explicit check for the page's stated audience.
+
+---
+
+_Derived from source material. Every criterion citable to a named source file above._
+_Owner: Alison Haire (Wonderland) · Created: 2026-03-24_
+
+---
+
+## Recommendations and Gaps
+
+*Critical review by second-pass agent — 2026-03-24*
+
+---
+
+### Veracity issues
+
+**V1. `checks.mdx` is cited as a primary source but was not listed in the pre-conditions source list (scorecard line 14–26)**
+
+The scorecard's source list (lines 14–26) names 11 files. `checks.mdx` is not among them. Yet it is cited as a source for 10 of 12 dimensions — D1 cites `checks.mdx §1`, D3 cites `checks.mdx §2.3–2.11`, D5 cites `checks.mdx §3.1–3.7`, D6 cites `checks.mdx §4.3–4.10`, D7 cites `checks.mdx §2.11`, D8 cites `checks.mdx §6`, D9 cites `checks.mdx §4.1–4.10`, D10 cites `checks.mdx §5.1–5.10`, D11 cites `checks.mdx §7.1–7.9`, D12 cites `checks.mdx §8.1–8.6`. An agent applying this scorecard without `checks.mdx` in context cannot verify most of its section references. **Fix:** Add `v2/orchestrators/_workspace/canonical/checks.mdx` as source line 12 in the opening sources block.
+
+**V2. D1 lists 10 required fields but `checks.mdx §1.1` lists 11 (scorecard lines 65–81 vs checks.mdx line 20)**
+
+`checks.mdx` check 1.1 lists 10 fields as: `title`, `sidebarTitle`, `description`, `pageType`, `audience`, `purpose`, `complexity`, `lifecycleStage`, `keywords`, OG image block. The scorecard's D1 table (lines 67–82) has the same 10 but replaces `keywords` with `veracityStatus` and treats `veracityStatus` as required. `keywords` does not appear in the D1 table at all. `checks.mdx §1.1` lists `keywords` as a required field; the scorecard omits it. `veracityStatus` is required per `checks.mdx §1.8` but is listed separately, not as one of the 10 core fields in §1.1. The scorecard's D1 field count is internally inconsistent: the introductory sentence says "Check all 10 required fields" but the table has 13 rows (including `pageVariant`, `industry`, `niche`, `OG image block` as separate entries and treating `veracityStatus` as a 10th required field rather than as its own check). **Fix:** Align the D1 table with `checks.mdx §1.1` exactly. `keywords` belongs in the 10-field list. `veracityStatus` is a required field per §1.8 but should be enumerated as check 1.8, not conflated into the core 10.
+
+**V3. D3 banned word list diverges from sources without explanation (scorecard lines 195)**
+
+The D3 banned word list (line 195) adds `simply` and `just` (as minimiser) which are not in the `Frameworks.mdx §3.1` banned words table (Frameworks.mdx line 575–585) nor in `voice-rules.md` Universal Rules (voice-rules.md line 26). `simply` and `just` appear in the per-audience section for `gateway` (voice-rules.md line 69) and `developer` (voice-rules.md line 69), but they are audience-specific prohibitions, not universal banned words. Elevating them to the universal banned word list is an extrapolation beyond what the sources state. **Fix:** Move `simply` and `just` from the universal banned word block (D3 lines 195) into the per-audience `gateway` and `developer` entries in D3, consistent with their source location in `voice-rules.md`.
+
+**V4. D5 "Winner filter" at scorecard lines 371–381 drops item 4 from `Frameworks.mdx §4.1`**
+
+`Frameworks.mdx §4.1` winner filter (Frameworks.mdx lines 723–733) has 10 items. The D5 winner filter (scorecard lines 372–381) reproduces 10 items but item 4 in the scorecard reads "Would still work if more examples were added later" — this is correct. However, the scorecard's item 3 reads "Is at the right conceptual layer" while the source (Frameworks.mdx line 725) reads "Is it at the right conceptual layer?" Both are equivalent. No divergence on content, but the scorecard converts questions to statements without noting that it is doing so — an agent cross-referencing against the source will see a format mismatch and may doubt the accuracy. **Fix:** Add a note: "(Questions from source file converted to declarative statements — content unchanged)."
+
+**V5. D8 source trust order at scorecard lines 512–518 is a partial extract of `Frameworks.mdx §4.5` and omits tiers 4–5 distinction**
+
+`Frameworks.mdx §4.5` (lines 855–866) presents six source categories with tier labels (Primary / Acceptable). The D8 source trust order (scorecard lines 512–518) numbers them 1–7 as a flat ordered list without tier labels, collapsing the distinction between Primary and Acceptable sources. The scorecard claims this traces to `Frameworks.mdx §4.5` but the format change removes the tier signal that tells an agent when a source is acceptable-but-not-primary. **Fix:** Restore the `Primary` / `Acceptable` tier labels from `Frameworks.mdx §4.5` in the D8 source trust order table.
+
+**V6. D10 component matrix at scorecard lines 613–630 is a compressed version of `checks.mdx §5.2` that omits the `instruction` "Next Steps" requirement**
+
+`checks.mdx §5.2` (line 188) lists `instruction` required sections as "Prerequisites, Steps" — notably without "Next Steps". But `content-pass.md §Phase 7.1` implies a next step is required. The D9 "Required sections" table at scorecard line 576–584 lists `instruction` as "Prerequisites, Steps, Next Steps" — which comes from `checks.mdx §5.2` component matrix (checks.mdx line 186–190) where tutorial has "Prerequisites, Steps, Next Steps" and instruction has "Prerequisites, Steps" (no Next Steps). The scorecard D9 table attributes "Prerequisites, Steps, Next Steps" to `instruction`, but `checks.mdx §5.2` attributes that pattern to `tutorial`. The scorecard has copied the tutorial row's required sections into the instruction row. **Fix:** In D9 "Required sections by pageType" table, instruction row: change "Prerequisites, Steps, Next Steps" to "Prerequisites, Steps" to match `checks.mdx §5.2` line 188.
+
+---
+
+### Completeness gaps
+
+**G1. `checks.mdx` Category 9 (Process and Governance) has no corresponding dimension in the scorecard**
+
+`checks.mdx §9` defines six process checks (9.1–9.6): human sign-off recorded, consuming decisions in registry, gate prerequisites met, phase ordering respected, findings gathered before fixes, feedback routed. None of these appear in any scorecard dimension. The scorecard has 12 dimensions (D1–D12) but no governance dimension. The source (checks.mdx lines 321–350) explicitly categorises these as quality checks a page must pass. **Fix:** Add D13 — Process and Governance with weight 2 (Standard), covering checks 9.1–9.6 from `checks.mdx §9`, or explicitly state why governance checks are excluded (e.g., they are pipeline-level not page-level).
+
+**G2. `checks.mdx §3.4` "domain-anchor rule" not represented in D5**
+
+`checks.mdx §3.4` (line 97) states: "Domain-anchor rule applied — Heading includes the domain noun when needed to be interpretable in isolation (out of page context)." This check does not appear in the D5 "Banned heading forms" list or the winner filter. The rule is non-trivial: a heading that makes sense on its page may fail when viewed in navigation without the surrounding context. **Fix:** Add to D5 pass criteria: "Every heading interpretable without surrounding page context (domain noun present where needed for disambiguation)."
+
+**G3. `checks.mdx §6.3` "no deprecated API usage" has no home in any dimension**
+
+`checks.mdx §6.3` checks that all endpoints, SDK methods, and CLI flags are current — no references to removed or renamed APIs. D7 (Deprecated Terms) covers role terminology deprecation. D8 (Veracity) covers factual claim accuracy. Neither dimension explicitly checks for deprecated API/SDK/CLI usage as a category. An agent could pass D7 and D8 and still leave a page with removed API endpoints. **Fix:** Add to D8 Fail criteria: "References to removed or renamed API endpoints, SDK methods, or CLI flags without a REVIEW flag."
+
+**G4. `checks.mdx §7.9` `_workspace/` TTL compliance not in D11**
+
+`checks.mdx §7.9` (line 273) specifies TTL rules: notes/drafts ≤30 days, archive ≤90 days. D11 checks file lane and naming conventions but has no TTL check. For a page-level scorecard this may be intentional, but D11's stated source is `checks.mdx §7.1–7.9`, which includes 7.9. If 7.9 is intentionally excluded, that should be stated. If it is an oversight, add it. **Fix:** Either add check 7.9 to D11 or add a parenthetical "(7.9 TTL compliance excluded — applies to workspace files only, not publishable content)" to the D11 source citation.
+
+**G5. `Frameworks.mdx §3.3 Voice Principles` (Entity-led voice, Exit state over topic, Precision over breadth, No forward-looking uncertainty) not represented in any dimension**
+
+`Frameworks.mdx §3.3` (lines 619–638) defines four voice principles beyond banned words and phrases: entity-led voice, exit state over topic, precision over breadth, no forward-looking uncertainty about shipped features. D3 covers banned words, phrases, constructions, opening order, and paragraph discipline, but these four named principles are not explicitly checkable items in D3. "Precision over breadth" ("say exactly what is true, not a range of things that might be true") and "no forward-looking uncertainty about shipped features" ("If it is live, state it as fact") are distinct from the banned-construction checks and would catch different failure modes. **Fix:** Add to D3 Universal Rules section: a block quoting Frameworks.mdx §3.3 with the four named principles as explicit checklist items, separate from the banned words/constructions list.
+
+**G6. `content-pass.md` Pre-flight check item "Feedback routing map exists" not in P pre-conditions**
+
+`content-pass.md` pre-flight dependency check (line 48) includes: "Feedback routing map exists (`decisions/feedback-routing-map.md`)." The scorecard's pre-conditions (P1–P9) do not include this. For a scorecard used at scale, missing this dependency means corrections found during review have no routing. **Fix:** Add P10: "Feedback routing map is available at `workspace/plan/active/CONTENT-WRITING/decisions/feedback-routing-map.md`."
+
+**G7. `checks.mdx §6.8` source staleness check not in D8**
+
+`checks.mdx §6.8` (line 224): "Information sourced from fast-changing sources (API responses, smart contracts, SDK versions) is flagged for staleness risk." D8 covers veracity standards but has no explicit staleness-risk check separate from the REVIEW flag requirement. The distinction matters: a claim can be verified today and stale next month without a REVIEW flag. **Fix:** Add to D8 pass criteria: "Information sourced from fast-changing sources (API responses, contract state, SDK versions, on-chain parameters) carries a staleness-risk flag or is linked to a live source."
+
+**G8. `voice-rules.md` "positive exemplars" for `community` audience (voice-rules.md lines 244–250) have no equivalent in D3**
+
+`voice-rules.md` includes positive exemplars for each community persona (explorer, ambassador, engager, researcher, internal) showing what correct voice looks like. These are not referenced anywhere in D3. The per-audience sections in D3 list prohibited phrases but no positive anchors. Prohibited-phrase lists alone do not prevent a page from being technically prohibition-compliant but still wrong in register. **Fix:** Add a note in D3 after each audience prohibited-phrases block: "Positive exemplar available in `voice-rules.md` — [audience] section. Apply when correctness is ambiguous."
+
+---
+
+### Scoring methodology concerns
+
+**M1. PASS/FAIL binary for all dimensions produces no gradient — a page that barely passes D3 scores identically to a perfect page**
+
+The output format table (scorecard lines 785–797) assigns PASS or FAIL to every dimension with no partial credit. D3 (Voice) could have one banned word (borderline FAIL) or fifty (catastrophic FAIL) and both produce "FAIL". The checks.mdx verdict scale uses PASS / NEEDS WORK / REWRITE REQUIRED — three levels. The scorecard collapses this to two at the dimension level, then maps to three at the verdict level. An agent trying to rank pages for prioritisation or track improvement over time cannot use the scorecard output to distinguish a page that is one edit from PASS from one requiring full rewrite. The original REVIEW-REGISTRY.md used a 1–10 numeric score that provided this gradient. **Fix:** Add PARTIAL as a valid dimension score with a definition: "PARTIAL — criterion met in ≥60% of instances; specific failures identified; fixable without structural change." Apply to D3, D4, D5, D7, D8 where partial compliance is common. Reserve FAIL for zero compliance or structural failure.
+
+**M2. "REWRITE REQUIRED" trigger at scorecard line 735 conflates two distinct conditions**
+
+The verdict table states: "Any critical dimension fails. Or: multiple standard dimensions fail in a pattern indicating structural scope problem." The first condition (critical dimension failure) is objective and executable. The second condition ("pattern indicating structural scope problem") requires a judgment call that is not defined: how many standard dimension failures constitute a pattern? What structural scope problems qualify? The prior session used this ambiguously — a page with `pageType: quickstart` and three voice issues was classified differently from a page with wrong audience and same voice issues. **Fix:** Replace the second condition with: "Four or more standard dimensions at FAIL. Or: D2 fails AND any other dimension fails (purpose failure invalidates all other work)."
+
+**M3. Cross-tab link count threshold in D6 (scorecard line 411) is specified at the section level, not the page level**
+
+D6 check 7 states: "At least 3 cross-tab links where audience journeys intersect." But `checks.mdx §4.10` (line 143) specifies this as a tab-level check, not a per-page check: "Cross-tab links at journey intersections: at least 3 cross-tab links where audience journeys intersect (tab-level check)." The scorecard applies a tab-level criterion at the page level. A single page cannot reasonably be expected to carry 3 cross-tab links — that would be a routing/navigation page, not a typical content page. Applying this per-page produces false FAILs on most operational content pages. **Fix:** Revise D6 check 7 to read: "(Tab-level check — not scored per page) Tab contains at least 3 cross-tab links at journey intersections. Flag for human if tab-level coverage is unknown."
+
+**M4. D8 `TESTED/NOT-TESTED` labelling requirement (scorecard line 524) has no defined format or placement rule**
+
+D8 requires: "Every code block, CLI command, and procedure must be labelled `TESTED:` or `NOT-TESTED:`." But the scorecard does not specify: where does the label go (as a comment inside the code block? As a preceding note?), what constitutes "tested" (local env only? Live network?), and who can mark TESTED (agent or human only?). The prior REVIEW-REGISTRY.md used `{/* REVIEW: */}` flags, not TESTED labels. There is a direct conflict: `content-pass.md §Phase 6` (line 273) specifies `{/* REVIEW: [claim] — verify with: [source] */}` as the flag format for unverified content — it does not mention TESTED/NOT-TESTED labels. **Fix:** Resolve the conflict between `content-pass.md §Phase 6` format and the TESTED/NOT-TESTED label requirement. If TESTED/NOT-TESTED is the canonical format, update `content-pass.md §Phase 6` to use it. If `{/* REVIEW: */}` is canonical, remove the TESTED/NOT-TESTED requirement from D8 and replace with the REVIEW flag format.
+
+**M5. The "BLOCKED" verdict (scorecard line 736) applies to two fundamentally different situations treated identically**
+
+"BLOCKED" covers: (1) missing pre-conditions and (2) `veracityStatus: verified` with unresolved REVIEW flags. These are not the same severity. Missing pre-conditions mean the page cannot be scored at all — the scorecard output is invalid. Dishonest `veracityStatus` means the page can be scored but has a specific integrity violation. Combining them into one verdict obscures which intervention is needed. **Fix:** Split into "BLOCKED (Pre-conditions)" — scorecard cannot proceed — and "BLOCKED (Integrity)" — scorecard ran but found dishonest status. The output format should differentiate them since the required action is different in each case.
+
+---
+
+### Usability problems
+
+**U1. D2 "Purpose delivery" check is not executable without the Phase 1 audience design output, but P8 makes this dependency optional ("D2 is degraded — flag this")**
+
+D2 check 5 states: "Does the section sequence lead the reader to the stated `purpose` outcome before the end of the page?" This requires knowing what the reader's arriving question is — which comes from Phase 1 audience design. Pre-condition P8 says "If P8 is unavailable, D2 (Persona Fit) is degraded — flag this." "Degraded" is not defined. Does degraded mean: score the dimension without persona context? Skip sub-checks 2 and 3? Give a provisional PASS with a note? Two agents applying this scorecard to the same page with P8 unavailable will produce different outputs. **Fix:** Replace "D2 (Persona Fit) is degraded — flag this" with: "If P8 is unavailable: skip D2 sub-checks 2 (persona fit) and 3 (register). Score only sub-checks 1 (knowledge level), 4 (knowledge level match), and 5 (purpose delivery). Mark D2 as PARTIAL with note: 'Persona fit not assessed — Phase 1 output unavailable.'"
+
+**U2. The heading scoring rubric produces inconsistent results because "Depth" and "Clarity" are not independently defined for technical vs non-technical headings**
+
+D5 defines "Depth" as "Names the governing concept, not just visible examples" and "Clarity" as "Instantly understood by target audience without reading the section." For an orchestrator-audience page, a heading like "NVENC Session Cap" would score 5/5 on Clarity for an expert but 1/5 for a beginner. The scorecard does not specify whether heading scores should be calibrated to the page's `audience` token and `complexity` level. Two agents — one calibrating to the `orchestrator` audience, one applying a generic technical standard — will score the same heading differently. **Fix:** Add to D5: "Score headings against the page's `audience` and `complexity` — a heading that is immediately clear to an `advanced orchestrator` reader scores full marks for Clarity even if opaque to a general reader."
+
+**U3. D7 "High-staleness terms requiring verification" (scorecard lines 438–448) has no pass/fail criterion — it only lists terms and sources**
+
+Every other D7 sub-section has explicit pass/fail criteria. The high-staleness terms block gives a table of terms, why they can change, and where to verify — but no rule about what constitutes a pass. Does a page pass if high-staleness terms are present but have a REVIEW flag? Does it fail if they are present without a flag? Does it pass if the numbers are present and verifiably current? The distinction between "verified current" and "unverified but not flagged" is not captured. **Fix:** Add to D7 Pass/Fail criteria: "Pass: All high-staleness terms either have a REVIEW flag citing the named verification source, or have been explicitly confirmed against the named source with a date. Fail: High-staleness terms used as current facts with no REVIEW flag and no verification date."
+
+**U4. D6 Pre-conditions P4 and P5 require PREV_PAGE and NEXT_PAGE to be known, but neither the output format nor the dimension score distinguishes between "N/A because single-entry page" and "N/A because reviewer did not look it up"**
+
+The output format (line 791) shows D6 as "PASS/FAIL/N/A" but the N/A condition is only defined for "If P4 or P5 are unknown." A tab portal page has no PREV_PAGE by design — that is a genuine N/A. A page where the reviewer simply did not identify adjacency is also N/A by that definition. These are not equivalent: one is a valid structural state, the other is a review gap. **Fix:** Define two N/A sub-types in D6: "N/A (structural)" — page is a genuine entry point with no predecessor by design; and "N/A (context gap)" — PREV/NEXT unknown because pre-condition P4/P5 not met. The latter should trigger a note flagging the gap rather than a clean N/A.
+
+**U5. The output format "Cross-Category Connections" block (scorecard lines 838–843) has no guidance on when to use it, making it optional in practice**
+
+The mandatory report format states "When findings in different dimensions share a root cause, log once here and cross-reference from each dimension." But there is no threshold or trigger — an agent that does not notice a shared root cause simply omits this section without the scorecard treating that as an error. The REVIEW-REGISTRY.md session showed multiple cases where a single root cause (missing taxonomy fields, deprecated pageType) affected 4+ dimensions but was logged redundantly. **Fix:** Change "When findings in different dimensions share a root cause" to "Required if the same root cause appears in two or more dimensions. Required if any CRITICAL finding in D1–D3 or D8 has downstream effects on other dimensions." Make omission a self-check failure.
+
+---
+
+### Structural problems
+
+**S1. D3 (Voice/Register) and D4 (UK English) overlap significantly and could be merged or explicitly separated**
+
+D4 is a sub-check of D3 in practical terms: UK English is a universal voice rule (voice-rules.md line 41: "UK English throughout"). The `content-pass.md` Phase 5.1 lists UK English as part of the universal blocking rules for voice. Separating D4 as its own weight-2 dimension creates a situation where a page with one "behavior" (US spelling) fails D4 but passes D3, which is internally inconsistent since UK English is a D3 voice rule. The REVIEW-REGISTRY.md session scored spelling independently, which is practical, but the scorecard's weighting system assigns the same weight to a US spelling as to a wrong audience register. **Fix:** Either: (a) reduce D4 weight to 1 (Minor) as a mechanical check that is automatable and does not affect reader comprehension as severely as register failures; or (b) fold D4 into D3 as sub-check 3.1 (UK English) and remove the separate dimension, allocating the weight to D3 which is already weight 3.
+
+**S2. D9 (Section Structure) and D6 (Adjacency) have overlapping scope on "no content duplication from adjacent pages"**
+
+D9 check 5 states: "No content duplication from neighbouring pages or sections." D6 check 6 states: "No section repeats content from PREV_PAGE." These are the same criterion stated from different angles. An agent running both dimensions will either log the same finding twice (duplication violation) or make an arbitrary choice about which dimension owns it. The "Cross-Category Connections" block is supposed to handle this, but that creates an obligation on every review to notice the overlap. **Fix:** Remove "No content duplication from adjacent sections" from D9 check 5, as D6 already owns adjacency. Alternatively, give D9 ownership of within-page duplication (same content appearing twice in the same page) and D6 ownership of cross-page duplication (same content appearing in adjacent pages). State the boundary explicitly.
+
+**S3. D10 (Components) is a Pass B (layout pass) concern embedded in a Pass A (content pass) scorecard**
+
+`content-pass.md` states explicitly (line 6): "Content layer only. This pass handles audience fit, purpose, information types, voice, veracity, and section structure. Do not apply MDX components, frontmatter, or layout — that is Pass B." D10 checks component selection, template compliance, CSS custom properties, component naming conventions — all Pass B work. The scorecard positions itself as a unified quality tool, not solely a Pass A tool. If this is intentional (unified scorecard spanning Pass A and Pass B), the source claim needs updating. If the scorecard is meant to be Pass A only, D10 should be removed or marked as a preview-only dimension that generates suggestions, not PASS/FAIL verdicts during the content pass. **Fix:** Add a note to D10 header: "D10 applies at Layout Pass (Pass B). During content pass (Pass A), score D10 as N/A and generate component suggestions only, not PASS/FAIL verdicts."
+
+**S4. The scorecard has no dimension for page-level scope validation — the single-scope test from `content-pass.md` Pre-flight is only partially represented**
+
+`content-pass.md` Pre-flight (lines 52–66) includes three specific tests: (1) purpose stated in one sentence, (2) adjacency coherent, (3) scope is single — "One purpose = one page. If PURPOSE requires two distinct reader outcomes, the page needs splitting." D2 includes the one-sentence purpose test and the one-job test. But the "scope is single" check — which produces a SPLIT recommendation, not just a FAIL — is not a clean dimension outcome. When a page needs splitting, the correct action is a structural decision (name the two pages), not a dimension fail. The current scorecard maps a split-required finding to D2 FAIL, which sends the same signal as wrong audience. **Fix:** Add a separate "Blocking Decision" pre-condition check before scoring dimensions: "Does this page serve more than one distinct reader job? If yes: stop scoring, flag as SPLIT REQUIRED, name the proposed pages, and do not score remaining dimensions." This mirrors the `content-pass.md` pre-flight logic and prevents wasted scoring effort on pages that need restructuring.
+
+---
+
+### Best practice delta
+
+**B1. No differentiation between automatable checks and judgment-requiring checks**
+
+Documentation engineering best practice separates machine-checkable rules (spelling, banned words, broken links, missing fields) from editorial judgment calls (register quality, purpose delivery, section sequence logic). The scorecard mixes these freely. D4 (UK English) and D12 (Links) are fully automatable. D2 (Purpose Fit) and D3 (Register) require editorial judgment. Treating them in the same framework without flagging which checks can be run by `operations/tests/run-all.js` means reviewers apply manual attention to things a script could catch. **Fix:** Add a column to the dimension weight table: "Automation level: Automated / Hybrid / Manual-only." Automated: D4, D12, parts of D1 (field presence), parts of D7 (term scanning). Manual-only: D2, D3 (register), D6, D8 (claim sourcing). This enables triage: run automated checks first, flag only the residual for human/agent review.
+
+**B2. No explicit recovery path from REWRITE REQUIRED**
+
+Documentation quality scorecards in production use cases need a defined recovery path from each verdict. PASS → no action. NEEDS WORK → fix list. But REWRITE REQUIRED has no defined next step in the scorecard. The output format says "state the one structural problem that makes patching insufficient" — but does not say what happens next. Does the page go back to a page brief? Does it trigger AUDIT mode? Is it removed from the navigation? **Fix:** Add to the REWRITE REQUIRED verdict entry: "Required action: Return page to page-brief stage. Human must approve scope before rewrite begins. Page should be removed from navigation (or marked `status: draft`) until rewrite completes. Log in REVIEW-REGISTRY.md as REWRITE QUEUED."
+
+**B3. The scorecard is designed for single-page review but Section 5 (Known Gaps) references the entire tab's prior session — scope mismatch**
+
+Section 5 (scorecard lines 874–919) is titled "Known Gaps from the Prior Review Session" and is written as a permanent part of the scorecard, not as contextual metadata for a specific review. A reviewer applying this scorecard to, say, `earning-model.mdx` in six months will read Section 5 and find it describes gaps from a session conducted in March 2026 on the orchestrators tab. That context will be stale or inapplicable. Section 5 conflates scorecard design documentation ("here is how we improved D3") with session artifacts ("these specific pages had this issue"). **Fix:** Move the "What the prior session caught well" and "Gaps the prior session missed" content to `REVIEW-REGISTRY.md` as a design retrospective. Keep in the scorecard only the structural fix statements that explain why each dimension is designed the way it is — stripping the session-specific references. Alternatively, version Section 5 explicitly: "Session retrospective — 2026-03-24 only. Review REVIEW-REGISTRY.md for current session findings."
+
+**B4. No confidence calibration for agent vs human application**
+
+The scorecard's introductory claim (line 11): "An agent or human reviewer applying this scorecard to a single MDX page needs no external context beyond the listed sources." This is false for several dimensions. D2 sub-check 2 (persona fit) requires Phase 1 audience design output. D6 (adjacency) requires knowing the actual navigation sequence, which requires reading docs.json. D8 (veracity) requires access to primary sources (go-livepeer repo, live API, contracts). None of these are "listed sources" in the scorecard header. The claim of context-completeness creates a false expectation that leads agents to score dimensions they do not have context for, producing unreliable outputs. **Fix:** Replace the introductory claim with: "Dimensions D1, D3, D4, D5, D7, D9, D10, D12 can be applied from the listed sources alone. Dimensions D2, D6, D8, D11 require additional context specified in their respective pre-conditions (P1–P9). Load all required context before scoring dependent dimensions."
+
+**B5. The scorecard over-engineers the heading check relative to its actual discriminating power in the tab context**
+
+The D5 heading check requires a full 5-dimension scoring table for every heading on every page. For a tab with 70 pages, many of which have 5–8 headings, this produces a heading table with 350–560 scored rows per full-tab review. The prior session (REVIEW-REGISTRY.md) applied headings qualitatively and caught the real failures — generic descriptors, self-referential openers, question-form headings — in a fraction of the time. The 5-dimension rubric is designed for generating candidate headings (per `Frameworks.mdx §4.1` "12-candidate generation"), not for scoring existing headings. Applying a generation rubric as a scoring rubric produces a mismatch. **Fix:** For review purposes, replace the full 5-dimension scoring table with a binary filter: "Does any heading fail the winner filter (Frameworks.mdx §4.1 lines 723–733)?" Score PASS if all 10 winner filter items are met for all headings. Score FAIL if any item fails, naming the heading and the specific item. Reserve the full 5-dimension rubric for WRITE mode heading generation only.
+
+---
+
+### Priority fixes (ordered)
+
+**1. Add `checks.mdx` to the source list (scorecard lines 14–26)**
+Impact: Without this, every source citation in D1–D12 that references `checks.mdx` is unverifiable by an agent reading only the listed sources. Affects 10 of 12 dimensions. Zero-effort fix: add one line to the source list.
+
+**2. Resolve the D8 TESTED/NOT-TESTED vs `{/* REVIEW: */}` conflict (scorecard line 524 vs content-pass.md line 273)**
+Impact: Two agents applying D8 will produce incompatible outputs — one using REVIEW flags, one using TESTED labels. Incompatible outputs from the same scorecard undermine the registry's ability to track issues consistently.
+
+**3. Move D10 to Pass B only — mark as N/A during Pass A (scorecard lines 592–641)**
+Impact: D10 currently creates pressure to make component decisions during content review, which `content-pass.md` explicitly prohibits. This is not a minor issue — it produces wasted work and fights against the concerns-separation principle that the pipeline is built on.
+
+**4. Add D13 — Process and Governance from `checks.mdx §9`**
+Impact: Without this dimension, pages can pass the scorecard while having skipped gates, having no human sign-off, or depending on decisions not in the registry. The governance checks are not redundant with content quality checks — they are orthogonal.
+
+**5. Fix D9 instruction row: change "Prerequisites, Steps, Next Steps" to "Prerequisites, Steps" (scorecard line 579 vs checks.mdx line 188)**
+Impact: The current entry marks every `instruction` page without an explicit Next Steps section as a D9 FAIL, even though the source does not require it. This produces false positives on correct pages.
+
+**6. Add PARTIAL as a valid dimension score for D3, D4, D5, D7, D8**
+Impact: Binary PASS/FAIL produces no gradient for prioritisation and cannot distinguish a page needing one word changed from a page needing full rewrite. The REVIEW-REGISTRY.md 1–10 numeric scale served this function; replacing it with binary scores loses that information.
+
+**7. Fix the cross-tab link criterion in D6 to tab-level, not page-level (scorecard line 411)**
+Impact: Applying a tab-level check at the page level produces systematic false FAILs on non-navigation pages. An operational guide page correctly scores D6 FAIL under the current wording if it does not contain 3 cross-tab links — which is almost always.
+
+**8. Add explicit Recovery Path for REWRITE REQUIRED verdict (scorecard lines 735)**
+Impact: Without a defined recovery path, a REWRITE REQUIRED verdict stops work but does not start anything. The page stays in limbo. Adding the recovery path closes the loop: REWRITE REQUIRED → page brief → human approval → WRITE mode.

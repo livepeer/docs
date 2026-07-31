@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-07T07:35:40.685Z",
+  "generated_at": "2026-03-22T11:41:44.939Z",
   "source_catalog": "ai-tools/ai-skills/catalog/skill-catalog.json",
   "source_manifest": "ai-tools/ai-skills/catalog/execution-manifest.json",
   "pipeline": [
@@ -10,7 +10,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/script-footprint-and-usage-audit.js --scope full",
+          "run": "node operations/scripts/audits/governance/scripts/script-footprint-and-usage-audit.js --scope full",
           "modes": [
             "static",
             "full"
@@ -18,8 +18,8 @@
         }
       ],
       "outputs": [
-        "tasks/reports/repo-ops/script-footprint-and-usage-audit.md",
-        "tasks/reports/repo-ops/script-footprint-and-usage-audit.json"
+        "workspace/reports/repo-ops/script-footprint-and-usage-audit.md",
+        "workspace/reports/repo-ops/script-footprint-and-usage-audit.json"
       ],
       "severity_model": "critical-high-medium-low",
       "autofix_mode": "advisory"
@@ -31,7 +31,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/docs-quality-and-freshness-audit.js --scope full",
+          "run": "node operations/scripts/audits/content/quality/docs-quality-and-freshness-audit.js --scope full",
           "modes": [
             "static",
             "full"
@@ -39,8 +39,8 @@
         }
       ],
       "outputs": [
-        "tasks/reports/repo-ops/docs-quality-and-freshness-audit.md",
-        "tasks/reports/repo-ops/docs-quality-and-freshness-audit.json"
+        "workspace/reports/repo-ops/docs-quality-and-freshness-audit.md",
+        "workspace/reports/repo-ops/docs-quality-and-freshness-audit.json"
       ],
       "severity_model": "critical-high-medium-low",
       "autofix_mode": "advisory"
@@ -52,7 +52,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/style-and-language-homogenizer-en-gb.js --scope full",
+          "run": "node operations/scripts/audits/content/style/style-and-language-homogenizer-en-gb.js --scope full",
           "modes": [
             "static",
             "full"
@@ -60,8 +60,8 @@
         }
       ],
       "outputs": [
-        "tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.md",
-        "tasks/reports/repo-ops/style-and-language-homogenizer-en-gb.json"
+        "workspace/reports/repo-ops/style-and-language-homogenizer-en-gb.md",
+        "workspace/reports/repo-ops/style-and-language-homogenizer-en-gb.json"
       ],
       "severity_model": "critical-high-medium-low",
       "autofix_mode": "advisory"
@@ -73,7 +73,7 @@
       "commands": [
         {
           "name": "audit",
-          "run": "node tools/scripts/component-layout-governance.js --scope full",
+          "run": "node operations/scripts/validators/components/library/component-layout-governance.js --scope full",
           "modes": [
             "static",
             "full"
@@ -81,8 +81,8 @@
         }
       ],
       "outputs": [
-        "tasks/reports/repo-ops/component-layout-governance.md",
-        "tasks/reports/repo-ops/component-layout-governance.json"
+        "workspace/reports/repo-ops/component-layout-governance.md",
+        "workspace/reports/repo-ops/component-layout-governance.json"
       ],
       "severity_model": "critical-high-medium-low",
       "autofix_mode": "advisory"
@@ -94,7 +94,7 @@
       "commands": [
         {
           "name": "classify",
-          "run": "node tools/scripts/cleanup-quarantine-manager.js",
+          "run": "node operations/scripts/remediators/content/repair/quarantine-manager.js",
           "modes": [
             "static",
             "full"
@@ -102,15 +102,15 @@
         },
         {
           "name": "apply",
-          "run": "node tools/scripts/cleanup-quarantine-manager.js --apply",
+          "run": "node operations/scripts/remediators/content/repair/quarantine-manager.js --apply",
           "modes": [
             "full"
           ]
         }
       ],
       "outputs": [
-        "tasks/reports/repo-ops/cleanup-quarantine-manifest.json",
-        "tasks/reports/repo-ops/cleanup-quarantine-manifest.md"
+        "workspace/reports/repo-ops/cleanup-quarantine-manifest.json",
+        "workspace/reports/repo-ops/cleanup-quarantine-manifest.md"
       ],
       "severity_model": "critical-high-medium-low",
       "autofix_mode": "requires-approval"
@@ -122,7 +122,7 @@
       "commands": [
         {
           "name": "package",
-          "run": "node tools/scripts/cross-agent-packager.js --agent-pack all",
+          "run": "node operations/scripts/integrators/ai/agents/cross-agent-packager.js --agent-pack all",
           "modes": [
             "static",
             "runtime",
@@ -138,6 +138,79 @@
       ],
       "severity_model": "info-only",
       "autofix_mode": "safe"
+    }
+  ],
+  "reference_skills": [
+    {
+      "id": "repo-audit-orchestrator",
+      "goal": "Run a full docs infrastructure audit pipeline and produce a unified scorecard.",
+      "commands": [
+        {
+          "name": "orchestrate",
+          "run": "node operations/scripts/dispatch/governance/repo/repo-audit-orchestrator.js --mode static --scope full",
+          "modes": [
+            "static",
+            "runtime",
+            "full"
+          ]
+        }
+      ],
+      "inputs": [
+        "repo state",
+        "audit mode",
+        "scope",
+        "pipeline manifest",
+        "skill catalog"
+      ],
+      "outputs": [
+        "workspace/reports/repo-ops/repo-audit-summary.md",
+        "workspace/reports/repo-ops/repo-audit-summary.json"
+      ]
+    },
+    {
+      "id": "rubric-static-review",
+      "goal": "Provide static rubric-based scoring and risk prioritization.",
+      "commands": [
+        {
+          "name": "review",
+          "run": "read ai-tools/ai-skills/rubric-static-review/SKILL.md",
+          "modes": [
+            "static",
+            "full"
+          ]
+        }
+      ],
+      "inputs": [
+        "repository files",
+        "architecture docs",
+        "quality checks"
+      ],
+      "outputs": [
+        "scorecard",
+        "top actions"
+      ]
+    },
+    {
+      "id": "page-authoring",
+      "goal": "Comprehensive guide for writing new v2 documentation pages with correct UX patterns, components, frontmatter, UK English, journey mapping, and content standards.",
+      "commands": [
+        {
+          "name": "reference",
+          "run": "read ai-tools/ai-skills/page-authoring/SKILL.md",
+          "modes": [
+            "static"
+          ]
+        }
+      ],
+      "inputs": [
+        "page type",
+        "audience",
+        "section placement",
+        "persona context"
+      ],
+      "outputs": [
+        "new MDX page conforming to all repo standards"
+      ]
     }
   ],
   "catalog_version": "1.0.0",

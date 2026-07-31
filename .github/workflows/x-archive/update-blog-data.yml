@@ -1,0 +1,62 @@
+name: Update Blog and Forum Data
+# DISABLED: superseded by the dedicated GitHub Actions refresh workflows and retained data files
+# under snippets/data/social-feeds/. The curl + raw JSON approach never worked
+# (uses YOUR_CONTENT_API_KEY placeholder). Kept for reference only.
+# Re-enable workflow_dispatch only if an emergency manual fallback is required.
+
+on:
+  workflow_dispatch: # Manual trigger only — schedule removed
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write # Required to push changes
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch Ghost blog data
+        run: |
+          curl -f -o ghost-data.json "https://livepeer.org/ghost/api/content/posts/?key=YOUR_CONTENT_API_KEY&limit=all&include=tags,authors" || echo "[]" > ghost-data.json
+        continue-on-error: true
+
+      - name: Fetch Forum data
+        run: |
+          curl -f -o forum-data.json "https://forum.livepeer.org/latest.json" || echo "[]" > forum-data.json
+        continue-on-error: true
+
+      - name: Update Ghost data file
+        run: |
+          echo "export const ghostData = " > snippets/data/social-feeds/ghostBlogData.jsx
+          cat ghost-data.json >> snippets/data/social-feeds/ghostBlogData.jsx
+          echo ";" >> snippets/data/social-feeds/ghostBlogData.jsx
+
+      - name: Update Forum data file
+        run: |
+          echo "export const forumData = " > snippets/data/social-feeds/forumData.jsx
+          cat forum-data.json >> snippets/data/social-feeds/forumData.jsx
+          echo ";" >> snippets/data/social-feeds/forumData.jsx
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code snippets/data/social-feeds/ghostBlogData.jsx snippets/data/social-feeds/forumData.jsx || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add snippets/data/social-feeds/ghostBlogData.jsx
+          git add snippets/data/social-feeds/forumData.jsx
+          git commit -m "chore: update blog and forum data [skip ci]"
+          git push
+
+      - name: Cleanup
+        run: |
+          rm -f ghost-data.json forum-data.json

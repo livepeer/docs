@@ -1,0 +1,257 @@
+---
+title: "Community Help Wanted"
+sidebarTitle: "Community help"
+description: "Open contribution opportunities across the docs-as-infrastructure system – file paths, acceptance criteria, and priority for every item. The repo is ownerless by design; this is the queue."
+keywords:
+  - livepeer
+  - docs guide
+  - community help
+  - good first issue
+  - contributor opportunities
+  - ownerless repo
+  - open source
+authority: contributing
+consumer: ["human", "agent"]
+maintenance: hand-maintained
+status: current
+lastVerified: "2026-05-19"
+owner: "@livepeer/docs-team"
+pageType: reference
+audience: developer
+purpose: reference
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': "Livepeer Docs – community help wanted"
+---
+
+# Community help wanted
+
+The Livepeer docs repo is **ownerless by design**: every governed surface declares a canonical source, a deterministic validator, an exact repair command, and a single gate layer. When the contract is complete, an OSS contributor – or an AI agent acting on their behalf – can correct routine drift without staff context. This page is the standing queue of open opportunities.
+
+Eighty-plus items are open across six feature domains. Each has a file path, an acceptance criterion, a priority, and a rough effort estimate. Many are excellent first PRs.
+
+<Note>
+**Where this list comes from.** Session-1 of the docs-as-infrastructure consolidation produced seven product-forward feature audits at [`workspace/thread-outputs/repo-docs-consolidation/`](https://github.com/livepeer/docs/tree/docs-v2/workspace/thread-outputs/repo-docs-consolidation). The synthesis is at [`00-SYNTHESIS.md`](https://github.com/livepeer/docs/blob/docs-v2/workspace/thread-outputs/repo-docs-consolidation/00-SYNTHESIS.md). This page is the curated, deduplicated index suitable for community contribution.
+</Note>
+
+<CustomDivider />
+
+## How to claim an opportunity
+
+<Steps>
+  <Step title="Open an issue using the right template">
+    `.github/ISSUE_TEMPLATE/` ships nine templates. Pick the one closest to the work – content request, docs page issue, feature request, tooling/CI issue. The template auto-applies `area:*` and `priority:*` labels.
+  </Step>
+  <Step title="Reference this page in the issue body">
+    Quote the specific opportunity and link to it. Example: "I'm picking up `[AI-1] Wire llms.txt regen to CI` from [community-help](/docs-guide/contributing/community-help)."
+  </Step>
+  <Step title="Read the acceptance criteria carefully">
+    Each entry below names the file path, the validator that must pass, and the expected output. The PR is "done" when the acceptance criterion is met, not just when the change compiles.
+  </Step>
+  <Step title="Submit a PR against `docs-v2`">
+    Follow the [contributor quickstart](/docs-guide/index#contributor-quickstart). The PR template auto-fills with Required Reading based on changed paths. CI runs the same validators the acceptance criterion names.
+  </Step>
+</Steps>
+
+<Tip>
+**Excellent first PRs** are tagged `[FIRST-PR]` below. They are mechanical, well-bounded, with clear acceptance criteria and a small blast radius.
+</Tip>
+
+<CustomDivider />
+
+## P0 – highest priority
+
+These items have been open the longest, have the broadest impact, or are blocking other downstream work.
+
+| ID | Item | File | Effort |
+|---|---|---|---|
+| AI-1 | Wire `llms.txt` + `sitemap-ai.xml` regen to CI on `docs.json` and `v2/**/*.mdx` changes | `.github/workflows/`, `operations/scripts/generators/ai/llm/generate-llms-files.js` | Medium |
+| AUTO-1 | Cherry-pick `integrator-maintenance-update-contract-addresses.yml` to `docs-v2` and dispatch with `--dry-run` | `.github/workflows/integrator-maintenance-update-contract-addresses.yml`, `.github/scripts/fetch-contract-addresses.js` | Small |
+| AUTO-2 | Wire `generate-og-images.js` into CI | `operations/scripts/generators/content/seo/generate-og-images.js` + new workflow | Medium |
+| AUTO-3 | Wire `generate-seo.js` into CI; resolve manual-keywords conflict | `operations/scripts/remediators/content/seo/generate-seo.js` + new workflow | Medium |
+| RFP-1 | Fix empty stubs in `v2/internal/rfp/` (outcomes.mdx, deliverables.mdx) – populate or remove from nav | `v2/internal/rfp/outcomes.mdx`, `deliverables.mdx` | Small |
+| RFP-2 | Populate or remove empty skeletal pages: `v2/internal/definitions.mdx`, `ecosystem.mdx`, `references.mdx`, `overview/strategic-alignment.mdx` | as listed | Small |
+| RFP-3 | Append Part 13 addendum to `livepeer-docs-v2-report.md` covering 2026-02-21 → 2026-05-19 work | `v2/internal/rfp/reports/livepeer-docs-v2-report.md` | Medium |
+
+<CustomDivider />
+
+## AI features and pipelines
+
+The AI layer ships two products: outward-facing AI surfaces (llms.txt, sitemap-ai.xml, hosted MCP, chat assistant) and an inward-facing agent runtime (six native adapters, 35 portable skills). Most opportunities here are about freshness automation and reconciling hand-maintained counts.
+
+| ID | Item | Priority | Effort | Acceptance criterion |
+|---|---|---|---|---|
+| AI-1 | Wire `llms.txt` + `sitemap-ai.xml` regen to CI | P0 | Medium | Workflow runs `generate-llms-files.js --write` and `generate-ai-sitemap.js --write` on `docs.json` / `v2/**` change; commits diffs. |
+| AI-2 | Replace hand-maintained skill/template counts in `docs-guide/tooling/ai-tools.mdx` with generator output | P1 | Small | Counts read from `ai-tools-inventory.md`; CI test fails on drift. |
+| AI-3 | Resolve `skill.md` – implement generator OR strike from public docs | P1 | Medium | Either `/skill.md` exists at root with a registered generator under `operations/scripts/generators/ai/llm/`, or the public mention is removed from `v2/resources/documentation-guide/ai-automations/ai-features.mdx`. |
+| AI-4 | Fix `research-and-fact-checking.mdx` script paths (currently wrong) | P2 | Small `[FIRST-PR]` | Code blocks updated to `operations/scripts/validators/content/veracity/...` and `audits/content/veracity/...`; `node <path> --help` succeeds in CI. |
+| AI-5 | Reconcile `check-agent-docs-freshness.js` canonical path between `agent-governance-framework.mdx` and `AGENTS.md` | P2 | Small | One path is correct; the other updated; CI link-check covers script paths in `.mdx`. |
+| AI-6 | Resolve local-skills vs portable-skills 34→53 divergence | P1 | Small | Explicit note in `ai-tools/agent-packs/README.md` and `docs-guide/features/ai-features.mdx`. |
+| AI-7 | Trim `.claude/CLAUDE.md` toward thin-adapter target per [D-DG-11](/docs-guide/decisions/docs-guide-structure) | P2 | Medium | File ≤350 lines; no policy duplicated from `AGENTS.md`. |
+| AI-8 | Retire duplicate `.augment/` subtree under `ai-tools/ai-rules/.augment/` | P2 | Small `[FIRST-PR]` | `ai-tools/ai-rules/.augment/` moved to `_retired/`; registry updated. |
+| AI-9 | Document `dispatchers/` and `workflows/` in `docs-guide/features/ai-features.mdx` | P2 | Medium | Section added; ~50 workflow pages + 6 dispatcher pages cross-linked. |
+| AI-10 | Add MCP tool-list drift check | P2 | Medium | Periodic job fetches live MCP tool list, diffs against documented set, fails on drift. |
+
+<CustomDivider />
+
+## UI system
+
+The UI system has 132 components, 40 templates, 312 VS Code snippets, and a `--lp-*` design token system. Most opportunities here are about reconciling hand-authored counts with live registry state and consolidating duplicated governance.
+
+| ID | Item | Priority | Effort | Acceptance criterion |
+|---|---|---|---|---|
+| UI-1 | Replace hand-authored component count tables with generator-emitted blocks | P1 | Medium | `ui-system.mdx`, `component-framework-canonical.mdx`, and the public `component-library/` pages all source from `component-registry.json`. |
+| UI-2 | Collapse `voice-rules.mdx` into `voice-and-copy.mdx`; replace voice-rules with redirect ✅ **DONE 2026-05-22** | – | – | Done. UK-English table extended (5 new rows), per-audience table extended with Tone + Lead-with columns, banned-phrase list extended, Heading rules section added. voice-rules.mdx is now a thin redirect to voice-and-copy.mdx. |
+| UI-3 | Fix wrapper-vs-display folder/category mismatch | P1 | Small `[FIRST-PR]` | AccordionGroupList, BasicList, CardCarousel, DisplayCard, DynamicTable – either move files or update `@type` JSDoc. Registry passes. |
+| UI-4 | Empty `snippets/components/x-archive/` | P2 | Medium | 24 archived components triaged: each is DELETE or KEEP-AS-ALIAS with `@deprecated` JSDoc + removal date. |
+| UI-5 | Regenerate stale catalogs | P2 | Small `[FIRST-PR]` | `node operations/scripts/generators/components/library/generate-ui-templates.js --write` runs cleanly; add CI workflow on `snippets/templates/**` changes. |
+| UI-6 | Fix embedded data block in `components-catalog.mdx` | P2 | Small | `componentTableData` moved to a JSON companion file; SearchTable imports from it; comment `{/* should not be here. */}` removed. |
+| UI-7 | Lock one canonical `pageType` enum ✅ **DONE 2026-05-23** | – | – | Done. Canonical 7-type schema now lives only in `docs-guide/frameworks/content-writing.mdx`. Other sources (`01-CORE-NEEDS-AND-STANDARDS.md`, public `authoring-guide.mdx`) flagged as carrying deprecated values in [Gap Analysis § 7](../features/gap-analysis.mdx). |
+| UI-8 | Retire `page-taxonomy-framework.mdx` (scratch notes) ✅ **DONE 2026-05-23** | – | – | Done. Page replaced with thin redirect pointing to `content-writing.mdx#page-taxonomy`. Same retirement applied to `page-composition-framework.mdx` → `checks-framework.mdx#phase-7--layout--component-check-cat-5`. |
+| UI-9 | Resolve 6-vs-7 JSDoc field count between component frameworks | P2 | Small | Both files cite the same number; pre-commit validator agrees. |
+| UI-10 | Clean `.DS_Store` and `.bak` artefacts in `snippets/` and `.vscode/` | P2 | Small `[FIRST-PR]` | All `.DS_Store` files deleted from `snippets/`; `.vscode/livepeer-legacy.code-snippets.bak` removed. |
+| UI-11 | Extend the style framework – design tokens, theme variants, Mermaid colours | P1 | Medium | Specific token additions, theme variant proposals, Mermaid palette rationalisation. Flagged by Alison in [`docs-guide/notes.mdx`](/docs-guide/notes). |
+
+<CustomDivider />
+
+## Automations (workflows, scripts, hooks)
+
+The automation layer ships 59 workflows on a 7-prefix taxonomy and 341 typed scripts with 11-tag JSDoc headers. Most opportunities are about taxonomy reconciliation, JSDoc compliance, and self-remediation maturity.
+
+| ID | Item | Priority | Effort | Acceptance criterion |
+|---|---|---|---|---|
+| AUTO-1 | Cherry-pick `integrator-maintenance-update-contract-addresses.yml` to `docs-v2` and dispatch | P0 | Small | Dispatch completes on `docs-v2`; dry-run output reviewed; full dispatch produces a commit with refreshed addresses. |
+| AUTO-2 | Wire `generate-og-images.js` into CI | P0 | Medium | Generator workflow triggers on push to `v2/**` MDX paths; regenerates OG images; auto-PR. |
+| AUTO-3 | Wire `generate-seo.js` into CI; resolve manual-keywords conflict | P0 | Medium | Generator workflow on `v2/**` changes; precedence declared. |
+| AUTO-4 | Resolve concern-enum split – declare one enum or publish mapping table | P1 | Medium | `docs-guide/frameworks/github-actions.mdx`, `script-framework.mdx`, `script-governance.mdx` all align; validator added. |
+| AUTO-5 | Repair 218 non-compliant JSDoc script headers | P1 | Large `[FIRST-PR-friendly in waves]` | `repair-script-inventory.js` in graduated waves; `SCRIPT_AUDIT.json` reports zero template-non-compliant scripts. |
+| AUTO-6 | Update `.githooks/pre-commit` and `pre-push` to use canonical JSDoc tags | P2 | Small | Hooks pass the `--strict` validator they enforce on other scripts. |
+| AUTO-7 | Consolidate archive paths – `.github/workflows/deprecated/` into `x-archive/` | P2 | Small `[FIRST-PR]` | One archive directory; framework spec declares retention policy. |
+| AUTO-8 | Reconcile script-framework spec with live filesystem | P1 | Medium | `interfaces/` declared as a real type; `automations/` removed if no folder exists; new concerns (`media`, `copy`, `maintenance`) documented or moved. |
+| AUTO-9 | Document `lpd` CLI as a contributor feature in `automations.mdx` | P2 | Small | New section in `docs-guide/features/automations.mdx` or dedicated page. |
+| AUTO-10 | Add audit-to-issue automation | P2 | Medium | Each `audit-*.yml` workflow has an issue-create step on failure with `area:*` and `priority:*` labels. |
+| AUTO-11 | Add CI lint that every generator has a matching verifier | P2 | Medium | New validator in `operations/scripts/validators/governance/`; fails when a `generator-*` workflow lacks a matching `validator-*` with `--check`. |
+
+<CustomDivider />
+
+## Data integrations
+
+The data layer keeps docs in sync with reality through scheduled fetchers, validators, and generated outputs. Most opportunities are about expanding OpenAPI coverage and reviving silent failures.
+
+| ID | Item | Priority | Effort | Acceptance criterion |
+|---|---|---|---|---|
+| DATA-1 | Expand `fetch-openapi-specs.sh` to cover all 5 specs and schedule | P0 | Medium | Script pulls Studio, CLI-HTTP, AI Worker, AI Gateway, Gateway. New workflow `integrator-maintenance-update-openapi-specs.yml` exists. `openapi-reference-audit.js --full --strict` gates the commit. |
+| DATA-2 | Wire `generate-glossary.js` into a scheduled pipeline + add drift validator | P1 | Medium | Workflow regenerates glossary weekly; CI test fails when MDX uses a term absent from the glossary. |
+| DATA-3 | Diagnose and revive the Luma feed | P1 | Small `[FIRST-PR]` | `lumaEventsData.jsx` mtime within last 14 days; fetcher patched or workflow trigger fixed. |
+| DATA-4 | Wire `generate-api-docs.sh` into refresh pipeline triggered by OpenAPI changes | P1 | Medium | Workflow regenerates `v2/.../api-reference/` MDX trees on `api/` changes; diff reviewable; manual annotation removed. |
+| DATA-5 | Remove legacy duplicate `snippets/data/changelogs/contractAddressesData.jsx` | P2 | Small `[FIRST-PR]` | File deleted; any references repointed; CI passes. |
+| DATA-6 | Resolve `showcaseData.jsx` vs `showcaseDataPopulated.jsx` duplication | P2 | Small | One canonical file remains; the other deleted or documented as a build artefact. |
+| DATA-7 | Validate reference maps against MDX usage | P2 | Medium | New validator reports unused entries in `badge-map.jsx` and `icon-map.jsx`, missing entries for badges/icons in MDX. Runs in CI. |
+| DATA-8 | Populate or remove snapshot placeholders | P2 | Small `[FIRST-PR]` | `CoinGeckoExchanges.json` and `SolidityEmbed.json` either contain real data or are deleted; retention policy documented. |
+| DATA-9 | Document `snippets/data/social-feed-solutions/` in `data-integrations.mdx` | P2 | Small `[FIRST-PR]` | Each product subfolder listed with fetcher, output, last-touched signal. |
+| DATA-10 | Converge `gateways/version.jsx` and `globals/latestRelease.jsx` | P2 | Small | One canonical release file; the other becomes a re-export or is removed. |
+| DATA-11 | Merge `contracts-pipeline.mdx` into `data-integrations.mdx` as the canonical deep-dive section | P2 | Small | Orphan page either folded in or registered in nav. |
+
+<CustomDivider />
+
+## Adaptive architecture / self-remediation
+
+The flagship feature. Ownerless governance, validators corpus, remediators, generators, audits. The biggest opportunity is promoting more surfaces to formally ownerless-ready.
+
+| ID | Item | Priority | Effort | Acceptance criterion |
+|---|---|---|---|---|
+| ADAP-1 | Backfill JSDoc headers for 218 non-compliant scripts | P1 | Large `[FIRST-PR in waves]` | `repair-script-inventory.js` runs against a bounded scope; SCRIPT_AUDIT.json count decreases. |
+| ADAP-2 | Wire `--verify` mode into every remediator that lacks it | P1 | Medium | Each remediator includes a `--verify` post-write re-check; documented in framework. |
+| ADAP-3 | Promote one advisory surface to ownerless-ready | P1 | Medium | Draft missing validator + remediator + repair command triple. File PR with `approval:governance-schema` label. Walk through promotion ladder. **The most repeatable contribution path.** |
+| ADAP-4 | Execute the first `gateways` v2 cleanup move-wave (199 of 307 rows) | P1 | Medium | 199 documented recommendations executed as `git mv` with redirect validation. |
+| ADAP-5 | Add a freshness validator for `docs-guide/features/*.mdx` | P2 | Medium | Detects stale workflow names, moved script roots, TODO markers. New validator + manifest entry + test fixture. |
+| ADAP-6 | Implement `tasks-retention.yml` workflow (currently a stub) | P1 | Medium | Walks `_workspace/` trees, compares mtime against 30/90-day TTL, emits structured report. |
+| ADAP-7 | Reduce report bloat in `workspace/reports/` | P2 | Medium | Replace full historical reports with concise summaries. Move historical captures out of the tracked tree. |
+| ADAP-8 | Resolve duplicate developer trees `v2/developers1/` and `v2/developers2/` | P2 | Large | IA migration plan drafted; moves executed with redirect validation. |
+| ADAP-9 | Standardise validator failure output to the "why / re-check / repair" triple | P2 | Medium per validator | Each validator prints the canonical triple. Old validators in `governance/pr/` are the priority. |
+| ADAP-10 | Promote one generated artefact to `--verify` parity | P2 | Small | Add `--check` flag to one generator at a time. Pre-commit can run `check_only` end-to-end. |
+| ADAP-11 | Regenerate `repo-governance-map.mdx` (currently stale by self-detection) | P1 | Small | `generate-repo-governance-status.js --check` passes. |
+
+<CustomDivider />
+
+## Contributor tools
+
+The `lpd` CLI, hooks, VS Code extensions, scoped preview. Opportunities here unblock other contributors.
+
+| ID | Item | Priority | Effort | Acceptance criterion |
+|---|---|---|---|---|
+| TOOL-1 | Fill in public `v2/resources/documentation-guide/tooling/lpd-cli.mdx` ✅ **DONE 2026-05-19** | – | – | Page is a public-shaped CLI quickstart with link to the canonical reference. |
+| TOOL-2 | Refresh public `contribute-to-the-docs.mdx` – use `lpd` workflow, correct branch, remove proposal sections ✅ **DONE 2026-05-19** | – | – | Page uses `lpd dev` not `mint dev`, branch refs are `docs-v2`, "Non-Technical Contribution Proposal" section removed. |
+| TOOL-3 | Retire `docs-guide/tooling/dev-tools.mdx` (status: draft, lastVerified 2026-03-11) ✅ **DONE 2026-05-22** | – | – | Done. VS Code snippets reference (5 files, live counts: 23/25/113/125/26) and editor tooling map absorbed into `docs-guide/features/contributor-tools.mdx`. dev-tools.mdx is now a thin redirect with links to the contributor-tools sections + lpd-cli + lpd-mdx-preview. Inbound links updated in source-of-truth-guide.mdx, canonical/Mintlify/index.md, governance-index.mdx, contributor-tools "Related" section. |
+| TOOL-4 | Document `lpd repair` in canonical CLI reference | P1 | Small `[FIRST-PR]` | New Accordion entry in `docs-guide/tooling/lpd-cli.mdx` under "Page Operations" or new "Repair" section. Flags and surface examples listed. |
+| TOOL-5 | Regenerate script catalog table in `lpd-cli.mdx` | P2 | Small | Pre-2026-03-21-layout table replaced with output from `lpd scripts list --json`. CI hook keeps it fresh. |
+| TOOL-6 | Document the other three VS Code extensions (`authoring-tools`, `components`, `markdown-list`) | P2 | Medium | Sub-page per extension at `lpd-mdx-preview.mdx` level of detail, OR one combined `docs-guide/tooling/editor-extensions.mdx`. |
+| TOOL-7 | Deduplicate `.vscode/components.code-snippets` vs `lp-components.code-snippets` | P2 | Small | One canonical snippet file; the other deleted OR scope-split documented. |
+| TOOL-8 | Clean stray duplicates in `tools/editor-extensions/` (`components 2/`, `markdown-list 2/`) and `.vscode/livepeer-legacy.code-snippets.bak` | P2 | Small `[FIRST-PR]` | Stray macOS duplicates and backup files removed; `.gitignore` updated if needed. |
+| TOOL-9 | Expand `.vscode/mcp.json` or document the limit | P2 | Medium | Either additional MCP servers (Blockscout, DeepWiki, Livepeer Docs MCP) added, OR `ai-tools.mdx` documents that they live in user-global config. |
+| TOOL-10 | Unify agent-instructions discoverability split | P2 | Small | `docs-guide/contributing/agent-instructions.mdx` expanded; cross-links to `ai-tools.mdx` for full governance. |
+
+<CustomDivider />
+
+## Cross-cutting governance
+
+Items that span multiple feature domains.
+
+| ID | Item | Priority | Effort | Acceptance criterion |
+|---|---|---|---|---|
+| GOV-1 | Build `check-docs-guide-contract.js` validator per [D-DG-07](/docs-guide/decisions/docs-guide-structure) | P1 | Large | Validator enforces mandatory frontmatter (`authority`, `consumer`, `maintenance`, `status`, `lastVerified`, `owner`) on every `docs-guide/` file outside `_workspace/` and `catalog/`. |
+| GOV-2 | Execute D-DG-03 folder migration (`features/`, `tooling/`, `repo-ops/`, `docs-library/` → `reference/`) | P1 | Large | Folders moved with redirects; generated catalogs regenerated; `lpd test --staged` passes. **Requires route approval.** |
+| GOV-3 | Execute D-DG-04 `canonical/` retirement | P2 | Medium | Mintlify files moved to `reference/external/mintlify/`. `canonical/frontmatter.md` stub deleted. `dep-files/` moved to `_workspace/archive/`. |
+| GOV-4 | Execute D-DG-05 `config/*.json` move to `operations/governance/config/` | P2 | Medium | Five registry files moved; pointer page at `reference/repo-ops/config-registries.mdx`. |
+| GOV-5 | Execute D-DG-06 `source-of-truth-guide.mdx` + `governance-index.mdx` merge into `docs-guide/index.mdx` ✅ **DONE 2026-05-19** | – | – | Both pages content absorbed into `docs-guide/index.mdx`. |
+| GOV-6 | Implement per-surface freshness thresholds per [D-DG-10](/docs-guide/decisions/docs-guide-structure) | P2 | Medium | `operations/governance/config/ownerless-governance-surfaces.json` extended with `freshness_thresholds` block. |
+| GOV-7 | Build adapter-parity validator per [D-DG-11](/docs-guide/decisions/docs-guide-structure) | P2 | Medium | `check-adapter-parity.js` enforces length caps and pointer-only model across native adapters. |
+| GOV-8 | Build PR Required-Reading validator per [D-DG-12](/docs-guide/decisions/docs-guide-structure) | P2 | Medium | `check-canonical-citation.js` auto-fills PR template's Required Reading from changed-path globs. Merge blocks until contributor ticks the listed framework. |
+
+<CustomDivider />
+
+## Future features and recommendations
+
+Larger initiatives that don't fit a single PR. Each is a candidate proposal for a future scoped engagement.
+
+| ID | Initiative | Domain | Effort | Why it matters |
+|---|---|---|---|---|
+| FUT-1 | `generate-community-help.js` – auto-generate this page from the 7 audit reports + flags.jsonl | Adaptive | Medium | Keeps the index fresh automatically; no manual maintenance burden. |
+| FUT-2 | Live counts via Mintlify reactive transclusion – `<Count source="…" />` component backed by catalog generators | UI / Adaptive | Medium | Eliminates every hand-maintained count in the overview. |
+| FUT-3 | MCP tool list drift validator – periodically fetch `docs.livepeer.org/mcp` and diff | AI | Small | Catches Mintlify adding tools we don't yet document. |
+| FUT-4 | Adopt `<RequestExample>` + `<ResponseExample>` in API reference pages | UI | Medium | Improves scannability over current `<ResponseField>`-only pattern. |
+| FUT-5 | AI-pack distribution README – explain the local-skills-vs-portable-skills 34→53 divergence | AI | Small | Reduces confusion for OSS contributors. |
+| FUT-6 | Page screenshot generator – capture rendered Mintlify pages, surface as "this is what it looks like" | Adaptive | Large | Visual exemplars for contributors. |
+| FUT-7 | "Page age" widget per page footer – `lastVerified` rendered as relative age with click-to-history | UI | Small | Honest staleness signal in the live site. |
+| FUT-8 | `lpd ship-feature` – scaffolds a new feature with page + wrapper + community-help entry + framework cross-link + decision-registry stub | Contributor tools | Large | One-command feature scaffolding. |
+| FUT-9 | Auto-PR for governance drift – when a validator detects drift on a `committed_derived_scoped` artefact, open a PR with the fix instead of failing CI | Automations | Large | True self-remediation. |
+| FUT-10 | `<Tree>` component with route-resolution – Tree nodes auto-resolve to live page links | UI | Medium | Clickable IA trees. |
+| FUT-11 | Per-feature health dashboard – surface validator pass/fail in a Mintlify-rendered status board | Adaptive | Large | Public scoreboard for the docs platform's own health. |
+| FUT-12 | `docs-as-infrastructure` blog series – publish the patterns externally (RFC posts, conference talks) | Marketing | Large | Positions Livepeer as a thought leader in docs engineering. |
+| FUT-13 | "Adopt this in your own repo" template – package the ownerless-governance contract as a reusable starter kit | Adaptive | XL | Multiplies impact beyond Livepeer. |
+| FUT-14 | RFP-style "Documentation as Infrastructure" reference architecture – whitepaper for other Foundations | Marketing | Large | Reusable model for docs RFPs. |
+| FUT-15 | Mintlify chat assistant regression test suite – sample prompts against the live assistant, diff against baselines | AI | Medium | Catches drift in assistant behaviour. |
+
+<CustomDivider />
+
+## Related
+
+<CardGroup cols={3}>
+  <Card title="Docs Guide overview" icon="book-open" href="/docs-guide/index" arrow>
+    The full docs-as-infrastructure overview. Start here.
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/docs-guide/contributing/contributing" arrow>
+    Canonical contributor flow with override trailers and governance approval labels.
+  </Card>
+  <Card title="Gap analysis" icon="magnifying-glass" href="/docs-guide/features/gap-analysis" arrow>
+    Implementation-ready audit of surfaces not yet aligned with ownerless governance.
+  </Card>
+  <Card title="Ownerless governance" icon="shield-check" href="/docs-guide/policies/ownerless-governance" arrow>
+    The four-part contract every governed surface must satisfy.
+  </Card>
+  <Card title="Decisions registry" icon="gavel" href="/docs-guide/decisions/registry" arrow>
+    Every architectural decision with a machine-readable ID.
+  </Card>
+  <Card title="Session-1 synthesis (source)" icon="folder-open" href="https://github.com/livepeer/docs/blob/docs-v2/workspace/thread-outputs/repo-docs-consolidation/00-SYNTHESIS.md" arrow>
+    The full 7-audit synthesis these opportunities are derived from.
+  </Card>
+</CardGroup>

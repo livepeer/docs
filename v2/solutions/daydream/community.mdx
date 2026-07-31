@@ -1,0 +1,124 @@
+---
+mode: wide
+title: Daydream Recent Announcements
+sidebarTitle: Recent Activity
+description: "Latest videos, socials, and community activity for Daydream."
+lifecycleStage: discover
+complexity: intermediate
+purpose: orient
+pageType: resource
+pageVariant: overview
+keywords:
+  - daydream
+  - livepeer
+  - community
+  - updates
+  - real-time AI
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Daydream Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: builder
+lastVerified: 2026-03-23T00:00:00.000Z
+---
+
+{/* COMPONENTS */}
+import { SocialLinks } from '/snippets/components/elements/links/Links.jsx'
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx';
+import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx';
+import { RssBlogCard, RssBlogCardLayout, DiscordAnnouncements } from '/snippets/components/integrators/blog/BlogCards.jsx'
+import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+
+{/* DATA */}
+import { youtubeData } from '/snippets/data/social-feed-solutions/daydream/youtubeData.jsx'
+import { daydreamBlogData } from '/snippets/data/social-feed-solutions/daydream/blogData.jsx'
+import { daydreamDiscordData } from '/snippets/data/social-feed-solutions/daydream/discordData.jsx'
+import { discordAnnouncementsData } from '/snippets/data/social-feeds/discordAnnouncementsData.jsx'
+import { daydreamSocials } from "./data/socials.jsx"
+
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox margin="0" padding="0.5rem 1rem 1rem 1rem" variant="muted">
+      <SocialLinks iconColor="var(--hero-text)" links={daydreamSocials} />
+  </BorderedBox>
+</CenteredContainer>
+
+<br/>
+<CenteredContainer width="80%" minWidth="fit-content" >
+    <Tip>
+    This page is an automated workflow.
+    </Tip>
+</CenteredContainer>
+
+## Videos <Icon icon="camera-movie" size={24} />
+
+Watch the latest on the <LinkArrow label="Daydream YouTube Channel" href="https://www.youtube.com/channel/UCviyh_-8H2vkYq9ROHMBffQ" newline={false} />
+
+<LazyLoad height="400px">
+  <YouTubeVideoData items={youtubeData} limit={4} />
+</LazyLoad>
+
+<CustomDivider style={{margin: "0.5rem 0 -2.5rem 0"}}/>
+
+## <Icon icon="pencil-line" size={24} /> Blog
+
+Read recent posts from the <LinkArrow label="Daydream Blog" href="https://blog.daydream.live" newline={false} />
+
+<LazyLoad height="200px">
+  <RssBlogCardLayout items={daydreamBlogData} limit={2} />
+</LazyLoad>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## <Icon icon="discord" size={24} /> Discord Announcements
+
+Latest from the <LinkArrow label="Daydream Discord" href="https://discord.gg/pF2Akym5bV" newline={false} />
+
+<LazyLoad height="300px">
+  <DiscordAnnouncements serverName="Daydream" items={daydreamDiscordData} limit={4} ScrollBox={ScrollBox} scrollMaxHeight={200} />
+</LazyLoad>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## <Icon icon="twitter" size={24} /> X / Twitter
+
+<LinkArrow label="@DaydreamLiveAI on X" href="https://x.com/DaydreamLiveAI" newline={false} />
+<br/>
+<br/>
+<LazyLoad height="650px">
+  <iframe
+      src="https://platform.twitter.com/embed/Tweet.html?id=2029225629434925247&theme=dark"
+      className="lp-tweet-frame-large"
+      title="Daydream on X"
+  />
+</LazyLoad>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## <Icon icon="github" size={24} /> GitHub
+
+<LazyLoad height="600px">
+  <BorderedBox>
+    <ScrollBox maxHeight={600}>
+      <BorderedBox variant="accent">
+          Daydream Github
+          <LinkArrow label="View Daydream on GitHub" href="https://github.com/daydreamlive/scope" newline={true} />
+      </BorderedBox>
+      <MarkdownEmbed url="https://raw.githubusercontent.com/daydreamlive/scope/main/README.md" />
+    </ScrollBox>
+  </BorderedBox>
+</LazyLoad>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Daydream Overview" icon="book-open" href="/solutions/daydream/overview" />
+  <Card title="Daydream Changelog" icon="clock" href="/solutions/daydream/changelog" />
+</CardGroup>

@@ -1,27 +1,24 @@
 ---
 title: 'Docs Navigation Route Report'
 sidebarTitle: 'Docs Navigation'
-description: 'Generated docs.json route validation report from tests/unit/docs-navigation.test.js.'
+description: 'Generated docs.json route validation report from operations/tests/unit/docs-navigation.test.js.'
 keywords: ["livepeer","internal","reports","navigation-links","docs-navigation.test"]
-og:image: "/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg"
+og:image: "/snippets/assets/media/og-images/fallback.png"
 ---
-Last Generated (UTC ISO): `2026-03-03T09:45:28.411Z`
-Last Generated (UTC Human): `March 03, 2026 09:45 UTC`
-Generator Script: `tests/unit/docs-navigation.test.js`
-What It Does: Validate docs.json page-entry syntax in check-only mode by default, with optional report writing and approved remaps.
+Last Generated (UTC ISO): `2026-04-14T04:31:05.401Z`
+Last Generated (UTC Human): `April 14, 2026 04:31 UTC`
+Generator Script: `operations/tests/unit/docs-navigation.test.js`
+What It Does: Generated docs.json route validation report from operations/tests/unit/docs-navigation.test.js.
 Audited Scope: `tests, docs.json`
 Outputs:
-- tasks/reports/navigation-links/navigation-report.md (when --write-report or --write-remaps is used)
-- tasks/reports/navigation-links/navigation-report.json (when --write-report or --write-remaps is used)
-- docs.json (only when --write-remaps is used and user approves entries)
-- Console summary of syntax and route-resolution status.
+- _Not documented in script header._
 # Docs Navigation Route Report
 
-- Generated at (UTC): 2026-03-02T10:44:38.732Z
-- Entries scanned: 2296
+- Generated at (UTC): 2026-03-16T20:55:39.113Z
+- Entries scanned: 1329
 - Syntax errors: 0
-- Missing routes: 0
-- Missing routes with suggestions: 0
+- Missing routes: 1
+- Missing routes with suggestions: 1
 
 ## Syntax Errors
 
@@ -29,4 +26,11 @@ Outputs:
 
 ## Missing Routes
 
-- None
+- `v2/gateways/guides-and-resources/gateway-job-pipelines/overview` (normalized: `v2/gateways/guides-and-resources/gateway-job-pipelines/overview`)
+  - Pointer: `navigation.versions[1].languages[0].tabs[8].anchors[0].groups[4].pages[0]`
+  - Suggested remaps:
+    - `v1/ai/api-reference/overview` (same leaf segment match [score=0.65])
+    - `v1/ai/pipelines/overview` (same leaf segment match [score=0.65])
+    - `v1/ai/sdks/overview` (same leaf segment match [score=0.65])
+    - `v1/api-reference/asset/overview` (same leaf segment match [score=0.65])
+    - `v1/api-reference/generate/overview` (same leaf segment match [score=0.65])

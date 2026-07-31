@@ -1,0 +1,62 @@
+---
+title: 协调器统计和监控
+sidebarTitle: 协调器统计
+description: 通过 Prometheus 和 Livepeer Explorer 监控节点健康状况、GPU 性能和收益。
+keywords:
+  - livepeer
+  - orchestrators
+  - monitoring
+  - stats
+  - prometheus
+  - metrics
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL3NldHRpbmctdXAtYW4tb3JjaGVzdHJhdG9yL29yY2hlc3RyYXRvci1zdGF0cy5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL29yY2hlc3RyYXRvcnMvc2V0dGluZy11cC1hbi1vcmNoZXN0cmF0b3Ivb3JjaGVzdHJhdG9yLXN0YXRzIiwic291cmNlSGFzaCI6IjNjMTFmODhlMmVmMzlhZjY3YzJkNGQ1MWVmODZhYzk0NDc5ZDMwNTI0OWUxMWY0ZGMwNDgyNmUxM2M3ODc2MjMiLCJsYW5ndWFnZSI6ImNuIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJxd2VuL3F3ZW4tdHVyYm8iLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMTQ6MzA6NTYuMjkwWiJ9 */}
+import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+
+运行一个协调器意味着保持节点在线，正确处理任务，每轮调用奖励，并赎回票证。监控有助于您在收入或声誉受损之前发现故障。
+
+## 内置指标
+
+使用`-monitor=true`, go-livepeer 在以下位置提供与 Prometheus 兼容的指标：
+
+<CustomCodeBlock
+  codeString={`http://localhost:7935/metrics`}
+  language="text"
+  icon="gauge"
+/>
+
+## 要跟踪的内容
+
+| 层 | 要监控的内容 |
+|--------|------------------|
+| **硬件** | GPU 使用率、VRAM、温度 (`nvidia-smi`) |
+| **应用** | go-livepeer 健康状态、分段/任务成功率 |
+| **网络** | 延迟，丢包 |
+| **链上** | 质押余额，活跃集状态，奖励调用 |
+| **经济** | ETH 费用，LPT 奖励 |
+
+关键指标包括：`livepeer_segment_processed_total`, `livepeer_segment_errors_total`, `livepeer_transcode_latency_seconds`, 以及（对于AI）推理任务数量和延迟。高错误率会降低选择概率。
+
+<Warning> If you do not call **reward()** every round, you stop earning inflation rewards. Automate reward calls or use a service that does.</Warning>
+
+## 浏览器
+
+使用 [Livepeer Explorer](https://explorer.livepeer.org) to check:
+
+- Active set status
+- Bonded and delegated LPT
+- Reward calls and fee earnings
+- Historical performance
+
+## Prometheus 和 Grafana
+
+对于生产环境，使用您的节点的抓取配置运行 Prometheus，并使用或构建 Grafana 仪表板。添加 "**节点导出器** 和 **NVIDIA DCGM 导出器** 以获取主机和 GPU 指标。
+
+## 另请参阅
+
+<Columns cols={2}>
+  <Card title="Install go-livepeer" icon="download" href="./install-go-livepeer" arrow />
+  <Card title="Rewards and fees" icon="coins" href="../advanced-setup/rewards-and-fees" arrow />
+  <Card title="FAQ" icon="circle-question" href="../references/faq" arrow />
+</Columns>

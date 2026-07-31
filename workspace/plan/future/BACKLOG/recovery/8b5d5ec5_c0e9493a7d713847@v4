@@ -1,0 +1,23 @@
+# Memory Index
+
+## CRITICAL
+- [Failure 1: Worktree only - no direct writes](feedback_critical_failure_worktree.md) - NEVER write to docs-v2-dev. Worktree only. NEVER destructive git. NEVER spawn agents without approval. Findings before fixes always. Highest priority rule.
+- [Failure 2: Repeated git checkout same session](feedback_critical_failure_2_same_session.md) - Ran git checkout HEAD -- on branch AGAIN 30 minutes after writing the rule. Overwrote files with old snapshots then destroyed more work. Advisory rules do not work.
+
+## Feedback (consolidated)
+- [Process discipline](feedback_process_discipline.md) - Contextual detail for each step of the CLAUDE.md reasoning loop: what to read, when to document, how to ground actions
+- [Speed and mechanics](feedback_speed_and_mechanics.md) - 5-second responses, agent delegation, direct file writes, focus protection, no redundant questions
+- [Communication style](feedback_communication_style.md) - No apologies, no em dashes, short headings, short and correct output, frustration is diagnostic
+- [Safety and scope](feedback_safety_and_scope.md) - Branch safety, task scope limits, destructive action evidence, root cause through generators, mint dev
+- [Content terminology](feedback_content_terminology.md) - On-chain/off-chain is operational mode; three independent axes (operational mode, setup type, node type)
+- [IA ownership](feedback_ia_ownership.md) - Alison designed the IA; AI runs are secondary sources. Only pull the best from AI output.
+- [Working style](feedback_working_style.md) - Carry the load, high standards, no drift. Alison course-corrects, not drives. Execute, don't discuss.
+- [Agent quality](feedback_agent_quality.md) - Every agent must self-test, reason from first principles, bring coordination/context/validation. No unchecked claims.
+- [No branch switching](feedback_no_branch_switching.md) - Never create new branches or switch away from current working branch. All work on docs-v2-dev.
+- [Agent workflow pattern](feedback_agent_workflow.md) - Coordinator model: record tasks, background agents do work + verify, never block chat. Auto-log to record-log.md.
+- [Parallel execution](feedback_parallel_execution.md) - Never queue independent tasks. If approach is agreed, run all in parallel immediately.
+- [Quality standard](feedback_quality_standard.md) - Verify before reporting done. Task list/record-log/standard are separate things. Mermaid types need different themes. Check preset defaults.
+
+## Project
+- [Style guide outdated](project_style_guide_outdated.md) - Style guide validator has 637 errors; needs its own governance thread (flagged 2026-03-20)
+- [Mintlify dev audit](project_mint_dev_audit.md) - Multi-session audit complete: 0 parsing errors, most warnings cleared. Three known-accepted warnings remain

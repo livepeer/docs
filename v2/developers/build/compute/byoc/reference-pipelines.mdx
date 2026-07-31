@@ -1,0 +1,125 @@
+---
+title: "Reference pipelines"
+sidebarTitle: "Reference Pipelines"
+description: >-
+  Production BYOC pipelines running on the Livepeer network: StreamDiffusion,
+  ControlNet, IPAdapter, FaceID, Whisper, Gemma, and SuperResolution.
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-15'
+keywords:
+  - reference pipelines
+  - StreamDiffusion
+  - ControlNet
+  - IPAdapter
+  - production BYOC
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>These pipelines run on the network today via ComfyStream. Each is a ComfyUI workflow packaged as a BYOC container with a pre-built Docker image.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+The following real-time AI pipelines are deployed on the Livepeer Network as BYOC containers running through ComfyStream. Each pipeline is a ComfyUI workflow that processes live video frames.
+
+<CustomDivider />
+
+## Available pipelines
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Pipeline</TableCell>
+      <TableCell header>Input</TableCell>
+      <TableCell header>Output</TableCell>
+      <TableCell header>Min VRAM</TableCell>
+      <TableCell header>Target FPS</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**StreamDiffusion**</TableCell>
+      <TableCell>Live video + text prompt</TableCell>
+      <TableCell>Style-transferred video</TableCell>
+      <TableCell>8 GB</TableCell>
+      <TableCell>20-30</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**StreamDiffusion V2**</TableCell>
+      <TableCell>Live video + text prompt</TableCell>
+      <TableCell>Higher-quality style transfer</TableCell>
+      <TableCell>12 GB</TableCell>
+      <TableCell>15-25</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**ControlNet**</TableCell>
+      <TableCell>Live video + control image</TableCell>
+      <TableCell>Pose/edge-conditioned generation</TableCell>
+      <TableCell>12 GB</TableCell>
+      <TableCell>10-15</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**IPAdapter**</TableCell>
+      <TableCell>Live video + reference image</TableCell>
+      <TableCell>Style-consistent generation</TableCell>
+      <TableCell>12 GB</TableCell>
+      <TableCell>10-15</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**FaceID**</TableCell>
+      <TableCell>Live video + face reference</TableCell>
+      <TableCell>Face-swapped or avatar video</TableCell>
+      <TableCell>12 GB</TableCell>
+      <TableCell>15-20</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Whisper (audio)**</TableCell>
+      <TableCell>Live audio</TableCell>
+      <TableCell>Real-time transcription (data channel)</TableCell>
+      <TableCell>4 GB</TableCell>
+      <TableCell>N/A (text output)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Gemma (vision)**</TableCell>
+      <TableCell>Live video</TableCell>
+      <TableCell>Scene understanding (data channel)</TableCell>
+      <TableCell>8 GB</TableCell>
+      <TableCell>1-5 (per analysis)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**SuperResolution**</TableCell>
+      <TableCell>Low-resolution video</TableCell>
+      <TableCell>Upscaled video (2x or 4x)</TableCell>
+      <TableCell>8 GB</TableCell>
+      <TableCell>15-25</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+All pipelines use the `live-video-to-video` pipeline type and are accessible through any Livepeer Gateway that routes to Orchestrators with the pipeline warm.
+
+<CustomDivider />
+
+## Building a custom pipeline
+
+Fork an existing reference pipeline as your starting point. Each pipeline is a ComfyUI workflow JSON file plus a requirements file for additional Python dependencies.
+
+1. Export your ComfyUI workflow as JSON
+2. Test it with [ComfyStream](/v2/developers/build/ai-and-agents/realtime-ai/ComfyStream/overview)
+3. Package it as a BYOC container via [ComfyStream as BYOC](/v2/developers/build/ai-and-agents/realtime-ai/ComfyStream/ComfyStream-as-byoc)
+4. Register it with your Orchestrator's `aiModels.json`
+
+<CustomDivider />
+
+The [ComfyStream workflow authoring](/v2/developers/build/ai-and-agents/realtime-ai/ComfyStream/workflow-authoring) page covers building custom workflows. The [BYOC quickstart](/v2/developers/build/compute/byoc/byoc-quickstart) covers container packaging and registration.

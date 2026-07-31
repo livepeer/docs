@@ -1,0 +1,37 @@
+diff --git a/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx b/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx
+index 796196e71..3782a0fe6 100644
+--- a/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx
++++ b/snippets/composables/pages/canonical/livepeer-contract-addresses.mdx
+@@ -59,8 +59,8 @@ lastVerified: 2026-03-26
+ {/* components */}
+ import { CustomDivider, InlineDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+ import { DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+-import { SearchTable } from '/snippets/components/wrappers/tables/SearchTable.jsx'
+-import { DynamicTable } from '/snippets/components/wrappers/tables/Table.jsx'
++import { SearchTableV2 } from '/snippets/components/wrappers/tables/SearchTable.jsx'
++import { DynamicTable, DynamicTableV2 } from '/snippets/components/wrappers/tables/Table.jsx'
+ import { StyledSteps, StyledStep } from '/snippets/components/wrappers/steps/Steps.jsx'
+ import { ContractVerifier } from '/snippets/components/integrators/feeds/ContractVerifier.jsx'
+ import { CustomCardTitle, AccordionTitle } from '/snippets/components/elements/text/CustomCardTitle.jsx'
+@@ -566,8 +566,8 @@ This table lists currently active standalone contract entrypoints together with
+     - Repository dispatch triggers: `governor-scripts-update`, `protocol-update`, `bridge-update`, `go-livepeer-update`
+ </Accordion>
+ 
+-<SearchTable
+-  TableComponent={DynamicTable}
++<SearchTableV2
++  TableComponent={DynamicTableV2}
+   headerList={["Name", "Address", "Type", "Chain"]}
+   itemsList={getActiveTableItems(contractAddresses)}
+   columnWidths={{ Type: 'clamp(4.5rem, 6vw, 5.25rem)', Chain: 'clamp(12rem, 22vw, 15rem)' }}
+@@ -594,8 +594,8 @@ This table lists currently active standalone contract entrypoints together with
+ 
+ Proxy addresses are stable upgrade entrypoints for active controller-managed contracts. They are primarily useful for deployment, governance upgrade, and implementation-tracking workflows rather than day-to-day contract usage.
+ 
+-<SearchTable
+-  TableComponent={DynamicTable}
++<SearchTableV2
++  TableComponent={DynamicTableV2}
+   headerList={["Name", "Proxy", "Proxy Address", "Chain", "Target", "Target Address"]}
+   itemsList={getProxyTableItems(contractAddresses)}
+   columnWidths={{

@@ -1,0 +1,151 @@
+---
+title: "AI authentication"
+sidebarTitle: "AI authentication"
+description: >-
+  Authenticate against the Livepeer AI gateway: API key types, CORS configuration,
+  key rotation, and security patterns for network-direct and managed access.
+pageType: guide
+audience: developer
+purpose: configure
+complexity: intermediate
+lifecycleStage: setup
+keywords:
+  - ai authentication
+  - api key
+  - CORS
+  - bearer token
+  - gateway auth
+  - security
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-14
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>The community Gateway accepts unauthenticated requests for development. Production Gateways require a Bearer token. Backend API keys have full access and must never appear in client-side code.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Authentication requirements depend on which Gateway you target. The community Gateway at `dream-gateway.livepeer.cloud` accepts unauthenticated requests for development and testing. Managed Gateway providers and self-hosted Gateways require a Bearer token in the `Authorization` header.
+
+<CustomDivider />
+
+## API key types
+
+Gateway providers that require authentication issue two key types:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Type</TableCell>
+      <TableCell header>Where to use</TableCell>
+      <TableCell header>Scope</TableCell>
+      <TableCell header>Risk if leaked</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Backend API key**</TableCell>
+      <TableCell>Server-side code, scripts, CI/CD pipelines</TableCell>
+      <TableCell>Full access to all API resources</TableCell>
+      <TableCell>Full account access; rotate immediately</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**CORS-enabled key**</TableCell>
+      <TableCell>Browser JavaScript, frontend applications</TableCell>
+      <TableCell>Scoped to specific asset and stream IDs</TableCell>
+      <TableCell>Limited to scoped resources only</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+A backend key in client-side code is a critical security vulnerability. Use the correct type for the deployment context.
+
+<CustomDivider />
+
+## Using a backend API key
+
+Pass the key as a Bearer token in the `Authorization` header:
+
+```bash icon="terminal"
+curl -X POST https://dream-gateway.livepeer.cloud/text-to-image \
+  -H "Authorization: Bearer $LIVEPEER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "a mountain at dawn", "model_id": "SG161222/RealVisXL_V4.0_Lightning"}'
+```
+
+In environment variables:
+
+```bash icon="terminal"
+# .env (never commit this file)
+LIVEPEER_API_KEY=your-api-key-here
+```
+
+```typescript icon="terminal"
+// Never hardcode; always read from environment
+const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+```
+
+<CustomDivider />
+
+## CORS-enabled keys for browser applications
+
+When your frontend makes direct API calls, use a CORS-enabled key scoped to specific asset or stream IDs. A leaked CORS key cannot access other resources in your account.
+
+```typescript icon="terminal"
+// Safe to bundle in a React or Next.js frontend
+const client = new Livepeer({
+  apiKey: process.env.NEXT_PUBLIC_LIVEPEER_CORS_KEY, // CORS-enabled key
+});
+```
+
+The `NEXT_PUBLIC_` prefix makes the variable available client-side in Next.js. Do not use this prefix for backend API keys.
+
+<CustomDivider />
+
+## Self-hosted Gateway authentication
+
+Self-hosted Gateways (go-livepeer in broadcaster mode) use a different authentication model. The Gateway authenticates to the network via its Ethereum keystore and TicketBroker deposit. Client requests to your self-hosted Gateway use whatever authentication layer you add in front of it (reverse proxy, API gateway, or application middleware).
+
+For production, [pymthouse](/v2/developers/guides/payments/clearinghouse-pattern) provides OIDC identity, usage-based billing, and a managed payment signer as a hosted or self-hosted backend for your self-hosted Gateway.
+
+<CustomDivider />
+
+## Key rotation
+
+Rotate API keys on a schedule and immediately if a key is exposed. Gateway providers let you create multiple active keys and delete compromised ones without downtime.
+
+Recommended rotation schedule:
+- Production backend keys: every 90 days
+- After any team member offboarding
+- Immediately after any suspected exposure
+
+Keep API keys out of version control. If a key appears in a commit, treat it as compromised and rotate immediately.
+
+<CustomDivider />
+
+## Authentication errors
+
+A `401 Unauthorized` response means the key is missing, malformed, or invalid:
+
+```json icon="terminal"
+{"error": "Unauthorized", "message": "Invalid API key"}
+```
+
+Check:
+1. The `Authorization` header is present and formatted as `Bearer <key>` (not `Bearer: <key>`)
+2. The key value has no leading or trailing whitespace
+3. The key has not been deleted or revoked
+4. You are using a backend key for a server-side request, not a CORS key
+5. You are not targeting the community Gateway with an auth header (it does not require one)
+
+See [job debugging](/v2/developers/guides/observability-and-debugging/job-debugging) for the full error diagnosis flow.

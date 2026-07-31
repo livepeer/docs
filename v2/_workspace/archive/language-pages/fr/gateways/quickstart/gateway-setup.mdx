@@ -1,0 +1,290 @@
+---
+title: 'Exécuter un Gateway : Guide de démarrage rapide'
+description: >-
+  Obtenez un nœud Gateway dual IA / vidéo Livepeer et lancez-le localement ou
+  sur le réseau Livepeer.
+sidebarTitle: 'Exécuter un Gateway : Démarrage rapide'
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - quickstart
+  - quickstart a gateway
+  - gateway
+  - guide
+  - video
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L3F1aWNrc3RhcnQvcXVpY2tzdGFydC1hLWdhdGV3YXkubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L3F1aWNrc3RhcnQvcXVpY2tzdGFydC1hLWdhdGV3YXkiLCJzb3VyY2VIYXNoIjoiYWMzMWZjYjg0NmVhZTU1YzY0MjEwNWZlMTJiMGNmZjI3ODliNWI5MTgzZGRhOGQ5ZDk4M2RmZmVhMTA3OTI4YiIsImxhbmd1YWdlIjoiZnIiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yN1QxNDowNjoxMC4xOTFaIn0= */}
+{/* DATA & CODE */}
+{/* These can be moved to the view using them */}
+import { DOCKER_CODE, DOCKER_YML, BASH_CODE, AI_TEST_COMMANDS, CONFIG_FILES, CLI_CODE } from '/v2/gateways/quickstart/data/docker/code.jsx';
+import { CONFIG_FLAGS } from '/v2/gateways/quickstart/data/flags.jsx';
+import { latestVersion } from '/snippets/data/gateways/version.jsx';
+
+{/* BANNERS, CALLOUTS, VALUE STRINGS */}
+{/* These can be moved to the view using them */}
+import { GatewayOffChainWarning, GatewayOnChainWarning, GatewayOnChainTTestnetNote, OrchAddrNote, TestVideoDownload, FfmpegWarning } from "/v2/gateways/quickstart/components/callouts.jsx";
+
+{/* COMPONENTS */}
+{/* These can be moved to the view using them */}
+import { ResponseFieldAccordion, ResponseFieldExpandable, CustomResponseField, ValueResponseField } from '/snippets/components/displays/response-fields/ResponseField.jsx';
+import { CustomCodeBlock, CodeSection, ComplexCodeBlock, } from '/snippets/components/displays/code/Code.jsx';
+import { TipWithArrow } from '/snippets/components/elements/callouts/Callouts.jsx';
+import { DoubleIconLink } from '/snippets/components/elements/links/Links.jsx';
+import { DownloadButton } from '/snippets/components/elements/buttons/Buttons.jsx';
+import { FlexContainer } from '/snippets/components/wrappers/containers/Layout.jsx';
+import { LatestVersion } from '/snippets/components/integrators/feeds/Release.jsx';
+
+{/* LAYOUTS & VIEWS */}
+import DockerOffChainTab from '/v2/gateways/quickstart/views/docker/dockerOffChainTab.mdx';
+import DockerOnChainTab from '/v2/gateways/quickstart/views/docker/dockerOnChainTab.mdx';
+import LinuxOffChainTab from '/v2/gateways/quickstart/views/linux/linuxOffChainTab.mdx';
+import LinuxOnChainTab from '/v2/gateways/quickstart/views/linux/linuxOnChainTab.mdx';
+import WindowsOffChainTab from '/v2/gateways/quickstart/views/windows/windowsOffChainTab.mdx';
+import WindowsOnChainTab from '/v2/gateways/quickstart/views/windows/windowsOnChainTab.mdx';
+
+{/* LAYOUT COMPOSABLE GROUPS */}
+import DockerSupport from '/v2/gateways/quickstart/groups/docker/dockerSupport.mdx';
+import LinuxSupport from '/v2/gateways/quickstart/groups/linux/linuxSupport.mdx';
+
+{/* 
+<Panel>
+  <div>
+    <span> *`go-livepeer` Latest Version:* <Badge color="green">{latestVersion}</Badge> </span>
+    <h1>Docker Quickstart Guide</h1>
+      <h4>{" "}<a href="#off-chain-gateway">Off-Chain Gateway</a></h4>
+      <h4>{" "}<a href="#on-chain-gateway">On-Chain Gateway</a></h4>
+  </div>
+</Panel> */}
+{/* <Icon icon="github" size={20} /> Github: [go-livepeer](https://github.com/livepeer/go-livepeer) <Icon icon="arrow-up-right" color="#2d9a67" size={10}/> codebase */}
+<TipWithArrow>
+  <span style={{fontSize: '1.0rem'}}> Use the <Icon icon="circle-chevron-down" /> **Dropdown** at the top-right of this page to view the Quickstart Guide
+  for your preferred OS. </span>
+</TipWithArrow>
+<Card title="go-livepeer" href="https://github.com/livepeer/go-livepeer" icon="github" arrow horizontal> 
+  <span> *Latest Version:* <Badge color="green">{latestVersion}</Badge> </span>
+</Card> 
+
+--- 
+# Allons-y (-Livepeer) ! <Icon icon="face-grin-wink" size={26} />
+Cette page vous permettra de mettre en place un nœud de passerelle Livepeer pour <Badge color="blue">Video</Badge> la transcodification & <Badge color="purple">AI</Badge> le routage du service de pipeline.
+
+*Ce guide comprend :* 
+- Configuration pour <span><Icon icon="link" size={20}/> **on-chain _(production)_** and <Icon icon="floppy-disk" size={20}/> **off-chain _(local/dev)_** Livepeer Gateway nodes </span>
+- Guides d'installation pour <span><Icon icon="docker" size={20} /> **Docker _(recommended)_** </span> et <span><Icon icon="laptop-code" size={20} /> **Pre-Built Binaries**. </span>
+
+{/* You can also build from source -> see full guide. */}
+
+
+{/* You can also build from source-> but
+Only build from source if you need to:
+
+Modify the code
+Test unreleased features
+Build for a specific configuration
+Debug issues
+*/}
+
+{/* Installing a Gateway means installing the <DoubleIconLink label="go-livepeer" href="https://github.com/livepeer/go-livepeer"/> Gateway code. */}
+
+{/* <Note>
+  You can install & run a [Livepeer Gateway Node](https://github.com/livepeer/go-livepeer) using
+  1. <Icon icon="docker" size={20} /> **Docker** (recommended)
+  2. Building from <Icon icon="code" size={20} /> **source (binary)**
+</Note> */}
+<Note>
+  <span style={{fontSize: '1.0rem'}}><Icon icon="docker" size={20}/> [Docker](https://docs.docker.com/get-docker/) is the recommended way to install and run a Livepeer Gateway Node.</span>
+  <br/>
+  <br/><span style={{ fontSize: '1.0rem' }}><Icon icon="linux" size={20}/> [Linux OS](https://linux.org) is recommended for production use.</span>
+</Note>
+
+<br />
+
+<View title=" Docker" icon="docker" iconType="solid">
+  ## <Icon icon="docker" iconType="solid" size={32} /> Docker Quickstart Guide
+  <FlexContainer gap="1rem" wrap>
+    <FlexContainer direction="row" gap="0.2rem" align="flex-start">
+      <Icon icon="linux" color="#ff9a0e" size={22}/>
+      <Badge> Linux </Badge>
+    </FlexContainer>
+    <FlexContainer direction="row" gap="0.2rem" align="flex-start">
+      <Icon icon="windows" color="#14bbf7" size={22} />
+      <Badge> Windows <Icon icon="warning" size={12} /></Badge>
+    </FlexContainer>
+    <FlexContainer direction="row" align="flex-start">
+      <Icon icon="apple" color="#60ba47" size={22} />
+      <Badge> MacOS <Icon icon="warning" size={12}/></Badge>
+    </FlexContainer>
+  </FlexContainer>
+  
+  <br />
+
+  <Accordion title="Docker Supported Hosts Details" icon="warning">
+    <DockerSupport />
+  </Accordion>
+
+
+
+  This guide will install and configure a Gateway to run video & AI workloads.
+
+  _**Choose your Gateway Mode:**_
+  <Tabs>
+    <DockerOffChainTab />
+    <DockerOnChainTab />
+  </Tabs>
+
+  <Accordion title="Docker Tips & Tricks" icon="magic-wand-sparkles">
+    <Danger> Verify these </Danger>
+    If you wanted to build a `go-livepeer` Docker image, you can do so from the root of the repository using this:
+    <CustomCodeBlock
+      codeString="docker build -t livepeer/go-livepeer:alpha-build -f docker/Dockerfile ../"
+      language="bash"
+      icon="terminal"
+      filename="Build Docker Image from Source"
+    />
+  </Accordion>
+
+  ## Reference Pages
+  {/* MOVE TO OWN PAGE*/}
+  <Columns cols={2}>
+    <Card
+      title="Docker Installation Guide"
+      href="../run-a-gateway/install/docker-install"
+      arrow
+      horizontal
+    >
+      View Full Installation Guide
+    </Card>
+    <Card
+      title="Configuration Flags Reference"
+      href="../references/configuration-flags"
+      arrow
+      horizontal
+    >
+      Gateway Configuration Flag Guide
+    </Card>
+  </Columns>
+
+</View>
+
+<View title="Linux" icon="linux" iconType="solid">
+  ## <Icon icon="linux" iconType="solid" size={32} /> Linux Quickstart Guide
+
+  This guide covers building from source on Linux (Ubuntu/Debian) 
+  {/* & MacOS (video support only).  -> separate view -> macOS can't do dual gateway.*/}
+
+  <Accordion title="Linux Supported Distributions & Required Packages" icon="info-circle">
+    <LinuxSupport />
+  </Accordion>
+
+  It's possible to use this guide for <Icon icon="apple" size={20} /> MacOS also, with some caveats:
+  <Accordion title="MacOS Important Notes" icon="warning">
+    <MacSupport />
+  </Accordion>
+  <br/>
+
+  _**Choose your Gateway Mode:**_
+  <Tabs>
+    <LinuxOffChainTab />
+    <LinuxOnChainTab />
+  </Tabs>
+
+  ## Reference Pages
+  {/* MOVE TO OWN PAGE*/}
+  <Columns cols={2}>
+    <Card
+      title="Linux Installation Guide"
+      href="../run-a-gateway/install/windows-install"
+      arrow
+      horizontal
+    >
+      View Full Installation Guide
+    </Card>
+    <Card
+      title="Configuration Flags Reference"
+      href="../references/configuration-flags"
+      arrow
+      horizontal
+    >
+      Gateway Configuration Flag Guide
+    </Card>
+  </Columns>
+
+</View>
+
+<View title="Windows" icon="windows" iconType="solid">
+  ## <Icon icon="windows" iconType="solid" size={32} /> Windows Quickstart Guide
+  <Tabs>
+    <WindowsOffChainTab />
+    <WindowsOnChainTab />
+  </Tabs>
+
+  ## Reference Pages
+
+  <Columns cols={2}>
+    <Card
+      title="Windows Installation Guide"
+      href="../run-a-gateway/install/windows-install"
+      arrow
+      horizontal
+    >
+      View Full Installation Guide
+    </Card>
+    <Card
+      title="Configuration Flags Reference"
+      href="../references/configuration-flags"
+      arrow
+      horizontal
+    >
+      Gateway Configuration Flag Guide
+    </Card>
+  </Columns>
+
+</View>
+
+## Dépannage
+
+<Card
+  title="Common Issues"
+  icon="triangle-exclamation"
+  iconType="solid"
+  arrow
+  horizontal
+>
+  FAQ here?
+</Card>
+
+## Pages connexes
+
+<Columns cols={2}>
+  <Card title="Setup Checklist" href="../run-a-gateway/requirements/setup" arrow horizontal>
+    {' '}
+    See Prerequisites & Requirements.{' '}
+  </Card>
+  <Card title="On-Chain Setup" href="../run-a-gateway/requirements/on-chain%20setup/on-chain" arrow horizontal>
+    See on-chain Setup Checklist.
+  </Card>
+  <Card title="Run a Gateway" href="../run-a-gateway/run-a-gateway" arrow horizontal>
+    See full Gateway Setup Guide.
+  </Card>
+  <Card
+    title="Orchestrator Guide"
+    href="/v2/fr/orchestrators/orchestrators-portal"
+    arrow
+    horizontal
+  >
+    Setup an Orchestrator.
+  </Card>
+</Columns>
+{/* 
+This page will have you running a Livepeer Gateway for video & AI trancoding in 10 minutes on Mac, Linux or Windows.
+
+It shows both off-chain (local) and on-chain (production) modes.
+
+## Assumed
+
+- You have ETH on Arbitrum L2 Network (or can get it from a faucet)
+-
+
+It uses defaults for all optional parameters. See the [full setup guide](/v2/fr/gateways/run-a-gateway/run-a-gateway) for more details on customising your Gateway. \*/}

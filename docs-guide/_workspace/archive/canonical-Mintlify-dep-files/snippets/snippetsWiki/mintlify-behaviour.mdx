@@ -1,0 +1,469 @@
+---
+title: "Mintlify Behaviour Guide"
+sidebarTitle: "Mintlify Behaviour"
+description: Historical reference for Mintlify-specific patterns and idiosyncrasies discovered while building the docs.
+pageType: reference
+audience: developer
+purpose: reference
+status: deprecated
+lastVerified: 2026-05-25
+---
+
+# Mintlify Behaviour Guide
+
+A reference for Mintlify-specific patterns and idiosyncrasies discovered while building this documentation.
+
+<CustomDivider />
+
+# Data & Variables in JSX & MDX
+
+Mintlify compiles components at the **MDX file level**, not the component file level. This means:
+
+- **Variables must be defined in the MDX file** where the component is used
+- **You cannot import data into a component file** and expect it to work
+- **Props must be passed from the MDX file** to the component
+
+This is a major limitation of Mintlify
+
+
+## JSX variables in Custom JSX Components
+The pattern is:
+
+✅ MyMDXPage.mdx file imports {variable} from `variable.jsx`
+✅ Component (MyComponent) can access {variable} even though it doesn't import it, if being used in the MyMDXpage file.
+✅ The component accesses the variable from the MDX scope
+
+<CustomDivider />
+
+**The Problem**
+
+❌  Import from other jsx
+You **cannot** do this:
+
+```jsx icon="terminal"
+// ❌ snippets/components/MyComponent.jsx
+import { themeColor } from '/snippets/styles/colours.jsx';
+
+export const MyComponent = () => {
+  return <div style={{ color: themeColor.light.accent }}>Hello</div>;
+};
+```
+
+**Why?** Mintlify doesn't resolve imports inside component files during compilation.
+
+<CustomDivider />
+❌  Same file definition
+You **cannot** do this:
+
+```jsx icon="terminal"
+// ❌ snippets/components/MyComponent.jsx
+export const themeColor = {
+  light: { accent: "#3CB540" },
+  dark: { accent: "#2b9a66" }
+};
+
+export const MyComponent = () => {
+  return <div style={{ color: themeColor.light.accent }}>Hello</div>;
+};
+```
+
+**Why?** Mintlify doesn't resolve imports inside component files during compilation.
+
+<CustomDivider />
+
+**Solution: Import data in Parent MDX** 
+
+You **MUST** define the data in the MDX file where MyComponent is used
+**YOU DO NOT NEED TO PASS IT AS A PROP**
+
+**MDX file:**
+
+```mdx icon="terminal"
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+import { themeColor } from '/snippets/styles/colours.jsx';
+
+<MyComponent otherProps="value">
+  Hello
+</MyComponent>
+```
+
+**Component file:**
+
+```jsx icon="terminal"
+// ✅ snippets/components/MyComponent.jsx
+export const MyComponent = ({otherProps}) => {
+  return <div style={{ themeColor }}>{children}</div>;
+};
+```
+
+## MDX-in-MDX Variable & Component Pattern
+
+When importing MDX files into other MDX files, child MDX files inherit the parent's scope **with limitations**.
+
+**Rules**
+
+1. **✅ Child MDX inherits parent scope for props** - Parent's imports work when used as component props
+2. **❌ Child MDX may NOT inherit parent scope for direct JSX interpolation** - Variables used as `{variable}` may need re-import
+3. **✅ Child can import its own variables** - If the child needs something the parent doesn't import
+4. **✅ Best practice** - Import shared variables/components in the parent, import child-specific ones in the child
+
+**Example: Parent and Child MDX**
+
+**Parent:** `gateway-setup.mdx`
+```mdx icon="terminal"
+import { DOCKER_CODE, CONFIG_FLAGS } from '/snippets/data/gateways/code.jsx'
+import { GatewayOffChainWarning } from '/v2/gateways/quickstart/components/callouts.jsx'
+import { CustomCodeBlock } from '/snippets/components/displays/code/Code.jsx'
+import DockerOffChainTab from '/snippets/pages/04_GATEWAYS/run/quickstart/views/docker/dockerOffChainTab.mdx'
+
+<DockerOffChainTab />
+```
+
+**Child:** `dockerOffChainTab.mdx`
+```mdx icon="terminal"
+{/* NO imports needed - uses parent's scope */}
+<Tab title="Off-Chain Gateway">
+  <GatewayOffChainWarning />
+  <CustomCodeBlock {...DOCKER_CODE.install} />
+  <ResponseFieldAccordion fields={CONFIG_FLAGS.offchain.required} />
+</Tab>
+```
+
+The child MDX can use `GatewayOffChainWarning`, `CustomCodeBlock`, `DOCKER_CODE`, and `CONFIG_FLAGS` without importing them because they're imported in the parent.
+
+**Common Mistake: Duplicate Imports**
+
+```mdx icon="terminal"
+// ❌ WRONG - This causes MDX errors
+// Parent.mdx
+import { myVariable } from '/snippets/data/myData.jsx'
+import ChildView from '/snippets/pages/ChildView.mdx'
+
+// ChildView.mdx
+import { myVariable } from '/snippets/data/myData.jsx'  // ❌ ERROR: Already imported in parent!
+```
+
+**When to Import in Child**
+
+Only import in the child if the parent doesn't already import it:
+
+```mdx icon="terminal"
+// ✅ CORRECT
+// Parent.mdx
+import { sharedVariable } from '/snippets/data/shared.jsx'
+import ChildView from '/snippets/pages/ChildView.mdx'
+
+// ChildView.mdx
+import { childSpecificVariable } from '/snippets/data/childSpecific.jsx'  // ✅ OK - not in parent
+
+<div>
+  {sharedVariable}  {/* From parent scope */}
+  {childSpecificVariable}  {/* From child import */}
+</div>
+```
+
+**HYPOTHESIS: Direct JSX Interpolation vs Props**
+
+**Hypothesis:** MDX scope inheritance works for variables used as **props**, but NOT for variables used in **direct JSX text interpolation** `{variable}`.
+
+**Evidence:**
+
+**Parent:** `gateway-setup.mdx`
+```mdx icon="terminal"
+import { latestVersion } from '/snippets/automations/globals/globals.jsx'
+import { DOCKER_CODE } from '/snippets/data/gateways/code.jsx'
+import DockerOffChainTab from '/snippets/pages/docker/dockerOffChainTab.mdx'
+import LinuxOffChainTab from '/snippets/pages/linux/linuxOffChainTab.mdx'
+
+<Badge color="green">{latestVersion}</Badge>  {/* Direct interpolation in parent */}
+```
+
+**Child 1:** `dockerOffChainTab.mdx` (NO imports)
+```mdx icon="terminal"
+{/* NO imports - uses parent's variables */}
+<CustomCodeBlock {...DOCKER_CODE.install} />  {/* ✅ Works - used as spread props */}
+<CustomCodeBlock codeString={DOCKER_YML.offChain.dual} />  {/* ✅ Works - used as prop value */}
+```
+
+**Child 2:** `linuxOffChainTab.mdx` (HAS imports)
+```mdx icon="terminal"
+{/* Parent has latestVersion, but child re-imports it */}
+import { latestVersion } from '/snippets/automations/globals/globals.jsx'
+import { LINUX_CODE } from '/snippets/data/gateways/linux/code.jsx'  {/* Not in parent */}
+
+<Badge><span>{latestVersion}</span></Badge>  {/* ❌ Needs import - direct JSX interpolation */}
+<CustomCodeBlock placeholderValue={latestVersion} />  {/* Also used as prop */}
+```
+
+**Pattern observed:**
+- ✅ `dockerOffChainTab.mdx` uses parent's variables ONLY as **props** → works without imports
+- ❌ `linuxOffChainTab.mdx` uses variable in **direct JSX interpolation** `{version}` → needs to import
+
+**Hypothesis:** Child must re-import variables if they're used in direct JSX text interpolation `{variable}`, even if parent already imports them. Variables used only as props inherit from parent scope.
+
+**Status:** Unsure why, but seems to be the pattern - needs testing to confirm.
+
+<CustomDivider />
+
+
+## React in Mintlify
+
+### Global React Hooks
+
+Mintlify provides React hooks **globally** - no imports needed:
+
+```jsx icon="terminal"
+// ✅ Works in Mintlify - hooks available without import
+export function MyComponent() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // fetch data, run effects, etc.
+  }, []);
+
+  return <div>{count}</div>;
+}
+```
+
+```jsx icon="terminal"
+// ❌ Not needed - will cause errors
+import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+```
+
+**Available hooks without import:** `useState`, `useEffect`, `useMemo`, `useCallback`, `useRef`, etc.
+
+### Two Ways to Use React
+
+**Option 1: Inline in MDX files**
+
+You can write React code directly in `.mdx` files:
+
+```mdx icon="terminal"
+export function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>Count: {count}</button>;
+}
+
+# My Page
+
+<Counter />
+```
+
+**Option 2: Separate component files (recommended)**
+
+Create a `.jsx` file in `snippets/`:
+
+```jsx icon="terminal"
+// snippets/components/MyComponent.jsx
+export function MyComponent() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.example.com/data')
+      .then(res => res.json())
+      .then(setData);
+  }, []);
+
+  return <div>{data ? JSON.stringify(data) : 'Loading...'}</div>;
+}
+```
+
+Then import in your MDX:
+
+```mdx icon="terminal"
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+
+<MyComponent />
+```
+
+### Data Fetching in MDX
+
+Yes, you can fetch data directly in MDX pages using React hooks! The component renders client-side and can make API calls:
+
+```jsx icon="terminal"
+export function LiveData() {
+  const [price, setPrice] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=livepeer&vs_currencies=usd')
+      .then(res => res.json())
+      .then(data => setPrice(data.livepeer.usd));
+  }, []);
+
+  return <span>${price ?? '...'}</span>;
+}
+```
+
+**Considerations:**
+- Components render **client-side** (not server-side)
+- SEO: Search engines may not index dynamic content
+- Initial load: Users may see loading states briefly
+- Error handling: Always handle fetch failures gracefully
+
+<CustomDivider />
+
+## Import Paths
+
+### Absolute Paths from Root
+
+Import paths in Mintlify are **relative to the repository root**, not the current file:
+
+```jsx icon="terminal"
+// ✅ Correct - absolute path from repo root
+import { MyComponent } from '/snippets/components/MyComponent.jsx';
+import data from '/snippets/data/mydata.json';
+
+// ❌ Wrong - relative paths don't work as expected
+import { MyComponent } from '../components/MyComponent.jsx';
+import { MyComponent } from './MyComponent.jsx';
+```
+
+### File Extensions
+
+Always include the file extension:
+
+```jsx icon="terminal"
+// ✅ Include extension
+import { Component } from '/snippets/Component.jsx';
+
+// ❌ May not resolve
+import { Component } from '/snippets/Component';
+```
+
+<CustomDivider />
+
+## Component Patterns
+
+### Exporting Components
+
+Use named exports for components:
+
+```jsx icon="terminal"
+// ✅ Named export
+export function MyComponent() { ... }
+
+// Then import as:
+import { MyComponent } from '/snippets/MyComponent.jsx';
+```
+
+### Children Prop Handling
+
+When creating wrapper components, handle children explicitly:
+
+```jsx icon="terminal"
+export function Wrapper({ children }) {
+  // ✅ Ensure children is always an array for mapping
+  const childArray = Array.isArray(children) ? children : [children];
+
+  return childArray.map((child, i) => (
+    <div key={i}>{child}</div>
+  ));
+}
+```
+
+<CustomDivider />
+
+## JSX File Scope
+
+### Top-level Constants are Not Accessible
+
+**CRITICAL:** Mintlify's MDX processor does not support top-level `const`, `let`, or `var` declarations outside exported component functions in `.jsx` files. They throw `ReferenceError` at runtime even though they pass linting and IDE checks.
+
+```jsx icon="terminal"
+// ❌ ReferenceError: myStyles is not defined
+const myStyles = { wrapper: { display: 'flex' } }
+export const MyComponent = () => <div style={myStyles.wrapper} />
+
+// ✅ Works — define inside the function body
+export const MyComponent = () => {
+  const myStyles = { wrapper: { display: 'flex' } }
+  return <div style={myStyles.wrapper} />
+}
+```
+
+Discovered 2026-03-28. Root cause: Mintlify evaluates each `export` in its own scope; file-level declarations are not carried into that scope.
+
+<CustomDivider />
+
+## Icon Component Behavior
+
+### Custom Icons are Rendered as Images
+
+**CRITICAL:** Mintlify's `<Icon>` component renders custom icons as `<img>` elements, NOT inline SVG.
+
+```jsx icon="terminal"
+// ❌ This will NOT work - color styling has no effect
+<span style={{ color: "#3CB540" }}>
+  <Icon icon="/path/to/icon.svg" size={20} />
+</span>
+
+// Mintlify renders this as:
+<img src="/path/to/icon.svg" width="20" height="20" />
+// CSS color property does NOT affect <img> elements!
+```
+
+**Why this matters:**
+- You **CANNOT** change icon color with CSS `color` property
+- You **CANNOT** use CSS variables to theme icons
+- The SVG file itself must contain the correct `fill=` color
+
+### Solution: Use Theme-Aware SVG Files
+
+Create SVG files that respond to theme changes using CSS media queries or theme classes:
+
+```svg icon="terminal"
+<!-- ✅ Theme-aware SVG with CSS -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .icon-fill { fill: #3CB540; } /* Light mode green */
+    @media (prefers-color-scheme: dark) {
+      .icon-fill { fill: #2b9a66; } /* Dark mode green */
+    }
+  </style>
+  <path class="icon-fill" d="M..." />
+</svg>
+```
+
+**Example from codebase:**
+```jsx icon="terminal"
+// ✅ Correct - using theme-aware SVG
+<Icon icon="/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg" size={20} />
+```
+
+The SVG file `/snippets/assets/logos/Livepeer-Logo-Full-Theme.svg` contains internal CSS that adapts to light/dark themes.
+
+### Alternative: Use Multiple SVG Files
+
+If you can't use CSS in SVG, use different files for each theme:
+
+```jsx icon="terminal"
+// ❌ Not ideal - requires conditional rendering
+{isDark ? (
+  <Icon icon="/icons/logo-dark.svg" size={20} />
+) : (
+  <Icon icon="/icons/logo-light.svg" size={20} />
+)}
+```
+
+**Best Practice:** Always use theme-aware SVG files with internal CSS for icons that need to adapt to theme changes.
+
+<CustomDivider />
+
+## Known Limitations
+
+1. **No `import React from 'react'`** - Will cause build errors
+2. **Client-side only** - No SSR for custom components
+3. **No Node.js APIs** - Can't use `fs`, `path`, etc. in components
+4. **External packages** - Limited to what Mintlify bundles (React, basic utilities)
+5. **Icon styling** - Custom icons render as `<img>` tags, cannot be styled with CSS color
+
+<CustomDivider />
+
+## Debugging Tips
+
+1. **Check the browser console** - Client-side errors show there
+2. **Verify import paths** - Must be absolute from root with extension
+3. **Test components in isolation** - Create a test page to verify components work
+4. **Check Mintlify build output** - Some errors only appear at build time
+5. **Inspect rendered HTML** - Check if icons are `<img>` or `<svg>` elements

@@ -1,0 +1,462 @@
+---
+title: 区块链合约
+sidebarTitle: 区块链合约
+description: 对 Livepeer 协议区块链合约的概述。
+keywords:
+  - livepeer
+  - about
+  - livepeer protocol
+  - blockchain contracts
+  - blockchain
+  - contracts
+  - overview
+  - protocol
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9hYm91dC9yZXNvdXJjZXMvYmxvY2tjaGFpbi1jb250cmFjdHMubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9hYm91dC9yZXNvdXJjZXMvYmxvY2tjaGFpbi1jb250cmFjdHMiLCJzb3VyY2VIYXNoIjoiOTFhZWNlMjFkNDQ4OTk4ZTg4MzVjNTg5MTI2YjZkYzA4NjU0ZDcxMTIyNGJhZThmNTM2NDQ3ZjdkMGE0ZThhOCIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6Im9wZW5haS9ncHQtb3NzLTEyMGI6ZnJlZSIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMi0yNlQxODo1Njo0MC44NzZaIn0= */}
+import { Image } from '/snippets/components/elements/images/Image.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { Subtitle, CopyText } from '/snippets/components/elements/text/Text.jsx'
+
+# Livepeer 区块链合约
+
+Livepeer 使用一个全面的以太坊智能合约系统，以无许可方式治理其去中心化网络。 
+
+当前，Livepeer 协议已部署在 Arbitrum One 上，并使用一系列以太坊智能合约进行治理：
+
+- LivepeerToken (LPT) 所有权和委托
+- 活跃转码器运营商（编排者）的质押和选择
+- 向参与者分配通胀奖励和费用
+- 协议通过轮次实现基于时间的进展
+- 通过概率微支付系统进行支付处理
+
+在 Livepeer 协议中，合约有 3 项核心功能：
+1. 核心协议合约
+2. 代币系统
+3. 治理
+
+它们由 **10 个智能合约** 共同协作，以管理质押、支付、治理和服务发现： 
+
+{/* 1. Controller [Core]
+2. BondingManager [Core]
+3. TicketBroker [Core]
+4. RoundsManager [Core]
+5. Minter [Core]
+6. ServiceRegistry [Core]
+7. MerkleSnapshot [Core]
+8. BondingVotes [Core]
+7. LivepeerToken [Token]
+8. Governor[Governance]
+9. LivepeerGovernor [Governance]
+10. Treasury [Governance] */}
+
+## 合约交互架构
+
+以下是这些合约相互交互的方式：
+
+<Danger> FIX THIS DIAGRAM - unreadable </Danger>
+````mermaid
+graph TB
+    subgraph "Discovery Layer"
+        Controller["Controller<br/>Contract Registry"]
+        ServiceRegistry["ServiceRegistry<br/>URI Mapping"]
+    end
+
+    subgraph "Economic Layer"
+        LPT["LivepeerToken<br/>ERC20 Token"]
+        BondingManager["BondingManager<br/>Staking & Rewards"]
+        TicketBroker["TicketBroker<br/>Micropayments"]
+        Minter["Minter<br/>Token Inflation"]
+    end
+
+    subgraph "Time & Governance"
+        RoundsManager["RoundsManager<br/>Protocol Rounds"]
+        Governor["LivepeerGovernor<br/>Governance"]
+    end
+
+    subgraph "Participants"
+        Broadcaster["Broadcaster Node"]
+        Orchestrator["Orchestrator Node"]
+        Delegator["Token Holder"]
+    end
+
+    Controller -.->|"Address Lookup"| LPT
+    Controller -.->|"Address Lookup"| BondingManager
+    Controller -.->|"Address Lookup"| TicketBroker
+    Controller -.->|"Address Lookup"| RoundsManager
+    Controller -.->|"Address Lookup"| Minter
+    Controller -.->|"Address Lookup"| ServiceRegistry
+    Controller -.->|"Address Lookup"| Governor
+
+    Delegator -->|"Approve() LPT"| LPT
+    Delegator -->|"Bond(amount, orchestrator)"| BondingManager
+    BondingManager -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"Transcoder(cuts)"| BondingManager
+    Orchestrator -->|"SetServiceURI(url)"| ServiceRegistry
+    Orchestrator -->|"Reward()"| BondingManager
+    BondingManager -->|"CreateReward()"| Minter
+    Minter -->|"Mint() new LPT"| LPT
+
+    Broadcaster -->|"Approve() LPT"| LPT
+    Broadcaster -->|"FundDepositAndReserve()"| TicketBroker
+    TicketBroker -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"RedeemWinningTicket()"| TicketBroker
+    TicketBroker -->|"Transfer() to orchestrator"| LPT
+    TicketBroker -->|"Update claimedReserve"| BondingManager
+
+    RoundsManager -->|"Round data"| BondingManager
+    RoundsManager -->|"Block hashes"| TicketBroker
+
+    BondingManager -->|"Stake weight"| Governor
+    Delegator -->|"CastVote()"| Governor
+````
+
+
+## 核心协议合约
+
+核心协议合约是 Livepeer 协议的支柱。
+它们管理编排者的质押、委托和奖励分配。
+它们还通过轮次管理协议的基于时间的进程，并通过概率微支付系统处理付款。
+Controller 充当中心注册表，通过更新实现地址来实现升级
+
+{/* - Controller
+- Bonding Manager
+- Rounds Manager
+- TicketBroker
+- Minter
+- ServiceRegistry
+------ */}
+
+<Danger> Maybe put in tab view for better layout </Danger>
+#### **Controller**: <Subtitle text="Contract Registry" />
+
+The [Controller](https://github.com/livepeer/protocol/blob/e8b6243c/deploy/deploy_contracts.ts) 是所有协议合约的中心注册表。
+所有协议合约都会向 Controller 查询它们需要交互的其他合约的地址。
+
+<Accordion title="Controller">
+	The Controller acts as the central registry for all other contract addresses in the protocol. 
+
+	It maintains a mapping of contract IDs to their addresses, enabling protocol upgrades by updating the registered implementation addresses. 
+	It uses [Keccak256](https://en.wikipedia.org/wiki/Keccak#Keccak-256) hashes of contract names as keys to store their addresses, enabling upgradeable architecture without changing the Controller address itself.
+
+	**Address**:
+	<LinkArrow label="See on Arbiscan" href="https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4" newline={false} />
+	```
+	0xD8E8328501E9645d16Cf49539efC04f734606ee4
+	```
+
+	**Purpose**:
+
+	- Central address registry for all protocol contracts
+	- Enables contract upgrades while maintaining a stable entry point
+	- Provides pause functionality for emergency situations
+
+	**Key Operations**:
+
+	- `getContract()` - Get address of a contract by name
+	- `setContract()` - Set address of a contract by name
+	- `pause()`/`unpause()` - Emergency pause for critical situations
+
+	<Image src="https://media1.tenor.com/m/_vT9Qzw03N4AAAAd/sir-topham-hatt-topham.gif" alt="Controller" />	
+	{/* <iframe href="https://tenor.com/view/sir-topham-hatt-the-fat-controller-sir-toping-hat-happy-bald-gif-6999538172963206619"/> */}
+
+</Accordion>
+
+#### **BondingManager**: <Subtitle text="Staking & Delegation" />
+The [BondingManager](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/bonding/BondingManager.sol) 是管理质押经济、协调器注册和奖励分配的最关键合约。
+
+<Accordion title="BondingManager">
+	**Address**:
+	<LinkArrow label="See on Arbiscan" href="https://arbiscan.io/address/0x0000000000000000000000000000000000000000" newline={false} />
+	```
+	0x0000000000000000000000000000000000000000
+	```
+
+	**Purpose**:
+
+	- Manages the transcoder (orchestrator) pool as a sorted linked list
+	- Handles bonding (staking) and delegation to orchestrators
+	- Distributes inflationary rewards and fees
+	- Manages unbonding periods and withdrawals
+	- Tracks earnings and claims
+
+	**Key Operations**:
+
+	- `Bond()` - Delegate stake to an orchestrator
+	- `Transcoder()` - Register as an orchestrator with reward/fee parameters
+	- `Unbond()` - Start withdrawal process (with lock period)
+	- `Reward()` - Called by orchestrators to mint inflationary rewards
+	- `ClaimEarnings()` - Claim accumulated rewards and fees
+
+</Accordion>
+
+#### **TicketBroker**: <Subtitle text="Probabilistic Micropayments" />
+
+The [TicketBroker](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/ticket/TicketBroker.sol) 管理离线支付系统，使用概率微支付进行广播者到编排者的付款。
+
+<Accordion title="TicketBroker">
+	**Purpose**:
+
+	- Holds broadcaster deposits and reserves for micropayments
+	- Validates and settles winning payment tickets
+	- Manages unlock/withdrawal periods for broadcasters
+	- Tracks claimed reserves per orchestrator
+
+	**Key Operations**:
+
+	- `FundDepositAndReserve()` - Broadcaster deposits funds for payments
+	- `RedeemWinningTicket()` - Orchestrator redeems a winning ticket
+	- `Unlock()` - Start withdrawal process
+	- `Withdraw()` - Complete withdrawal after unlock period
+</Accordion>
+
+#### **RoundsManager**: <Subtitle text="Protocol Time Management" /> 
+
+该[RoundsManager](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/RoundsManager.sol) 管理协议的基于时间的轮次系统，每个轮次都有固定的区块长度。
+
+<Accordion title="RoundsManager">
+	**Purpose**:
+
+	- Defines protocol rounds (epochs) of fixed block length
+	- Tracks round initialization and locking
+	- Provides block hashes for ticket validation
+	- Coordinates time-based protocol operations
+
+	**Key Operations**:
+
+	- `InitializeRound()` - Initialize new round
+	- `CurrentRound()` - Get current round number
+	- `BlockHashForRound()` - Get L1 block hash for ticket validation
+</Accordion>
+
+#### **Minter**: <Subtitle text="Token Inflation" />
+
+该 [铸造者](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/Minter.sol) 控制代币供应通胀，以奖励活跃的 orchestrators.
+
+<Accordion title="Minter">
+**Purpose**:
+
+- Manages LPT token inflation schedule
+- Calculates mintable tokens per round
+- Adjusts inflation based on target bonding rate
+- Called by BondingManager during reward distribution
+
+**Key Operations**:
+
+- `CurrentMintableTokens()` - Calculate tokens to mint for rewards
+- `Inflation()`, `InflationChange()` - Query inflation parameters
+
+</Accordion>
+
+#### **服务注册表**: <Subtitle text="Orchestrator Discovery" /> 
+
+该 [服务注册表](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/service/ServiceRegistry.sol) 将以太坊地址映射到服务 URI，以进行 orchestrator 发现.
+
+<Accordion title="ServiceRegistry">
+	**Purpose**:
+
+	- Allows orchestrators to advertise their network endpoints
+	- Enables broadcasters to discover and connect to orchestrators
+	- Stores URI strings on-chain
+
+	**Key Operations**:
+
+	- `SetServiceURI()` - Orchestrator registers their endpoint
+	- `GetServiceURI()` - Query orchestrator's service URL
+</Accordion>
+
+#### **MerkleSnapshot**
+
+[MerkleSnapshot](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/MerkleSnapshot.sol) 创建在给定轮次的 staking pool 快照，并生成用于可验证委托的 merkle root.
+
+<Accordion title="MerkleSnapshot">
+	**Purpose**:
+
+	- Creates a snapshot of the staking pool at a given round
+	- Generates a merkle root for verifiable delegation
+	- Used for delegator rewards and governance
+
+	**Key Operations**:
+
+	- `CreateSnapshot()` - Create snapshot at current round
+	- `MerkleRoot()` - Get merkle root for a round
+</Accordion>
+
+<CustomDivider />
+
+## 代币与实用合约
+
+<Tip> 
+
+Livepeer moved from the Ethereum mainnet to the Arbitrum One network in 2022 to increase transaction throughput and reduce fees. <br/> 
+
+On Ethereum mainnet, only the `LivepeerToken` and `BridgeMinter` contracts remain operational; all other contracts have migrated to Arbitrum One.
+
+This ensures the token has the higher security of the Ethereum mainnet while the network enjoys the higher throughput and lower fees of Arbitrum. 
+
+</Tip>
+
+#### **LivepeerToken (LPT)**: <Subtitle text="ERC20 Token" /> 
+<Badge color="green">Ethereum Mainnet Only </Badge>
+
+The [LivepeerToken](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/LivepeerToken.sol) 是用于质押、支付和治理的原生协议代币，基于[ERC-20](https://eips.ethereum.org/EIPS/eip-20) 标准。
+
+<Accordion title="LivepeerToken">
+	**Purpose**:
+
+	- ERC20 token for all economic activity in the network
+	- Used for bonding/staking to orchestrators
+	- Required for broadcaster deposits and payments
+	- Governance voting weight
+
+	**Key Operations**:
+
+	- `Transfer()`, `BalanceOf()`, `TotalSupply()` - Standard ERC20 operations
+	- `Approve()` - Required before bonding or funding deposits
+</Accordion>
+
+#### **BridgeMinter**: <Subtitle text="Token Bridge" />
+<Badge color="green">Ethereum Mainnet Only </Badge>
+
+该 [BridgeMinter](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/BridgeMinter.sol) 是一个铸造合约，当它收到来自 Ethereum 主网的有效存款时，会在 Arbitrum One 网络上铸造 LPT 代币。
+
+<Accordion title="BridgeMinter">
+	**Purpose**:
+
+	- Mints LPT tokens on Arbitrum One when it receives a valid deposit from the Ethereum mainnet
+
+</Accordion>
+
+#### **LivepeerTokenFaucet**: <Subtitle text="Test Token Distribution" />
+<Badge color="surface">Testnets Only </Badge>
+
+该[LivepeerTokenFaucet](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/token/LivepeerTokenFaucet.sol) 用于测试网，分发测试 LPT 代币。 
+
+<Accordion title="LivepeerTokenFaucet">
+	**Purpose**:
+
+	- Provides test tokens on testnets
+	- Rate-limited token requests
+	- Development and testing support
+
+</Accordion>
+
+<CustomDivider />
+
+## 治理合约
+
+#### **治理者**: <Subtitle text="Contract Upgrades" />
+
+[治理者](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/governance/Governor.sol) 通过多步骤的交易提案和执行过程来处理协议升级。
+
+<Accordion title="Governor">
+	**Purpose**:
+
+	- Handles protocol upgrades through a multi-step transaction proposal and execution process
+
+	**Key Operations**:
+
+	- `Propose()` - Submit a new proposal
+	- `Queue()` - Queue a proposal for execution
+	- `Execute()` - Execute a queued proposal
+</Accordion>
+
+#### **LivepeerGovernor**: <Subtitle text=" Protocol Governance" />
+
+The [LivepeerGovernor](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/governance/LivepeerGovernor.sol) 实现链上治理，以进行协议升级和参数更改。
+
+<Accordion title="LivepeerGovernor">
+	**Purpose**:
+
+	- On-chain voting on protocol proposals
+	- Weighted by bonded stake
+	- Implements governance mechanisms
+
+	**Key Operations**:
+
+	- `CastVote()` - Vote on governance proposals
+	- `CastVoteWithReason()` - Vote with explanation
+</Accordion>
+
+#### **国库**: <Subtitle text="On-chain Treasury Management" />
+
+[国库](https://github.com/livepeer/protocol/blob/e8b6243c/contracts/governance/Treasury.sol) 管理链上国库，用于资助和会计。
+
+<Accordion title="Treasury">
+	**Purpose**:
+
+	- Manages protocol treasury for funding
+	- Tracks allocations and expenditures
+	- Funds Special Purpose Entities (SPEs)
+
+	**Key Operations**:
+
+	- `Deposit()` - Add funds to the treasury
+	- `Withdraw()` - Allocate funds to recipients
+</Accordion>
+
+
+{/* ## Contract Interaction Architecture
+
+Here's how these contracts interact with each other:
+
+````mermaid
+graph TB
+    subgraph "Discovery Layer"
+        Controller["Controller<br/>Contract Registry"]
+        ServiceRegistry["ServiceRegistry<br/>URI Mapping"]
+    end
+
+    subgraph "Economic Layer"
+        LPT["LivepeerToken<br/>ERC20 Token"]
+        BondingManager["BondingManager<br/>Staking & Rewards"]
+        TicketBroker["TicketBroker<br/>Micropayments"]
+        Minter["Minter<br/>Token Inflation"]
+    end
+
+    subgraph "Time & Governance"
+        RoundsManager["RoundsManager<br/>Protocol Rounds"]
+        Governor["LivepeerGovernor<br/>Governance"]
+    end
+
+    subgraph "Participants"
+        Broadcaster["Broadcaster Node"]
+        Orchestrator["Orchestrator Node"]
+        Delegator["Token Holder"]
+    end
+
+    Controller -.->|"Address Lookup"| LPT
+    Controller -.->|"Address Lookup"| BondingManager
+    Controller -.->|"Address Lookup"| TicketBroker
+    Controller -.->|"Address Lookup"| RoundsManager
+    Controller -.->|"Address Lookup"| Minter
+    Controller -.->|"Address Lookup"| ServiceRegistry
+    Controller -.->|"Address Lookup"| Governor
+
+    Delegator -->|"Approve() LPT"| LPT
+    Delegator -->|"Bond(amount, orchestrator)"| BondingManager
+    BondingManager -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"Transcoder(cuts)"| BondingManager
+    Orchestrator -->|"SetServiceURI(url)"| ServiceRegistry
+    Orchestrator -->|"Reward()"| BondingManager
+    BondingManager -->|"CreateReward()"| Minter
+    Minter -->|"Mint() new LPT"| LPT
+
+    Broadcaster -->|"Approve() LPT"| LPT
+    Broadcaster -->|"FundDepositAndReserve()"| TicketBroker
+    TicketBroker -->|"TransferFrom()"| LPT
+
+    Orchestrator -->|"RedeemWinningTicket()"| TicketBroker
+    TicketBroker -->|"Transfer() to orchestrator"| LPT
+    TicketBroker -->|"Update claimedReserve"| BondingManager
+
+    RoundsManager -->|"Round data"| BondingManager
+    RoundsManager -->|"Block hashes"| TicketBroker
+
+    BondingManager -->|"Stake weight"| Governor
+    Delegator -->|"CastVote()"| Governor
+```  */}

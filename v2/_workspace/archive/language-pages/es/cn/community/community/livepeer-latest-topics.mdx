@@ -1,0 +1,56 @@
+---
+title: Livepeer 热门话题与更新
+sidebarTitle: 最新话题
+description: 来自 Livepeer 的最新产品更新、视频、论坛讨论、X 帖子和博客。
+keywords:
+  - livepeer
+  - community
+  - livepeer community
+  - livepeer latest topics
+  - topics
+  - updates
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9jb21tdW5pdHkvbGl2ZXBlZXItY29tbXVuaXR5L2xpdmVwZWVyLWxhdGVzdC10b3BpY3MubWR4Iiwic291cmNlUm91dGUiOiJ2Mi9jb21tdW5pdHkvbGl2ZXBlZXItY29tbXVuaXR5L2xpdmVwZWVyLWxhdGVzdC10b3BpY3MiLCJzb3VyY2VIYXNoIjoiYThjZDhhNjY1M2JhNTkxZWQyMzY3NDBiYTRjZDMzYTlhZWY2MGU3ZmViYWYzMzFiMDZiZDdmYzQ4MzE4NjgyMSIsImxhbmd1YWdlIjoiY24iLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxMToyOTowOS4xMzhaIn0= */}
+import { PostCard, BlogCard, CardBlogDataLayout, CardColumnsPostLayout, ColumnsBlogCardLayout, ForumLatestLayout, DiscordAnnouncements, } from '/snippets/components/integrators/blog/BlogCards.jsx'
+import { TwitterTimeline } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx';
+import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx';
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { forumData } from '/snippets/data/social-feeds/forumData.jsx'
+import { ghostData } from '/snippets/data/social-feeds/ghostBlogData.jsx'
+import { youtubeData } from '/snippets/data/social-feeds/youtubeData.jsx'
+import { discordAnnouncementsData } from '/snippets/data/social-feeds/discordAnnouncementsData.jsx'
+
+<Tip>
+  Uses automations to pull in the latest youtube videos, forum posts and blogs
+</Tip>
+
+
+## <Icon icon="fire" size={22} /> 最新产品更新
+
+<Note>Coming Soon: Automation that links to product updates feed</Note>
+
+
+## <Icon icon="camera-movie" size={24} /> 视频
+ 在 <LinkArrow label="Livepeer Youtube Channel" href="https://www.youtube.com/@livepeer" newline={false} />
+{/* { DownloadButton } from "/snippets/components/elements/buttons/Buttons.jsx"; */}
+<YouTubeVideoData items={youtubeData} limit={2} />
+
+## <Icon icon="messages" size={24} /> 论坛
+ 参与热门 <LinkArrow label="Forum Discussions" href="https://forum.livepeer.org/" newline={false} /> 
+
+<ForumLatestLayout items={forumData} limit={2} />
+
+## <Icon icon="discord" size={24} /> Discord
+将您的声音加入最新的 <LinkArrow label="Discord Discussions" href="https://discord.livepeer.org/" newline={false} /> 
+<DiscordAnnouncements items={discordAnnouncementsData} limit={2} />
+
+## <Icon icon="twitter" size={24} /> X 帖子
+在最新的 <LinkArrow label="Livepeer X posts" href="https://x.com/Livepeer" newline={false} />
+{/* Note: widget used from "https://www.mikle.com/". Alt: https://www.sociablekit.com/ */}
+<TwitterTimeline />
+
+## <Icon icon="pencil-line" size={24} /> 博客
+阅读来自 <LinkArrow label="Livepeer Blog" href="https://blog.livepeer.org/" newline={false} />
+<ColumnsBlogCardLayout items={ghostData} limit={2} />

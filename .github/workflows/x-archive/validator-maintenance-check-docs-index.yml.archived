@@ -1,0 +1,20 @@
+# type: validator
+# concern: maintenance
+# pipeline: P3
+name: Check Docs Index
+
+on:
+  pull_request:
+    branches:
+      - docs-v2
+  push:
+    branches:
+      - docs-v2
+  workflow_dispatch:
+
+jobs:
+  docs-index-check:
+    uses: ./.github/workflows/dispatch-maintenance-check-catalogs.yml
+    with:
+      mode: check-docs-index
+    secrets: inherit

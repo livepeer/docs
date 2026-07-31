@@ -1,5 +1,9 @@
 # Augment Instructions for Livepeer Docs
 
+> **Archived reference only.** Active Augment rules have moved to `.augment/rules/` at the
+> project root — that is the canonical location Augment reads. This file is kept for
+> historical reference and is no longer consumed by Augment automatically.
+
 ## ⛔ CRITICAL RULES - VIOLATION = CATASTROPHIC FAILURE ⛔
 
 ### NEVER PERFORM GIT OPERATIONS WITHOUT EXPLICIT PERMISSION
@@ -9,6 +13,7 @@
 - **NEVER** run `git reset` (soft/hard/mixed) without explicit user permission
 - **DEFAULT:** do not use `--no-verify` to bypass hooks
 - **EXCEPTION:** only when explicitly instructed by a human in-thread, `git commit --no-verify` is allowed with audit metadata per `ai-tools/ai-rules/HUMAN-OVERRIDE-POLICY.md`
+- **NEVER** use port `3000` for local Mintlify, preview, or browser-validation sessions; choose a non-3000 port explicitly
 - **NEVER** modify git history or remote state
 - **ALWAYS** ask before ANY git operation that could lose work
 
@@ -39,7 +44,7 @@
 
 **BEFORE making any styling, component, or documentation changes, you MUST read:**
 
-1. **Structure Rules** - `contribute/STRUCTURE.md` (if exists) or `tasks/plan/migration-plan.md` Section 4
+1. **Structure Rules** - `workspace/plan/migration-plan.md` Section 4
    - Repository structure and file organization rules
    - Directory purposes and file placement guidelines
    - Enforcement mechanisms
@@ -68,8 +73,8 @@
 **⚠️ MANDATORY: Read Structure Rules Before Creating/Moving Files**
 
 **BEFORE creating, moving, or organizing files, you MUST read:**
-- `contribute/STRUCTURE.md` - Complete repository structure rules (if exists)
-- `tasks/plan/migration-plan.md` - Detailed structure documentation (Section 4)
+- `workspace/plan/migration-plan.md` Section 4 - Structure rules
+- `workspace/plan/migration-plan.md` - Detailed structure documentation (Section 4)
 
 ### Critical Structure Rules
 
@@ -79,20 +84,20 @@
    - **CRITICAL:** Mintlify only allows ONE CSS file (`style.css`) at root - NO `styles/` folder
 
 2. **File Locations** - Files must be in correct directories:
-   - Scripts → `tools/scripts/` (organized by purpose: audit/, generate/, test/, verify/, fetch/)
+   - Scripts → `operations/scripts/` (organised by type/concern/niche)
    - Config files → `tools/config/` **EXCEPT**:
      - `.prettierrc.yaml` → **ROOT** (Prettier convention)
    - `.speakeasy/` → `tools/config/.speakeasy/` (Speakeasy API docs tool config)
    - AI guidelines → `tools/ai-rules/`
    - Public assets → `snippets/assets/` (favicon.png, logo/ in snippets/assets/ - referenced in docs.json)
    - OpenAPI specs → `api/` (consolidated)
-   - Contribution docs → `contribute/`
+   - Contribution docs → `docs-guide/contributing/`
    - Documentation → `docs/v1/` (FROZEN) or `docs/v2/pages/` (active)
 
 3. **Snippets Directory** - MUST follow Mintlify conventions:
    - ✅ Required: `snippets/pages/` (for MDX-in-MDX pattern)
    - ✅ Allowed: `components/`, `data/`, `assets/`, `automations/`, `generated/`
-   - ❌ Forbidden: Scripts (→ `tools/scripts/`), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
+   - ❌ Forbidden: Scripts (→ `operations/scripts/` organised by type/concern/niche), wiki/docs (→ `tools/wiki/`), styles (→ root `style.css` only)
    - ✅ All imports must be absolute paths from root: `/snippets/components/...`
    - ❌ Components cannot import other components
 
@@ -110,18 +115,17 @@
 ### Key Directories
 
 - `snippets/components/` - Custom React/JSX/TSX components
-- `snippets/data/` - Data files (gateways.jsx, etc.)
+- `snippets/data/` - Canonical data modules, generated feed outputs, and shared variables
 - `snippets/pages/` - REQUIRED for MDX sub-views (MDX-in-MDX pattern)
 - `snippets/assets/` - Static assets for docs content
-- `snippets/automations/` - Dynamic/AI/data-fetching logic
-- `tools/scripts/` - All scripts (organized by purpose)
+- `operations/scripts/` - All scripts (organised by type/concern/niche: audits, generators, validators, remediators, dispatch, automations)
 - `tools/config/` - Tool configurations
 - `tools/ai-rules/` - AI guidelines and rules
 - `api/` - Consolidated OpenAPI specifications
-- `contribute/` - Contribution documentation
+- `docs-guide/contributing/` - Contribution documentation
 - `favicon.png` and `logo/` - Public assets in `snippets/assets/` (referenced in docs.json)
 - `ai-tools/` - AI tool setup guides
-- `tasks/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
+- `workspace/` - AI working directory (plan/, reports/, scripts/, errors/, experiments/, notes/)
 - `style.css` - Global CSS Custom Properties (ONLY CSS file at root)
 
 ### Important Files
@@ -139,7 +143,7 @@
 
 ```bash
 npm i -g mintlify
-mint dev
+mint dev --port 3001
 ```
 
 ### Docker Build

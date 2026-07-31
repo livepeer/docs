@@ -1,0 +1,113 @@
+---
+mode: wide
+title: Livepeer Studio Recent Announcements
+sidebarTitle: Recent Activity
+description: "Latest videos, blog posts, and community activity for Livepeer Studio."
+lifecycleStage: discover
+complexity: intermediate
+purpose: orient
+pageType: resource
+pageVariant: overview
+keywords:
+  - livepeer studio
+  - livepeer
+  - community
+  - updates
+  - video API
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Studio Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: builder
+lastVerified: 2026-03-25T00:00:00.000Z
+---
+
+{/* COMPONENTS */}
+import { SocialLinks } from '/snippets/components/elements/links/Links.jsx'
+import { YouTubeVideo } from '/snippets/components/displays/video/Video.jsx'
+import { YouTubeVideoData } from '/snippets/components/integrators/video-data/VideoData.jsx'
+import { RssBlogCard, RssBlogCardLayout, DiscordAnnouncements } from '/snippets/components/integrators/blog/BlogCards.jsx'
+import { MarkdownEmbed } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+
+{/* DATA */}
+import { youtubeData } from '/snippets/data/social-feed-solutions/livepeer-studio/youtubeData.jsx'
+import { youtubeDataStatic } from '/snippets/data/social-feed-solutions/livepeer-studio/youtubeDataStatic.jsx'
+import { discordAnnouncementsData } from '/snippets/data/social-feeds/discordAnnouncementsData.jsx'
+import { studioSocials } from "./data/socials.jsx"
+
+<CenteredContainer maxWidth="fit-content">
+  <BorderedBox variant="muted" padding="0.5rem 1rem 1rem 1rem">
+      <SocialLinks iconColor="var(--hero-text)" links={studioSocials} />
+  </BorderedBox>
+</CenteredContainer>
+
+<br/>
+<CenteredContainer width="80%" minWidth="fit-content" >
+    <Tip>
+    This page is an automated workflow.
+    </Tip>
+</CenteredContainer>
+
+## <Icon icon="camera-movie" size={24} /> Videos
+
+Watch the latest on the <LinkArrow label="Livepeer YouTube Channel" href="https://www.youtube.com/@livepeer" newline={false} />
+
+<LazyLoad height="400px">
+  <YouTubeVideoData items={youtubeDataStatic} limit={4} />
+</LazyLoad>
+
+<CustomDivider style={{margin: "0.5rem 0 -2.5rem 0"}}/>
+
+## <Icon icon="discord" size={24} /> Discord Announcements
+
+Latest from the <LinkArrow label="Livepeer Discord" href="https://discord.gg/livepeer" newline={false} />
+
+<LazyLoad height="300px">
+  <DiscordAnnouncements serverName="Livepeer" items={discordAnnouncementsData} limit={4} ScrollBox={ScrollBox} scrollMaxHeight={200} />
+</LazyLoad>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## Featured X Post <Icon icon="x-twitter" size={24} />
+
+<br/>
+{/* https://x.com/elliot_braem/status/1977819660897640875?s=20 */}
+
+<LazyLoad height="650px">
+  <iframe
+      src="https://platform.twitter.com/embed/Tweet.html?id=1977819660897640875&theme=dark"
+      className="lp-tweet-frame-large"
+      title="Studio on X"
+  />
+</LazyLoad>
+
+<CustomDivider style={{margin: "0 0 -2.5rem 0"}} />
+
+## <Icon icon="github" size={24} /> GitHub
+
+<LazyLoad height="600px">
+  <BorderedBox>
+    <ScrollBox maxHeight={600}>
+      <BorderedBox variant="accent">
+          Livepeer Studio Github
+          <LinkArrow label="View livepeer/studio on GitHub" href="https://github.com/livepeer/studio" newline={true} />
+      </BorderedBox>
+      <MarkdownEmbed url="https://raw.githubusercontent.com/livepeer/studio/master/README.md" />
+    </ScrollBox>
+  </BorderedBox>
+</LazyLoad>
+
+<CustomDivider />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Studio Overview" icon="book-open" href="/solutions/livepeer-studio/overview" />
+  <Card title="Livepeer Studio Changelog" icon="clock" href="/solutions/livepeer-studio/changelog" />
+</CardGroup>

@@ -1,0 +1,449 @@
+---
+sidebarTitle: Changelog
+title: Livepeer Studio Changelog
+description: Release history for Livepeer Studio – video infrastructure APIs and dashboard.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
+  - livepeer studio
+  - livepeer
+  - changelog
+  - releases
+  - video API
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Studio Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: changelog
+purpose: changelog
+audience: builder
+lastVerified: 2026-03-25T00:00:00.000Z
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
+import { CustomCardTitle } from '/snippets/components/elements/text/Text.jsx'
+import { InlineDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<Tip>
+  This page is an automated workflow.
+  <Subtitle variant="changelog" style={{fontSize: "0.95rem", marginTop: "0.25rem"}}>Subscribe to this changelog's <LinkArrow label="RSS Feed" href="/v2/solutions/livepeer-studio/changelog/rss.xml" newline={false} /></Subtitle>
+</Tip>
+
+<CustomDivider style={{margin: "-0.5rem 0 -1.5rem 0"}} />
+
+Track releases for <LinkArrow label="Livepeer Studio" href="https://github.com/livepeer/studio/releases" newline={false} /> on GitHub.
+
+{/* ──────────────────────────────────────────────
+  AUTOMATION ZONE — entries below are populated by workflow.
+  ────────────────────────────────────────────── */}
+
+<Update label="v0.19.0" tags={["Features", "Fixes"]} rss={{ title: "Livepeer Studio v0.19.0", description: "* api: projects: allUsers param in projects list by @gioelecerati in https://github.com/livepeer/studio/pull/2206" }} description={<Subtitle variant="changelog">June 2024</Subtitle>}>
+  ## v0.19.0
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * api: projects: allUsers param in projects list
+    * api: Add profiles field to asset
+    * api/jobs/update-usage: Process users in parallel and allow cancellation
+    * fix: update old workspace deps
+    * Tailwind and UI tweaks
+    * Fix thumbs for direct uploads
+    * api: Allow patching a stream recordingSpec
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.19.0" iconLeft="github" />
+</Update>
+
+<Update label="v0.18.0" tags={["Features", "Fixes"]} rss={{ title: "Livepeer Studio v0.18.0", description: "* api: access-control: allowedOrigins by @gioelecerati in https://github.com/livepeer/studio/pull/2176" }} description={<Subtitle variant="changelog">June 2024</Subtitle>}>
+  ## v0.18.0
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * api: access-control: allowedOrigins
+    * access-control: fix casing for origin header
+    * access-control: use referer on redirects
+    * access-control: handle referer decoding
+    * add GTM
+    * access-control: check empty origins
+    * asset: payloa: remove project id from asset payload
+    * access-control: tests: fix casing
+    * Fix checking 'deleting' field while listing assets
+    * api/task: Prevent tasks from suspended users from running
+    * schema fixes
+    * Change 'not-used-playback' to 'ingest-{playbackId}'
+    * api: update asset's hash to include null type
+    * api: stream: add cache to /stream/playback
+    * "Restore" add projectId scoping to streams/sessions/webhook (#2103)
+    * api: Livestream recording customisation
+    * logger: Allow enabling verbose logs for staging
+    * project: user: create default project id
+    * api: Create entrypoints for long-running jobs
+    * .github: Delete active-cleanup and billing cronjobs
+    * api: billing: notify user disabled due to invalid payment method
+    * api/stripe: Avoid sleeping too much when reporting usage
+    * db: index: asset phase, deleted, deletedAt
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.18.0" iconLeft="github" />
+</Update>
+
+<Update label="v0.17.0" tags={["Features", "Fixes"]} rss={{ title: "Livepeer Studio v0.17.0", description: "* fix: fix broadcasting by @0xcadams in https://github.com/livepeer/studio/pull/2028" }} description={<Subtitle variant="changelog">May 2024</Subtitle>}>
+  ## v0.17.0
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * fix: fix broadcasting
+    * api: Add createdByTokenName field to assets
+    * Add stream config endpoint
+    * Set use replica false for stream config
+    * update content on homepage
+    * api: asset: limit on delete by user id
+    * api: Implement MVP of stream pull trigger
+    * Rename webhook response table
+    * Remove unnecessary db field
+    * Add webhook search field on request body
+    * Add flv playback URL to playback info endpoint
+    * Ability to set custom profiles for vod uploads
+    * Ability to set custom segment size for vod uploads
+    * access-control: added refresh interval for policies
+    * Support for thumbs vtt opt out
+    * tmp: rename rate limit
+    * ci: add bucket upload of builds
+    * hot fix: multistream state
+    * fix: null safety in metrics lookup
+    * docs: fix clip timestamp requirements
+    * ui: new webhook page
+    * api: webhook: allow additional headers & payload to be sent in webhooks
+    * api: acl: bring limit for hackers down to 5 per node
+    * acl: fix webhook headers
+    * fix: update successful filter in webhooks logs
+    * Add a webhook log success field to allow filtering in the UI
+    * api: disable user on first payment failed
+    * api: flag streams as pull created for auth header in webhook
+    * api: better user disable on payment failed
+    * acl: logs for webhook & header fix
+    * Unsuspend stream with a new call to /pull
+    * api: playback: require auth for playback recordings
+    * add isHealthy to filters
+    * Correct values for 'encoder' in Profiles
+    * api: acl: remove redundant isPullStream
+    * api: update param description
+    * Terminate the stream if the pull source has been updated
+    * api/stream/pull: Start pulls on the requested loc
+    * stream/helpers: reduce some delays in await functions
+    * Webhook page
+    * Update customer template
+    * api: Fix creatorId filter for assets
+    * Always log response body for pull streams
+    * Stream pull startup improvements
+    * Pull stream start improvements
+    * Allow for 200 access denied for webhook access control
+    * Update faq.md
+    * fix: moved upload via URL to separate API schema and added docs
+    * Add admin fields to new upload payload definition
+    * www/admin/stream: Add allow-same-origin to iframe
+    * Create stream api fix
+    * Call stream update for pull API rather than nuke
+    * Revert "Call stream update for pull API rather than nuke (#2090)"
+    * 0xcadams/create stream api fix
+    * Projects in Studio
+    * Call stop sessions rather than nuke for stream pull
+    * Revert "Projects in Studio (#2078)"
+    * Wait after sending stop sessions
+    * Switch terminate to a stop sessions
+    * Revert "Wait after sending stop sessions"
+    * Remove stopsessions from /pull
+    * Increase webhook timeout 5s => 30s
+    * Delay the stream pull if it has been recently terminated
+    * Return 429 for too many terminate calls
+    * Add extra debug values to session re-use log
+    * Switch from nuke to stop sessions when disabling users
+    * access-control: fix status code of gate
+    * Implement locking stream pull to avoid multiple catalyst pulling the …
+    * projects: add projects and projectId scoping to assets/api-token cotrollers
+    * access-control.test: fix test to receive correct error
+    * project: return project object for CRUD api
+    * Revert "Implement locking stream pull to avoid multiple catalyst pull lock
+    * Implement locking stream pull to avoid multiple catalyst pulling the stream
+    * Add host param to lockPull endpoint
+    * lockPull: check isActive in the transaction and only by different nodes
+    * fix: remove encodings from API schema
+    * Release pull lock when stream is terminated
+    * api: Enable local IP verification on webhooks
+    * api: Attempt processing recording up to 5 times
+    * Revert "api: Enable local IP verification on webhooks (#2118)"
+    * api/store: Handle connection failure with RabbitMQ
+    * remove mention of “free” from recording tooltip
+    * api: webhook: log headers
+    * api: webhook: fix header log
+    * Add pullRegion to streams to make the ingest node sticky
+    * api: gate: add playurl to logs
+    * Integrating June tracking tool
+    * fix: fix June method
+    * api: asset: delete & restore
+    * Add additional logs to /pull
+    * feat: add stream filters
+    * ui: fix the stream states
+    * Stick to the pull host while triggering the catalyst pull start
+    * Revert "Stick to the pull host while triggering the catalyst pull start"
+    * Stick to the pull host while triggering the catalyst pull start
+    * api: ingest: direct base & playback
+    * api: Handle active cleanup from pull lock API
+    * refactor: improve api schema
+    * api: Query isHealthy field as a string to handle JSOnull
+    * api: moved objectStoreId and catalystPipelineStrategy to db schema
+    * api: fix direct playback api
+    * fix june trigger
+    * fix stream page ui issues
+    * api: Log the full pull payload for debugging
+    * add canny redirect
+    * api: stream: test profiles for test creator ids
+    * api/stream: Allow admins to use API key to patch stream
+    * api: stream: added isMobile to pull streams
+    * api/stream: Add a couple more hacks for testing Trovo profiles
+    * move auth routes to /dashboard
+    * reskin auth pages to match new site
+    * update email button urls
+    * remove corporate site, move everything to /dashboard
+    * add redirect to dashboard
+    * .github: Create staging active streams cleanup job
+    * .github: Improve active-cleanup action
+    * api/stream: Make sure we use patched payload on /pull create stream
+    * api: Create logic for automatically cleaning up dead streams
+    * api,www: Create `failed` state for recordings
+    * api/stream: Order streams by lastSeen on active-cleanup
+    * api/cannon: Re-fix local IP check with better error handling
+    * api: Fix double index creation with separate jobs DB pool
+    * Reuse catalyst stream pull node if pull is locked
+    * api: Fix the hack for non-standard profiles on pull API
+    * api: Allow isMobile to be specified as an int (0 or 1... Or 2!)
+    * api/stream: Only clear fps if isMobile === 2
+    * add projectId scoping to streams/sessions/webhook
+    * api/cannon: Stop retrying invalid webhooks forever
+    * Revert "add projectId scoping to streams/sessions/webhook (#2103)"
+    * fix: change to nullable create/patch stream
+    * refactor: improve api schema
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.17.0" iconLeft="github" />
+</Update>
+
+<Update label="v0.16.2" tags={["Release"]} rss={{ title: "Livepeer Studio v0.16.2", description: "* api: Create PUT /stream/pull API for idempotent pull stream by @victorges in https://github.com/livepeer/studio/pul..." }} description={<Subtitle variant="changelog">February 2024</Subtitle>}>
+  ## v0.16.2
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * api: Create PUT /stream/pull API for idempotent pull stream
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.16.2" iconLeft="github" />
+</Update>
+
+<Update label="v0.16.1" tags={["Features", "Fixes"]} rss={{ title: "Livepeer Studio v0.16.1", description: "* Document the quality param by @leszko in https://github.com/livepeer/studio/pull/1996" }} description={<Subtitle variant="changelog">February 2024</Subtitle>}>
+  ## v0.16.1
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * Document the quality param
+    * api: Fix index usage for usage queries
+    * api: Stop spamming external Object Stores
+    * feat: added login and update livepeer.js
+    * Revert "feat: added login and update livepeer.js"
+    * Return targetId while creating a multistream target
+    * clipping: enforce endTime > startTime
+    * refactor: update security schema
+    * feat: integrate ripe for tracking leads
+    * ui: fix the pricing grid
+    * www: Implement JWT refreshing logic
+    * don't produce db query related prometheus metrics
+    * restore dropped comment
+    * user: patch api & change email
+    * www: Fix initial API client state
+    * Start on webhook log API
+    * feat: added login and update livepeer.js
+    * Rename /requests to /log
+    * access-control: move rate limit to catalyst
+    * api: added user custom tags to stream object
+    * api: Pull ingest for streams
+    * api: Fix ensureExperimentSubject call
+    * update the content on homepage
+    * fix: bump livepeer react
+    * ui: add status page link
+    * api: fix userTags type
+    * Webhook get and resend APIs
+
+    ## New Contributors
+    * @pwilczynskiclearcode made their first contribution in https://github.com/livepeer/studio/pull/2014
+    * @denbrkic made their first contribution in https://github.com/livepeer/studio/pull/2023
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.16.1" iconLeft="github" />
+</Update>
+
+<Update label="v0.16.0" tags={["Features", "Fixes"]} rss={{ title: "Livepeer Studio v0.16.0", description: "* Add Quality param to profile by @leszko in https://github.com/livepeer/studio/pull/1880" }} description={<Subtitle variant="changelog">December 2023</Subtitle>}>
+  ## v0.16.0
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * Add Quality param to profile
+    * Add quality param for livestreams
+    * clip: fix api failing when unauthenticated requests come in
+    * Increase publishTimeout to 60s
+    * fix: typo
+    * db: cache objects with ttl
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.16.0" iconLeft="github" />
+</Update>
+
+<Update label="v0.15.7" tags={["Features", "Fixes"]} rss={{ title: "Livepeer Studio v0.15.7", description: "* Handle update task failure by @mjh1 in https://github.com/livepeer/studio/pull/1983" }} description={<Subtitle variant="changelog">December 2023</Subtitle>}>
+  ## v0.15.7
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * Handle update task failure
+    * api/schema: Add docs on stream terminate API
+    * refactor: fixed openapi errors (api-schema)
+    * chore: add dispatch event workflow
+    * multistream: atomic add and remove targets from a given stream
+    * Revert "add vercel analytics (#1976)"
+    * access-control: admin public key access
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.15.7" iconLeft="github" />
+</Update>
+
+<Update label="v0.15.6" tags={["Features", "Fixes"]} rss={{ title: "Livepeer Studio v0.15.6", description: "* api: have tus respect X-Forwarded-Proto headers by @iameli in https://github.com/livepeer/studio/pull/1874" }} description={<Subtitle variant="changelog">November 2023</Subtitle>}>
+  ## v0.15.6
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * api: have tus respect X-Forwarded-Proto headers
+    * api: attestation test was missing an await for clearDatabase
+    * billing: remove migration endpoints
+    * Add support for a failover recording bucket
+    * webhook: b64 encode the response of failing webhooks
+    * fix: remove redirect
+    * fix: changed search to case insensitive
+    * www: billing: remove upcoming invoice total on dashboard home page
+    * Update site
+    * fix prettier
+    * Fix dark mode in dashboard
+    * Fix compare page
+    * chore: bump lvpr js
+    * Update compare heading
+    * Implement vod storage experiment/feature toggle
+    * Remove transcode and import tasks
+    * api: user: added email verification messages
+    * clip: define clip api
+    * api: delete user api
+    * playback: improve dvr playback error handling
+    * session: don't fail when no sessions exist
+    * clip: allow sdk clipping
+    * api: allow overriding default stream profiles
+    * clip: livepeerjs clipping & admin check
+    * clip: fix clipping permissions
+    * api: bump tus server to 1.0.0
+    * api: get clips
+    * user: fix delete user authorizer
+    * clip: show clips in the dashboard
+    * Increase final retry delay
+    * api: clip: get clips api
+    * clip: api: fix get clips by stream
+    * www: clips: display session ids also in recordings
+    * Support secondary private object store
+    * Fix room delete error
+    * stream: fix idle state race condition
+    * fix: z index on sidebar
+    * clip: static mp4 as downloadUrl
+    * clip: remove stream.record check from clip & playback info
+    * clip: clip by session id
+    * api: clips rate limit
+    * clip: change processing query
+    * clip: fix rate limiting
+    * clip: fix headers in clip api
+    * api: abstract requesterId
+    * api: Nuke streams asynchronously w/ events
+    * Request VOD thumbnails based on user experiment
+    * Don't log headers
+    * Log database queries at debug level
+    * Add new pages: product, customer, blog
+    * Enable secondary storage by default with a blocklist via an experiment
+    * billing: usage notifications
+    * api: fix resend validation email
+    * Add C2PA support
+    * Return live thumbnail URL from playback API
+    * api: user: added disabled field
+    * Add secondary store logic to recordings
+    * user: disable on tier limit & enable enforcement
+    * usage: fix usage query
+    * usage: fetch active users from analyzer
+    * usage: report: fix recent active
+    * usage: added notification logs
+    * notifications: better usage notifications
+    * access-control: enforce viewers limit for free tier
+    * Revert "Return live thumbnail URL from playback API (#1938)"
+    * notifications: fix email sent check
+    * billing: patch subscription endpoint
+    * gate: enforce viewers limit in memory
+    * Revert "stream: fix idle state race condition (#1916)"
+    * www: fix active right now status
+    * Return live thumbnail URL from playback API
+    * fix: login redirect
+    * Add /heartbeat endpoint
+    * api: asset: delete assets by user
+    * api: clip: added clip apis reference to api-schema
+    * usage: enable hourly reporting
+    * Support patching profiles in a stream
+    * Fix Stream Idle by using the isActive from webhook, not stream
+    * Revert "Fix Stream Idle by using the isActive from webhook, not strea…
+    * Update faq.md
+    * api: filter streams by playbackId
+    * stream: fix idle state race condition (#1916)
+    * Yarn prettier
+    * api: asset: delete multiple asset at once fixes
+    * Return live thumbnail URL for everyone
+    * Return VOD thumbs VTT URL when available
+    * Fix removing Multistream Target from UI
+    * docs: added better docs to api schema
+    * add vercel analytics
+    * reduce revalidate seconds for pages
+    * api: asset: rerun tasks
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.15.6" iconLeft="github" />
+</Update>
+
+<Update label="v0.15.5" tags={["Fixes"]} rss={{ title: "Livepeer Studio v0.15.5", description: "* billing: hackers with pay as you go by @gioelecerati in https://github.com/livepeer/studio/pull/1867" }} description={<Subtitle variant="changelog">September 2023</Subtitle>}>
+  ## v0.15.5
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * billing: hackers with pay as you go
+    * www: plans: fix alert text
+    * package.json: i guess don't use lerna to run tests?
+    * test: increase timeout
+    * fix box www fallback
+    * www: gitignore sitemap
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.15.5" iconLeft="github" />
+</Update>
+
+<Update label="v0.15.4" tags={["Release"]} rss={{ title: "Livepeer Studio v0.15.4", description: "* chore: bump @livepeer/react@^2.8.2 by @iameli in https://github.com/livepeer/studio/pull/1864" }} description={<Subtitle variant="changelog">September 2023</Subtitle>}>
+  ## v0.15.4
+
+  <ScrollBox maxHeight="250px" showHint={true}>
+    ## What's Changed
+    * chore: bump @livepeer/react@^2.8.2
+  </ScrollBox>
+
+  <DoubleIconLink label="View release on GitHub" href="https://github.com/livepeer/studio/releases/tag/v0.15.4" iconLeft="github" />
+</Update>
+

@@ -1,0 +1,147 @@
+---
+title: Livepeer Overview
+sidebarTitle: Livepeer Overview
+description: >-
+  A high-level introduction to the key concepts workings of the Livepeer open,
+  on-demand AI & Media infrastructure substrate and the distributed
+  crypto-primitive coordination system.
+keywords:
+  - livepeer
+  - about
+  - core concepts
+  - mental model
+  - introduction
+  - key
+  - architecture
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+## Livepeer Overview
+
+The real-time media substrate is underpinned by a network of actors that perform the work needed to compute, transcode & orchestrate video & AI jobs in the [Livepeer Network](/v2/about/network/design).
+
+The [Livepeer Protocol](/v2/about/protocol/design) is the underlying code that enforces the mechanisms and rules to ensure the reliability, cooperation and coordination of these decentralised actors.
+
+## Protocol vs Network
+
+The protocol governs.
+The network performs the work.
+
+<CenteredContainer>
+  <DynamicTableV2
+    headerList={['Layer', 'Description']}
+    itemsList={[
+        {
+        Layer: <strong>Livepeer Protocol</strong>,
+        Description: 'On-chain crypto-economic incentives & coordination; staking; payments.',
+        },
+        {
+        Layer: <strong>Livepeer Network</strong>,
+        Description: 'Off-chain nodes performing real-time work (transcoding, inference, routing).',
+        }
+    ]}
+    />
+</CenteredContainer>
+
+<Note> The protocol determines the rules of the game while the network is the players & participants. </Note>
+
+## Marketplace & System Architecture
+
+From a **marketplace** perspective, Livepeer has:
+<BorderedBox variant="accent">
+- A **demand-side** agent (an app, platform, or operator) which brings video or AI jobs;
+- A **supply-side** agent (Orchestrators and their GPU capacity, optionally backed by separate worker processes) which performs compute and other work;
+- A **protocol** which provides the governance, payment primitives and reward system to coordinate open participation and make the market viable at scale.
+ {/* // - routing, measurement, and payment primitives to make that market viable at scale. */}
+</BorderedBox>
+<br/>
+From a **systems engineering** perspective, Livepeer has:
+<BorderedBox variant="accent">
+- A **hardware layer** of GPU nodes (orchestrators) that perform the compute work
+- A **network layer** of `go-livepeer` nodes that handle job routing, verification and payment;
+- A **software layer** of services built on top of the network layer (e.g. Studio, Daydream, ComfyStream) that provide additional functionality and services to the network.
+- A **protocol layer** of smart contracts that enforce the rules of the network.
+- An **economics layer** of tokenomics and game theory that aligns incentives.
+</BorderedBox>
+
+See more on the architectural layers in <LinkArrow href="/v2/about/concepts/mental-model" label="Mental Model: OSI Framework for Livepeer" newline={false} />
+
+{/* ----
+
+# Protocol Overview
+
+The Livepeer Protocol is a decentralised video transcoding network built on Ethereum smart contracts, using a delegated proof-of-stake model to coordinate participants and distribute economic incentives.
+
+## Key Actors and Participants
+
+The protocol involves three main participant types:
+
+1. **Delegators** - LPT token holders who delegate their tokens to transcoders to earn rewards
+2. **Transcoders** - Service providers who perform video transcoding work and earn rewards and fees
+3. **Broadcasters** - Users who pay for transcoding services using ETH through the ticket system
+
+## Video vs AI Pipelines
+
+Based on the available codebase, I can only see infrastructure for **video transcoding pipelines**. The protocol manages video processing work through transcoders who are elected via staking. I do not see any AI-specific pipeline implementations in this repository - the codebase appears focused solely on video transcoding infrastructure.
+
+## Key Capabilities
+
+The protocol provides:
+
+- **Decentralised transcoding** - Video processing distributed across network participants
+- **Economic incentives** - LPT inflation rewards and ETH fee distribution
+- **Probabilistic micropayments** - Ticket-based payment system for transcoding services
+- **Round-based governance** - Time progression through discrete rounds
+- **Staking and delegation** - Token bonding to secure the network
+
+## Key Value Propositions
+
+- **Cost efficiency** - Decentralised infrastructure reduces transcoding costs
+- **Reliability** - Economic incentives ensure network participation and uptime
+- **Scalability** - Distributed processing can scale with demand
+- **Permissionless** - Anyone can participate as delegator or transcoder
+
+## Job Routing
+
+Jobs are routed through the **transcoder pool** mechanism:
+
+1. Transcoders register and set commission rates (reward cut and fee share)
+2. The top transcoders by stake are selected for the active set each round
+3. Broadcasters send work to active transcoders
+4. The `SortedDoublyLL` data structure maintains the ordered transcoder pool
+
+## Economic Model
+
+The protocol uses a dual-token economic system:
+
+- **LPT (Livepeer Token)** - Governance and staking token with inflationary rewards
+- **ETH** - Payment currency for transcoding services
+
+**Reward Distribution**:
+- New LPT minted each round based on inflation rate and active stake
+- Rewards split between transcoders (reward cut) and delegators
+- ETH fees from broadcasters split between transcoders (fee share) and delegators
+
+**Key Economic Parameters**:
+- `inflation` - Per-round inflation rate
+- `targetBondingRate` - Target percentage of bonded tokens
+- `unbondingPeriod` - Time delay for withdrawing staked tokens
+
+---
+
+## Notes
+
+This overview is based solely on the smart contract codebase in the livepeer/protocol repository. The repository contains the core protocol contracts but may not include all aspects of the broader Livepeer ecosystem, such as:
+- Off-chain transcoding software implementations
+- AI pipeline components (if they exist in separate repositories)
+- Client applications and user interfaces
+- Network monitoring and orchestration tools
+
+For a complete understanding of video vs AI pipelines, you may need to consult additional Livepeer repositories or documentation beyond this protocol contracts repository.
+
+Wiki pages you might want to explore:
+- [Architecture (livepeer/protocol)](/wiki/livepeer/protocol#1.1) */}

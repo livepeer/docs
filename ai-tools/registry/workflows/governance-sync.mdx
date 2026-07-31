@@ -1,0 +1,125 @@
+---
+title: 'Governance sync (post-merge)'
+kind: 'workflow'
+status: 'active'
+concern: 'repo-ops'
+source_path: '.github/workflows/governance-sync.yml'
+trigger_mode: 'push'
+risk_level: 'high'
+consolidation_flag: 'review for alignment with `repo-cleanup-handover` while preserving current push trigger behavior'
+dispatcher_candidate: 'repo-cleanup-handover'
+workflow_family: 'governance-maintenance'
+cleanup_decision: 'merge'
+usage_status: 'active-mutating'
+process_fit: 'handover-support'
+consolidation_target: 'future:governance-maintenance-workflow'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Governance sync (post-merge)
+
+## Summary
+
+Governance sync (post-merge) runs on push and primarily produces generated or refreshed repository data.
+
+## Why It Exists
+
+Govern the `.github/workflows/governance-sync.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- push: branches=docs-v2; paths=.allowlist, README.md, operations/scripts/**, tools/lib/**, tools/dev/**, tools/config/**, operations/tests/unit/**, operations/tests/integration/**, operations/tests/utils/**, operations/tests/run-all.js, operations/tests/run-pr-checks.js, .githooks/**, .github/scripts/**, .github/workflows/**, docs-guide/policies/root-allowlist-governance.mdx, docs-guide/repo-ops/config/root-governance-map.mdx, workspace/scripts/**, workspace/reports/script-classifications.json
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `sync` | sync | `ubuntu-latest` | none | 9 |
+
+### sync
+
+- `step-1` | uses actions/checkout@v4
+- `step-2` | uses actions/setup-node@v4
+- `step-3` | runs `cd tools && npm ci`
+- `step-4` | runs `cd tests && npm ci`
+- `step-5` | runs `node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write`
+- `step-6` | runs `node operations/scripts/validators/governance/compliance/check-root-governance-sync.js`
+- `Run governance repair` | runs `node operations/scripts/dispatch/governance/pipelines/governance-pipeline.js 2>&1 | tee /tmp/repair.log`
+- `Detect changed governance outputs` | runs `FILES="$(git diff --name-only)"`
+- `Create PR if fixes applied` | uses peter-evans/create-pull-request@v7
+
+## Inputs
+
+- No explicit workflow inputs declared.
+
+## Second Pass Assessment
+
+- Workflow family: `governance-maintenance`
+- Usage status: `active-mutating`
+- Cleanup decision: `merge`
+- Process fit: `handover-support`
+- Consolidation target: `future:governance-maintenance-workflow`
+- Recommended engineering action: Merge this workflow with its sibling family into `future:governance-maintenance-workflow` so one workflow owns both check and write modes.
+
+## Outputs
+
+- Generated or refreshed repository data
+- GitHub issue or PR metadata
+
+## Dependencies
+
+- action:actions/checkout@v4
+- action:actions/setup-node@v4
+- action:peter-evans/create-pull-request@v7
+- operations/scripts/dispatch/governance/pipelines/governance-pipeline.js
+- operations/scripts/generators/governance/root/generate-root-governance-artifacts.js
+- operations/scripts/validators/governance/compliance/check-root-governance-sync.js
+- workspace/reports/repo-ops/REPAIR_REPORT_LATEST.json
+
+## Dependants
+
+- dispatcher:repo-cleanup-handover
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: push"]
+  workflow["Workflow: Governance sync (post-merge)"]
+  trigger --> workflow
+  job1["Job: sync"]
+  workflow --> job1
+  outputs["Outputs: Generated or refreshed repository data, GitHub issue or PR metadata"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- Current heuristic risk level is `high`; no exceptional frailty markers were detected in the file scan.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `repo-cleanup-handover`. Second-pass target: `future:governance-maintenance-workflow`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This workflow writes back to the repository, so its blast radius is higher than a read-only validation workflow.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

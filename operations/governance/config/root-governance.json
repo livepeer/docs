@@ -1,0 +1,595 @@
+{
+  "version": "root-governance.v1",
+  "policy_owner": "docs",
+  "generated_outputs": {
+    "allowlist": ".allowlist",
+    "map_doc": "docs-guide/repo-ops/config/root-governance-map.mdx",
+    "sync_report_json": "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.json",
+    "sync_report_md": "workspace/reports/repo-ops/ROOT_GOVERNANCE_SYNC_LATEST.md"
+  },
+  "placement_matrix": [
+    {
+      "surface": "scripts",
+      "allowed_paths": [
+        "operations/scripts/**",
+        "operations/tests/**",
+        "tools/**",
+        ".githooks/**"
+      ],
+      "notes": "Executable repo automation belongs in governed script roots, not at repo root."
+    },
+    {
+      "surface": "tooling_docs",
+      "allowed_paths": [
+        "docs-guide/tooling/**",
+        "docs-guide/repo-ops/**",
+        "docs-guide/policies/**"
+      ],
+      "notes": "Human-facing governance and operational docs stay under docs-guide."
+    },
+    {
+      "surface": "public_root_artifacts",
+      "allowed_paths": [
+        "docs-index.json",
+        "llms.txt",
+        "sitemap-ai.xml",
+        "robots.txt"
+      ],
+      "notes": "Only explicit public/runtime contracts may remain rooted."
+    },
+    {
+      "surface": "workspace_reports",
+      "allowed_paths": [
+        "workspace/reports/**"
+      ],
+      "notes": "Audits, trackers, and generated governance reports belong under workspace/reports."
+    },
+    {
+      "surface": "local_browser_outputs",
+      "allowed_paths": [
+        "workspace/reports/_local/playwright/**"
+      ],
+      "notes": "Local-only browser captures must never write to repo root."
+    }
+  ],
+  "local_compatibility": [
+    {
+      "path": ".env",
+      "class": "local_compatibility",
+      "tracking_policy": "untracked_only",
+      "notes": "Local compatibility env file is tolerated untracked but is never a governed root entry."
+    }
+  ],
+  "forbidden_root_artifacts": [
+    {
+      "path": ".DS_Store",
+      "reason": "OS noise must be cleaned or ignored, never governed."
+    },
+    {
+      "path": ".cache",
+      "reason": "Local caches belong in ignored scratch space, not repo root."
+    },
+    {
+      "path": ".cursorrules",
+      "reason": "Retired legacy Cursor surface replaced by .cursor/rules/*.mdc."
+    },
+    {
+      "path": ".playwright-cli",
+      "reason": "Browser automation output must live under workspace/reports/_local/playwright/."
+    },
+    {
+      "path": "repo-catalog.mdx",
+      "reason": "Root placeholder docs are forbidden; governed references belong under docs-guide."
+    },
+    {
+      "path": "ASSISTANT.md",
+      "reason": "Legacy assistant root files are retired from the governed root model."
+    },
+    {
+      "path": "Assistant.md",
+      "reason": "Legacy assistant root files are retired from the governed root model."
+    }
+  ],
+  "entries": [
+    {
+      "path": ".allowlist",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "generator": "node operations/scripts/generators/governance/root/generate-root-governance-artifacts.js --write",
+      "sources": [
+        "operations/governance/config/root-governance.json",
+        "operations/scripts/generators/governance/root/generate-root-governance-artifacts.js",
+        "tools/lib/governance/root-governance.js"
+      ],
+      "doc_refs": [
+        "docs-guide/policies/root-allowlist-governance.mdx",
+        "docs-guide/repo-ops/config/root-governance-map.mdx"
+      ],
+      "notes": "Generated projection consumed by the root-structure pre-commit gate."
+    },
+    {
+      "path": ".augment",
+      "entry_type": "directory",
+      "class": "tool_adapter",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/policies/agent-governance-framework.mdx",
+        "docs-guide/tooling/ai-tools.mdx"
+      ],
+      "notes": "Native Augment adapter root."
+    },
+    {
+      "path": ".claude",
+      "entry_type": "directory",
+      "class": "tool_adapter",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/policies/agent-governance-framework.mdx",
+        "docs-guide/tooling/ai-tools.mdx"
+      ],
+      "notes": "Native Claude Code adapter root."
+    },
+    {
+      "path": ".codex",
+      "entry_type": "directory",
+      "class": "tool_adapter",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "AGENTS.md",
+        "docs-guide/policies/agent-governance-framework.mdx"
+      ],
+      "notes": "Codex task-contract and local lock root."
+    },
+    {
+      "path": ".cursor",
+      "entry_type": "directory",
+      "class": "tool_adapter",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/policies/agent-governance-framework.mdx",
+        "docs-guide/tooling/ai-tools.mdx"
+      ],
+      "notes": "Native Cursor adapter root."
+    },
+    {
+      "path": ".editorconfig",
+      "entry_type": "file",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Standard repo editor config lives at root for tool discovery."
+    },
+    {
+      "path": ".gitattributes",
+      "entry_type": "file",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Git attributes are fixed-path root config."
+    },
+    {
+      "path": ".githooks",
+      "entry_type": "directory",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "docs-guide/policies/root-allowlist-governance.mdx"
+      ],
+      "notes": "Repo hook root remains rooted because the hook installer and git config expect it."
+    },
+    {
+      "path": ".github",
+      "entry_type": "directory",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "docs-guide/policies/agent-governance-framework.mdx"
+      ],
+      "notes": "GitHub workflows, issue templates, and Copilot adapter require the fixed root path."
+    },
+    {
+      "path": ".gitignore",
+      "entry_type": "file",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "docs-guide/policies/root-allowlist-governance.mdx"
+      ],
+      "notes": "Root ignore policy governs local-only outputs."
+    },
+    {
+      "path": ".mintignore",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "docs-guide/repo-ops/config/repo-config-map.mdx"
+      ],
+      "notes": "Mintlify build exclusion file is root-discovered."
+    },
+    {
+      "path": ".mintlify",
+      "entry_type": "directory",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/policies/agent-governance-framework.mdx",
+        "docs-guide/tooling/ai-tools.mdx"
+      ],
+      "notes": "Mintlify runtime directory remains rooted for the assistant contract."
+    },
+    {
+      "path": ".prettierrc",
+      "entry_type": "file",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Formatter config is fixed-path root config."
+    },
+    {
+      "path": "jsconfig.json",
+      "entry_type": "file",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "tool_discovery",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "JavaScript path-resolution config read by VS Code, Cursor, and other editors; must remain at root for editor discovery."
+    },
+    {
+      "path": ".vscode",
+      "entry_type": "directory",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "tool_discovery",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Editor workspace settings remain in the conventional root directory."
+    },
+    {
+      "path": ".windsurf",
+      "entry_type": "directory",
+      "class": "tool_adapter",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/policies/agent-governance-framework.mdx",
+        "docs-guide/tooling/ai-tools.mdx"
+      ],
+      "notes": "Native Windsurf adapter root."
+    },
+    {
+      "path": "AGENTS.md",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/policies/agent-governance-framework.mdx",
+        "README.md"
+      ],
+      "notes": "Canonical repo-wide agent baseline."
+    },
+    {
+      "path": "LICENSE",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Repository license stays at root."
+    },
+    {
+      "path": "Makefile",
+      "entry_type": "file",
+      "class": "docs_runtime",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Convenience entrypoint retained at root."
+    },
+    {
+      "path": "README.md",
+      "entry_type": "file",
+      "class": "repo_entrypoint",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/repo-ops/config/root-governance-map.mdx"
+      ],
+      "notes": "Repo entrypoint for humans and agents."
+    },
+    {
+      "path": "SECURITY.md",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Security disclosure file remains rooted."
+    },
+    {
+      "path": "ai-tools",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "approved_subsystem",
+      "lifecycle": "active",
+      "doc_refs": [
+        "docs-guide/tooling/ai-tools.mdx",
+        "docs-guide/policies/root-allowlist-governance.mdx",
+        "README.md"
+      ],
+      "notes": "Approved root AI-first subsystem. Governance must preserve it at root in this pass."
+    },
+    {
+      "path": "api",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "API spec root."
+    },
+    {
+      "path": "docs-guide",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Canonical internal docs tree."
+    },
+    {
+      "path": "docs-index.json",
+      "entry_type": "file",
+      "class": "public_artifact",
+      "owner": "docs",
+      "root_basis": "public_url",
+      "lifecycle": "active",
+      "generator": "node operations/scripts/generators/content/catalogs/generate-docs-index.js --write",
+      "sources": [
+        "docs.json",
+        "v1/**/*.md",
+        "v1/**/*.mdx",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "snippets/**/*.md",
+        "snippets/**/*.mdx"
+      ],
+      "public_contract": {
+        "url_path": "/docs-index.json",
+        "purpose": "Machine-readable docs inventory for AI and tooling consumers."
+      },
+      "doc_refs": [
+        "README.md",
+        "docs-guide/repo-ops/config/root-governance-map.mdx"
+      ],
+      "notes": "Ratified AI-first public root artifact."
+    },
+    {
+      "path": "docs.json",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "docs-guide/repo-ops/config/repo-config-map.mdx"
+      ],
+      "notes": "Mintlify routing and navigation source of truth."
+    },
+    {
+      "path": "llms.txt",
+      "entry_type": "file",
+      "class": "public_artifact",
+      "owner": "docs",
+      "root_basis": "public_url",
+      "lifecycle": "active",
+      "generator": "node operations/scripts/generators/ai/llm/generate-llms-files.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "operations/scripts/generators/ai/llm/generate-llms-files.js"
+      ],
+      "public_contract": {
+        "url_path": "/llms.txt",
+        "purpose": "AI-first text index for LLM consumers."
+      },
+      "doc_refs": [
+        "README.md",
+        "docs-guide/features/ai-features.mdx",
+        "docs-guide/repo-ops/config/root-governance-map.mdx"
+      ],
+      "notes": "Ratified AI-first public root artifact. llms-full.txt is retired."
+    },
+    {
+      "path": "operations",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Governed scripts, validators, and tests root."
+    },
+    {
+      "path": "robots.txt",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "public_url",
+      "lifecycle": "active",
+      "public_contract": {
+        "url_path": "/robots.txt",
+        "purpose": "Crawler control file."
+      },
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Public crawler contract stays at root."
+    },
+    {
+      "path": "sitemap-ai.xml",
+      "entry_type": "file",
+      "class": "public_artifact",
+      "owner": "docs",
+      "root_basis": "public_url",
+      "lifecycle": "active",
+      "generator": "node operations/scripts/generators/content/seo/generate-ai-sitemap.js --write",
+      "sources": [
+        "docs.json",
+        "v2/**/*.md",
+        "v2/**/*.mdx",
+        "operations/scripts/generators/content/seo/generate-ai-sitemap.js"
+      ],
+      "public_contract": {
+        "url_path": "/sitemap-ai.xml",
+        "purpose": "AI-focused sitemap for discoverability."
+      },
+      "doc_refs": [
+        "README.md",
+        "docs-guide/repo-ops/config/root-governance-map.mdx"
+      ],
+      "notes": "Ratified AI-first public root artifact."
+    },
+    {
+      "path": "snippets",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "snippets/snippets-registry.mdx"
+      ],
+      "notes": "Component, snippet, and snippet governance root."
+    },
+    {
+      "path": "style.css",
+      "entry_type": "file",
+      "class": "platform_contract",
+      "owner": "docs",
+      "root_basis": "fixed_path",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Mintlify style entrypoint remains rooted."
+    },
+    {
+      "path": "tools",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "docs-guide/tooling/lpd-cli.mdx"
+      ],
+      "notes": "CLI, config, and shared library root."
+    },
+    {
+      "path": "v1",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Frozen legacy docs tree."
+    },
+    {
+      "path": "v2",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md"
+      ],
+      "notes": "Active published docs tree."
+    },
+    {
+      "path": "workspace",
+      "entry_type": "directory",
+      "class": "subsystem_root",
+      "owner": "docs",
+      "root_basis": "repo_entrypoint",
+      "lifecycle": "active",
+      "doc_refs": [
+        "README.md",
+        "docs-guide/policies/root-allowlist-governance.mdx"
+      ],
+      "notes": "Governed AI working directory for plans and reports."
+    }
+  ]
+}

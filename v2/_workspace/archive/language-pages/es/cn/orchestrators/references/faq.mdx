@@ -1,0 +1,63 @@
+---
+title: Orchestrator FAQ
+sidebarTitle: FAQ
+description: 关于运行和操作 Livepeer Orchestrator 的常见问题。
+keywords:
+  - livepeer
+  - orchestrators
+  - FAQ
+  - troubleshooting
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9vcmNoZXN0cmF0b3JzL3JlZmVyZW5jZXMvZmFxLm1keCIsInNvdXJjZVJvdXRlIjoidjIvb3JjaGVzdHJhdG9ycy9yZWZlcmVuY2VzL2ZhcSIsInNvdXJjZUhhc2giOiI2ZWNmMjJjM2RjMjZkYzJlZmUwZjRmODY5N2FiYTJmNzBmNzA3NzY4N2FlMjIyYzEzODYyZDcxN2IyMmQ5NWUyIiwibGFuZ3VhZ2UiOiJjbiIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAyLTI3VDE0OjMzOjE1LjA3MloifQ== */}
+关于协调器、质押、奖励和操作的常见问题。有关安装和配置，请参阅 [安装 go-livepeer](/v2/orchestrators/setup/install-go-livepeer) 和 [添加您的 GPU](../quickstart/orchestrator-setup).
+
+## 什么是协调器？
+
+一个 **协调器** 是一个通过 BondingManager 抵押 LPT 的网络参与者，它会宣传服务端点，运行链下计算（视频转码和/或 AI 推理），在 Arbitrum 上赎回中奖的票，并将奖励分配给委托人。它是一个 **由抵押保障的计算提供者**，而不是网关或产品 UI。
+
+## 工作是如何分配的？
+
+- **视频:** 选择是 **基于质押权重**. 网关转发片段工作；协调者根据其质押的代币比例进行选择（活跃集 = 前 100 名）.
+- **AI:** 路由是通过 **功能、价格和延迟**。质押不会决定AI任务的分配。网关会将请求与提供正确模型和价格的编排者匹配。
+
+## 有两个收入来源是什么？
+
+1. **LPT 通胀** - 每轮铸造并分配给绑定的质押。您必须调用**reward()**每轮都可以领取。你的份额取决于你的质押和你的 **奖励分成**（其余部分会分配给委托人）。
+2. **ETH 费用** - 通过概率性票据支付工作费用。中奖的票据会在 Arbitrum 上兑换。你的 **费用分成** 设置你与委托人分享的 ETH。
+
+查看 [奖励和费用](../advanced-setup/rewards-and-fees)。
+
+## 什么是 slashing 风险？
+
+由于双重签名、欺诈性转码证明或恶意票务行为，可能会发生 slashing。这会减少质押的代币；委托人会按比例受到影响。该协议设计为作弊的成本超过收益。
+
+## 什么是池？
+
+A **pool** 是一个协调器（一个链上身份，一个质押）由 **多个 GPU** 支持，通常来自不同的所有者。运营商运行节点并将收益分配给 GPU 贡献者 **离线**。参见 [加入一个池子](../quickstart/join-a-pool) 和 [运行一个池子](../advanced-setup/run-a-pool)。
+
+## 我应该监控什么？
+
+- **链上：** 质押余额，活跃集状态，奖励调用，费用收益（例如[探索者](https://explorer.livepeer.org)）
+- **节点：** GPU 使用率，分段/任务成功率，延迟（Prometheus 指标在 `:7935/metrics` 当 `-monitor=true`）。
+- ** 经济学:** 票据赎回率，LPT 奖励，ETH 费用。
+
+查看 [Orchestrator 统计和监控](../setting-up-an-orchestrator/orchestrator-stats).
+
+## 故障排除
+
+- **节点未接收任务:** 检查服务地址、定价和活动集状态。确保节点可访问，并且日志中没有 RPC 错误。
+- **缺失奖励:** 调用 **reward()** 每轮; 如需要可自动化。检查 Explorer 以查看是否有遗漏的轮次。
+- ** 未检测到 GPU:** 运行 `nvidia-smi` ; 确保 Docker 有 `--gpus all` 如果使用容器；检查 CUDA/驱动程序版本。
+- **RPC 错误：** 使用稳定的 Arbitrum RPC；不稳定的端点可能导致交易失败和错过奖励调用。
+
+更多内容，请参见[安装 go-livepeer](/v2/orchestrators/setup/install-go-livepeer), [连接到 Arbitrum](/v2/orchestrators/setup/install-go-livepeer)，以及[CLI 标志](./cli-flags)。
+
+## 另请参阅
+
+<Columns cols={2}>
+  <Card title="CLI flags" icon="terminal" href="./cli-flags" arrow />
+  <Card title="Rewards and fees" icon="coins" href="../advanced-setup/rewards-and-fees" arrow />
+  <Card title="Staking LPT" icon="coins" href="../advanced-setup/staking-LPT" arrow />
+  <Card title="Orchestrator stats" icon="chart-line" href="../setting-up-an-orchestrator/orchestrator-stats" arrow />
+</Columns>

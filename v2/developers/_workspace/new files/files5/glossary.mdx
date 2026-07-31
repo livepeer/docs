@@ -1,0 +1,133 @@
+---
+title: 'Glossary'
+sidebarTitle: 'Glossary'
+description: >-
+  Canonical definitions for Livepeer protocol, AI inference, and video
+  infrastructure terminology used throughout the documentation.
+keywords:
+  - livepeer
+  - glossary
+  - terminology
+  - definitions
+  - probabilistic micropayments
+  - orchestrator
+  - gateway
+  - BYOC
+  - trickle
+  - Cascade
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { CustomDivider } from '/snippets/components/primitives/divider.jsx'
+
+<CenteredContainer style={{ width: '90%' }}>
+  <Tip>Terms are listed alphabetically within each category. Protocol-layer terms are in the first section; application and infrastructure terms follow.</Tip>
+</CenteredContainer>
+
+---
+
+<CustomDivider />
+
+## Protocol Terms
+
+**Active set**
+The set of orchestrators eligible to receive work from gateways in the current protocol round. Membership requires staking above the minimum threshold and having a registered `serviceAddr`. The active set is determined on-chain at each round boundary.
+
+**Arbitrum One**
+The Layer 2 network where the Livepeer protocol contracts are deployed. All on-chain settlement (ticket redemption, staking, reward calls) happens on Arbitrum One. The protocol migrated from Ethereum mainnet to Arbitrum One during LIP-73 (Confluence migration).
+
+**Face value (`faceVal`)**
+The ETH amount an orchestrator receives when a probabilistic micropayment ticket wins. Set by the gateway per job so that `faceVal × winProb` equals the expected per-unit payment.
+
+**LPT (Livepeer Token)**
+The ERC-20 governance and work token of the Livepeer protocol. Orchestrators stake LPT to enter the active set; delegators stake to orchestrators to earn a portion of their fees and inflation rewards.
+
+**Orchestrator**
+A network node that accepts transcoding and AI inference jobs from gateways, processes them using its GPU resources, and returns output. Orchestrators stake LPT, advertise capabilities and pricing, and receive probabilistic micropayment tickets from gateways.
+
+**Probabilistic micropayments (PM)**
+The payment mechanism by which gateways pay orchestrators. Each job carries a signed ticket with a face value and win probability; orchestrators redeem winning tickets (determined by a verifiable random draw) on-chain via the `TicketBroker` contract. Non-winning tickets are discarded. The expected payment per ticket equals `faceVal × winProb`.
+
+**Reward cut**
+The percentage of protocol inflation rewards that an orchestrator keeps before distributing the remainder to delegators. Expressed as a percentage (0-100).
+
+**Fee cut**
+The percentage of transcoding/AI fees that an orchestrator keeps before distributing the remainder to delegators. Expressed as a percentage (0-100).
+
+**Round**
+A protocol time period, approximately one Ethereum day. At each round boundary, the active orchestrator set is recalculated, inflation is minted, and reward calls become available.
+
+**Sender deposit**
+The ETH balance an account holds in `TicketBroker` to cover expected winning ticket payouts. Orchestrators check this before accepting jobs; a deposit below the ticket face value causes the ticket to be invalid.
+
+**TicketBroker**
+The Livepeer smart contract on Arbitrum One that holds gateway ETH deposits and processes winning ticket redemptions. The canonical address is in the <a href="/v2/developers/resources/contract-addresses">Contract Addresses</a> reference.
+
+**Win probability**
+The fraction of tickets from a given session that are expected to win. Expressed as a fraction of 2^256. Together with face value, it determines the expected payment per ticket.
+
+<CustomDivider />
+
+## Infrastructure Terms
+
+**ai-runner**
+The Dockerised Python application that loads AI models and exposes the inference REST API used by Livepeer orchestrators. Each pipeline type corresponds to a specific ai-runner container image.
+
+**aiModels.json**
+The configuration file on an orchestrator node that registers BYOC containers and native AI pipelines. Each entry maps a pipeline type and model ID to a container URL and price.
+
+**AI Service Registry**
+The on-chain registry on Arbitrum One where orchestrators register their AI capabilities (pipeline types, model IDs, pricing). Gateways query this to discover AI-capable orchestrators for job routing.
+
+**BYOC (Bring Your Own Compute)**
+The mechanism for running custom inference containers registered with a Livepeer orchestrator. BYOC containers implement a small HTTP contract (`/health` plus pipeline-specific endpoints) and are registered in `aiModels.json`.
+
+**Cascade**
+The Livepeer real-time AI streaming architecture. A Cascade pipeline transforms live video frames using a persistent connection between gateway, orchestrator, and ai-runner container, using the trickle protocol for low-latency frame delivery.
+
+**clearinghouse**
+An entity that operates the Ethereum-facing remote signer service on behalf of multiple gateway operators. Gateways settle with the clearinghouse in traditional currency; the clearinghouse handles PM settlement with orchestrators on-chain.
+
+**ComfyStream**
+A ComfyUI custom node that enables real-time video processing using ComfyUI workflows and the Livepeer Cascade architecture.
+
+**Gateway**
+A Livepeer node (or compatible implementation) that accepts video or AI inference jobs from clients, routes them to network orchestrators, manages probabilistic micropayment tickets, and returns results. go-livepeer in broadcaster mode is the canonical gateway implementation.
+
+**LPMS (Livepeer Media Server)**
+A Go library (`livepeer/lpms`) that wraps FFmpeg to provide RTMP ingest, HLS output, and GPU-accelerated transcoding. It is the media handling layer inside go-livepeer.
+
+**NaaP (Network as a Product)**
+The Livepeer Foundation's developer platform that surfaces network capabilities to service providers and application developers.
+
+**pricePerGateway**
+An orchestrator configuration allowing differentiated pricing per gateway address. Not yet widely deployed; most orchestrators use a flat `pricePerUnit` for all gateways.
+
+**PyTrickle**
+The Python SDK (`livepeer/pytrickle`) for building custom real-time processing services over the trickle protocol. Provides `FrameProcessor` and `StreamServer` abstractions.
+
+**remote signer**
+A separate service that handles the Ethereum payment signing operations for a Livepeer gateway, removing the ETH key from the media processing hot path. Introduced in go-livepeer PRs #3791 and #3822.
+
+**serviceAddr**
+The publicly routable HTTPS endpoint of a Livepeer orchestrator, registered on-chain. Gateways use the `serviceAddr` to connect to and submit jobs to an orchestrator.
+
+**trickle protocol**
+An HTTP/1.1-based streaming transport (`j0sh/http-trickle`) that delivers media segments as soon as they are produced. Used internally by the Livepeer Cascade architecture for frame delivery between gateway, orchestrator, and ai-runner.
+
+**warm model**
+A model that is currently loaded into GPU memory on an orchestrator and can accept inference jobs immediately without load time. Orchestrators declare warm models in `aiModels.json` and register them in the AI Service Registry.
+
+**wei per pixel**
+The unit of price for transcoding jobs on Livepeer. Total output pixels across all rendition profiles per segment, multiplied by the orchestrator's wei-per-pixel price, gives the expected payment for that segment.
+
+**winning ticket**
+A probabilistic micropayment ticket whose hash falls below the win probability threshold. Orchestrators submit winning tickets to `TicketBroker` to receive the face value in ETH. Typically one in every few hundred to few thousand tickets wins, depending on configuration.

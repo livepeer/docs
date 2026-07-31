@@ -1,0 +1,125 @@
+---
+title: 'Local Gateway'
+sidebarTitle: 'Local Gateway'
+description: >-
+  Running a go-livepeer broadcaster gateway locally: Ethereum keystore setup,
+  deposit funding, and connecting to mainnet orchestrators.
+keywords:
+  - livepeer
+  - local gateway
+  - broadcaster
+  - go-livepeer
+  - Arbitrum
+  - keystore
+  - deposit
+  - mainnet
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: how_to
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>A local gateway in broadcaster mode needs ETH on Arbitrum One in its keystore before it can send jobs to the network. Fund the TicketBroker deposit after the node starts; the node will not route jobs with an unfunded deposit.</Tip>
+</CenteredContainer>
+
+---
+
+Running a local go-livepeer broadcaster connects your development environment directly to the Livepeer network, bypassing managed API infrastructure. Use this when you need to test RTMP ingest, custom orchestrator selection, or payment flows with full network access.
+
+<CustomDivider />
+
+## Prerequisites
+
+- go-livepeer installed (see <LinkArrow href="/v2/developers/guides/local-development/overview" label="Local Development Overview" newline={false} />)
+- An Arbitrum One RPC endpoint (Alchemy, Infura, or any Arbitrum RPC provider)
+- An Ethereum keystore file with ETH on Arbitrum One for payment deposits
+
+<CustomDivider />
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+  <StyledStep title="Create or import a keystore" icon="key">
+    go-livepeer generates a keystore on first run if none exists. Alternatively, import an existing Ethereum keystore file.
+
+    To create a new keystore, run go-livepeer once with no flags and let it generate one:
+
+    ```bash
+    livepeer
+    ```
+
+    The keystore is stored at `~/.lpData/arbitrum-one-mainnet/keystore/` by default. Note the generated Ethereum address.
+  </StyledStep>
+
+  <StyledStep title="Fund the account with ETH on Arbitrum One" icon="coin">
+    The gateway address needs ETH on Arbitrum One (not Ethereum mainnet). Bridge ETH from L1 or buy ETH directly on Arbitrum via a centralised exchange.
+
+    The amount needed depends on your expected usage. For development, 0.01-0.1 ETH covers typical testing; for production workloads, scale up based on expected ticket face values and session volumes.
+  </StyledStep>
+
+  <StyledStep title="Start the broadcaster" icon="play">
+    ```bash
+    livepeer \
+      -broadcaster \
+      -network arbitrum-one-mainnet \
+      -ethUrl <YOUR_ARBITRUM_RPC_URL> \
+      -ethKeystorePath ~/.lpData/arbitrum-one-mainnet/keystore \
+      -maxPricePerUnit 0 \
+      -rtmpAddr 127.0.0.1:1935 \
+      -httpAddr 127.0.0.1:8935 \
+      -metrics
+    ```
+
+    `-maxPricePerUnit 0` disables price filtering. Set a positive value to limit which orchestrators the gateway routes to.
+  </StyledStep>
+
+  <StyledStep title="Fund the TicketBroker deposit" icon="lock">
+    With the node running, use `livepeer_cli` to fund the sender deposit and penalty reserve:
+
+    ```bash
+    livepeer_cli -sender-deposit 0.05
+    livepeer_cli -sender-reserve 0.02
+    ```
+
+    Amounts are in ETH. Once funded, the node will route jobs to the active orchestrator set.
+  </StyledStep>
+
+  <StyledStep title="Test with a stream" icon="video">
+    Push a test stream via FFmpeg:
+
+    ```bash
+    ffmpeg -re -f lavfi -i testsrc=size=640x360:rate=30 \
+      -f lavfi -i sine=frequency=440 \
+      -c:v libx264 -b:v 1000k -c:a aac \
+      -f flv rtmp://127.0.0.1:1935/stream/test
+    ```
+
+    The HLS manifest appears at `http://127.0.0.1:8935/stream/test.m3u8` once the first segment is transcoded.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider />
+
+Once the deposit is funded and a test stream completes successfully, the gateway is ready for development workloads. See the [production checklist](/v2/developers/guides/production-hardening-checklist) before moving to real traffic.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="ETH Escrow and Deposits" icon="lock" href="/v2/developers/guides/payments/eth-escrow-and-deposits" arrow horizontal>
+    Managing TicketBroker deposits including withdrawal.
+  </Card>
+  <Card title="Transcoding" icon="cpu" href="/v2/developers/build/video/transcoding" arrow horizontal>
+    The segment submission API the local broadcaster uses.
+  </Card>
+  <Card title="Local Development Overview" icon="grid" href="/v2/developers/guides/local-development/overview" arrow horizontal>
+    Choosing the right local setup for your development scenario.
+  </Card>
+</CardGroup>

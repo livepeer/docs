@@ -1,0 +1,293 @@
+---
+title: Dual Docker Configuration
+sidebarTitle: Dual Docker Configuration
+description: Configure Dual AI & Video Services on a Livepeer Gateway using Docker
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - configure
+  - dual docker
+  - dual
+  - docker
+  - configuration
+  - video
+  - services
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+icon: docker
+---
+
+
+
+
+# Configuration Files for Dual Video & AI Gateway
+
+To run a dual video & AI gateway using Docker, you need to create these configuration files:
+
+## Required Files
+
+### 1. docker-compose.yml
+
+Main Docker configuration file that defines the gateway service with both video and AI capabilities.
+
+### 2. aiModels.json
+
+AI model configuration file that specifies which AI pipelines and models to load [1](#54-0) .
+
+### 3. models/ directory
+
+Directory where AI model weights are stored [2](#54-1) .
+
+## Optional Files
+
+### 4. transcodingOptions.json (optional)
+
+Video transcoding profile configuration if you want custom profiles beyond defaults [3](#54-2) .
+
+### 5. password.txt (optional, on-chain only)
+
+File containing your Ethereum keystore password for on-chain operations [4](#54-3) .
+
+---
+
+## Complete Example
+
+### docker-compose.yml
+
+```yaml
+version: '3.9'
+
+services:
+  dual-gateway:
+    image: livepeer/go-livepeer:master
+    container_name: 'dual-gateway'
+    hostname: 'dual-gateway'
+    ports:
+      - 1935:1935 # RTMP for video ingest
+      - 8935:8935 # HTTP API for both video and AI
+      - 5935:5935 # CLI port
+    volumes:
+      - dual-gateway-lpData:/root/.lpData
+      - ./aiModels.json:/root/.lpData/aiModels.json
+      - ./models:/root/.lpData/models
+    command: '-network offchain
+      -gateway
+      -httpIngest
+      -aiServiceRegistry
+      -monitor=true
+      -v=6
+      -rtmpAddr=0.0.0.0:1935
+      -httpAddr=0.0.0.0:8935
+      -cliAddr=0.0.0.0:5935
+      -orchAddr=<ORCHESTRATOR_ADDRESSES>
+      -transcodingOptions=P240p30fps16x9,P360p30fps16x9,P720p30fps16x9
+      -aiModels=/root/.lpData/aiModels.json
+      -aiModelsDir=/root/.lpData/models
+      -livePaymentInterval=5s'
+
+volumes:
+  dual-gateway-lpData:
+    external: true
+```
+
+### aiModels.json
+
+```json
+[
+  {
+    "pipeline": "text-to-image",
+    "model_id": "stabilityai/sd-turbo",
+    "warm": true
+  },
+  {
+    "pipeline": "image-to-image",
+    "model_id": "stabilityai/sd-turbo",
+    "warm": false
+  },
+  {
+    "pipeline": "image-to-video",
+    "model_id": "stabilityai/stable-video-diffusion-img2vid-xt",
+    "warm": false
+  },
+  {
+    "pipeline": "upscale",
+    "model_id": "stabilityai/stable-diffusion-x4-upscaler",
+    "warm": false
+  }
+]
+```
+
+### transcodingOptions.json (optional)
+
+```json
+[
+  {
+    "name": "240p",
+    "width": 426,
+    "height": 240,
+    "bitrate": 250000,
+    "fps": 30,
+    "profile": "h264constrainedhigh"
+  },
+  {
+    "name": "360p",
+    "width": 640,
+    "height": 360,
+    "bitrate": 500000,
+    "fps": 30,
+    "profile": "h264constrainedhigh"
+  },
+  {
+    "name": "720p",
+    "width": 1280,
+    "height": 720,
+    "bitrate": 3000000,
+    "fps": 30,
+    "profile": "h264constrainedhigh"
+  }
+]
+```
+
+## Setup Steps
+
+1. **Create directories**:
+
+   ```bash
+   mkdir -p models
+   docker volume create dual-gateway-lpData
+   ```
+
+2. **Create configuration files**:
+
+   - Save the `docker-compose.yml` above
+   - Create `aiModels.json` with your desired AI models
+   - Optionally create `transcodingOptions.json` for custom video profiles
+
+3. **Start the gateway**:
+   ```bash
+   docker-compose up -d
+   ```
+
+The gateway will handle both video transcoding (via RTMP ingest on port 1935) and AI processing (via HTTP API on port 8935) simultaneously [5](#54-4) .
+
+## Notes
+
+- The `aiModels.json` file defines which AI pipelines and models the gateway will support [6](#54-5)
+- Models are downloaded on-demand when processing requests if not present in the models directory
+- For on-chain operation, add ETH configuration flags and mount the keystore directory
+- The dual gateway exposes both traditional video endpoints and AI processing endpoints through the same HTTP server [7](#54-6)
+
+Wiki pages you might want to explore:
+
+- [Architecture (livepeer/go-livepeer)](https://github.com/livepeer/wiki)
+- [AI Workers (livepeer/go-livepeer)](https://github.com/livepeer/wiki)
+
+### Citations
+
+**File:** core/ai.go (L74-88)
+
+```go
+type AIModelConfig struct {
+	Pipeline string `json:"pipeline"`
+	ModelID  string `json:"model_id"`
+	// used by worker
+	URL               string                   `json:"url,omitempty"`
+	Token             string                   `json:"token,omitempty"`
+	Warm              bool                     `json:"warm,omitempty"`
+	Capacity          int                      `json:"capacity,omitempty"`
+	OptimizationFlags worker.OptimizationFlags `json:"optimization_flags,omitempty"`
+	// used by orchestrator
+	Gateway       string  `json:"gateway"`
+	PricePerUnit  JSONRat `json:"price_per_unit,omitempty"`
+	PixelsPerUnit JSONRat `json:"pixels_per_unit,omitempty"`
+	Currency      string  `json:"currency,omitempty"`
+}
+```
+
+**File:** core/ai.go (L90-125)
+
+```go
+func ParseAIModelConfigs(config string) ([]AIModelConfig, error) {
+	var configs []AIModelConfig
+
+	info, err := os.Stat(config)
+	if err == nil && !info.IsDir() {
+		data, err := os.ReadFile(config)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := json.Unmarshal(data, &configs); err != nil {
+			return nil, err
+		}
+
+		return configs, nil
+	}
+
+	models := strings.Split(config, ",")
+	for _, m := range models {
+		parts := strings.Split(m, ":")
+		if len(parts) < 3 {
+			return nil, errors.New("invalid AI model config expected <pipeline>:<model_id>:<warm>")
+		}
+
+		pipeline := parts[0]
+		modelID := parts[1]
+		warm, err := strconv.ParseBool(parts[2])
+		if err != nil {
+			return nil, err
+		}
+
+		configs = append(configs, AIModelConfig{Pipeline: pipeline, ModelID: modelID, Warm: warm})
+	}
+
+	return configs, nil
+}
+```
+
+**File:** cmd/livepeer/starter/starter.go (L210-210)
+
+```go
+	defaultTranscodingOptions := "P240p30fps16x9,P360p30fps16x9"
+```
+
+**File:** cmd/livepeer/starter/starter.go (L1313-1326)
+
+```go
+		modelsDir := *cfg.AIModelsDir
+		if modelsDir == "" {
+			var err error
+			modelsDir, err = filepath.Abs(path.Join(*cfg.Datadir, "models"))
+			if err != nil {
+				glog.Error("Error creating absolute path for models dir: %v", modelsDir)
+				return
+			}
+		}
+
+		if err := os.MkdirAll(modelsDir, 0755); err != nil {
+			glog.Error("Error creating models dir %v", modelsDir)
+			return
+		}
+```
+
+**File:** cmd/livepeer/starter/flags.go (L83-83)
+
+```go
+	cfg.EthPassword = fs.String("ethPassword", *cfg.EthPassword, "Password for existing Eth account address or path to file")
+```
+
+**File:** server/mediaserver.go (L191-197)
+
+```go
+			BroadcastJobVideoProfiles = profiles
+		}
+	}
+	server := lpmscore.New(&opts)
+	ls := &LivepeerServer{RTMPSegmenter: server, LPMS: server, LivepeerNode: lpNode, HTTPMux: opts.HttpMux, connectionLock: &sync.RWMutex{},
+		serverLock:              &sync.RWMutex{},
+		rtmpConnections:         make(map[core.ManifestID]*rtmpConnection),
+```

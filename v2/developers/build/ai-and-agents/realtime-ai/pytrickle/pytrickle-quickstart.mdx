@@ -1,0 +1,231 @@
+---
+title: 'PyTrickle Quickstart'
+sidebarTitle: 'Quickstart'
+description: >-
+  Install PyTrickle, write a minimal FrameProcessor, and run it against a local
+  test stream using http-trickle.
+keywords:
+  - livepeer
+  - PyTrickle
+  - quickstart
+  - FrameProcessor
+  - real-time AI
+  - Python
+  - trickle protocol
+  - StreamServer
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: tutorial
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>By the end of this tutorial you will have a PyTrickle service running locally, processing video frames from a test stream, and returning a modified output stream you can verify with FFplay.</Tip>
+</CenteredContainer>
+
+---
+
+**Prerequisites:**
+- Python 3.8+ with pip
+- PyTorch installed (CPU build works for this tutorial)
+- FFmpeg on PATH
+- Go installed (for the http-trickle test tool)
+
+<CustomDivider />
+
+<StyledSteps iconColor="#2d9a67" titleColor="var(--accent)">
+  <StyledStep title="Install PyTrickle" icon="download">
+    Clone the repository and install in editable mode:
+
+    ```bash
+    git clone https://github.com/livepeer/pytrickle.git
+    cd pytrickle
+    pip install -r requirements.txt
+    pip install -e .
+    ```
+
+    Verify installation:
+
+    ```bash
+    python -c "from pytrickle import FrameProcessor, StreamServer; print('OK')"
+    ```
+  </StyledStep>
+
+  <StyledStep title="Install http-trickle" icon="tool">
+    The `http-trickle` binary provides a local trickle server for testing without a Livepeer Orchestrator:
+
+    ```bash
+    git clone https://github.com/livepeer/http-trickle.git ~/repos/http-trickle
+    cd ~/repos/http-trickle
+    make build
+    ```
+
+    After building, `http-trickle` is available at `~/repos/http-trickle/http-trickle`.
+  </StyledStep>
+
+  <StyledStep title="Write a FrameProcessor" icon="code">
+    Create `my_processor.py` with a processor that applies a green tint to each frame:
+
+    ```python
+    import asyncio
+    from pytrickle import FrameProcessor, StreamServer
+    from pytrickle.frames import VideoFrame, AudioFrame
+    from typing import Optional, List
+
+    class GreenTintProcessor(FrameProcessor):
+
+        async def initialize(self):
+            self.intensity = 0.3
+            print("Processor ready")
+
+        async def process_video_async(self, frame: VideoFrame) -> Optional[VideoFrame]:
+            tensor = frame.tensor.clone()
+            # Boost the green channel
+            tensor[:, :, 1] = (tensor[:, :, 1] + self.intensity).clamp(0, 1)
+            return frame.replace_tensor(tensor)
+
+        async def process_audio_async(self, frame: AudioFrame) -> Optional[List[AudioFrame]]:
+            return [frame]
+
+        def update_params(self, params: dict):
+            if "intensity" in params:
+                self.intensity = float(params["intensity"])
+                print(f"Updated intensity to {self.intensity}")
+
+    async def main():
+        processor = GreenTintProcessor()
+        await processor.start()
+        app = StreamServer(
+            frame_processor=processor,
+            port=8000,
+            capability_name="green-tint",
+        )
+        print("PyTrickle service running on port 8000")
+        await app.run_forever()
+
+    asyncio.run(main())
+    ```
+  </StyledStep>
+
+  <StyledStep title="Start the service" icon="play">
+    Run your processor:
+
+    ```bash
+    python my_processor.py
+    ```
+
+    Expected output:
+
+    ```
+    Processor ready
+    PyTrickle service running on port 8000
+    ```
+  </StyledStep>
+
+  <StyledStep title="Start a test stream" icon="video">
+    In a second terminal, start the http-trickle relay and send a test stream to it using FFmpeg. Use a test video or a webcam input:
+
+    ```bash
+    # Terminal 2: start http-trickle relay on port 3389
+    ~/repos/http-trickle/http-trickle --addr 127.0.0.1:3389
+
+    # Terminal 3: push a test stream to the relay
+    ffmpeg -re -f lavfi -i testsrc=size=512x512:rate=30 \
+      -f lavfi -i sine=frequency=440 \
+      -vcodec libx264 -acodec aac \
+      -f trickle http://127.0.0.1:3389/input
+    ```
+  </StyledStep>
+
+  <StyledStep title="Start a processing session" icon="bolt">
+    Send an HTTP request to the PyTrickle service to begin processing:
+
+    ```bash
+    curl -X POST http://localhost:8000/api/stream/start \
+      -H "Content-Type: application/json" \
+      -d '{
+        "subscribe_url": "http://127.0.0.1:3389/input",
+        "publish_url": "http://127.0.0.1:3389/output",
+        "gateway_request_id": "test-1",
+        "params": {
+          "width": 512,
+          "height": 512,
+          "max_framerate": 30
+        }
+      }'
+    ```
+
+    The service subscribes to `/input`, processes each frame through `GreenTintProcessor`, and publishes transformed frames to `/output`.
+  </StyledStep>
+
+  <StyledStep title="Verify the output" icon="check">
+    In a fourth terminal, read the processed output stream with FFplay:
+
+    ```bash
+    cd ~/repos/http-trickle && \
+    go run cmd/read2pipe/*.go --url http://127.0.0.1:3389/ --stream output | ffplay -
+    ```
+
+    You should see the test video with a visible green tint applied to each frame. The PyTrickle service logs processed frame counts to stdout.
+  </StyledStep>
+</StyledSteps>
+
+<CustomDivider />
+
+Replace the green tint logic in `process_video_async` with your own processing: load a PyTorch model in `initialize`, run inference in `process_video_async`, and return the output tensor. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/frame-processor" label="Frame Processor Reference" newline={false} /> for the full API.
+
+To connect this service to the Livepeer Network, register it as a BYOC container following the same pattern as <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc" label="ComfyStream as BYOC" newline={false} />.
+
+<CustomDivider />
+
+## Related Pages
+
+You have a working PyTrickle service processing live frames. The [FrameProcessor reference](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/frame-processor) covers the full API for VideoFrame, AudioFrame, and session management.
+
+<CardGroup cols={2}>
+  <Card
+    title="Frame Processor Reference"
+    icon="code"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/frame-processor"
+    arrow
+    horizontal
+  >
+    Full FrameProcessor API: VideoFrame, AudioFrame, update_params, and StreamServer options.
+  </Card>
+  <Card
+    title="PyTrickle Overview"
+    icon="grid"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/overview"
+    arrow
+    horizontal
+  >
+    Architecture, capabilities table, and prerequisites.
+  </Card>
+  <Card
+    title="ComfyStream as BYOC"
+    icon="box"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc"
+    arrow
+    horizontal
+  >
+    How to register a real-time processing service with a Livepeer Orchestrator.
+  </Card>
+  <Card
+    title="Real-Time AI Overview"
+    icon="video"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/overview"
+    arrow
+    horizontal
+  >
+    Cascade architecture and the full request flow.
+  </Card>
+</CardGroup>

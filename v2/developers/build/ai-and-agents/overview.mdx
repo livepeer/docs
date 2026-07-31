@@ -1,0 +1,245 @@
+---
+title: 'BYOC Overview'
+sidebarTitle: 'Overview'
+description: >-
+  Bring Your Own Container runs any Python AI model on the Livepeer network through a containerised trickle protocol interface.
+keywords:
+  - byoc
+  - bring your own container
+  - pytrickle
+  - frame processor
+  - capability
+  - real-time ai
+  - custom pipeline
+  - docker
+pageType: concept
+audience: developer
+purpose: explain
+complexity: intermediate
+lifecycleStage: discover
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>BYOC runs any Python AI model on the network inside your own Docker container. Implement one class, register a capability, get paid per second of compute.</Tip>
+</CenteredContainer>
+
+---
+
+Bring Your Own Container (BYOC) extends what runs on Livepeer beyond the eleven native AI pipelines. A custom container receives live video or audio frames from the network's trickle streaming protocol, processes them with your model, and returns the result. The network handles routing, payment, and Orchestrator selection; the container handles the workload.
+
+Phase 4 (January 2026) hardened BYOC for production. Embody and Streamplace currently run production BYOC workloads on the network. The integration layer is `livepeer/pytrickle`; the SDK for client-side BYOC consumption is `@muxionlabs/byoc-sdk`.
+
+For ComfyUI-based workflows, ComfyStream is already BYOC-compatible. See <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-as-byoc" label="ComfyStream as BYOC" newline={false} />.
+
+<CustomDivider />
+
+## BYOC Selection Criteria
+
+The decision splits along two lines: what the workload is, and who runs the compute.
+
+| You're running | Use |
+|---|---|
+| A standard batch pipeline (text-to-image, audio-to-text, LLM, the other native pipelines) | <LinkArrow href="/v2/developers/build/ai-and-agents/ai-jobs-direct-quickstart" label="AI quickstart" newline={false} /> |
+| A ComfyUI workflow as a real-time pipeline | <LinkArrow href="/v2/developers/build/ai-and-agents/realtime-ai/comfystream/comfystream-quickstart" label="ComfyStream quickstart" newline={false} /> |
+| A custom Python model that isn't a ComfyUI workflow | BYOC |
+| A model architecture not in the native set | BYOC |
+| A pipeline that needs Python packages outside the standard ai-runner image | BYOC |
+
+The model sits here; the activation path is in the <LinkArrow href="/v2/developers/build/compute/byoc/byoc-quickstart" label="BYOC quickstart" newline={false} />.
+
+<CustomDivider />
+
+## Container Contract
+
+A BYOC container does two things:
+
+1. Exposes a REST API the Orchestrator calls to start, stop, and update a processing session
+2. Connects to the trickle streaming layer to receive input frames and publish output frames
+
+PyTrickle implements both sides. You implement a Python class (`FrameProcessor`), and PyTrickle handles the streaming, encoding, decoding, and HTTP surface.
+
+```
+Livepeer Gateway
+  ↓ trickle protocol
+PyTrickle StreamServer (inside your container)
+  ↓ VideoFrame / AudioFrame tensors
+Your FrameProcessor (your model logic here)
+  ↓ processed tensors
+PyTrickle StreamServer
+  ↓ trickle protocol
+Livepeer Gateway
+```
+
+The container exposes four REST endpoints. PyTrickle provides them; you do not implement them.
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/stream/start` | POST | Start a new processing session |
+| `/api/stream/params` | POST | Update parameters mid-stream |
+| `/api/stream/status` | GET | Return current session status |
+| `/api/stream/stop` | POST | Stop the current session |
+
+The `start` request carries `subscribe_url`, `publish_url`, `gateway_request_id`, and a `params` map. The Orchestrator constructs these URLs against its local trickle server; the container subscribes to the input stream and publishes to the output stream.
+
+<CustomDivider />
+
+## FrameProcessor Contract
+
+The minimum contract is one method: receive bytes, return bytes. Optional methods handle initialisation and shutdown.
+
+```python
+from pytrickle import FrameProcessor, StreamServer
+from pytrickle.frames import VideoFrame, AudioFrame
+from typing import Optional, List
+import torch
+
+
+class MyAIProcessor(FrameProcessor):
+    """Custom AI video processor."""
+
+    async def initialize(self):
+        """Load your model. Called once on container start."""
+        self.model = load_my_model()
+
+    async def process_video_async(self, frame: VideoFrame) -> Optional[VideoFrame]:
+        """Process a single video frame. Called once per frame."""
+        tensor = frame.tensor  # PyTorch tensor: (H, W, C) or (C, H, W)
+        with torch.no_grad():
+            processed = self.model(tensor)
+        return frame.replace_tensor(processed)
+
+    async def process_audio_async(self, frame: AudioFrame) -> Optional[List[AudioFrame]]:
+        """Process audio. Return None to drop; return frame list to pass through."""
+        return [frame]
+
+    def update_params(self, params: dict):
+        """Handle real-time parameter updates from the gateway or client."""
+        pass
+```
+
+For batch contracts (single frame in, single frame out), the simpler `process(bytes) -> bytes` interface is also supported. The BYOC Quickstart uses that form for the green-tint example.
+
+<CustomDivider />
+
+## Capability Registration
+
+A BYOC container is advertised on the network as a **capability**: a named identifier the Gateway routes against. The Orchestrator declares its capabilities on startup; the Gateway matches incoming jobs to capabilities and forwards them to the right Orchestrator.
+
+The go-livepeer flags that register a BYOC container with an Orchestrator:
+
+| Flag | Effect |
+|---|---|
+| `-byoc` | Enable BYOC mode |
+| `-byocContainerURL` | URL of the running BYOC container (e.g. `http://127.0.0.1:8000`) |
+| `-byocModelID` | Capability name advertised to Gateways; arbitrary string |
+
+The `-byocModelID` is what the client sends in the `X-Model-Id` header when submitting a job. Capability names are case-sensitive; the Gateway forwards jobs to whichever Orchestrator advertises an exact match.
+
+For multi-capability Orchestrators, the capability set is declared in the Orchestrator's configuration. Production Orchestrators publish capabilities to the on-chain registry so Gateways can discover them without manual configuration.
+
+<CustomDivider />
+
+## Per-Second Compute
+
+BYOC jobs are paid per second of GPU compute, settled through Probabilistic Micropayments on Arbitrum One. The per-second model was introduced in <LinkArrow href="/v2/developers/guides/payments/per-second-compute" label="per-second compute" newline={false} />.
+
+The pricing surface for Orchestrators (`autoAdjustPrice`, `pricePerGateway`, `aiPipelinePricing`) sets the wei-per-second rate. The Gateway selects Orchestrators using a price/latency/quality model and pays in real time as the container processes frames.
+
+For off-chain testing, `-network offchain` bypasses payment but exercises the same routing and capability lookup. The <LinkArrow href="/v2/developers/guides/local-development/overview" label="local development" newline={false} /> uses off-chain mode to prove the lifecycle without on-chain setup.
+
+Full payment model in <LinkArrow href="/v2/developers/guides/payments/overview" label="payments overview" newline={false} />.
+
+<CustomDivider />
+
+## Production Deployments
+
+Three live workloads run on BYOC today:
+
+- **Embody**: avatar and identity tooling for AI video applications
+- **Streamplace**: AT-Protocol-native video infrastructure
+- **ComfyStream**: every ComfyUI workflow served as BYOC since Phase 4
+
+The reference repositories for community-built BYOC containers live under `muxionlabs/byoc-example-apps` and `muxionlabs/livepeer-app-pipelines`. The TypeScript SDK for client-side BYOC consumption is `@muxionlabs/byoc-sdk`, which handles WebRTC streaming and data-channel from the same connection.
+
+<CustomDivider />
+
+## Container Hosting
+
+The container image must be accessible to the Orchestrator. Common options:
+
+| Option | When to use |
+|---|---|
+| Docker Hub (public) | Open-source pipelines; lowest friction |
+| Private container registry | Proprietary models, controlled access |
+| Self-hosted registry | Air-gapped or enterprise deployments |
+
+Orchestrators pull the image and start it under their own resource management. For GPU pipelines, the Orchestrator runs the container with `--gpus all`; for CPU-only pipelines, no GPU flag is needed.
+
+ComfyStream-as-BYOC uses the canonical `livepeer/comfystream` image. Custom muxionlabs deployment images are documented at `docs.comfystream.org` for ComfyStream-specific configurations.
+
+<CustomDivider />
+
+## Client-Side Integration
+
+Once a BYOC container is live on the network, applications connect through a Gateway using `@muxionlabs/byoc-sdk`:
+
+```ts
+import { BYOCClient } from '@muxionlabs/byoc-sdk';
+
+const client = new BYOCClient({
+  gatewayUrl: 'https://<livepeer-gateway-url>',
+  capability: 'live-video-to-video',
+});
+
+await client.startStream({ videoElement, params: { /* pipeline params */ } });
+```
+
+The SDK handles WebRTC streaming from the browser directly to the Gateway, plus data-channel for structured text output. No custom backend required.
+
+For Python clients consuming BYOC workloads on the network, `livepeer-python-gateway` provides an `OrchestratorSession` class with capability-aware job submission. See <LinkArrow href="/v2/developers/build/alt-gateways/overview" label="alt-gateways" newline={false} />.
+
+<CustomDivider />
+
+## Local Development
+
+PyTrickle runs without Docker for development:
+
+```bash
+pip install git+https://github.com/livepeer/pytrickle.git
+python processor.py
+```
+
+This does not register with the Livepeer Network, but lets you iterate on the `FrameProcessor` logic and confirm the trickle contract before packaging the container. Once the processor works locally, the same Python code goes into the Docker image without changes.
+
+<CustomDivider />
+
+The BYOC quickstart walks through the full cycle: build a FrameProcessor, package it in Docker, register it with a local Orchestrator, and route a live session through it. Start there.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="BYOC Quickstart" icon="rocket" href="/v2/developers/build/compute/byoc/byoc-quickstart">
+    First BYOC job routed end-to-end in twenty-five minutes.
+  </Card>
+  <Card title="BYOC Architecture" icon="diagram-project" href="/v2/developers/build/compute/byoc/byoc-architecture">
+    Trickle protocol, capability discovery, payment flow.
+  </Card>
+  <Card title="BYOC Production" icon="server" href="/v2/developers/build/compute/byoc/byoc-production">
+    Registry, hosting, scaling, monitoring.
+  </Card>
+  <Card title="PyTrickle Reference" icon="book" href="/v2/developers/resources/reference/pytrickle-reference">
+    FrameProcessor API, StreamServer, advanced usage.
+  </Card>
+</CardGroup>

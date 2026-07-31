@@ -1,0 +1,86 @@
+---
+title: 'Project Showcase Sync'
+sidebarTitle: 'Project Showcase Sync'
+description: 'Project Showcase Sync'
+pageType: reference
+purpose: reference
+audience: internal
+status: active
+lastVerified: '2026-04-01'
+keywords:
+  - livepeer
+  - github-actions
+  - integrator
+  - copy
+  - project-showcase-sync
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+## Classification
+
+| Field | Value |
+|---|---|
+| **Current file** | `.github/workflows/project-showcase-sync.yml` |
+| **New name** | `integrator-copy-update-showcase-submissions.yml` |
+| **Type** | `integrator` |
+| **Concern** | `copy` |
+| **Pipeline tag** | P5-auto (scheduled + auto-commit) |
+| **Status** | active |
+
+<CustomDivider />
+
+## Purpose
+
+{/* TODO: Write purpose paragraph from workflow and script inspection */}
+
+<CustomDivider />
+
+## Pipeline
+
+{/* TODO: Add Mermaid diagram tracing triggers, scripts, data files, consuming pages */}
+
+```mermaid
+graph LR
+    TRIGGER["schedule, workflow_dispatch, repository_dispatch"] --> WF["project-showcase-sync"]
+    WF --> OUTPUT["output"]
+```
+
+<CustomDivider />
+
+## Triggers
+
+| Trigger | Details |
+|---|---|
+| `schedule` | See workflow file |
+| `workflow_dispatch` | See workflow file |
+| `repository_dispatch` | See workflow file |
+
+<CustomDivider />
+
+## Dependencies
+
+**Scripts:**
+- `.github/scripts/project-showcase-sync.js`
+
+<CustomDivider />
+
+## Known Issues
+
+- Runs every 15 minutes — aggressive schedule
+- No error handling
+- No concurrency control
+
+**Review flags:** Disable for now, not working
+
+<CustomDivider />
+
+## Governance Notes
+
+| Field | Value |
+|---|---|
+| **Consolidation** | Stays separate |
+| **Dry-run** | No |
+| **Concurrency** | No |
+| **Error reporting** | none |
+| **Auto-commit** | No |

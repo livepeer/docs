@@ -1,0 +1,343 @@
+---
+sidebarTitle: Contract Addresses
+title: Contract Addresses
+description: >-
+  Current and historical Livepeer protocol contract addresses across Arbitrum
+  One and Ethereum Mainnet. Verified on-chain.
+keywords:
+  - livepeer
+  - livepeer contracts
+  - livepeer contract address
+  - livepeer contract addresses
+  - LPT contract address
+  - LPT token address
+  - livepeer token address
+  - livepeer smart contract address
+  - livepeer arbitrum contract address
+  - livepeer ethereum contract address
+  - livepeer official contract
+  - livepeer protocol contracts
+  - contract addresses
+  - arbitrum
+  - ethereum
+  - blockchain
+  - smart contracts
+  - canonical
+  - reference
+  - livepeer BondingManager
+  - livepeer TicketBroker
+  - livepeer Controller
+  - livepeer RoundsManager
+  - livepeer Governor
+  - livepeer verified contracts
+  - livepeer arbiscan
+  - official livepeer addresses
+  - "0x289ba1701C2F088cf0faf8B3705246331cB8A839"
+  - "0x58b6a8a3302369daec383334672404ee733ab239"
+'og:title': Contract Addresses
+'og:description': >-
+  Current and historical Livepeer protocol contract addresses across Arbitrum
+  One and Ethereum Mainnet. Verified on-chain.
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+'twitter:card': summary_large_image
+'twitter:title': Contract Addresses
+'twitter:description': >-
+  Current and historical Livepeer protocol contract addresses across Arbitrum
+  One and Ethereum Mainnet. Verified on-chain.
+pageType: reference
+purpose: reference
+audience: community
+status: current
+lastVerified: 2026-03-26
+---
+
+{/* components */}
+import { CustomDivider, InlineDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { DoubleIconLink, LinkIcon } from '/snippets/components/elements/links/Links.jsx'
+import { SearchTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { DynamicTable, DynamicTableV2 } from '/snippets/components/displays/tables/Tables.jsx'
+import { AccordionTitle } from '/snippets/components/elements/text/Text.jsx'
+import { ArbitrumIcon, LivepeerIcon } from '/snippets/components/elements/icons/Icons.jsx'
+import { HistoricalContractTable } from '/snippets/components/integrators/feeds/HistoricalContractTable.jsx'
+import { DataWrap } from '/snippets/components/elements/text/DataWrap.jsx'
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+
+import VerifyContractAddresses from '/snippets/composables/pages/canonical/verify-contract-addresses.mdx'
+import {
+  buildCategoryAccordionRows,
+  historicalCategoryIcon,
+} from '/snippets/composables/pages/canonical/data/livepeer-contract-addresses-page-data.jsx'
+import {
+  NonActiveContractsAccordion,
+  HistoricalContractsAccordion,
+} from '/snippets/components/integrators/feeds/CanonicalContractAccordions.jsx'
+
+{/* data */}
+import { contractAddresses } from '/snippets/data/contract-addresses/contractAddressesData.jsx'
+import {
+  activeTableItems,
+  proxyTableItems,
+  nonActiveGroups,
+  historicalCategories,
+} from '/snippets/data/contract-addresses/canonicalContractsPageData.jsx'
+
+<Danger>
+ Ensure you are on the official `docs.livepeer.org/` site before using any address.
+ <br/><br/> **ALWAYS VERIFY ADDRESSES ON-CHAIN**
+ - [Livepeer Contracts Address Verifier Widget](#verifier-widget-verify-contract-address)
+ - [No-Trust Livepeer Contract Verification On-chain Steps](#No-Trust-On-chain-Address-Verification)
+ </Danger>
+
+<Tip>
+  Addresses on this page are automatically updated via a GitHub Action workflow `update-contract-addresses.yml`.
+
+  Current addresses are recovered from live controller reads, upstream deployment sources, commit-pinned code provenance, and explorer verification.
+
+  **Last Verified:** <DataWrap value={contractAddresses.meta.lastVerified} />
+</Tip>
+
+<br/>
+<Columns cols={2}>
+  <Card
+    href="https://github.com/livepeer/protocol"
+    icon="github"
+    title={<>Livepeer Protocol Source <br/>  <Badge color="green"> Commit Pinned </Badge></>}
+    horizontal
+  />
+  <Card
+    href="https://arbiscan.io/accounts/label/livepeer"
+    icon="cubes"
+    title={<>Livepeer Contracts Arbiscan <br/>  <Badge color="green"> On-chain Verified </Badge></>}
+    horizontal
+  />
+</Columns>
+
+<CustomDivider />
+
+<VerifyContractAddresses />
+
+<CustomDivider />
+
+## Livepeer Contract Overview
+
+Livepeer protocol contracts are deployed on **Arbitrum One** (active) and **Ethereum Mainnet** (legacy bridge and governance). Proxy addresses are stable across upgrades; target addresses change when a new implementation is deployed via governance.
+
+<AccordionGroup>
+  <Accordion title={<AccordionTitle icon={<Icon icon="gear" color="var(--accent)" />} title="Core" description="Staking, payments, round progression, and service discovery" />}>
+  <InlineDivider margin="0" />
+    Core Contracts are the operational backbone of the protocol. Most use a [proxy/target](https://docs.openzeppelin.com/contracts/5.x/api/proxy#TransparentUpgradeableProxy) pattern where the proxy address is stable across governance upgrades.
+        - Controller
+        - BondingManager
+        - TicketBroker
+        - RoundsManager
+        - Minter
+        - ServiceRegistry
+        - AIServiceRegistry
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/protocol/blockchain-contracts#core-protocol-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="coins" color="var(--accent)" />} title="Token" description="The LPT ERC-20 token and bridge infrastructure" />}>
+  <InlineDivider margin="0" />
+    The [Livepeer Token (LPT)](/v2/about/protocol/livepeer-token) secures the protocol and enables governance and staking. Its main contract lives on the secure Ethereum L1 chain (genesis deployment) with a minter for Arbitrum L2 LPT.
+        - LivepeerToken
+        - BridgeMinter
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/protocol/blockchain-contracts#token-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="landmark" color="var(--accent)" />} title="Governance" description="On-chain voting, proposal execution, and treasury management" />}>
+  <InlineDivider margin="0" />
+    Governance Contracts power protocol upgrades via [LIPs](https://github.com/livepeer/LIPs) and a democratic [Governance Model](/v2/about/protocol/governance-model), and fund the public good [Treasury](/v2/about/protocol/treasury).
+        - Governor
+        - LivepeerGovernor
+        - Treasury
+        - BondingVotes
+        - MerkleSnapshot
+        - PollCreator
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/protocol/blockchain-contracts#governance-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="bridge" color="var(--accent)" />} title="Bridge" description="Cross-chain infrastructure connecting Ethereum Mainnet and Arbitrum One" />}>
+  <InlineDivider margin="0" />
+    Bridge Contracts provide LP Token transfers and data synchronisation between the Ethereum Mainnet and Arbitrum One. L1Escrow holds all bridged LPT.
+        - L2LPTGateway
+        - L2LPTDataCache
+        - L1LPTGateway
+        - L1LPTDataCache
+        - L1Escrow
+        - L1Migrator
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/protocol/blockchain-contracts#bridge-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="wrench" color="var(--accent)" />} title="Utility" description="Libraries and helper contracts (genesis distribution, sorting, refunds)" />}>
+  <InlineDivider margin="0" />
+    Ethereum Mainnet only. Historical infrastructure from the original 2018 launch, which has been migrated to Arbitrum.
+        - GenesisManager
+        - MerkleMine
+        - MultiMerkleMine
+        - Refunder
+        - SortedDoublyLL
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/protocol/blockchain-contracts"/>
+  </Accordion>
+  <Accordion title={<AccordionTitle icon={<Icon icon="clock-rotate-left" color="var(--accent)" />} title="Migration" description="Historical Confluence upgrade contracts (2022), migration complete" />}>
+  <InlineDivider margin="0" />
+    Facilitated the migration of staked LPT from Ethereum Mainnet to Arbitrum One. No new migrations are possible. L2Migrator still accepts `claimStake` from participants who have not yet claimed.
+        - L2Migrator
+        - DelegatorPool
+    <DoubleIconLink label="Full Documentation" iconLeft="file-code" href="/v2/about/protocol/blockchain-contracts#migration-contracts"/>
+  </Accordion>
+</AccordionGroup>
+
+## Active Livepeer Contract Addresses
+<Badge color="green"> ACTIVE </Badge>
+<Icon icon="check" color="var(--text)"/> _Verified <DataWrap value={contractAddresses.meta.lastVerified}/>_
+
+This table lists currently active standalone contract entrypoints together with the current implementation targets behind active upgradeable proxies. Active proxy addresses are listed separately below. Paused, migration-residual, and legacy-operational contracts are grouped into a separate section so the main searchable table stays active-only.
+
+<Accordion title="See Workflow Verification Information">
+  This page is not populated from a hand-maintained address list. It reads the generated contracts registry `contractAddressesData.jsx`, which is the canonical persisted contracts dataset in this repo.
+
+  <Steps>
+    <Step title="Trigger Workflow">
+      [`update-contract-addresses.yml`](https://github.com/livepeer/docs/blob/main/.github/workflows/update-contract-addresses.yml) runs daily at `02:00 UTC` (`0 2 * * *`), supports manual dispatch with `dry_run`, `skip_verify`, and `use_test_branch`, and can also be started by `repository_dispatch` events tied to [`livepeer/protocol`](https://github.com/livepeer/protocol), [`livepeer/arbitrum-lpt-bridge`](https://github.com/livepeer/arbitrum-lpt-bridge), [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer), and [`livepeer/governor-scripts`](https://github.com/livepeer/governor-scripts).
+    </Step>
+
+    <Step title="Load Source Inputs">
+      [`fetch-contract-addresses.js`](https://github.com/livepeer/docs/blob/main/.github/scripts/fetch-contract-addresses.js) starts the pipeline. The live implementation then loads:
+      - the proof catalog from `operations/scripts/integrators/content/data/contracts/spec.js`
+      - the governor manifest from `livepeer/governor-scripts/updates/addresses.js`
+      - the previous successful generated payload
+      - the previous branch-watch snapshot
+      - source and provenance data from these watched Livepeer repos:
+        - [`livepeer/protocol`](https://github.com/livepeer/protocol)
+        - [`livepeer/arbitrum-lpt-bridge`](https://github.com/livepeer/arbitrum-lpt-bridge)
+        - [`livepeer/go-livepeer`](https://github.com/livepeer/go-livepeer)
+        - [`livepeer/governor-scripts`](https://github.com/livepeer/governor-scripts)
+      - GitHub API reads used to fetch repo metadata, branches, commits, and file contents from those repos
+    </Step>
+
+    <Step title="Resolve Contract Families">
+      The pipeline resolves the known contract families in its proof catalog from external sources:
+      - controller-managed contracts via Ethereum JSON-RPC `eth_call`
+      - deployment artefacts and repo-pinned source files from the watched Livepeer repos
+      - runtime consumer evidence where the proof catalog requires it
+      - governor manifest keys for families that are keyed from `addresses.js`
+    </Step>
+
+    <Step title="Verify And Enrich Addresses">
+      Before data is published, the current implementation verifies and enriches each row with external checks:
+      - `eth_call` to recover controller state and proxy/controller relationships
+      - `eth_getLogs` on the Arbitrum controller to rebuild historical `SetContractInfo` entries
+      - Arbiscan or Etherscan proxy API `module=proxy&action=eth_getCode` to confirm bytecode exists at each published address
+      - Blockscout `api/v2/addresses/{address}` to enrich creator address, labels, verified-source state, and proxy hints
+      - repo-pinned source and commit provenance from GitHub so contract code links resolve to a concrete upstream commit
+    </Step>
+
+    <Step title="Write Canonical Dataset">
+      If validation passes, the workflow writes `snippets/data/contract-addresses/contractAddressesData.jsx`. The JSON mirrors and page-facing companion outputs are derived from that generated dataset rather than authored separately.
+    </Step>
+
+    <Step title="Fail Safely">
+      If blocking validation fails, the workflow writes `_health-checks.json`, anomaly artefacts, and an incident issue payload, uploads those artefacts, creates or updates a GitHub issue, and does not publish replacement contract data.
+    </Step>
+
+    <Step title="Run Shadow Verification">
+      `update-contract-addresses-shadow.yml` runs daily at `02:30 UTC` (`30 2 * * *`) in `--check` mode. It reruns the verification path without publishing changes.
+    </Step>
+  </Steps>
+
+  **Current limit:** the live pipeline verifies the proof catalog aggressively, but it still resolves the known catalog rather than discovering arbitrary new contract families directly from repo diffs.
+</Accordion>
+
+<SearchTableV2
+  TableComponent={DynamicTableV2}
+  headerList={["Name", "Address", "Type", "Chain"]}
+  itemsList={activeTableItems}
+  columnWidths={{ Type: 'clamp(4.5rem, 6vw, 5.25rem)', Chain: 'clamp(12rem, 22vw, 15rem)' }}
+  monospaceColumns={[]}
+  searchPlaceholder="Search by name or address..."
+  searchColumns={["Name", "Address"]}
+  categoryColumn="Category"
+  filterColumns={["Chain", "Type"]}
+  showSeparators={true}
+  separatorColumn="Category"
+  boldFirstColumn={true}
+  columnVariant={{ "Type": "badge", "Chain": "textIcon", "Address": "addressWrapper" }}
+  categoryBadges={[
+    { label: "target", color: "surface-destructive" },
+    { label: "standalone", color: "blue" },
+  ]}
+  textIcons={[
+    { label: "Arbitrum One", icon: <ArbitrumIcon color="var(--arbitrum)"/> },
+    { label: "Ethereum Mainnet", icon: <Icon icon="ethereum" color="var(--hero-text)" size={13} /> }
+  ]}
+/>
+
+### Active Proxy Contract Addresses
+
+Proxy addresses are stable upgrade entrypoints for active controller-managed contracts. They are primarily useful for deployment, governance upgrade, and implementation-tracking workflows rather than day-to-day contract usage.
+
+<SearchTableV2
+  TableComponent={DynamicTableV2}
+  headerList={["Name", "Proxy", "Proxy Address", "Chain", "Target", "Target Address"]}
+  itemsList={proxyTableItems}
+  columnWidths={{
+    Name: 'clamp(10rem, 16vw, 14rem)',
+    Proxy: 'clamp(3.75rem, 5vw, 4.5rem)',
+    "Proxy Address": 'clamp(14rem, 26vw, 20rem)',
+    Chain: 'clamp(12rem, 22vw, 15rem)',
+    Target: 'clamp(3.75rem, 5vw, 4.5rem)',
+    "Target Address": 'clamp(14rem, 26vw, 20rem)',
+  }}
+  monospaceColumns={[]}
+  searchPlaceholder="Search proxy contracts by name or address..."
+  searchColumns={["Name", "Proxy Address", "Target Address"]}
+  categoryColumn="Category"
+  filterColumns={["Chain"]}
+  showSeparators={true}
+  separatorColumn="Category"
+  boldFirstColumn={true}
+  columnVariant={{ "Proxy": "badge", "Proxy Address": "addressWrapper", "Chain": "textIcon", "Target": "badge", "Target Address": "addressWrapper" }}
+  categoryBadges={[
+    { label: "proxy", color: "surface" },
+    { label: "target", color: "surface-destructive" },
+  ]}
+  textIcons={[
+    { label: "Arbitrum One", icon: <ArbitrumIcon color="var(--arbitrum)"/> },
+    { label: "Ethereum Mainnet", icon: <Icon icon="ethereum" color="var(--hero-text)" size={13} /> }
+  ]}
+/>
+
+<CustomDivider />
+
+### Published Non-Active Contracts
+
+Paused Ethereum contracts, migration-residual contracts, and legacy-operational helper contracts remain published for verification and audit purposes, but they are not part of the active contract table above.
+
+<NonActiveContractsAccordion groups={nonActiveGroups} renderRows={buildCategoryAccordionRows} />
+
+<CustomDivider />
+
+## Historical Contract Addresses
+
+Historical implementations replaced through governance upgrades. These target contracts are superseded and listed for audit trail and version history only. Do not interact with deprecated targets directly.
+
+<HistoricalContractsAccordion categories={historicalCategories} sourceData={contractAddresses} getIcon={historicalCategoryIcon} />
+
+<CustomDivider />
+
+## Contract Source Code
+
+<CardGroup cols={2}>
+  <Card title="Livepeer Protocol" icon="github" href="https://github.com/livepeer/protocol/tree/delta/contracts" arrow>
+    Core protocol Solidity contracts (BondingManager, TicketBroker, RoundsManager, Controller, governance)
+  </Card>
+  <Card title="Arbitrum LPT Bridge" icon="github" href="https://github.com/livepeer/arbitrum-lpt-bridge/tree/main/contracts" arrow>
+    Token bridge contracts connecting Ethereum Mainnet and Arbitrum One
+  </Card>
+  <Card title="Contracts Proof Inputs" icon="github" href="https://github.com/livepeer" arrow>
+    Watched upstream repositories used for discovery, provenance resolution, and verification support
+  </Card>
+  <Card title="Livepeer on Arbiscan" icon="cubes" href="https://arbiscan.io/accounts/label/livepeer" arrow>
+    All labelled Livepeer contracts on Arbitrum One block explorer
+  </Card>
+</CardGroup>

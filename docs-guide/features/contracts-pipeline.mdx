@@ -1,0 +1,43 @@
+---
+title: "Contracts Pipeline"
+sidebarTitle: "Contracts Pipeline"
+description: >-
+  Moved. The contracts pipeline canonical now lives as a deep-dive section
+  inside the Data Integrations feature page. This page is a thin redirect
+  pointer retained to preserve any external links.
+audience: builder
+pageType: reference
+purpose: reference
+status: deprecated
+lastVerified: "2026-05-23"
+supersededBy: docs-guide/features/data-integrations.mdx
+keywords:
+  - contracts pipeline
+  - moved
+  - redirect
+  - data integrations
+"og:image": "/snippets/assets/media/og-images/fallback.png"
+"og:image:alt": "Livepeer Docs social preview image"
+"og:image:type": "image/png"
+"og:image:width": 1200
+"og:image:height": 630
+---
+
+# Contracts Pipeline
+
+This page has been retired. The contracts pipeline is the gold-standard Pattern A integrator and its deep-dive canonical now lives inside the Data Integrations feature page:
+
+**See: [Data Integrations → Contracts Pipeline (deep dive)](./data-integrations.mdx#contracts-pipeline-deep-dive)**
+
+That section includes:
+
+- The mermaid flowchart of the full pipeline (trigger → fetch → verify → publish gate)
+- All 7 pipeline guarantees (trigger, entrypoint, source loading, repo/provenance, resolution/verification, output build, publish-or-fail)
+- The trust model (daily cron + shadow verification + bytecode auth + `--check` rerun gate)
+- Current limits (open-ended contract-family discovery; Ethereum historical replay)
+- The `_health-checks.json` "FAIL" semantics (branch-watch state changes are not pipeline failures)
+- The cron-is-dry-run bug causing 18+ day publish-gate staleness despite daily cron runs
+
+## Why this moved
+
+This page sat under `docs-guide/features/` but was **not registered in `docs.json` navigation** as of 2026-05-23 – an orphan deep-dive that overlapped with `data-integrations.mdx` without a clear consumer split. Per the consolidation work in `workspace/thread-outputs/repo-consolidation-deep/SLICE-04-data-integrations-audit.md`, the deep-dive content was absorbed into `data-integrations.mdx` as a dedicated section. This file is retained as a thin pointer to preserve any external references; it should not be edited further.

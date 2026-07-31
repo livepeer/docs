@@ -1,0 +1,64 @@
+---
+title: Visión general de la guía de documentación
+sidebarTitle: Guía de documentación
+description: >-
+  Fuente interna de verdad para las características y funcionalidades del
+  repositorio
+keywords:
+  - livepeer
+  - docs guide
+  - internal
+  - source of truth
+  - repository
+  - features
+  - functionality
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJkb2NzLWd1aWRlL1JFQURNRS5tZHgiLCJzb3VyY2VSb3V0ZSI6ImRvY3MtZ3VpZGUiLCJzb3VyY2VIYXNoIjoiZDQ1OTFlMTA5MTc4MjFhNWU4ZTk0ZmI1MjQ4YTBhZmJkZTE1MDFkNDdmZTUwMjA3NzI4Y2MwZGI1YmI4NTY2YyIsImxhbmd1YWdlIjoiZXMiLCJwcm92aWRlciI6Im9wZW5yb3V0ZXIiLCJtb2RlbCI6InF3ZW4vcXdlbi10dXJibyIsImdlbmVyYXRlZEF0IjoiMjAyNi0wMy0wMVQxNzowODowNC4zMjlaIn0= */}
+# Guía de Documentación (Fuente de Verdad Interna)
+
+Esta carpeta es la fuente de verdad interna para la navegación de mantenimiento de las características y funcionalidades del repositorio. No forma parte de la navegación de Mintlify en `docs.json`; existe para mantener la documentación operativa descubrible, no duplicada y mantenible.
+
+## Modelo de Fuente de Verdad
+
+- Comportamiento en tiempo de ejecución: la fuente de verdad es el código y las pruebas.
+- Navegación de características y operaciones: la fuente de verdad es esta `docs-guide/` carpeta.
+- UX/contenido de documentación pública: la fuente de verdad son las páginas Mintlify bajo `v2/pages/`.
+- Catálogos generados: la fuente de verdad son los scripts generadores; los archivos generados son de solo lectura.
+
+Ver [source-of-truth-policy.md](./policies/source-of-truth-policy.mdx) para conocer los límites completos.
+
+## Empieza aquí
+
+| Si necesitas entender...                  | Archivo canónico                                           |
+| --------------------------------------------- | -------------------------------------------------------- |
+| Gobernanza y propiedad canónica            | [source-of-truth-policy.md](./policies/source-of-truth-policy.mdx) |
+| Mapa completo de las capacidades del repositorio                  | [feature-map.md](./features/feature-map.mdx)                       |
+| Flujo de datos y control a través de sistemas            | [architecture-map.md](./architecture-map.mdx)             |
+| Comportamiento de la CLI y manuales de operación            | [lpd.md](./tooling/lpd-cli.mdx)                                       |
+| Puertas de validación y cumplimiento              | [quality-gates.md](./policies/quality-gates.mdx)                   |
+| Acciones de GitHub, n8n y pipelines de automatización | [automation-pipelines.md](./features/automations.mdx)     |
+| Arquitectura de información y estrategia de contenido | [content-system.md](./frameworks/content-system.mdx)                 |
+| APIs e integraciones de datos externos           | [data-integrations.md](./features/data-integrations.mdx)           |
+| Catálogo del árbol de páginas (generado)                | [pages-catalog.mdx](./catalog/pages-catalog.mdx)                     |
+| Catálogo de componentes (generado)                | [components-catalog.mdx](./catalog/components-catalog.mdx)           |
+| Catálogo de scripts (generado)                    | [scripts-catalog.mdx](./catalog/scripts-catalog.mdx)                   |
+| Catálogo de flujos de trabajo (generado)                  | [workflows-catalog.mdx](./catalog/workflows-catalog.mdx)             |
+| Catálogo de plantillas de problemas/PR (generado)         | [templates-catalog.mdx](./catalog/templates-catalog.mdx)             |
+
+## Reglas de Actualización
+
+1. Actualiza la documentación manual cuando cambie el comportamiento, proceso, propiedad o arquitectura.
+2. Regenera los catálogos generados cuando cambien los scripts, flujos de trabajo o plantillas:
+   - `node tools/scripts/generate-docs-guide-indexes.js --write`
+   - `node tools/scripts/generate-docs-guide-pages-index.js --write`
+   - `node tools/scripts/generate-docs-guide-components-index.js --write`
+   - `node tests/unit/script-docs.test.js --write --rebuild-indexes`
+3. Mantén `README.md` de alto nivel y enlázalo a los archivos de documentación canónica para obtener detalles profundos.
+4. No dupliques guías prolijas en README, documentación de pruebas y docs-guide. En lugar de eso, enlázalos a las páginas canónicas.
+
+## Áreas Relacionadas
+
+- Orientación de raíz: [`README.md`](/README.md)
+- Documentación pública: [`v2/resources/documentation-guide/`](/v2/es/resources/documentation-guide/documentation-guide)
+- Procedimientos de contribuidor: [`contribute/CONTRIBUTING/`](../contribute/CONTRIBUTING/)
+- Matrices de prueba y comportamiento de CI: [`tests/`](/tests/README.md)

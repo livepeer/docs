@@ -1,0 +1,40 @@
+---
+title: Encrypted assets
+description: Upload and play encrypted video with Livepeer Studio and control access.
+lifecycleStage: discover
+complexity: intermediate
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - solutions
+  - livepeer studio
+  - video on demand
+  - encrypted assets
+  - encrypted
+  - assets
+  - upload
+  - play
+  - video
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+lastVerified: 2026-03-17T00:00:00.000Z
+---
+Livepeer Studio supports **encrypted** video assets: you encrypt the file with AES-CBC, encrypt the key with Livepeer's public key, then upload. Playback can be gated with [access control](../access-control/overview).
+
+<Info>
+ Encryption uses AES-CBC (256-bit). Compatible with Web Crypto and protocols like Lit.
+</Info>
+
+## Flow
+
+1. Generate a 256-bit AES key and encrypt the video (random IV, PKCS#7 padding).
+2. Fetch Livepeer's public key from `GET https://livepeer.studio/api/access-control/public-key` (with Bearer API key).
+3. Encrypt the symmetric key with that public key (SPKI format in browsers).
+4. Create an asset with the encrypted key (base64) and upload the encrypted file via the returned TUS URL.
+
+Playback is protected by your playback policy (webhook or JWT). Only authorised viewers get access. For full code and Lit integration see the [Livepeer Studio docs](https://livepeer.studio/docs).

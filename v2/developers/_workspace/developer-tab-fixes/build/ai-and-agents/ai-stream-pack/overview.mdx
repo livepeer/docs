@@ -1,0 +1,157 @@
+---
+title: 'AI Stream Pack'
+sidebarTitle: 'Overview'
+description: >-
+  The Livepeer ComfyUI-Stream-Pack is a suite of custom ComfyUI nodes for
+  building real-time video and audio workflows using ComfyStream.
+keywords:
+  - livepeer
+  - AI Stream Pack
+  - ComfyUI-Stream-Pack
+  - ComfyUI custom nodes
+  - real-time AI
+  - ComfyStream
+  - streaming nodes
+  - Foundation Nodes
+  - Control Nodes
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: overview
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>AI Stream Pack extends ComfyUI with nodes that accept live video and audio inputs, enabling workflows that were previously impossible in standard ComfyUI batch mode.</Tip>
+</CenteredContainer>
+
+---
+
+The Livepeer `ComfyUI-Stream-Pack` (`livepeer/ComfyUI-Stream-Pack`) is a suite of custom ComfyUI nodes for building real-time video and audio processing workflows with ComfyStream. Standard ComfyUI workflows operate on static images or pre-rendered video files. AI Stream Pack introduces node categories that accept live streams as first-class inputs, enabling the same node graph authoring experience for real-time pipelines.
+
+<CustomDivider />
+
+## Node Categories
+
+The node pack uses three categories based on the role each node plays in a workflow:
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Category</TableCell>
+      <TableCell header>Purpose</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Foundation Nodes**</TableCell>
+      <TableCell>Introduce entirely new capabilities to ComfyUI that are otherwise impossible. Typically introduce new AI models or checkpoint types, or enable core functionality expanded by Light Nodes.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Light Nodes**</TableCell>
+      <TableCell>Modify or enhance existing workflows by tweaking parameters or intermediate values in Foundation Nodes. Provide workflow insights, debug information, or variations of existing functionality.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Control Nodes**</TableCell>
+      <TableCell>Connect external data sources and outputs to workflows. Load tensor data, process audio input, and stream outputs to Livepeer, WebRTC, or other real-time platforms.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Control Nodes
+
+Control Nodes are the input/output layer of a streaming workflow. The current pack ships two Control Nodes:
+
+- **`LoadTensor`**: loads tensor data from a live stream for real-time processing. This is the entry point for video frames in a streaming workflow.
+- **`LoadAudioTensor`**: processes real-time audio input, delivering audio data into the workflow for audio-aware pipelines.
+
+Both nodes replace the static `Load Image` pattern used in batch ComfyUI workflows. In a streaming context, they receive frames from the ComfyStream server on each forward pass rather than reading from disk.
+
+<Note>
+  Foundation Nodes and Light Nodes are defined in the node pack architecture but have no shipped implementations in the current release. The Control Nodes (`LoadTensor`, `LoadAudioTensor`) are the active entry points for streaming workflows.
+</Note>
+
+<CustomDivider />
+
+## Installation
+
+The AI Stream Pack is installed as part of the ComfyStream setup. When ComfyStream is installed and its auxiliary custom nodes are copied into a ComfyUI workspace, the AI Stream Pack nodes become available in the ComfyUI node graph.
+
+To install standalone:
+
+```bash
+cd /path/to/ComfyUI/custom_nodes
+git clone https://github.com/livepeer/ComfyUI-Stream-Pack.git
+```
+
+After restarting ComfyUI, the `LoadTensor` and `LoadAudioTensor` nodes appear in the node menu under the Livepeer category.
+
+<CustomDivider />
+
+## Using Stream Pack Nodes in a Workflow
+
+A streaming workflow replaces the static `Load Image` node with `LoadTensor`. The rest of the workflow (samplers, ControlNet, VAE decode, etc.) is unchanged:
+
+1. Add a `LoadTensor` node as the input source
+2. Connect it to your img2img sampler or latent processing chain
+3. Export the workflow in API format
+4. Point ComfyStream at the exported JSON
+
+ComfyStream's server intercepts the `LoadTensor` node at runtime and injects decoded video frames. The downstream nodes process each frame as they would a static image input, but the forward pass is called once per incoming frame rather than once per workflow execution.
+
+See <LinkArrow href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring" label="Workflow Authoring" newline={false} /> for the full workflow setup and streaming server configuration.
+
+<CustomDivider />
+
+## Related Pages
+
+Stream Pack nodes work inside ComfyStream workflows. See the [ComfyStream overview](/v2/developers/build/ai-and-agents/realtime-ai/comfystream/overview) for the full real-time pipeline architecture.
+
+<CardGroup cols={2}>
+  <Card
+    title="Workflow Authoring"
+    icon="workflow"
+    href="/v2/developers/build/ai-and-agents/comfystream/workflow-authoring"
+    arrow
+    horizontal
+  >
+    How to build and connect a ComfyUI workflow to a live video source with ComfyStream.
+  </Card>
+  <Card
+    title="Real-Time AI Overview"
+    icon="video"
+    href="/v2/developers/build/ai-and-agents/realtime-ai/overview"
+    arrow
+    horizontal
+  >
+    Cascade architecture and how ComfyStream fits into the Livepeer pipeline.
+  </Card>
+  <Card
+    title="ComfyStream as BYOC"
+    icon="box"
+    href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc"
+    arrow
+    horizontal
+  >
+    Registering a ComfyStream instance with a Livepeer orchestrator.
+  </Card>
+  <Card
+    title="PyTrickle Overview"
+    icon="code"
+    href="/v2/developers/build/ai-and-agents/pytrickle/overview"
+    arrow
+    horizontal
+  >
+    Python SDK alternative for custom real-time processing without ComfyUI.
+  </Card>
+</CardGroup>

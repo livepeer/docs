@@ -1,0 +1,146 @@
+---
+title: Delegation Economics
+sidebarTitle: Economics
+description: >-
+  How LPT inflation, treasury allocation, reward cut, fee share, and reward reliability combine into real delegator
+  outcomes.
+complexity: intermediate
+keywords:
+  - livepeer
+  - lpt
+  - delegation
+  - economics
+  - staking
+  - rewards
+  - inflation
+  - reward cut
+  - fee share
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: concept
+audience: delegator
+purpose: explain
+lifecycleStage: evaluate
+status: current
+lastVerified: 2026-04-06T00:00:00.000Z
+---
+
+import { MathInline, MathBlock } from '/snippets/components/elements/math/Math.jsx'
+
+Delegating LPT can earn you two things: a share of newly minted LPT and a share of ETH fees earned by your Orchestrator. The first is protocol-driven. The second depends on real network demand. Both are filtered through the Orchestrator you choose.
+
+## Where Delegator rewards come from
+
+Each protocol round, the BondingManager mints new LPT for bonded stake. The amount depends on the current inflation state, which adjusts around Livepeer's target bonding rate.
+
+<Note>
+  As of 6 April 2026, the on-chain treasury Reward Cut remains `10%` under LIP-92. Delegators and Orchestrators share the remaining `90%` of round issuance.
+</Note>
+
+## Inflation reward maths
+
+Your LPT reward per round can be expressed as:
+
+<MathBlock latex={String.raw`R_{delegator} = I_{round} \times \frac{B_O}{B_T} \times (1 - c_O) \times \frac{b_D}{B_O}`} />
+
+Where:
+
+- <MathInline latex={String.raw`I_{round}`} /> is the issuance available to Delegators and Orchestrators after any treasury allocation
+- <MathInline latex={String.raw`B_O`} /> is the total stake bonded to your Orchestrator
+- <MathInline latex={String.raw`B_T`} /> is total bonded stake across the network
+- <MathInline latex={String.raw`c_O`} /> is the Orchestrator's `rewardCut`
+- <MathInline latex={String.raw`b_D`} /> is your bonded stake
+
+### Worked example
+
+Suppose:
+
+- `900 LPT` of round issuance is available to Delegators and Orchestrators after treasury allocation
+- your Orchestrator controls `5%` of total bonded stake, so its pool gets `45 LPT`
+- the Orchestrator's `rewardCut` is `10%`, so Delegators share `40.5 LPT`
+- you hold `10%` of that pool's total bonded stake
+
+Your round reward would be `4.05 LPT`.
+
+## ETH fee revenue
+
+Gateways pay Orchestrators in ETH for completed work. Delegators only receive a share if:
+
+- the Orchestrator actually earns fees
+- the Orchestrator's `feeShare` passes some of those fees through
+
+The fee-side formula is:
+
+<MathBlock latex={String.raw`F_{delegator} = F_O \times f_O \times \frac{b_D}{B_O}`} />
+
+Where:
+
+- <MathInline latex={String.raw`F_O`} /> is total ETH fee revenue earned by the Orchestrator
+- <MathInline latex={String.raw`f_O`} /> is the Orchestrator's `feeShare`
+- <MathInline latex={String.raw`b_D`} /> is your bonded stake
+- <MathInline latex={String.raw`B_O`} /> is total stake bonded to that Orchestrator
+
+## `rewardCut` and `feeShare` in plain English
+
+| Parameter | What it controls | Better for Delegators |
+|---|---|---|
+| `rewardCut` | share of inflationary LPT kept by the Orchestrator | lower |
+| `feeShare` | share of ETH fees passed to Delegators | higher |
+
+<Warning>
+  As of 6 April 2026, current Explorer product surfaces use **Fee Share**, not **Fee Cut**. For `feeShare`, higher is better. For `rewardCut`, lower is better.
+</Warning>
+
+## Why reward reliability matters more than a tiny commission difference
+
+Each round, the Orchestrator still has to call `reward()`. If they miss it, the pool misses that round's inflation.
+
+That means a "slightly worse commission but near-perfect reward reliability" can outperform a "great commission headline with weak reliability".
+
+## How rewards accrue and compound
+
+Rewards accumulate in contract state. They do not automatically appear in your wallet.
+
+To realise them, you call `claimEarnings()`. After that, you can:
+
+- leave the resulting bonded balance in place to compound
+- unbond if your goal is to exit and withdraw
+
+See [Manage Your Delegation](./manage-your-delegation) before you claim, because the timing of a claim relative to the Orchestrator's `reward()` call matters.
+
+## What changes your real return in practice
+
+<AccordionGroup>
+  <Accordion title="Inflation changes over time">
+    The current mint rate is not static. Check live state rather than relying on an old annualised screenshot or article.
+  </Accordion>
+  <Accordion title="ETH fees are demand-driven">
+    Strong fee share only matters if the Orchestrator actually earns fee revenue.
+  </Accordion>
+  <Accordion title="Orchestrators can change their terms">
+    Commission settings are not permanent promises. Re-check them periodically.
+  </Accordion>
+  <Accordion title="Stake growth changes your pool share">
+    If many more Delegators join the same Orchestrator after you, your percentage of that pool gets smaller.
+  </Accordion>
+</AccordionGroup>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Choose an Orchestrator" icon="list-check" href="/v2/delegators/delegation/choose-an-orchestrator" arrow>
+    Use the economics on this page to compare operators properly.
+  </Card>
+  <Card title="Protocol Parameters" icon="sliders" href="/v2/delegators/resources/reference/protocol-parameters" arrow>
+    Check the governance-controlled values behind inflation, treasury allocation, and unbonding.
+  </Card>
+  <Card title="Manage Your Delegation" icon="gauge" href="/v2/delegators/delegation/manage-your-delegation" arrow>
+    See how claim timing, compounding, and redelegation affect realised return.
+  </Card>
+  <Card title="Livepeer Explorer" icon="compass" href="https://explorer.livepeer.org" arrow>
+    Inspect live network state instead of relying on stale static yield assumptions.
+  </Card>
+</CardGroup>

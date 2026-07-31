@@ -1,9 +1,25 @@
 'use strict';
+/**
+ * @script            rubric-loader
+ * @category          utility
+ * @purpose           qa:repo-health
+ * @scope             single-domain
+ * @owner             docs
+ * @needs             R-R14
+ * @purpose-statement Loads and parses rubric YAML/JSON for page-type scoring rules.
+ * @pipeline          indirect -- library module
+ * @usage             const { loadRubric } = require('../../tools/lib/docs-usefulness/rubric-loader');
+ */
 
 const fs = require('fs');
 const path = require('path');
+const taxonomy = require('../docs/frontmatter-taxonomy');
+const { CANONICAL_AUDIENCES } = taxonomy;
 
-const PURPOSE_ENUM = [
+// Rubric-internal purpose labels — intentionally uses pre-Phase-1 names that key
+// into the rubric config JSON and prompts/. New taxonomy canonicals are mapped to
+// these via taxonomy.purposeToRubricPurpose(). Do NOT derive from CANONICAL_PURPOSES.
+const PURPOSE_ENUM = Object.freeze([
   'landing',
   'overview',
   'concept',
@@ -11,34 +27,27 @@ const PURPOSE_ENUM = [
   'tutorial',
   'reference',
   'faq',
+  'troubleshooting',
   'glossary',
-  'changelog',
-  'troubleshooting'
-];
+  'changelog'
+]);
 
-const AUDIENCE_ENUM = [
-  'developer',
-  'gateway-operator',
-  'orchestrator',
-  'delegator',
-  'platform-builder',
-  'community',
-  'internal',
-  'general',
-  'everyone'
-];
+// Derived from frontmatter-taxonomy.js CANONICAL_AUDIENCES — the single source of truth.
+// Do not hardcode here. If the canonical set changes, update frontmatter-taxonomy.js only.
+const AUDIENCE_ENUM = CANONICAL_AUDIENCES;
 
+// Updated 2026-03-24: gateway-operator → gateway, platform-builder → builder,
+// general/everyone → community, internal section removed (not audience-typed).
 const SECTION_DEFAULT_AUDIENCE = {
-  home: 'everyone',
-  about: 'general',
+  home: 'community',
+  about: 'community',
   developers: 'developer',
-  gateways: 'gateway-operator',
+  gateways: 'gateway',
   orchestrators: 'orchestrator',
   lpt: 'delegator',
   community: 'community',
-  solutions: 'platform-builder',
-  internal: 'internal',
-  resources: 'everyone'
+  solutions: 'builder',
+  resources: 'community'
 };
 
 const cache = new Map();
@@ -66,7 +75,7 @@ function getFrontmatterValues(page) {
 }
 
 function configPath(relativePath) {
-  return path.join(__dirname, '../../config', relativePath);
+  return path.join(__dirname, '../../config/quality', relativePath);
 }
 
 function loadRubric(filePath = configPath('usefulness-rubric.json')) {
@@ -148,10 +157,11 @@ function resolveAudience(page, normalization = loadAudienceNormalization()) {
     };
   }
 
+  // Updated 2026-03-24: fallback was 'everyone' (deprecated); now 'community' (canonical).
   const fallback =
     (normalization?.section_defaults && normalization.section_defaults[page.section]) ||
     SECTION_DEFAULT_AUDIENCE[page.section] ||
-    'everyone';
+    'community';
   return {
     audience: fallback,
     source: 'inferred',
@@ -164,50 +174,78 @@ function resolvePurpose(page) {
   const frontmatter = getFrontmatterValues(page);
   const frontmatterPurpose = String(frontmatter.purpose || '').trim();
   if (frontmatterPurpose) {
-    if (PURPOSE_ENUM.includes(frontmatterPurpose)) {
-      return { purpose: frontmatterPurpose, source: 'frontmatter', invalid: false };
+    const normalized = taxonomy.normalizePurpose(frontmatterPurpose);
+    if (normalized.valid) {
+      // Convert taxonomy canonical → rubric label so downstream scoring can look
+      // up the correct rubric config entry and prompt.
+      const rubricLabel =
+        taxonomy.purposeToRubricPurpose(normalized.canonical) || normalized.canonical;
+      return {
+        purpose: rubricLabel,
+        source: 'frontmatter',
+        invalid: false,
+        deprecatedAlias: normalized.deprecatedAlias
+      };
     }
-    return { purpose: null, source: 'none', invalid: true };
+    return { purpose: null, source: 'none', invalid: true, deprecatedAlias: false };
   }
 
   const base = path.basename(String(page.path || ''), path.extname(String(page.path || '')));
   const route = String(page.path || '').toLowerCase();
 
-  if (/portal|mission-control/i.test(base) || base === 'index') return { purpose: 'landing', source: 'inferred', invalid: false };
-  if (/quickstart|get-started|primer|^first-/i.test(base)) return { purpose: 'tutorial', source: 'inferred', invalid: false };
-  if (/^faq/i.test(base)) return { purpose: 'faq', source: 'inferred', invalid: false };
-  if (/troubleshoot/i.test(base)) return { purpose: 'troubleshooting', source: 'inferred', invalid: false };
-  if (/glossary/i.test(base)) return { purpose: 'glossary', source: 'inferred', invalid: false };
-  if (/changelog|release-notes/i.test(base)) return { purpose: 'changelog', source: 'inferred', invalid: false };
-  if (/api-reference|config-flags/i.test(base)) return { purpose: 'reference', source: 'inferred', invalid: false };
-  if (/overview/i.test(base)) return { purpose: 'overview', source: 'inferred', invalid: false };
-  if (/\/references?\//i.test(route)) return { purpose: 'reference', source: 'inferred', invalid: false };
+  if (/portal|mission-control/i.test(base) || base === 'index') {
+    return { purpose: 'landing', source: 'inferred', invalid: false, deprecatedAlias: false };
+  }
+  if (/quickstart|get-started|primer|^first-/i.test(base)) {
+    return { purpose: 'tutorial', source: 'inferred', invalid: false, deprecatedAlias: false };
+  }
+  if (/^faq/i.test(base)) return { purpose: 'faq', source: 'inferred', invalid: false, deprecatedAlias: false };
+  if (/troubleshoot/i.test(base)) {
+    return { purpose: 'troubleshooting', source: 'inferred', invalid: false, deprecatedAlias: false };
+  }
+  if (/glossary/i.test(base)) return { purpose: 'glossary', source: 'inferred', invalid: false, deprecatedAlias: false };
+  if (/changelog|release-notes/i.test(base)) {
+    return { purpose: 'changelog', source: 'inferred', invalid: false, deprecatedAlias: false };
+  }
+  if (/api-reference|config-flags/i.test(base)) {
+    return { purpose: 'reference', source: 'inferred', invalid: false, deprecatedAlias: false };
+  }
+  if (/overview/i.test(base)) return { purpose: 'overview', source: 'inferred', invalid: false, deprecatedAlias: false };
+  if (/\/references?\//i.test(route)) {
+    return { purpose: 'reference', source: 'inferred', invalid: false, deprecatedAlias: false };
+  }
 
-  if ((page.components || []).includes('Steps')) return { purpose: 'how_to', source: 'inferred', invalid: false };
+  if ((page.components || []).includes('Steps')) {
+    return { purpose: 'how_to', source: 'inferred', invalid: false, deprecatedAlias: false };
+  }
 
   if ((page.wordCount || 0) < 150 && (page.components || []).some((component) => ['Card', 'CardGroup', 'GotoCard', 'DisplayCard'].includes(component))) {
-    return { purpose: 'landing', source: 'inferred', invalid: false };
+    return { purpose: 'landing', source: 'inferred', invalid: false, deprecatedAlias: false };
   }
 
   const accordionCount = (String(page.content || '').match(/<Accordion(?:Group)?[\s>]/g) || []).length;
-  if (accordionCount >= 5) return { purpose: 'faq', source: 'inferred', invalid: false };
+  if (accordionCount >= 5) return { purpose: 'faq', source: 'inferred', invalid: false, deprecatedAlias: false };
 
   if ((page.wordCount || 0) > 300 && (page.headings || []).length >= 3 && !(page.components || []).includes('Steps')) {
-    return { purpose: 'concept', source: 'inferred', invalid: false };
+    return { purpose: 'concept', source: 'inferred', invalid: false, deprecatedAlias: false };
   }
 
-  return { purpose: null, source: 'none', invalid: false };
+  return { purpose: null, source: 'none', invalid: false, deprecatedAlias: false };
 }
 
 function getRulesForPage(rubric, page, normalization = loadAudienceNormalization()) {
   const purposeResolution = resolvePurpose(page);
   const audienceResolution = resolveAudience(page, normalization);
+  const pageType = getFrontmatterValues(page).pageType || '';
+  const rubricPurpose = taxonomy.purposeToRubricPurpose(purposeResolution.purpose, pageType);
 
-  if (!purposeResolution.purpose || !rubric[purposeResolution.purpose]) {
+  if (!rubricPurpose || !rubric[rubricPurpose]) {
     return {
-      purpose: null,
+      purpose: purposeResolution.purpose,
+      rubricPurpose: rubricPurpose || null,
       purposeSource: purposeResolution.source,
       purposeInvalid: Boolean(purposeResolution.invalid),
+      purposeDeprecatedAlias: Boolean(purposeResolution.deprecatedAlias),
       audience: audienceResolution.audience,
       audienceSource: audienceResolution.source,
       audienceRaw: audienceResolution.audienceRaw,
@@ -219,14 +257,16 @@ function getRulesForPage(rubric, page, normalization = loadAudienceNormalization
 
   return {
     purpose: purposeResolution.purpose,
+    rubricPurpose,
     purposeSource: purposeResolution.source,
     purposeInvalid: Boolean(purposeResolution.invalid),
+    purposeDeprecatedAlias: Boolean(purposeResolution.deprecatedAlias),
     audience: audienceResolution.audience,
     audienceSource: audienceResolution.source,
     audienceRaw: audienceResolution.audienceRaw,
     audienceCandidates: audienceResolution.audienceCandidates,
-    tier1: rubric[purposeResolution.purpose].tier1_rules,
-    tier2: rubric[purposeResolution.purpose].tier2_llm
+    tier1: rubric[rubricPurpose].tier1_rules,
+    tier2: rubric[rubricPurpose].tier2_llm
   };
 }
 

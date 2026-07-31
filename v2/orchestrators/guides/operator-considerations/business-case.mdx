@@ -1,0 +1,389 @@
+---
+title: The Commercial Case
+sidebarTitle: Commercial Case
+description: >-
+  How commercial Orchestrators operate - earning from service fees rather than inflation, building Gateway
+  relationships, and positioning for application workloads.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
+  - livepeer
+  - orchestrator
+  - commercial orchestrator
+  - business case
+  - service fees
+  - SLA
+  - gateway relationship
+  - pricing strategy
+  - pricePerGateway
+  - application workloads
+  - commercial GPU
+  - professional operation
+'og:image': /snippets/assets/media/og-images/en/orchestrators.png
+'og:image:alt': Livepeer Docs social preview image for Orchestrators
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: guide
+audience: orchestrator
+purpose: evaluation
+status: current
+lastVerified: "2026-03-15"
+---
+
+{/* TODO:
+Verify:
+- Mermaid diagrams use theme colours (hardcoded - see mermaid-colours.jsx)
+- Fontawesome icons on accordions
+- Tables use StyledTable with thead/tbody
+- No em-dashes
+- UK spelling throughout
+- Headers concise and technical
+- REVIEW flags below for SME verification
+Human:
+- REVIEW flags - particularly on commercial operator names and revenue figures
+- Review page layout for Persona D/C journey fit
+*/}
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { CenteredContainer, BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CustomDivider style={{margin: "-1rem 0 -1rem 0"}} />
+
+Most Orchestrator operators start by thinking about LPT inflation rewards. Commercial operators
+think primarily about ETH service fees. The two models require different hardware investments,
+different operational standards, and a different relationship with the Gateways that send work.
+What professional-grade Orchestrator operation looks like in practice.
+
+For the mechanics of how both revenue streams work, see <LinkArrow href="/v2/orchestrators/concepts/incentive-model" label="Incentive Model" newline={false} />. For pricing configuration, see <LinkArrow href="/v2/orchestrators/guides/payments-and-pricing/pricing-strategy" label="Pricing Strategy" newline={false} />.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Hobbyist vs Commercial
+
+The Livepeer Orchestrator ecosystem contains two broadly distinct operating models that coexist on
+the same protocol. Understanding which model applies determines everything from hardware investment
+to how pricing is set.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+flowchart LR
+    subgraph HOB["Hobbyist Model"]
+        direction TB
+        H1["Primary income:\nLPT inflation rewards"]
+        H2["Revenue driver:\nStake size"]
+        H3["Gateway relationship:\nPassive (get selected)"]
+        H4["Uptime target:\n~95%"]
+        H5["Hardware:\nExisting GPU, amortised"]
+    end
+
+    subgraph COM["Commercial Model"]
+        direction TB
+        C1["Primary income:\nETH service fees"]
+        C2["Revenue driver:\nJob volume + pricing"]
+        C3["Gateway relationship:\nActive (build relationships)"]
+        C4["Uptime target:\n99%+"]
+        C5["Hardware:\nDedicated, planned investment"]
+    end
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+    style HOB fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+    style COM fill:#0d0d0d,stroke:#18794E,stroke-width:2px
+```
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Dimension</TableCell>
+      <TableCell header>Hobbyist operator</TableCell>
+      <TableCell header>Commercial operator</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Primary income**</TableCell>
+      <TableCell>LPT inflation rewards</TableCell>
+      <TableCell>ETH service fees from job processing</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Revenue lever**</TableCell>
+      <TableCell>Total bonded stake</TableCell>
+      <TableCell>Job volume, pricing discipline, uptime</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Uptime requirement**</TableCell>
+      <TableCell>~95% (reward calls + basic availability)</TableCell>
+      <TableCell>99%+ (SLA-driven, continuous monitoring)</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Gateway relationship**</TableCell>
+      <TableCell>Passive - wait to be selected by price and stake</TableCell>
+      <TableCell>Active - direct relationships, per-Gateway pricing</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Hardware approach**</TableCell>
+      <TableCell>Existing hardware repurposed</TableCell>
+      <TableCell>Dedicated investment, redundancy planned</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Monitoring**</TableCell>
+      <TableCell>Periodic checks, Prometheus optional</TableCell>
+      <TableCell>Automated alerting, SLA dashboards</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Model loading**</TableCell>
+      <TableCell>Load on demand; cold starts acceptable</TableCell>
+      <TableCell>Pre-loaded and warm; cold starts are SLA failures</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+Neither model is superior - they reflect different operator goals and capabilities. Many operators
+run a hybrid: inflation rewards provide a base, service fees from well-served application workloads
+provide the upside.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Why Service Fees Scale
+
+For commercial operators, ETH service fees - not LPT inflation rewards - are the primary economic
+lever. The reason is straightforward: fee income scales with workload volume, while inflation
+rewards scale with stake.
+
+An Orchestrator with significant staked LPT earns a fixed percentage of the round's inflation
+regardless of how many jobs it processes. An Orchestrator serving high-volume AI inference workloads
+earns ETH proportional to every pixel processed and every model inference returned.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#18794E', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3CB540', 'lineColor': '#3CB540', 'mainBkg': '#18794E', 'nodeBorder': '#3CB540', 'clusterBkg': 'transparent', 'clusterBorder': '#3CB540', 'titleColor': '#3CB540', 'edgeLabelBackground': 'transparent', 'textColor': '#3CB540', 'nodeTextColor': '#fff'}}}%%
+flowchart LR
+    subgraph FEES["Service Fee Income"]
+        A["Jobs processed\n× price per unit"] --> B["ETH earnings\n(scales with volume)"]
+    end
+    subgraph REWARDS["Inflation Reward Income"]
+        C["Total bonded stake\n× inflation rate"] --> D["LPT earnings\n(fixed % of round)"]
+    end
+
+    classDef default fill:#1a1a1a,color:#fff,stroke:#2d9a67,stroke-width:2px
+    style FEES fill:#0d0d0d,stroke:#18794E,stroke-width:2px
+    style REWARDS fill:#0d0d0d,stroke:#2d9a67,stroke-width:1px
+```
+
+For an Orchestrator actively serving a high-volume Gateway - a streaming platform, an AI product,
+or a real-time video application - monthly ETH fee income from job processing can exceed LPT
+inflation income by a substantial margin.
+
+{/* REVIEW: Do not add specific revenue numbers here without verified data from active commercial operators. Keep this framing general until SME input is available. */}
+
+<Note>
+Commercial fee income is variable - it depends on Gateway demand, job mix, and market pricing
+conditions. Inflation rewards are predictable by stake. Most commercial operators treat inflation as
+a base and fees as the variable upside.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## What Commercial Operation Requires
+
+Serving application workloads at commercial scale imposes concrete operational requirements beyond
+what is needed for passive inflation earning.
+
+### Uptime and reliability
+
+A Gateway operator building a product on Livepeer's network needs the Orchestrators it routes to
+to be consistently available. If an Orchestrator fails mid-session, the Gateway must failover -
+introducing latency and degraded user experience. Repeated failures result in the Orchestrator
+being deprioritised in the Gateway's selection algorithm.
+
+Commercial Orchestrators target 99%+ uptime. This requires:
+
+- Automated monitoring with immediate alerts on node failure
+- Automated restart and recovery
+- Stable, redundant connectivity (not shared home broadband)
+- Consistent power supply (UPS or colocation)
+- Hardware health monitoring (GPU temperatures, VRAM utilisation)
+
+### Model warm-up management
+
+For AI inference workloads, cold model starts (loading a model from disk into VRAM on first request)
+introduce latency that breaks user-facing SLAs. Commercial AI Orchestrators pre-load all advertised
+models at startup and keep them warm.
+
+The practical implication: the VRAM requirements for commercial AI operation are determined by the
+sum of all models that must be simultaneously loaded, not just the largest single model.
+
+### Latency targets
+
+Gateways rank Orchestrators by response latency among other factors. Consistently slow responses
+- even within acceptable job completion time - affect long-term selection probability.
+
+Commercial Orchestrators optimise for:
+- Network proximity to high-volume Gateways
+- Low GPU scheduling latency (dedicated GPU, not shared)
+- Fast storage for model weights (NVMe preferred over SATA)
+
+{/* TODO: Add screenshot of Livepeer Explorer showing orchestrator response time metrics when available */}
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Working with Gateways
+
+The standard Orchestrator discovery model is anonymous: a Gateway queries the ServiceRegistry,
+ranks nodes by capability and price, and selects the best match. Commercial operators take a
+more active approach.
+
+### Per-Gateway pricing
+
+The `-pricePerGateway` flag allows Orchestrators to set different prices for specific Gateway
+addresses. This is the primary tool for commercial Gateway relationships:
+
+```bash icon="terminal" title="per-gateway pricing"
+# Set a negotiated rate for a specific high-volume Gateway
+-pricePerGateway='{"0xGatewayEthAddress": 800, "0xOtherGateway": 950}'
+```
+
+A high-volume Gateway that commits consistent traffic in exchange for a preferred rate is a
+commercially valuable relationship. Per-Gateway pricing formalises that arrangement at the
+protocol level without requiring any off-chain contract.
+
+### Capability signalling
+
+Gateways discover AI capabilities through the capability manifest returned during session
+negotiation. Commercial Orchestrators ensure their declared capabilities are accurate and
+stable - advertising a model that is slow to load or frequently unavailable damages the
+Gateway's product and the Orchestrator's selection score.
+
+Practical discipline for commercial capability management:
+
+- Declare only models that are loaded and warm at startup
+- Remove capability declarations for models that are not being actively served
+- Use `-aiModels` to specify exactly which pipeline/model combinations to load on startup
+- Monitor model load times and remove slow-start models from the Active Set
+
+### Building Gateway relationships
+
+{/* REVIEW: The following is general guidance; specific Gateway operator names or contacts should be verified and updated by the operator community before publishing. */}
+
+Active commercial relationships with Gateways typically develop through:
+
+- Consistent performance history visible on the Livepeer Explorer
+- Participation in the `#orchestrators` channel on the [Livepeer Discord](https://discord.gg/livepeer)
+- Direct outreach to Gateway SPEs and ecosystem partners
+- Demonstrated capability support for pipelines that specific Gateways need
+
+Gateways serving AI products actively look for Orchestrators with specific capability profiles.
+An Orchestrator running a pipeline that a Gateway cannot currently source from the network has
+real negotiating leverage.
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## How to Position for Commercial Workloads
+
+The transition from passive inflation earner to active commercial Orchestrator requires changes in
+both technical setup and operational approach.
+
+<AccordionGroup>
+  <Accordion title="Capability selection" icon="microchip">
+
+    Commercial Orchestrators focus on pipelines with active demand rather than loading every
+    available model. Check current network demand at
+    [tools.Livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities)
+    to see which pipelines are being routed and at what prices.
+
+    Prioritise:
+    - Pipelines with few available Orchestrators and active demand
+    - High-VRAM models that exclude commodity GPU competition
+    - Cascade (real-time AI) pipelines if hardware supports it - higher per-job value
+
+  </Accordion>
+  <Accordion title="Pricing discipline" icon="tag">
+
+    Commercial pricing differs from setting a generic `-pricePerUnit`. It requires:
+
+    - Understanding the Gateway's `maxPricePerUnit` ceiling for each pipeline
+    - Setting prices that are competitive but not floor-level (under-pricing signals low quality to some Gateway operators)
+    - Using `-pricePerGateway` to offer volume discounts to specific Gateways
+    - Using `-autoAdjustPrice` carefully - automatic adjustment can undercut commercial relationships
+
+    See <LinkArrow href="/v2/orchestrators/guides/payments-and-pricing/pricing-strategy" label="Pricing Strategy" newline={false} /> for configuration guidance.
+
+  </Accordion>
+  <Accordion title="Infrastructure investment" icon="server">
+
+    Commercial operations typically require infrastructure changes that hobbyist setups do not:
+
+    - **Colocation or cloud GPU** instead of home hardware, for reliability and connectivity
+    - **Dedicated GPUs** with no competing workloads (mining rigs sharing GPUs with Livepeer
+      introduce unpredictable latency)
+    - **Redundant connectivity** with failover (not a single home ISP connection)
+    - **UPS or colocation power** for uptime targets above 99%
+
+    Hardware investment for commercial operation should be planned against projected service fee
+    income, not against inflation rewards alone. The break-even analysis is different.
+
+  </Accordion>
+  <Accordion title="Monitoring and alerting" icon="chart-line">
+
+    Commercial uptime targets require automated monitoring. Go-livepeer exposes a Prometheus
+    metrics endpoint (port 7935 by default). Connect this to an alerting stack (Grafana,
+    PagerDuty, or equivalent) to detect:
+
+    - Node offline or unreachable
+    - GPU memory pressure (model eviction)
+    - Reward call failures
+    - Unusual session failure rates
+
+    Manual monitoring (periodic log checks) is insufficient for commercial SLA targets.
+    See <LinkArrow href="/v2/orchestrators/guides/monitoring-and-tools/metrics-monitoring" label="Metrics and Monitoring" newline={false} /> for setup guidance.
+
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## The Commercial Operator Landscape
+
+Several types of operator run commercial-grade Orchestrators on the Livepeer Network.
+
+**Pool operators** manage the Orchestrator registration, on-chain staking, and reward calling for a
+fleet of GPU workers. Workers register under the pool's Orchestrator address; the pool earns
+a margin on their job income. Pool operators are effectively GPU infrastructure businesses,
+combining the service fee model with a managed-Orchestrator offering.
+
+{/* REVIEW: Add named pool operators here once confirmed with community - Titan-Node is known but confirm active commercial status and whether they want to be named in docs. */}
+
+**Enterprise GPU operators** run dedicated fleets serving specific AI application workloads. These
+operators serve Gateways that power user-facing AI products and require SLA-level commitments.
+Their hardware is typically data-centre grade with redundant connectivity.
+
+**Dual-workload operators** run both video transcoding and AI inference from the same infrastructure,
+earning fees from both streams. This is the natural next step for video Orchestrators who invest in
+high-VRAM GPUs.
+
+<Note>
+The commercial Orchestrator landscape is evolving. The [Livepeer Forum](https://forum.livepeer.org)
+and the `#orchestrators` Discord channel contain the most current information on who is operating
+commercially and what workloads are available.
+</Note>
+
+<CustomDivider style={{margin: "-1rem 0 -2rem 0"}} />
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card title="Operating Rationale" icon="scale-balanced" href="/v2/orchestrators/guides/operator-considerations/operator-rationale" arrow horizontal>
+    Financial evaluation - costs, revenue streams, and the decision matrix for choosing your path.
+  </Card>
+  <Card title="Pricing Strategy" icon="tag" href="/v2/orchestrators/guides/payments-and-pricing/pricing-strategy" arrow horizontal>
+    How to configure competitive prices for video and AI workloads, including per-Gateway rates.
+  </Card>
+  <Card title="Working with Gateways" icon="handshake" href="/v2/orchestrators/guides/advanced-operations/gateways-orchestrators" arrow horizontal>
+    The technical and operational details of the Gateway-Orchestrator relationship.
+  </Card>
+  <Card title="Protocol Influence" icon="landmark" href="/v2/orchestrators/guides/operator-considerations/protocol-influence" arrow horizontal>
+    Why operating an Orchestrator matters beyond earnings - governance weight and network stewardship.
+  </Card>
+</CardGroup>

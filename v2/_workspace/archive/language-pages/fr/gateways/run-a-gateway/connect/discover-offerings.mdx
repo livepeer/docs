@@ -1,0 +1,123 @@
+---
+title: Découvrez les offres du Marketplace
+description: >-
+  Cette page explique comment découvrir les services de calcul IA & Vidéo
+  offerts par les Orchestrateurs via votre passerelle. pour Livepeer
+  consommation d'application.
+sidebarTitle: Découvrez les offres de calcul
+keywords:
+  - livepeer
+  - gateways
+  - run a gateway
+  - connect
+  - discover offerings
+  - discover
+  - marketplace
+  - offerings
+  - explains
+  - video
+'og:image': /snippets/assets/domain/SHARED/LivepeerDocsLogo.svg
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9nYXRld2F5cy9ydW4tYS1nYXRld2F5L2Nvbm5lY3QvZGlzY292ZXItb2ZmZXJpbmdzLm1keCIsInNvdXJjZVJvdXRlIjoidjIvZ2F0ZXdheXMvcnVuLWEtZ2F0ZXdheS9jb25uZWN0L2Rpc2NvdmVyLW9mZmVyaW5ncyIsInNvdXJjZUhhc2giOiJjYzdlMWNjZjJkN2VlOTFiZjQzNGIwNTFjNzIzMTVjZGUzNWU5YjZjYzExMGFkZWM3YWU3NTNlMTJiMzA5ZTQ5IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoib3BlbmFpL2dwdC1vc3MtMjBiOmZyZWUiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjdUMDM6MTM6NDcuNDI4WiJ9 */}
+import { StyledSteps, StyledStep } from '/snippets/components/displays/steps/Steps.jsx'
+
+## Processus de découverte
+
+Les passerelles découvrent les orchestrateurs via le pool d'orchestrateurs dans [discovery/discovery.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/discovery/discovery.go)
+
+<StyledSteps
+  iconColor="#18794e"
+  titleColor="#fff"
+  lineColor="#18794e"
+  iconSize="24px"
+>
+  <StyledStep title="Query orchestrators">
+    Get `OrchestratorInfo` from each orchestrator
+  </StyledStep>
+  <StyledStep title="Filter capabilities & price">
+    Match against required capabilities & pricing limits & optionally rank
+    results
+  </StyledStep>
+  <StyledStep title="Expose results">
+    Make matching orchestrator services available through HTTP endpoints
+  </StyledStep>
+  <StyledStep title="Route requests">
+    Forward incoming requests to selected orchestrators
+  </StyledStep>
+</StyledSteps>
+
+## Trouver tous les orchestrateurs & offres
+
+Le `/getNetworkCapabilities` point de terminaison dans [server/handlers.go](https://github.com/livepeer/go-livepeer/blob/5691cb48/server/handlers.go#L275-L295)
+expose toutes les offres d'orchestrateur disponibles
+
+```go /getNetworkCapabilities icon="code"
+func (s *LivepeerServer) getNetworkCapabilitiesHandler() http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Returns orchestrators with their capabilities, pricing, and hardware
+    })
+}
+```
+
+**Structure des données de réponse**
+
+La réponse utilise la structure NetworkCapabilities provenant de `common/types.go` [types.go:166-176](https://github.com/livepeer/go-livepeer/blob/5691cb48/common/types.go#L166-L176)
+
+```go icon="code" title="NetworkCapabilities"
+type NetworkCapabilities struct {
+    Orchestrators []*OrchNetworkCapabilities `json:"orchestrators"`
+}
+
+type OrchNetworkCapabilities struct {
+    Address            string                     `json:"address"`
+    LocalAddress       string                     `json:"local_address"`
+    OrchURI            string                     `json:"orch_uri"`
+    Capabilities       *net.Capabilities          `json:"capabilities"`
+    CapabilitiesPrices []*net.PriceInfo           `json:"capabilities_prices"`
+    Hardware           []*net.HardwareInformation `json:"hardware"`
+}
+```
+
+## Passerelle
+
+Les passerelles exposent des offres décrivant:
+
+### **1. Modèles pris en charge**
+
+Exemple:
+
+- `stable-diffusion-v1.5`
+- `depth-anything`
+- `controlnet_lineart`
+- `ip_adapter`
+
+### **2. Pipelines pris en charge**
+
+- Transfert de style en temps réel à la manière de Daydream
+- Flux de travail ComfyStream
+- Conteneurs BYOC
+- Graphiques d’inférence personnalisés
+
+### **3. Tarification**
+
+Un Gateway peut facturer :
+
+- `$0.004 / frame`
+- `$0.06 / second`
+- `$0.0005 / inference token`
+
+### **4. Régions**
+
+Exemple:
+
+- `us-east`
+- `eu-central`
+- `ap-southeast`
+
+### **5. Scores de fiabilité**
+
+Les passerelles peuvent publier :
+
+- Disponibilité %
+- Latence moyenne d'inférence
+- Configuration de basculement

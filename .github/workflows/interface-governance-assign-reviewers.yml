@@ -1,0 +1,77 @@
+# type: interface
+# concern: governance
+# pipeline: P7
+name: Auto Assign Docs Reviewers
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, edited, labeled]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  codex-copilot-reviewer:
+    if: ${{ github.event.pull_request.base.ref == 'docs-v2' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Gate Codex PR eligibility
+        id: gate
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { gate } = require('./operations/scripts/interfaces/governance/assign-reviewers.js');
+            return await gate({ github, context, core });
+
+      - name: Request Copilot reviewer (best effort)
+        if: ${{ steps.gate.outputs.should_run == 'true' }}
+        id: request
+        uses: actions/github-script@v7
+        env:
+          REVIEWER_CANDIDATES: ${{ vars.CODEX_COPILOT_REVIEWER_LOGINS }}
+        with:
+          script: |
+            const { requestReviewers } = require('./operations/scripts/interfaces/governance/assign-reviewers.js');
+            return await requestReviewers({ github, context, core });
+
+      - name: Fallback assign Copilot
+        if: ${{ steps.gate.outputs.should_run == 'true' && steps.request.outputs.fallback_needed == 'true' }}
+        id: fallback
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          gh pr edit "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --add-assignee "@copilot"
+          status=$?
+          if [ "$status" -eq 0 ]; then
+            echo "assigned=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "assigned=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
+      - name: Add fallback marker comment
+        if: ${{ steps.gate.outputs.should_run == 'true' && steps.request.outputs.fallback_reason == 'reviewer-request-failed' }}
+        uses: actions/github-script@v7
+        env:
+          FALLBACK_ASSIGNED: ${{ steps.fallback.outputs.assigned }}
+          REQUEST_ERRORS_JSON: ${{ steps.request.outputs.errors }}
+          ATTEMPTED_JSON: ${{ steps.request.outputs.attempted }}
+        with:
+          script: |
+            const { addFallbackComment } = require('./operations/scripts/interfaces/governance/assign-reviewers.js');
+            return await addFallbackComment({ github, context });
+
+      - name: Skip reason
+        if: ${{ steps.gate.outputs.should_run != 'true' }}
+        run: |
+          echo "Skipping reviewer automation:"
+          echo "same_repo=${{ steps.gate.outputs.same_repo }}"
+          echo "is_codex_pr=${{ steps.gate.outputs.is_codex_pr }}"
+          echo "is_ready=${{ steps.gate.outputs.is_ready }}"

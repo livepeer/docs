@@ -1,0 +1,47 @@
+---
+title: Optimizar la latencia
+description: >-
+  Lograr una latencia baja o ultra baja con WebRTC y HLS y ajustar la
+  configuración de transmisión en OBS y en el navegador.
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9zb2x1dGlvbnMvbGl2ZXBlZXItc3R1ZGlvL2xpdmVzdHJlYW0vb3B0aW1pemUtbGF0ZW5jeS5tZHgiLCJzb3VyY2VSb3V0ZSI6InYyL3NvbHV0aW9ucy9saXZlcGVlci1zdHVkaW8vbGl2ZXN0cmVhbS9vcHRpbWl6ZS1sYXRlbmN5Iiwic291cmNlSGFzaCI6IjljNDIwZTQzZjZjMWU1ZThhNzNjZjM4ZWJiN2I5M2I2NTI1MTFjZGQ0ZDI5NzM1NjIxNDEwYzQ0OWU0N2U3NmYiLCJsYW5ndWFnZSI6ImVzIiwicHJvdmlkZXIiOiJvcGVucm91dGVyIiwibW9kZWwiOiJvcGVuYWkvZ3B0LW9zcy0xMjBiOmZyZWUiLCJnZW5lcmF0ZWRBdCI6IjIwMjYtMDItMjhUMTI6MzQ6MDkuNDU4WiJ9 */}
+La latencia es el retraso entre que algo ocurre frente a la cámara y los espectadores lo ven. **Latencia ultra baja** (alrededor de 0,5–3 segundos) funciona bien para la interacción; **latencia estándar** (p. ej. ~10–20 s con HLS) es adecuada para muchos otros casos de uso.
+
+## Protocolos
+
+- **WebRTC** - Lo mejor para baja latencia (~0.5–3 s). Usa un reproductor compatible con WebRTC (p. ej. el [Livepeer Player](../player)).
+- **HLS** - Mayor compatibilidad; latencia típica ~10–20 s. Con los ajustes recomendados de baja latencia, HLS en Livepeer Studio puede estar alrededor de ~10 s.
+
+Elige según necesites interacción en tiempo real (WebRTC) o la máxima compatibilidad (HLS).
+
+## Latencia más baja: reproducción WebRTC
+
+- Usa **WebRTC** para la reproducción (p. ej. Livepeer Player con la configuración predeterminada).
+- Las transmisiones en el navegador ya están optimizadas para baja latencia.
+- **Si la transmisión tiene B-frames, la reproducción WebRTC no está disponible** y el reproductor recurre a HLS. Así que para WebRTC:
+  - Con **OBS**: establece el intervalo de keyframe a **1** y desactiva los B-frames (`bframes=0`). Usa el preset Livepeer Studio en OBS si está disponible.
+  - Ver [Transmisión vía OBS](stream-via-obs) para los ajustes recomendados.
+
+## Ajustes de OBS para menor latencia
+
+- **Intervalo de keyframe** - Menor = menor latencia. Usa **1** para la latencia más baja (y compatibilidad WebRTC).
+- **Control de tasa** - CRF o CBR; un bitrate más alto suele significar mejor calidad pero más ancho de banda. No excedas la capacidad de subida.
+- **B-frames** - Configura a **0** para WebRTC y la latencia más baja. Los B-frames mejoran la compresión pero añaden latencia y rompen el orden de WebRTC.
+
+Ver [Transmisión vía OBS](stream-via-obs) para los perfiles recomendados completos (baja latencia, equilibrado, alta calidad).
+
+## Transmisión en el navegador
+
+Las transmisiones WebRTC en el navegador son de baja latencia por defecto. Los espectadores pueden ver a través de:
+
+- **WebRTC** - ~0.5–3 s (usa el Livepeer Player u otro reproductor WebRTC/WHEP).
+- **HLS** - ~8–10 s si lo prefieres o si WebRTC no está disponible.
+
+Ver [Transmisión en vivo desde el navegador](livestream-from-browser).
+
+## Prueba de humo
+
+1. Abrir `https://lvpr.tv?v=<playbackId>` y verifica la latencia.
+2. Si la latencia es alta (&gt;15 s HLS o &gt;4 s WebRTC), el problema probablemente sea **ingestión**: intervalo de keyframe, bitrate o B-frames. Ajusta OBS/encoder y vuelve a intentarlo.
+3. Compara con otro reproductor HLS si es necesario; los valores predeterminados de HLS del reproductor Livepeer están afinados para un equilibrio entre latencia y estabilidad.
+4. Para problemas persistentes, contacta al [Livepeer Studio team](https://livepeer.studio) o soporte comunitario.

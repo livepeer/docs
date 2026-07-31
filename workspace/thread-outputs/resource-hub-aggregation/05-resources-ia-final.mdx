@@ -1,0 +1,683 @@
+---
+title: "Resource HUB — Final IA"
+sidebarTitle: "Resource HUB IA"
+description: >-
+  Comprehensive information architecture for the Resource HUB tab. Every HUB nav leaf shown as a folder
+  containing the source files that produce its content. Composable wrappers, hand-authored aggregations,
+  existing canonicals, and deferred items all marked.
+keywords:
+  - resource hub
+  - information architecture
+  - IA
+  - composables
+  - aggregation
+  - canonical
+pageType: reference
+purpose: reference
+audience: internal
+status: draft
+lastVerified: "2026-05-19"
+---
+
+The Resource HUB lives at the `v2/resources/` namespace (matches existing canonical content: glossary, help-center, changelog/, concepts/, compendium/, documentation-guide/).
+
+Each HUB nav leaf is shown as a **folder** containing the source files that produce its content. Per direction: *"the page of the Tree that represents the final mdx that will live there should be a folder for the content that is used to produce it."*
+
+Audience tabs are NOT modified. Audience-specific pages (gateway FAQ, delegator videos, orchestrator pools) remain in their audience tabs. The HUB lists CANONICAL pages — either composable wrappers (for pure duplicates) or hand-authored aggregations (for content collated from multiple audience sources).
+
+## Legend
+
+| Marker | Meaning |
+|---|---|
+| 📂 → 📄 | Final HUB MDX page (shown as folder containing its sources) |
+| ⚙️ composable | Pure-duplicate — content lives in `snippets/composables/`, multiple wrappers import it |
+| ➕ aggregation | New hand-authored canonical that combines content from N audience-tab pages |
+| ✅ exists | Canonical page already in place — no work needed |
+| 🆕 new | New file to create |
+| 🔁 wrap | Existing audience page converted to a wrapper that imports the canonical composable |
+| ⏸️ deferred | Generated content (AI-API, CLI-HTTP, SDK changelogs) — handling TBD |
+
+## The Tree
+
+<Tree>
+  <Tree.Folder name="Resource HUB tab" defaultOpen>
+
+    <Tree.Folder name="Technical References (group)" defaultOpen>
+
+      <Tree.Folder name="Contract Addresses & Protocol (sub-group)">
+
+        <Tree.Folder name="📄 v2/resources/references/contract-addresses.mdx — ✅ exists, ⚙️ composable wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/livepeer-contract-addresses.mdx" />
+          <Tree.File name="📁 data:   snippets/composables/pages/canonical/livepeer-contract-addresses-data.json" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/protocol-parameters.mdx — 🆕 ⚙️ composable wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/protocol-parameters.mdx (🆕 extract from v2/delegators/resources/reference/protocol-parameters)" />
+          <Tree.File name="🔁 wrap: v2/delegators/resources/reference/protocol-parameters.mdx becomes wrapper too" />
+        </Tree.Folder>
+
+      </Tree.Folder>
+
+      <Tree.Folder name="AI APIs (sub-group) ⏸️ DEFERRED — 15 generated endpoints">
+        <Tree.File name="v2/gateways/resources/reference/technical/api-reference/AI-API/ai (portal)" />
+        <Tree.File name="text-to-image, image-to-image, image-to-text, image-to-video" />
+        <Tree.File name="live-video-to-video, text-to-speech, audio-to-text, llm" />
+        <Tree.File name="segment-anything-2, upscale, hardware-info, hardware-stats, health" />
+        <Tree.File name="AI-Worker/ai-worker-api" />
+      </Tree.Folder>
+
+      <Tree.Folder name="CLI-HTTP API (sub-group) ⏸️ DEFERRED — 13 generated endpoints">
+        <Tree.File name="cli-http-api (portal), status, bond, rebond, unbond" />
+        <Tree.File name="signmessage, transfertokens, activateorchestrator" />
+        <Tree.File name="registeredorchestrators, setbroadcastconfig, setmaxpriceforcapability" />
+        <Tree.File name="protocolparameters, reward" />
+      </Tree.Folder>
+
+      <Tree.Folder name="go-livepeer (sub-group)">
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/cli-reference.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/cli-reference.mdx (🆕 extract from gateway page)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/go-livepeer/cli-reference.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/cli-commands.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/cli-commands.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/technical/cli-commands.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/configuration-flags.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/configuration-flags.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/technical/configuration-flags.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/prometheus-metrics.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/prometheus-metrics.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/go-livepeer/prometheus-metrics.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/hardware-requirements.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/hardware-requirements.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/go-livepeer/hardware-requirements.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/bandwidth-requirements.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/bandwidth-requirements.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/go-livepeer/bandwidth-requirements.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/gpu-support.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/gpu-support.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/go-livepeer/gpu-support.mdx becomes wrapper" />
+          <Tree.File name="🔁 v2/orchestrators/resources/reference/gpu-support.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/go-livepeer/technical-architecture.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/go-livepeer/technical-architecture.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/technical/technical-architecture.mdx becomes wrapper" />
+        </Tree.Folder>
+
+      </Tree.Folder>
+
+      <Tree.Folder name="APIs & SDKs (sub-group)">
+
+        <Tree.Folder name="📄 v2/resources/references/apis-sdks/apis.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/apis-sdks/apis.mdx (🆕)" />
+          <Tree.File name="🔁 v2/developers/resources/reference/apis.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/apis-sdks/sdks.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/apis-sdks/sdks.mdx (🆕)" />
+          <Tree.File name="🔁 v2/developers/resources/reference/sdks.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/apis-sdks/pytrickle-reference.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/apis-sdks/pytrickle-reference.mdx (🆕)" />
+          <Tree.File name="🔁 v2/developers/resources/reference/pytrickle-reference.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/apis-sdks/pricing-rate-limits.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/apis-sdks/pricing-rate-limits.mdx (🆕)" />
+          <Tree.File name="🔁 v2/developers/resources/reference/pricing-rate-limits.mdx becomes wrapper" />
+        </Tree.Folder>
+
+      </Tree.Folder>
+
+      <Tree.Folder name="Network Data (sub-group)">
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/network-metrics.mdx — 🆕 ✅ canonical">
+          <Tree.File name="📁 source: existing canonical at v2/about/resources/reference/network-metrics.mdx — moved here OR kept and listed only in HUB" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/technical-roadmap.mdx — 🆕 ✅ canonical">
+          <Tree.File name="📁 source: existing canonical at v2/about/resources/reference/technical-roadmap.mdx — also a guide dupe at v2/about/guides/technical-roadmap.mdx (drop guide version)" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/actors.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/network-data/actors.mdx (🆕 extract from v2/about/network/actors.mdx)" />
+          <Tree.File name="🔁 v2/about/network/actors.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/arbitrum-rpc.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/network-data/arbitrum-rpc.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/compendium/arbitrum-rpc.mdx becomes wrapper" />
+          <Tree.File name="🔁 v2/orchestrators/resources/reference/arbitrum-rpc.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/arbitrum-exchanges.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/network-data/arbitrum-exchanges.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/compendium/arbitrum-exchanges.mdx becomes wrapper" />
+          <Tree.File name="🔁 v2/orchestrators/resources/reference/arbitrum-exchanges.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/livepeer-exchanges.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/network-data/livepeer-exchanges.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/compendium/livepeer-exchanges.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/orchestrator-offerings.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/network-data/orchestrator-offerings.mdx (🆕)" />
+          <Tree.File name="🔁 v2/gateways/resources/reference/technical/orchestrator-offerings.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/model-demand-reference.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/network-data/model-demand-reference.mdx (🆕)" />
+          <Tree.File name="🔁 v2/orchestrators/guides/ai-and-job-workloads/model-demand-reference.mdx becomes wrapper" />
+        </Tree.Folder>
+
+        <Tree.Folder name="📄 v2/resources/references/network-data/dashboards.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: snippets/composables/pages/canonical/network-data/dashboards.mdx (🆕)" />
+          <Tree.File name="🔁 v2/community/resources/dashboards.mdx becomes wrapper" />
+        </Tree.Folder>
+
+      </Tree.Folder>
+
+    </Tree.Folder>
+
+    <Tree.Folder name="Compendium (group)" defaultOpen>
+
+      <Tree.Folder name="📄 v2/resources/glossary.mdx — ✅ exists, ➕ aggregation (canonical)">
+        <Tree.File name="📁 source: v2/about/resources/glossary.mdx" />
+        <Tree.File name="📁 source: v2/about/resources/livepeer-glossary.mdx" />
+        <Tree.File name="📁 source: v2/home/resources/glossary.mdx" />
+        <Tree.File name="📁 source: v2/community/resources/glossary.mdx" />
+        <Tree.File name="📁 source: v2/developers/resources/glossary.mdx" />
+        <Tree.File name="📁 source: v2/gateways/resources/glossary.mdx" />
+        <Tree.File name="📁 source: v2/orchestrators/resources/glossary.mdx" />
+        <Tree.File name="📁 source: v2/delegators/resources/glossary.mdx" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/resource-hub-terms.mdx — ✅ canonical">
+        <Tree.File name="📁 source: this page IS canonical (extended glossary of HUB-section terms)" />
+        <Tree.File name="📁 data:   v2/resources/resource-hub-terms-data.json" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/help-center.mdx — ✅ exists, ➕ aggregation (canonical)">
+        <Tree.File name="📁 source: v2/developers/guides/help.mdx" />
+        <Tree.File name="📁 source: v2/gateways/resources/knowledge-hub/help.mdx" />
+        <Tree.File name="📁 source: any other audience-specific help pages" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/compendium/media-kit.mdx — ✅ canonical">
+        <Tree.File name="📁 source: this page IS canonical" />
+        <Tree.File name="ℹ️ note: v2/community/resources/compendium/media-kit.mdx is a dupe → drop community version OR convert to wrapper" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/faq.mdx — 🆕 ➕ aggregation (NEW canonical)">
+        <Tree.File name="📁 source: v2/about/resources/faq.mdx (about-specific Q&A — 6 Qs)" />
+        <Tree.File name="📁 source: v2/community/resources/faq.mdx (community Q&A — 1 Q)" />
+        <Tree.File name="📁 source: v2/gateways/resources/reference/faq.mdx (gateway-specific — 25 Qs)" />
+        <Tree.File name="📁 source: v2/orchestrators/resources/reference/faq.mdx (orchestrator-specific — 39 Qs)" />
+        <Tree.File name="ℹ️ All 4 source FAQs remain in their audience tabs unchanged. HUB FAQ is the aggregated view." />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/guides.mdx — 🆕 ➕ aggregation (NEW canonical)">
+        <Tree.File name="📁 source: v2/community/resources/guides.mdx (community-curated guide index)" />
+        <Tree.File name="📁 source: v2/gateways/resources/knowledge-hub/guides.mdx (gateway guide index)" />
+        <Tree.File name="📁 source: v2/orchestrators/resources/knowledge-hub/community-guides.mdx (orchestrator community guides)" />
+        <Tree.File name="ℹ️ Source pages remain in audience tabs. HUB guides = aggregated index of everything." />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/troubleshooting.mdx — 🆕 ➕ aggregation (NEW canonical)">
+        <Tree.File name="📁 source: v2/gateways/guides/monitoring-and-tooling/troubleshooting.mdx" />
+        <Tree.File name="📁 source: v2/orchestrators/guides/monitoring-and-tooling/troubleshooting.mdx" />
+        <Tree.File name="ℹ️ Source pages remain in audience tabs. HUB troubleshooting = aggregated index of all troubleshoot content." />
+      </Tree.Folder>
+
+    </Tree.Folder>
+
+    <Tree.Folder name="Knowledge Hub (group)" defaultOpen>
+
+      <Tree.Folder name="📄 v2/resources/knowledge-hub/livepeer-whitepaper.mdx — 🆕 ⚙️ wrapper">
+        <Tree.File name="📁 source: snippets/composables/pages/canonical/knowledge-hub/livepeer-whitepaper.mdx (🆕)" />
+        <Tree.File name="🔁 v2/about/resources/knowledge-hub/livepeer-whitepaper.mdx becomes wrapper" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/concepts/livepeer-101.mdx — ✅ canonical">
+        <Tree.File name="📁 source: this page IS canonical, HUB-only" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/concepts/brief-history-of-video.mdx — ✅ canonical">
+        <Tree.File name="📁 source: this page IS canonical, HUB-only" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/knowledge-hub/gateways-vs-orchestrators.mdx — 🆕 ⚙️ wrapper">
+        <Tree.File name="📁 source: snippets/composables/pages/canonical/knowledge-hub/gateways-vs-orchestrators.mdx (🆕)" />
+        <Tree.File name="🔁 v2/about/resources/knowledge-hub/gateways-vs-orchestrators.mdx becomes wrapper" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/knowledge-hub/evaluating-livepeer.mdx — 🆕 (move) ✅ canonical">
+        <Tree.File name="📁 source: this page IS canonical (move from v2/about/resources/knowledge-hub/evaluating-livepeer.mdx OR keep and list only in HUB)" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/knowledge-hub/contributor-orientation.mdx — 🆕 (move) ✅ canonical">
+        <Tree.File name="📁 source: this page IS canonical (same pattern as evaluating-livepeer)" />
+      </Tree.Folder>
+
+    </Tree.Folder>
+
+    <Tree.Folder name="Changelogs (group)" defaultOpen>
+      <Tree.File name="📄 v2/resources/changelog/changelog.mdx (master changelog) — ✅ canonical" />
+      <Tree.File name="📄 v2/resources/changelog/docs.mdx — ✅ canonical" />
+      <Tree.File name="📄 v2/resources/changelog/migration-guide.mdx — ✅ canonical" />
+
+      <Tree.Folder name="Protocol & Network (sub-group)">
+        <Tree.File name="📄 v2/resources/changelog/protocol/go-livepeer.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/protocol/lips.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/protocol/naap.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/protocol/subgraph.mdx — ✅ canonical" />
+      </Tree.Folder>
+
+      <Tree.Folder name="AI & Compute (sub-group)">
+        <Tree.File name="📄 v2/resources/changelog/ai-compute/ai-runner.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/ai-compute/comfystream.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/ai-compute/pytrickle.mdx — ✅ canonical" />
+      </Tree.Folder>
+
+      <Tree.Folder name="APIs & SDKs (sub-group) ⏸️ DEFERRED — generated">
+        <Tree.File name="📄 v2/resources/changelog/apis-sdks/livepeer-js.mdx" />
+        <Tree.File name="📄 v2/resources/changelog/apis-sdks/livepeer-ai-js.mdx" />
+        <Tree.File name="📄 v2/resources/changelog/apis-sdks/livepeer-python.mdx" />
+        <Tree.File name="📄 v2/resources/changelog/apis-sdks/livepeer-ai-python.mdx" />
+        <Tree.File name="📄 v2/resources/changelog/apis-sdks/livepeer-ai-go.mdx" />
+      </Tree.Folder>
+
+      <Tree.Folder name="Data & Tooling (sub-group)">
+        <Tree.File name="📄 v2/resources/changelog/tooling/explorer.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/tooling/livepeer-data.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/tooling/livepeer-python-gateway.mdx — ✅ canonical" />
+      </Tree.Folder>
+
+      <Tree.Folder name="Ecosystem (sub-group)">
+        <Tree.File name="📄 v2/resources/changelog/ecosystem/website.mdx — ✅ canonical" />
+        <Tree.File name="📄 v2/resources/changelog/ecosystem/awesome-livepeer.mdx — ✅ canonical" />
+      </Tree.Folder>
+    </Tree.Folder>
+
+    <Tree.Folder name="Documentation Guide (group) — docs-guide/ is SoT, v2/resources/documentation-guide/ is wrappers" defaultOpen>
+
+      <Tree.Folder name="📄 v2/resources/documentation-guide/index.mdx — 🆕 ⚙️ wrapper">
+        <Tree.File name="📁 source: docs-guide/index.mdx (✅ exists, canonical)" />
+        <Tree.File name="ℹ️ HUB entrance for the Documentation Guide group" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/documentation-guide/documentation-overview.mdx — ✅ exists">
+        <Tree.File name="📁 source: this page IS canonical (overview/intro) — could reference docs-guide/overview.mdx" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/documentation-guide/documentation-guide.mdx — ✅ exists">
+        <Tree.File name="📁 source: this page IS canonical (high-level guide)" />
+      </Tree.Folder>
+
+      <Tree.Folder name="📄 v2/resources/documentation-guide/source-of-truth-guide.mdx — 🆕 ⚙️ wrapper">
+        <Tree.File name="📁 source: docs-guide/source-of-truth-guide.mdx (✅ canonical)" />
+      </Tree.Folder>
+
+      <Tree.Folder name="Contributing (sub-group)">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/contributing/contributing.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/contributing/contributing.mdx (✅ canonical)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/contributing/contribute-to-the-docs.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical (audience-facing how-to)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/contributing/agent-instructions.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/contributing/agent-instructions.mdx (✅ canonical)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/contributing/git-hooks.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/contributing/git-hooks.mdx (✅ canonical)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/contributing/local-preview.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/contributing/local-preview.mdx (✅ canonical)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/contributing/mintlify.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/contributing/mintlify.mdx (✅ canonical)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Frameworks (sub-group) — 14 frameworks">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/ai-tools-governance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/ai-tools-governance.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/component-framework-canonical.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/component-framework-canonical.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/component-governance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/component-governance.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/content-system.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/content-system.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/content-writing.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/content-writing.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/doc-item-model.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/doc-item-model.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/file-placement.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/file-placement.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/github-actions.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/github-actions.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/page-composition-framework.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/page-composition-framework.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/page-taxonomy-framework.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/page-taxonomy-framework.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/repo-structure.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/repo-structure.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/research-skill-workflow.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/research-skill-workflow.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/script-framework.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/script-framework.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/frameworks/styles-engineering-guide.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/frameworks/styles-engineering-guide.mdx (✅)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Standards (sub-group) — 5 standards">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/standards/authoring-standard.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/standards/authoring-standard.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/standards/frontmatter.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/standards/frontmatter.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/standards/naming-conventions.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/standards/naming-conventions.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/standards/voice-and-copy.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/standards/voice-and-copy.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/standards/voice-rules.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/standards/voice-rules.mdx (✅)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Policies (sub-group) — 16 policies">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/governance-index.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/governance-index.mdx (✅ canonical, the master index)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/agent-governance-framework.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/agent-governance-framework.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/audit-system-overview.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/audit-system-overview.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/cleanup-quarantine-policy.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/cleanup-quarantine-policy.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/component-layout-decisions.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/component-layout-decisions.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/docs-guide-structure-policy.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/docs-guide-structure-policy.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/generated-artifact-and-hook-governance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/generated-artifact-and-hook-governance.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/infrastructure-principles.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/infrastructure-principles.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/ownerless-governance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/ownerless-governance.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/quality-gates.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/quality-gates.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/root-allowlist-governance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/root-allowlist-governance.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/script-governance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/script-governance.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/skill-pipeline-map.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/skill-pipeline-map.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/snippets-assets-policy.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/snippets-assets-policy.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/source-of-truth-policy.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/source-of-truth-policy.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/v2-folder-governance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/v2-folder-governance.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/policies/workspace-lifecycle-policy.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/policies/workspace-lifecycle-policy.mdx (✅)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Features (sub-group) — 11 feature docs">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/feature-map.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/feature-map.mdx (✅ master feature index)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/adaptive-architecture.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/adaptive-architecture.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/ai-features.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/ai-features.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/architecture-map.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/architecture-map.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/automations.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/automations.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/contracts-pipeline.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/contracts-pipeline.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/contributor-tools.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/contributor-tools.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/data-integrations.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/data-integrations.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/gap-analysis.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/gap-analysis.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/ui-system.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/ui-system.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/visual-explainer-workflows.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/features/visual-explainer-workflows.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/features/docs-features-and-ai-integrations.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical (audience-facing overview)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="AI & Automations (sub-group)">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/ai-automations/ai-features.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/ai-automations/automations-workflows.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/ai-automations/research-and-fact-checking.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="UX & Style (sub-group)">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/copy-style/style-guide.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical (audience-facing style guide)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/copy-style/authoring-guide.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/copy-style/authoring-standard.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical (or wrap docs-guide/standards/authoring-standard.mdx)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Component Library (sub-group)">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/overview.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/component-library.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/elements.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/wrappers.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/displays.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/scaffolding.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/integrators.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/component-library/config.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Tooling (sub-group)">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/tooling/lpd-cli.mdx — ✅ exists">
+          <Tree.File name="📁 source: docs-guide/tooling/lpd-cli.mdx (✅ canonical) — currently a separate wrapper, recommend wrap-or-consolidate" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/tooling/lpd-mdx-preview.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/tooling/lpd-mdx-preview.mdx (✅ canonical)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/tooling/dev-tools.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/tooling/dev-tools.mdx (✅ canonical)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/tooling/ai-tools.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/tooling/ai-tools.mdx (✅ canonical)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/tooling/snippets-inventory.mdx — ✅ exists">
+          <Tree.File name="📁 source: this page IS canonical (snippets folder inventory)" />
+        </Tree.Folder>
+        <Tree.Folder name="Reference Maps (nested sub-group)">
+          <Tree.Folder name="📄 v2/resources/documentation-guide/tooling/reference-maps/badge-map.mdx — 🆕 ⚙️ wrapper">
+            <Tree.File name="📁 source: docs-guide/tooling/reference-maps/badge-map.mdx (✅)" />
+          </Tree.Folder>
+          <Tree.Folder name="📄 v2/resources/documentation-guide/tooling/reference-maps/icon-map.mdx — 🆕 ⚙️ wrapper">
+            <Tree.File name="📁 source: docs-guide/tooling/reference-maps/icon-map.mdx (✅)" />
+          </Tree.Folder>
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Repo Operations (sub-group)">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/repo-ops/config/repo-config-map.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/repo-ops/config/repo-config-map.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/repo-ops/config/repo-governance-map.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/repo-ops/config/repo-governance-map.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/repo-ops/config/root-governance-map.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/repo-ops/config/root-governance-map.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/repo-ops/maps/enforcement-map.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/repo-ops/maps/enforcement-map.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/repo-ops/secrets/solutions-secrets.mdx — 🆕 ⚙️ wrapper (hidden?)">
+          <Tree.File name="📁 source: docs-guide/repo-ops/secrets/solutions-secrets.mdx (✅) — check if this should be in public HUB" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Registry / Catalogs (sub-group) — 6 catalogs">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/catalog/pages-catalog.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/catalog/pages-catalog.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/catalog/components-catalog.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/catalog/components-catalog.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/catalog/scripts-catalog.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/catalog/scripts-catalog.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/catalog/templates-catalog.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/catalog/templates-catalog.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/catalog/workflows-catalog.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/catalog/workflows-catalog.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/catalog/ui-templates.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/catalog/ui-templates.mdx (✅)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Docs Library (sub-group) — pipelines reference">
+        <Tree.Folder name="📄 v2/resources/documentation-guide/docs-library/index.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/docs-library/index.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/docs-library/pipelines/component-health.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/docs-library/pipelines/component-health.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/docs-library/pipelines/content-quality.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/docs-library/pipelines/content-quality.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/docs-library/pipelines/copy-brand.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/docs-library/pipelines/copy-brand.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/docs-library/pipelines/data-integration.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/docs-library/pipelines/data-integration.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/docs-library/pipelines/discoverability.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/docs-library/pipelines/discoverability.mdx (✅)" />
+        </Tree.Folder>
+        <Tree.Folder name="📄 v2/resources/documentation-guide/docs-library/pipelines/governance-compliance.mdx — 🆕 ⚙️ wrapper">
+          <Tree.File name="📁 source: docs-guide/docs-library/pipelines/governance-compliance.mdx (✅)" />
+        </Tree.Folder>
+      </Tree.Folder>
+
+      <Tree.Folder name="Decisions (sub-group) — placeholder if needed">
+        <Tree.File name="ℹ️ docs-guide/decisions/ exists with decision logs; consider exposing in HUB if useful for contributors" />
+      </Tree.Folder>
+
+    </Tree.Folder>
+
+  </Tree.Folder>
+</Tree>
+
+## Summary
+
+### Final HUB page counts by type
+
+| Type | Count | Examples |
+|---|---:|---|
+| ✅ Existing canonical (no work) | ~25 | v2/resources/glossary, v2/resources/help-center, changelog/*, concepts/*, compendium/media-kit |
+| 🆕 ⚙️ Wrapper (composable + new HUB wrapper) | 22 | go-livepeer/*, apis-sdks/*, network-data/*, knowledge-hub/whitepaper, knowledge-hub/gateways-vs-orchestrators, references/protocol-parameters |
+| 🆕 ➕ Aggregation (NEW hand-authored) | 3 | v2/resources/faq, v2/resources/guides, v2/resources/troubleshooting |
+| 🆕 ✅ Canonical move | 4 | network-data/network-metrics, technical-roadmap, knowledge-hub/evaluating-livepeer, knowledge-hub/contributor-orientation |
+| ⏸️ Deferred | 28 | AI-API (15), CLI-HTTP (13), SDK changelogs (5) |
+| Documentation Guide | ~42 | Separate phase |
+
+### What you decide
+
+1. **HUB FAQ slug** — `v2/resources/faq.mdx` (recommended) or different
+2. **Knowledge Hub page locations** — move whitepaper/gateways-vs-orch/evaluating/contributor-orientation to `v2/resources/knowledge-hub/` OR keep at `v2/about/resources/knowledge-hub/` and list only in HUB nav
+3. **Network Data location** — network-metrics and technical-roadmap currently at `v2/about/resources/reference/` — move to `v2/resources/references/network-data/` OR keep and list only in HUB
+4. **Aggregation page content** — for HUB FAQ, Guides, Troubleshooting: hand-author from audience pages as REFERENCE/SOURCE (not as composable imports — composables don't fit aggregation per established rule)
+5. **Deferred APIs** — accept ejection caveat for AI-API/CLI-HTTP pages until generator-side solution
+6. **Documentation Guide** — deferred to docs-guide-as-SoT phase
+
+On confirmation: batch-execute composable extraction + 22 wrapper builds + 3 aggregation page drafts + 4 canonical moves + docs.json nav update + render-verify per batch.

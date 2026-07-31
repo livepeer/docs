@@ -1,0 +1,112 @@
+---
+title: 'Docs v2 Issue Indexer'
+kind: 'workflow'
+status: 'active'
+concern: 'review'
+source_path: '.github/workflows/docs-v2-issue-indexer.yml'
+trigger_mode: 'issues + schedule + workflow_dispatch'
+risk_level: 'medium'
+consolidation_flag: 'review for alignment with `research-review-packet` while preserving current issues + schedule + workflow_dispatch trigger behavior'
+dispatcher_candidate: 'research-review-packet'
+workflow_family: 'issue-intake-and-triage'
+cleanup_decision: 'keep'
+usage_status: 'active'
+process_fit: 'supporting-infra'
+consolidation_target: 'dispatcher:research-review-packet'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Docs v2 Issue Indexer
+
+## Summary
+
+Docs v2 Issue Indexer runs on issues, schedule, workflow_dispatch and primarily produces workflow logs and job status.
+
+## Why It Exists
+
+Govern the `.github/workflows/docs-v2-issue-indexer.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- issues: types=opened, edited, labeled, unlabeled, reopened, closed
+- schedule: default event configuration
+- workflow_dispatch: default event configuration
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `build-index` | build-index | `ubuntu-latest` | none | 1 |
+
+### build-index
+
+- `Create or update docs-v2 top-level issue index` | uses actions/github-script@v7
+
+## Inputs
+
+- No explicit workflow inputs declared.
+
+## Second Pass Assessment
+
+- Workflow family: `issue-intake-and-triage`
+- Usage status: `active`
+- Cleanup decision: `keep`
+- Process fit: `supporting-infra`
+- Consolidation target: `dispatcher:research-review-packet`
+- Recommended engineering action: Keep this as a standalone workflow because its trigger contract and ownership boundary are distinct enough to justify a top-level entrypoint.
+
+## Outputs
+
+- Workflow logs and job status
+
+## Dependencies
+
+- action:actions/github-script@v7
+
+## Dependants
+
+- dispatcher:research-review-packet
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: issues + schedule + workflow_dispatch"]
+  workflow["Workflow: Docs v2 Issue Indexer"]
+  trigger --> workflow
+  job1["Job: build-index"]
+  workflow --> job1
+  outputs["Outputs: Workflow logs and job status"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- Scheduled execution can hide drift until the next cron window.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `research-review-packet`. Second-pass target: `dispatcher:research-review-packet`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- The current trigger contract looks distinct enough to justify keeping a dedicated workflow entrypoint.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

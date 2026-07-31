@@ -1,6 +1,279 @@
-import Contributing from "../../contribute/CONTRIBUTING.mdx"
+---
+title: Contributing to the Livepeer Docs
+sidebarTitle: Contribute
+description: >-
+  Canonical contributor workflow for docs content, components, tooling, quality
+  gates, and PR process.
+keywords:
+  - livepeer
+  - contribute
+  - contributing
+  - docs
+  - documentation
+  - workflow
+  - content
+  - components
+  - tooling
+  - quality gates
+  - PR process
+audience: community
+pageType: guide
+purpose: start
+status: current
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+lastVerified: 2026-04-09
+---
 
-<Contributing />
+import { DynamicTable } from "/snippets/components/displays/tables/Tables.jsx";
+
+<Tip>
+This is the canonical contributor entrypoint for this repository. For hook details, see [Git Hooks](./git-hooks).
+</Tip>
+
+## 1) Start Here
+
+<CodeGroup>
+```bash Quickstart
+# 1) Bootstrap tools/tests/hooks
+bash lpd setup --yes
+
+# 2) Run docs locally
+lpd dev
+
+# 3) Run staged checks before opening a PR
+lpd test --staged
+```
+</CodeGroup>
+
+<Note>
+If `lpd` is not on your PATH yet, use `bash lpd <command>`.
+</Note>
+
+## 2) What You Can Contribute
+
+<CardGroup cols={2}>
+  <Card title="Docs Content" icon="file-pen-line">
+    Update guides, references, quickstarts, and troubleshooting pages in `v2/`.
+  </Card>
+  <Card title="Component Library" icon="puzzle-piece">
+    Improve reusable components and examples under `snippets/components/`.
+  </Card>
+  <Card title="Tooling & Scripts" icon="terminal">
+    Improve `lpd`, local checks, generators, and operational scripts.
+  </Card>
+  <Card title="CI & Automation" icon="workflow">
+    Improve issue/PR intake, workflows, and content freshness automation.
+  </Card>
+</CardGroup>
+
+## 3) Repo Map for Contributors
+
+<DynamicTable
+  headerList={["Path", "Purpose", "Typical changes"]}
+  itemsList={[
+    { Path: "v2/", Purpose: "Primary documentation content", "Typical changes": "MDX page updates, new docs routes" },
+    { Path: "snippets/", Purpose: "Components, shared data, assets", "Typical changes": "Component behavior, data snippets, media" },
+    { Path: "docs-guide/", Purpose: "Internal source-of-truth maps", "Typical changes": "Operational docs, generated indexes" },
+    { Path: "tests/", Purpose: "Docs quality and validation suite", "Typical changes": "Unit/integration checks" },
+    { Path: "operations/scripts/", Purpose: "Generators and maintenance scripts", "Typical changes": "Index generation, audits, automation" },
+    { Path: ".githooks/", Purpose: "Local pre-commit enforcement", "Typical changes": "Hook policy and verification logic" },
+    { Path: ".github/ISSUE_TEMPLATE/", Purpose: "Issue intake forms", "Typical changes": "Template fields, labels, triage metadata" },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+## 4) Issue Templates (What to File, When)
+
+<DynamicTable
+  headerList={["Template", "Use when", "Required context"]}
+  itemsList={[
+    { Template: "01_bug_report.yml", "Use when": "Broken behavior, wrong instructions, broken links/assets", "Required context": "repro steps, actual/expected result, impact, requested action" },
+    { Template: "02_docs_page_issue.yml", "Use when": "Page-specific actionable docs issue", "Required context": "exact page/anchor, evidence, suggested fix, done criteria" },
+    { Template: "03_feature_request.yml", "Use when": "New docs/site capability request", "Required context": "problem, proposal, alternatives, acceptance criteria" },
+    { Template: "04_content_request.yml", "Use when": "Missing topic/tutorial/reference", "Required context": "audience, outline, source references, done criteria" },
+    { Template: "05_tooling_ci_issue.yml", "Use when": "Tooling, hooks, script, or CI failures", "Required context": "failing command/workflow, full error output, repro conditions" },
+    { Template: "06_question_clarification.yml", "Use when": "Tracked clarification question", "Required context": "question, what you already checked, blocker context" },
+    { Template: "docs-review.yml", "Use when": "Batch docs review across multiple pages", "Required context": "overall feedback + per-page generated sections" },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+## 5) PR Workflow
+
+<AccordionGroup>
+  <Accordion title="Step 1: Branch and scope">
+    Fork or branch from the active docs branch, keep PRs focused, and avoid mixing unrelated changes.
+  </Accordion>
+  <Accordion title="Step 2: Implement and verify locally">
+    Make changes, run `lpd dev` to preview, then run `lpd test --staged`.
+  </Accordion>
+  <Accordion title="Step 3: Open PR with the correct template">
+    PR templates in this repo:
+    - `.github/pull-request-template-v2.md`
+    - `.github/pull_request_template.md`
+
+    Fill in scope, testing evidence, and linked issues.
+  </Accordion>
+  <Accordion title="Step 4: Address review feedback">
+    Push fixes to the same branch, re-run staged checks, and resolve reviewer comments.
+  </Accordion>
+  <Accordion title="Step 5: Merge readiness">
+    Ensure required blocking checks pass. Advisory workflows can still surface follow-up work.
+  </Accordion>
+</AccordionGroup>
+
+### 5a) Codex Branch Contract (`codex/*`)
+
+For implementation tasks run by agents, use:
+
+- branch format: `codex/<issue-id>-<slug>`
+- task contract: `.codex/task-contract.yaml`
+- PR required sections: `Scope`, `Validation`, `Follow-up Tasks`
+
+These checks are enforced only on `codex/*` branches by local hooks and PR CI.
+
+```yaml Task Contract Example
+task_id: 1234
+base_branch: docs-v2
+branch: codex/1234-community-fix
+scope_in:
+  - v2/community/
+  - docs.json
+scope_out:
+  - v1/
+allowed_generated:
+  - docs-index.json
+acceptance_checks:
+  - node operations/tests/run-pr-checks.js --base-ref docs-v2
+risk_flags:
+  - navigation
+follow_up_issues:
+  - 1250
+```
+
+Open a prefilled PR directly from contract metadata:
+
+```bash
+node operations/scripts/dispatch/ai/codex/create-codex-pr.js --create
+```
+
+## 6) Required Quality Gates
+
+<DynamicTable
+  headerList={["Gate", "Source", "Policy"]}
+  itemsList={[
+    { Gate: "Pre-commit checks", Source: ".githooks/pre-commit", Policy: "Blocking for structural/style/test failures" },
+    { Gate: "PR changed-file suite", Source: ".github/workflows/test-suite.yml", Policy: "Blocking (integration PR docs-v2 -> main has advisory static exceptions)" },
+    { Gate: "V2 browser sweep", Source: ".github/workflows/test-v2-pages.yml", Policy: "Blocking" },
+    { Gate: "Broken links", Source: ".github/workflows/broken-links.yml", Policy: "Advisory" },
+    { Gate: "External link audit", Source: ".github/workflows/v2-external-link-audit.yml", Policy: "Advisory" },
+  ]}
+  monospaceColumns={[1]}
+/>
+
+## 7) `lpd` CLI Contributor Commands
+
+<DynamicTable
+  headerList={["Command", "What it does", "When to use"]}
+  itemsList={[
+    { Command: "lpd setup --yes", "What it does": "Installs dependencies and hooks", "When to use": "First-time setup" },
+    { Command: "lpd doctor --strict", "What it does": "Environment and repo readiness checks", "When to use": "Before deeper debugging" },
+    { Command: "lpd dev", "What it does": "Runs local docs dev launcher", "When to use": "Previewing page/component changes" },
+    { Command: "lpd test --staged", "What it does": "Runs staged validations", "When to use": "Before commit/PR" },
+    { Command: "lpd ci --skip-browser", "What it does": "CI-like local validation", "When to use": "Fast CI simulation" },
+    { Command: "lpd hooks info", "What it does": "Hook commands, bypass flags, override guidance", "When to use": "Hook policy lookup" },
+    { Command: "lpd scripts list --group tools", "What it does": "Lists managed scripts", "When to use": "Discover script entrypoints" },
+    { Command: "lpd scripts run GROUP <token...>", "What it does": "Runs managed script via lpd runner", "When to use": "Controlled script execution" },
+  ]}
+  monospaceColumns={[0]}
+/>
+
+## 8) Component Library and Authoring Rules
+
+<Warning>
+Follow these rules strictly:
+- Use CSS custom properties (for example `var(--accent)`), not legacy JS theme objects.
+- Do not hardcode theme colors when a CSS variable should be used.
+- Use absolute snippet imports (`/snippets/...`), not relative snippet paths.
+- Do not import Mintlify global components or React hooks unnecessarily.
+</Warning>
+
+See canonical docs:
+- [`v2/resources/documentation-guide/style-guide.mdx`](../../v2/resources/documentation-guide/style-guide.mdx)
+- [`v2/resources/documentation-guide/component-library/overview.mdx`](../../v2/resources/documentation-guide/component-library/overview.mdx)
+
+## 9) Scripts and Generated Indexes
+
+<CodeGroup>
+```bash Regenerate Indexes
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-indexes.js --write
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-pages-index.js --write
+node operations/scripts/generators/governance/catalogs/generate-docs-guide-components-index.js --write
+node operations/tests/unit/script-docs.test.js --write --rebuild-indexes
+```
+</CodeGroup>
+
+<Note>
+Generated indexes are read-only outputs. Regenerate them instead of hand-editing.
+</Note>
+
+## 10) Human-Only Overrides and Safety
+
+<Warning>
+Do not use `--no-verify` in normal contribution flow.
+
+Human-only overrides:
+- `.allowlist` edits: `--trailer "allowlist-edit=true"`
+- file deletions outside allowed scope: `--trailer "allow-deletions=true"`
+</Warning>
+
+Canonical governance details:
+
+- root allowlist policy: [`docs-guide/policies/root-allowlist-governance.mdx`](../policies/root-allowlist-governance.mdx)
+- agent governance policy: [`docs-guide/policies/agent-governance-framework.mdx`](../policies/agent-governance-framework.mdx)
+
+## 11) Pre-PR Checklist
+
+- [ ] Changes are scoped and clearly described.
+- [ ] `lpd dev` preview looks correct for affected pages/components.
+- [ ] `lpd test --staged` passes.
+- [ ] Related links and references were verified.
+- [ ] PR template is fully completed with testing notes.
+- [ ] Any generated indexes affected by this change were regenerated.
+
+## 12) Where to Ask for Help
+
+<CardGroup cols={2}>
+  <Card title="GitHub Issues" icon="circle-dot" href="https://github.com/livepeer/docs/issues" arrow>
+    Report bugs, page issues, feature/content requests, and tooling problems.
+  </Card>
+  <Card title="GitHub Discussions" icon="messages-square" href="https://github.com/livepeer/docs/discussions" arrow>
+    Ask broader questions and start proposal threads.
+  </Card>
+  <Card title="Livepeer Discord" icon="message-circle" href="https://discord.gg/livepeer" arrow>
+    Get real-time community support.
+  </Card>
+  <Card title="Security Advisories" icon="shield-alert" href="https://github.com/livepeer/docs/security/advisories/new" arrow>
+    Report security issues privately.
+  </Card>
+</CardGroup>
+
+## Canonical References
+
+- [`docs-guide/tooling/lpd-cli.mdx`](../tooling/lpd-cli.mdx)
+- [`docs-guide/catalog/templates-catalog.mdx`](../catalog/templates-catalog.mdx)
+- [`docs-guide/catalog/workflows-catalog.mdx`](../catalog/workflows-catalog.mdx)
+- [`docs-guide/catalog/scripts-catalog.mdx`](../catalog/scripts-catalog.mdx)
+- [`docs-guide/policies/root-allowlist-governance.mdx`](../policies/root-allowlist-governance.mdx)
+- [`docs-guide/policies/agent-governance-framework.mdx`](../policies/agent-governance-framework.mdx)
+- [`docs-guide/policies/quality-gates.mdx`](../policies/quality-gates.mdx)
+- [Git Hooks](./git-hooks)
+
+---
 
 ## Optional Visual-Explainer Workflows (Pilot)
 
@@ -30,4 +303,4 @@ Use visual-explainer when you need high-signal review artifacts for structural c
 
 For full details and corrected repo path references, see:
 
-- [`docs-guide/feature-guides/visual-explainer-workflows.mdx`](../feature-guides/visual-explainer-workflows.mdx)
+- [`docs-guide/features/visual-explainer-workflows.mdx`](../features/visual-explainer-workflows.mdx)

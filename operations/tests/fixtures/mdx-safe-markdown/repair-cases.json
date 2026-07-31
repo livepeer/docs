@@ -1,0 +1,259 @@
+[
+  {
+    "name": "Converts HTML comments to Markdown reference comments",
+    "filePath": "fixtures/comment.md",
+    "inputLines": [
+      "# Example",
+      "<!-- hidden guidance -->"
+    ],
+    "expectedLines": [
+      "# Example",
+      "[//]: # (hidden guidance)"
+    ],
+    "expectedRules": ["html-comment"]
+  },
+  {
+    "name": "Normalizes raw line breaks in Markdown tables",
+    "filePath": "fixtures/table-breaks.md",
+    "inputLines": [
+      "| Column | Notes |",
+      "| --- | --- |",
+      "| One | first<br>second |"
+    ],
+    "expectedLines": [
+      "| Column | Notes |",
+      "| --- | --- |",
+      "| One | first<br />second |"
+    ],
+    "expectedRules": ["raw-br-in-table"]
+  },
+  {
+    "name": "Wraps code-like table cells in inline code",
+    "filePath": "fixtures/table-code.md",
+    "inputLines": [
+      "| Column | Snippet |",
+      "| --- | --- |",
+      "| One | style={{ color: token }} |"
+    ],
+    "expectedLines": [
+      "| Column | Snippet |",
+      "| --- | --- |",
+      "| One | `style={{ color: token }}` |"
+    ],
+    "expectedRules": ["code-like-table-cell"]
+  },
+  {
+    "name": "Replaces angle bracket placeholders with safe tokens",
+    "filePath": "fixtures/placeholders.md",
+    "inputLines": [
+      "Use branch codex/<issue-id>-<slug> for the task."
+    ],
+    "expectedLines": [
+      "Use branch codex/ISSUE_ID-TASK_SLUG for the task."
+    ],
+    "expectedRules": ["angle-placeholder"]
+  },
+  {
+    "name": "Escapes raw comparison operators in prose",
+    "filePath": "fixtures/comparison.md",
+    "inputLines": [
+      "Keep section paragraphs <= 4 lines where possible."
+    ],
+    "expectedLines": [
+      "Keep section paragraphs &lt;= 4 lines where possible."
+    ],
+    "expectedRules": ["comparison-operator"]
+  },
+  {
+    "name": "Leaves real tags and inline code unchanged",
+    "filePath": "fixtures/noop.mdx",
+    "inputLines": [
+      "<Note>Rendered content</Note>",
+      "",
+      "`codex/<issue-id>-<slug>`"
+    ],
+    "expectedLines": [
+      "<Note>Rendered content</Note>",
+      "",
+      "`codex/<issue-id>-<slug>`"
+    ],
+    "expectedRules": []
+  },
+  {
+    "name": "Converts REVIEW comments to Markdown reference comments",
+    "filePath": "fixtures/review-comment.mdx",
+    "inputLines": [
+      "Paragraph before.",
+      "<!-- REVIEW: confirm path -->"
+    ],
+    "expectedLines": [
+      "Paragraph before.",
+      "[//]: # (REVIEW: confirm path)"
+    ],
+    "expectedRules": ["html-comment"]
+  },
+  {
+    "name": "Replaces standalone markdown dividers after frontmatter",
+    "filePath": "fixtures/divider.mdx",
+    "inputLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Paragraph before.",
+      "",
+      "---",
+      "",
+      "## Next"
+    ],
+    "expectedLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Paragraph before.",
+      "",
+      "<CustomDivider />",
+      "",
+      "## Next"
+    ],
+    "expectedRules": ["markdown-divider"]
+  },
+  {
+    "name": "Leaves markdown dividers inside Tabs layouts unchanged",
+    "filePath": "fixtures/divider-in-tabs.mdx",
+    "inputLines": [
+      "---",
+      "title: Tabs Divider Example",
+      "---",
+      "",
+      "<Tabs>",
+      "  <Tab title=\"One\" icon=\"bolt\">",
+      "",
+      "---",
+      "",
+      "  </Tab>",
+      "</Tabs>"
+    ],
+    "expectedLines": [
+      "---",
+      "title: Tabs Divider Example",
+      "---",
+      "",
+      "<Tabs>",
+      "  <Tab title=\"One\" icon=\"bolt\">",
+      "",
+      "---",
+      "",
+      "  </Tab>",
+      "</Tabs>"
+    ],
+    "expectedRules": []
+  },
+  {
+    "name": "Leaves markdown dividers inside Steps layouts unchanged",
+    "filePath": "fixtures/divider-in-steps.mdx",
+    "inputLines": [
+      "---",
+      "title: Steps Divider Example",
+      "---",
+      "",
+      "<Steps>",
+      "  <Step title=\"One\">",
+      "",
+      "---",
+      "",
+      "  </Step>",
+      "</Steps>"
+    ],
+    "expectedLines": [
+      "---",
+      "title: Steps Divider Example",
+      "---",
+      "",
+      "<Steps>",
+      "  <Step title=\"One\">",
+      "",
+      "---",
+      "",
+      "  </Step>",
+      "</Steps>"
+    ],
+    "expectedRules": []
+  },
+  {
+    "name": "Replaces top-level markdown dividers without blank padding",
+    "filePath": "fixtures/divider-no-padding.mdx",
+    "inputLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Paragraph before.",
+      "---",
+      "## Next"
+    ],
+    "expectedLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Paragraph before.",
+      "<CustomDivider />",
+      "## Next"
+    ],
+    "expectedRules": ["markdown-divider"]
+  },
+  {
+    "name": "Replaces dividers after inline code placeholders",
+    "filePath": "fixtures/divider-after-inline-code.mdx",
+    "inputLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Test reachability with `curl -v https://<your-service-uri>:8935/status`.",
+      "",
+      "---",
+      "",
+      "## Next"
+    ],
+    "expectedLines": [
+      "---",
+      "title: Divider Example",
+      "---",
+      "",
+      "Test reachability with `curl -v https://<your-service-uri>:8935/status`.",
+      "",
+      "<CustomDivider />",
+      "",
+      "## Next"
+    ],
+    "expectedRules": ["markdown-divider"]
+  },
+  {
+    "name": "Adds terminal icon to authored fenced code blocks",
+    "filePath": "v2/orchestrators/setup/guide.mdx",
+    "inputLines": [
+      "---",
+      "title: Setup Guide",
+      "pageType: guide",
+      "---",
+      "",
+      "```bash",
+      "livepeer_cli status",
+      "```"
+    ],
+    "expectedLines": [
+      "---",
+      "title: Setup Guide",
+      "pageType: guide",
+      "---",
+      "",
+      "```bash icon=\"terminal\"",
+      "livepeer_cli status",
+      "```"
+    ],
+    "expectedRules": ["code-block-icon", "code-block-filename"]
+  }
+]

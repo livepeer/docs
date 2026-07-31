@@ -1,0 +1,451 @@
+---
+sidebarTitle: Go-Livepeer (weekly)
+title: go-livepeer weekly changelog
+description: >-
+  Weekly summary of merged changes to the Livepeer node software (go-livepeer) that affect gateway operators,
+  orchestrators, and developers.
+lifecycleStage: discover
+complexity: intermediate
+pageType: changelog
+keywords:
+  - livepeer
+  - go-livepeer
+  - changelog
+  - weekly
+  - node
+  - gateway
+  - orchestrator
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+purpose: changelog
+audience: everyone
+lastVerified: 2026-07-31T00:00:00.000Z
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { Subtitle } from '/snippets/components/elements/text/Text.jsx'
+
+<Tip>
+  Weekly digest of merged go-livepeer changes. For tagged releases, see the [release changelog](/v2/resources/changelog/protocol/go-livepeer).
+  <Subtitle variant="changelog" style={{fontSize: "0.95rem", marginTop: "0.25rem"}}>Subscribe to the release changelog's <LinkArrow label="RSS Feed" href="/v2/resources/changelog/protocol/go-livepeer/rss.xml" newline={false} /></Subtitle>
+</Tip>
+
+<CustomDivider />
+
+Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<CustomDivider />
+
+<Update label="Week of July 27, 2026 (end-of-week update)" tags={["Live AI", "Live Runner", "Reliability"]} description={<Subtitle variant="changelog">July 31, 2026</Subtitle>}>
+  ## End-of-week update — July 31, 2026
+
+### Updates
+
+- **Live runners can now signal orchestrators to end streams** - Live runner heartbeat responses can now include a list of stream IDs to terminate, and the orchestrator will cleanly stop each matching Live AI pipeline (segmenter, control channel, and orchestrator-side session). This lets a runner proactively release capacity when a stream has ended, failed health checks, or should no longer be served — instead of waiting for the next payment or session-level timeout to notice. No configuration changes are required for existing runners; runners that don't return stream IDs keep the previous behavior. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for how live runners fit into the node.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 27, 2026 (end-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 30, 2026</Subtitle>}>
+  ## End-of-week update — July 30, 2026
+
+No user-facing changes merged to go-livepeer on July 29. The most recent shipped change is the **v0.9.0** release on July 25 — see the update below for highlights, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 27, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 29, 2026</Subtitle>}>
+  ## Mid-week update — July 29, 2026
+
+No user-facing changes merged to go-livepeer on July 28. The most recent shipped change is the **v0.9.0** release on July 25 — see the update below for highlights, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 27, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 28, 2026</Subtitle>}>
+  ## Mid-week update — July 28, 2026
+
+No user-facing changes merged to go-livepeer on July 27. The most recent shipped change is the **v0.9.0** release on July 25 — see the update below for highlights, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 27, 2026 (start-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 27, 2026</Subtitle>}>
+  ## Start-of-week update — July 27, 2026
+
+No user-facing changes merged to go-livepeer on July 26. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (weekend update)" tags={["Release", "v0.9.0", "Live Runner", "Remote Signer"]} description={<Subtitle variant="changelog">July 26, 2026</Subtitle>}>
+  ## Weekend update — July 26, 2026
+
+go-livepeer **v0.9.0** shipped on July 25. This release bundles the Live Runner, TLS, remote signer, and logging changes covered in the daily updates below into a single tagged build. Highlights below; see the [GitHub release notes](https://github.com/livepeer/go-livepeer/releases/tag/v0.9.0) for the full list.
+
+### New features
+
+- **Live Runner for orchestrator-managed live AI apps** - Orchestrators can now front external live runner processes that host live AI applications, with persistent and single-shot sessions, dynamic heartbeat registration or static JSON config, and orchestrator-proxied URLs that keep the runner's internal address off the discovery path. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines).
+- **Fixed pricing for live runners** - Live runner apps can be advertised with a `fixed` price, charging once at session or request creation instead of metering over time or pixels. Existing time- and pixel-metered runners are unaffected.
+
+### Updates
+
+- **Single-shot live runner sessions now enforce payments** - Requests to the single-shot proxy path now go through the standard `402 Payment Required` challenge, matching persistent sessions. Combined with fixed pricing, this makes single-shot mode a first-class option for stateless request/response and batch inference workloads.
+- **Trickle enforces TLS when Live Runner is enabled** - Nodes running with `-useLiveRunners` or `-liveRunnerConfig` now validate remote TLS certificates on the trickle publisher and subscriber, closing a man-in-the-middle gap on the live AI media path. Nodes without Live Runner keep the previous behavior.
+- **Debug logging follows the `-v` flag** - Raising `-v` now also surfaces debug output from the live runner, trickle, AI worker, and media subsystems, making Live AI and BYOC issues easier to diagnose.
+
+### Breaking changes
+
+- **Remote signer refuses to start unauthenticated on public addresses** - A remote signer bound to a non-loopback `-httpAddr` will refuse to start unless `-remoteSignerWebhookUrl` is set or the new `-remoteSignerAllowNoAuth` flag is passed. Loopback bindings and deployments with a configured webhook are unaffected. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers).
+
+### Bug fixes
+
+- **Remote signer mode starts as a non-root user** - `-cliAddr` now defaults to `127.0.0.1:3935` in remote signer mode, so the node no longer tries to bind port 80 and fail on startup for non-root operators. Setups that explicitly pass `-cliAddr` are unaffected.
+- **Gateways reject tickets with a zero expiration block** - Probabilistic micropayment tickets that advertise a zero expiration block are now rejected so every paid ticket is subjected to the standard economic caps. Honest orchestrators always advertise a non-zero expiration block, so well-behaved deployments are unaffected.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (weekend update)" tags={["Live Runner", "Payments", "Pricing"]} description={<Subtitle variant="changelog">July 25, 2026</Subtitle>}>
+  ## Weekend update — July 25, 2026
+
+### New features
+
+- **Fixed pricing for live runners** - Orchestrators can now advertise a `fixed` price for live runner apps, charging a single payment when a session or request is created instead of metering payment over time or processed pixels. Fixed pricing flows end-to-end through static and dynamic runner registration, discovery, remote signers, and orchestrator accounting, so gateways and clients see the price and pay once at session start. Existing time- and pixel-metered runners are unaffected. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for how live runners fit into the node.
+
+### Updates
+
+- **Single-shot live runner sessions now enforce payments** - Requests to the single-shot proxy path now go through the standard `402 Payment Required` challenge and are subject to the same payment accounting as persistent sessions. Previously, single-shot requests were proxied without a payment check, which meant operators had to use persistent mode to enforce on-chain payment. Combined with fixed pricing, this makes single-shot mode a first-class option for stateless request/response and fast batch inference workloads. Fixed-payment sessions still only need to pay once at reservation. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for background on live runner sessions.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (weekend update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 24, 2026</Subtitle>}>
+  ## Weekend update — July 24, 2026
+
+No user-facing changes merged to go-livepeer on July 23. The only merge was an internal Live Runner test-consolidation change with no impact on gateway or orchestrator operators. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (end-of-week update)" tags={["Live AI", "Live Runner", "Trickle", "TLS"]} description={<Subtitle variant="changelog">July 23, 2026</Subtitle>}>
+  ## End-of-week update — July 23, 2026
+
+### New features
+
+- **Live Runner for orchestrator-managed live AI apps** - Orchestrators can now front external "live runner" processes that host live AI applications. Runners register with the orchestrator, advertise their app, version, GPU, capacity, mode, and pricing, and receive session traffic through orchestrator-proxied URLs so the runner's internal address is never exposed through discovery. Both persistent sessions (which stay active until stopped, expired, released by a health check, or ended by a payment failure) and single-shot sessions (which reserve capacity for one proxied request) are supported. Runners can register dynamically via heartbeats or be pinned statically from a JSON config. Enable with `-useLiveRunners` (requires `-orchSecret` for dynamic registration) or `-liveRunnerConfig <path>` for static registration, and set `-liveRunnerProxyUrl` to publish the public proxy URL template and `-liveRunnerAddr` for the internal heartbeat/callback address. Existing orchestrator setups are unaffected until the flags are set. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for how live AI fits into the node.
+
+### Updates
+
+- **Trickle now verifies TLS certificates by default with Live Runner** - When a node runs with `-useLiveRunners` or `-liveRunnerConfig`, the trickle publisher and subscriber now validate remote TLS certificates instead of skipping the check. This closes a man-in-the-middle gap on the trickle media path for live AI deployments. Nodes that don't use Live Runner keep the previous behavior so existing self-signed orchestrator setups continue to work. Operators combining Live Runner with BYOC or other trickle endpoints will need valid certificates on every endpoint. See the [Live AI overview](/v2/gateways/guides/node-pipelines/ai-pipelines) for how trickle fits into the AI media path.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 22, 2026</Subtitle>}>
+  ## Mid-week update — July 22, 2026
+
+No user-facing changes merged to go-livepeer on July 21. The only recent merge was an internal runtime refactor with no impact on gateway or orchestrator operators. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 20, 2026 (start-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 21, 2026</Subtitle>}>
+  ## Start-of-week update — July 21, 2026
+
+No user-facing changes merged to go-livepeer on July 19 or July 20. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (weekend update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 19, 2026</Subtitle>}>
+  ## Weekend update — July 19, 2026
+
+No user-facing changes merged to go-livepeer on July 18. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (weekend update)" tags={["Live AI", "AI Worker", "Trickle"]} description={<Subtitle variant="changelog">July 18, 2026</Subtitle>}>
+  ## Weekend update — July 18, 2026
+
+### New features
+
+- **Optional serverless AI worker mode** - AI worker operators can now opt in to a standalone serverless runtime via the new `-aiServerless` flag. This lets orchestrators run AI jobs against an external serverless backend instead of the bundled local worker, giving operators more flexibility in how AI capacity is provisioned. The flag is off by default, so existing AI worker setups continue to run unchanged. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for background on how AI workers fit into the node.
+
+### Updates
+
+- **Smoother startup for Live AI trickle subscribers** - The trickle publisher used by Live AI pipelines now advances its stream head as soon as bytes are written, so subscribers that connect at the leading edge no longer replay the same segment they just received. This trims a small amount of duplicated data on session start for long-running realtime streams. No configuration changes are required. See the [Live AI overview](/v2/gateways/guides/node-pipelines/ai-pipelines) for how trickle fits into the AI media path.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (end-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 17, 2026</Subtitle>}>
+  ## End-of-week update — July 17, 2026
+
+No user-facing changes merged to go-livepeer on July 16. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (end-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 16, 2026</Subtitle>}>
+  ## End-of-week update — July 16, 2026
+
+No user-facing changes merged to go-livepeer on July 15. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 15, 2026</Subtitle>}>
+  ## Mid-week update — July 15, 2026
+
+No user-facing changes merged to go-livepeer on July 14. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 14, 2026</Subtitle>}>
+  ## Mid-week update — July 14, 2026
+
+No user-facing changes merged to go-livepeer on July 13. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 13, 2026 (start-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 13, 2026</Subtitle>}>
+  ## Start-of-week update — July 13, 2026
+
+No user-facing changes merged to go-livepeer on July 12. The only merge was an internal README link update with no impact on gateway or orchestrator operators. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 6, 2026 (weekend update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 12, 2026</Subtitle>}>
+  ## Weekend update — July 12, 2026
+
+No user-facing changes merged to go-livepeer on July 11. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 6, 2026 (weekend update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 11, 2026</Subtitle>}>
+  ## Weekend update — July 11, 2026
+
+No user-facing changes merged to go-livepeer on July 10. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 6, 2026 (end-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 10, 2026</Subtitle>}>
+  ## End-of-week update — July 10, 2026
+
+No user-facing changes merged to go-livepeer on July 9. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 6, 2026 (end-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 9, 2026</Subtitle>}>
+  ## End-of-week update — July 9, 2026
+
+No user-facing changes merged to go-livepeer on July 8. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 6, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 8, 2026</Subtitle>}>
+  ## Mid-week update — July 8, 2026
+
+No user-facing changes merged to go-livepeer on July 7. See the previous updates below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 6, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 7, 2026</Subtitle>}>
+  ## Mid-week update — July 7, 2026
+
+No user-facing changes merged to go-livepeer on July 6. See the previous update below for the most recent shipped change, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of July 6, 2026 (start-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 6, 2026</Subtitle>}>
+  ## Start-of-week update — July 6, 2026
+
+No user-facing changes merged to go-livepeer on July 5. The only recent merge was an internal e2e test-reliability fix with no impact on gateway or orchestrator operators. See the previous start-of-week update below for the most recent shipped change, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 29, 2026 (weekend update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 5, 2026</Subtitle>}>
+  ## Weekend update — July 5, 2026
+
+No user-facing changes merged to go-livepeer on July 4. See the start-of-week update below for the most recent shipped change, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 29, 2026 (weekend update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 4, 2026</Subtitle>}>
+  ## Weekend update — July 4, 2026
+
+No user-facing changes merged to go-livepeer on July 3. See the start-of-week update below for the most recent shipped change, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 29, 2026 (end-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 3, 2026</Subtitle>}>
+  ## End-of-week update — July 3, 2026
+
+No user-facing changes merged to go-livepeer on July 2. See the start-of-week update below for the most recent shipped change, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 29, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 2, 2026</Subtitle>}>
+  ## Mid-week update — July 2, 2026
+
+No user-facing changes merged to go-livepeer on July 1. See the start-of-week update below for the most recent shipped change, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 29, 2026 (mid-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">July 1, 2026</Subtitle>}>
+  ## Mid-week update — July 1, 2026
+
+No user-facing changes merged to go-livepeer on June 30. The only merge was an internal test-reliability fix with no impact on gateway or orchestrator operators. See the start-of-week update below for the most recent shipped change, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 29, 2026 (start-of-week update)" tags={["Remote Signer", "Security"]} description={<Subtitle variant="changelog">June 30, 2026</Subtitle>}>
+  ## Start-of-week update — June 30, 2026
+
+### Updates
+
+- **Remote signer now fails closed on public addresses without auth** - A remote signer bound to a non-loopback `-httpAddr` will refuse to start unless either `-remoteSignerWebhookUrl` is set or the new `-remoteSignerAllowNoAuth` flag is passed. This closes a configuration footgun where a publicly reachable signer with no webhook could be made to sign live payment tickets for any caller. Loopback bindings and deployments that already configure a webhook are unaffected; operators who intentionally run an unauthenticated public signer must now opt in explicitly. A warning is also logged whenever no webhook is configured. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers) for setup details.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 22, 2026 (end-of-week update)" tags={["Quiet day"]} description={<Subtitle variant="changelog">June 27, 2026</Subtitle>}>
+  ## End-of-week update — June 27, 2026
+
+No additional user-facing changes merged to go-livepeer on June 27. See the mid-week update below for the most recent shipped changes, or browse the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases) for tagged builds.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 22, 2026 (mid-week update)" tags={["Remote Signer", "Logging"]} description={<Subtitle variant="changelog">June 26, 2026</Subtitle>}>
+  ## Mid-week update — June 26, 2026
+
+### Updates
+
+- **Debug logging now follows the `-v` flag** - Setting `-v 6` (the documented maximum verbosity) now also enables debug-level output from the structured logger used by the live runner, trickle, AI worker, and media subsystems. Previously those debug lines were silently dropped, making it harder to diagnose Live AI and BYOC issues. No action is required for normal operation; raise `-v` only when you need deeper logs. See the [Live AI overview](/v2/gateways/guides/node-pipelines/ai-pipelines) for context on which components this covers.
+
+### Bug fixes
+
+- **Remote signer mode no longer fails to start as a non-root user** - When launching a node with `-remoteSigner`, the management CLI address was unset and the node fell back to binding port 80, which fails with "permission denied" for non-root users and shut the node down on startup. The CLI address now defaults to `127.0.0.1:3935` in remote signer mode, matching the loopback default used by other node types and avoiding a port collision with a co-located broadcaster. Existing setups that explicitly pass `-cliAddr` are unaffected. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers) for setup details.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 22, 2026" tags={["Release", "v0.8.11", "BYOC", "Live AI"]} description={<Subtitle variant="changelog">June 22 – 26, 2026</Subtitle>}>
+  ## Week of June 22, 2026
+
+go-livepeer **v0.8.11** shipped this week. Highlights below; see the [GitHub release notes](https://github.com/livepeer/go-livepeer/releases/tag/v0.8.11) for the full list.
+
+### New features
+
+- **Authenticated BYOC worker registration** - Orchestrators running Bring-Your-Own-Container workloads can now require a shared auth token when external workers register with the node. This gives operators a simple way to keep unauthorized workers from attaching to a BYOC-enabled orchestrator. Existing setups continue to work; the token is only enforced when configured. See the [BYOC tutorial](/v2/gateways/guides/tutorials/byoc-cpu-tutorial) for end-to-end setup.
+- **Payment tracking events for Live AI** - Live AI gateways can now emit per-payment events to an external stream, making it easier for operators to monitor spend in real time and reconcile usage against orchestrator billing. The feed is off by default and only activates when an export target is configured. See the [Live AI payments guide](/v2/gateways/guides/payments-and-pricing/payment-guide) for background.
+- **New trickle endpoint for stream continuity** - The trickle subsystem used by Live AI pipelines gained a new per-channel endpoint that lets clients pick up the next segment in a stream more reliably, improving resumption behavior for long-running realtime sessions. No configuration changes are required. See the [Live AI overview](/v2/gateways/guides/node-pipelines/ai-pipelines) for how trickle fits into the AI media path.
+
+### Updates
+
+- **Webcam input for the Livepeer-in-a-Box demo** - The bundled `box` demo environment now supports webcam input out of the box, making it easier for new operators to try Live AI end-to-end on a laptop without wiring up an external RTMP source. Existing demo flows are unchanged.
+- **Slimmer macOS builds** - macOS binaries no longer bundle the X11 dependency, producing a smaller download and removing an unused system requirement on Mac hosts. No action required for existing installs.
+
+### Bug fixes
+
+- **Stricter ticket parameter validation on gateways** - Gateways now reject probabilistic micropayment tickets that advertise a zero expiration block, ensuring every paid ticket is subjected to the standard economic caps before it is accepted. Previously, tickets with a zero expiration block could bypass those caps. Honest orchestrators always advertise a non-zero expiration block, so well-behaved deployments are unaffected. Gateway operators should update to the latest build to pick up the fix. See the [payment guide](/v2/gateways/guides/payments-and-pricing/payment-guide) for background on how gateways handle orchestrator tickets.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 15, 2026" tags={["Quiet week"]} description={<Subtitle variant="changelog">June 15 – 19, 2026</Subtitle>}>
+  ## Week of June 15, 2026
+
+No user-facing changes shipped to go-livepeer this week. For tagged builds and full release notes, browse the [release changelog](/v2/resources/changelog/protocol/go-livepeer) or the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases). The next digest goes out Monday.
+
+</Update>
+
+<CustomDivider />
+
+<Update label="Week of June 8, 2026" tags={["Live AI", "Remote Signer"]} description={<Subtitle variant="changelog">June 8 – 12, 2026</Subtitle>}>
+  ## Week of June 8, 2026
+
+### New features
+
+- **Optional RTMP output for the AI media server** - Live AI gateway operators can now disable RTMP egress on the AI media server when it isn't needed — for example, when streams are delivered to viewers over WHEP instead of being republished as RTMP. Turning RTMP output off avoids spinning up an unused encode path, which reduces overhead for WHEP-only deployments. RTMP output remains enabled by default, so existing setups are unaffected. See the [AI pipelines guide](/v2/gateways/guides/node-pipelines/ai-pipelines) for Live AI gateway configuration.
+
+### Updates
+
+- **Optional auth webhook for remote signers** - Operators running a remote signer alongside a Live AI gateway can now point the signer at an external webhook to enforce policy checks before payments are signed. When configured, the signer forwards the incoming request headers and current signer state to the webhook URL and only proceeds with signing if the webhook returns a 200. Non-200 responses are propagated back to the caller with the upstream status code, making it straightforward to reject or rate-limit payment requests at the policy layer. Existing remote signer deployments are unaffected unless the new webhook URL is set. See the [remote signers guide](/v2/gateways/guides/payments-and-pricing/remote-signers) for setup details.
+
+</Update>
+
+<CustomDivider />
+
+## Related resources
+
+<CardGroup cols={2}>
+  <Card title="Release changelog" icon="tag" href="/v2/resources/changelog/protocol/go-livepeer" arrow>
+    Notes for tagged go-livepeer releases
+  </Card>
+  <Card title="GitHub releases" icon="github" href="https://github.com/livepeer/go-livepeer/releases" arrow>
+    Download binaries and view full release notes
+  </Card>
+  <Card title="Remote signers" icon="key" href="/v2/gateways/guides/payments-and-pricing/remote-signers" arrow>
+    Set up keyless gateway operation with remote signing
+  </Card>
+  <Card title="Gateway capabilities" icon="grid-2" href="/v2/gateways/concepts/capabilities" arrow>
+    How gateways discover and route to orchestrator capabilities
+  </Card>
+</CardGroup>

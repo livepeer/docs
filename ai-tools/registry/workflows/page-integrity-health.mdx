@@ -1,0 +1,123 @@
+---
+title: 'Page Integrity Health'
+kind: 'workflow'
+status: 'active'
+concern: 'validation'
+source_path: '.github/workflows/page-integrity-health.yml'
+trigger_mode: 'schedule + workflow_dispatch'
+risk_level: 'medium'
+consolidation_flag: 'review for alignment with `review-fix` while preserving current schedule + workflow_dispatch trigger behavior'
+dispatcher_candidate: 'review-fix'
+workflow_family: 'validation-sweeps'
+cleanup_decision: 'consolidate'
+usage_status: 'active-advisory'
+process_fit: 'core-shipping'
+consolidation_target: 'dispatcher:review-fix'
+last_verified: '2026-04-05'
+---
+
+{/*
+generated-file-banner: ai-tools-visual-library:v1
+Generation Script: operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js
+Purpose: AI-tools canonical visual library for workflows and dispatcher actions.
+Run when: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change.
+Run command: node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write
+*/}
+
+<Note>
+**Generation Script**: This file is generated from script(s): `operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js`. <br/>
+**Purpose**: AI-tools canonical visual library for workflows and dispatcher actions. <br/>
+**Run when**: GitHub workflows, dispatcher definitions, registry coverage, or visual-library contracts change. <br/>
+**Important**: Do not manually edit this file; run `node operations/scripts/generators/governance/catalogs/generate-ai-tools-visual-library.js --write`. <br/>
+</Note>
+
+# Page Integrity Health
+
+## Summary
+
+Page Integrity Health runs on schedule, workflow_dispatch and primarily produces github step summary.
+
+## Why It Exists
+
+Govern the `.github/workflows/page-integrity-health.yml` workflow as a human-readable, visually explorable source-of-truth page inside `ai-tools/registry/workflows`.
+
+## Triggers
+
+- schedule: default event configuration
+- workflow_dispatch: default event configuration
+
+## Jobs
+
+| Job ID | Name | Runs On | Needs | Step Count |
+| --- | --- | --- | --- | --- |
+| `page-integrity-health` | page-integrity-health | `ubuntu-latest` | none | 7 |
+
+### page-integrity-health
+
+- `Checkout repository` | uses actions/checkout@v4
+- `Set up Node.js` | uses actions/setup-node@v4
+- `Run page integrity dispatch` | runs `node operations/scripts/dispatch/content/health/page-integrity-dispatch.js \`
+- `Upload page integrity reports` | uses actions/upload-artifact@v4
+- `Publish summary` | runs `echo "## Page Integrity Dispatch" >> "$GITHUB_STEP_SUMMARY"`
+- `Ensure rolling issue labels` | uses actions/github-script@v7
+- `Sync rolling page integrity issue` | uses actions/github-script@v7
+
+## Inputs
+
+- No explicit workflow inputs declared.
+
+## Second Pass Assessment
+
+- Workflow family: `validation-sweeps`
+- Usage status: `active-advisory`
+- Cleanup decision: `consolidate`
+- Process fit: `core-shipping`
+- Consolidation target: `dispatcher:review-fix`
+- Recommended engineering action: Consolidate this workflow under `dispatcher:review-fix` and keep the script or validator layer as the reusable implementation boundary.
+
+## Outputs
+
+- GitHub step summary
+- Uploaded artifacts
+
+## Dependencies
+
+- action:actions/checkout@v4
+- action:actions/github-script@v7
+- action:actions/setup-node@v4
+- action:actions/upload-artifact@v4
+- operations/scripts/dispatch/content/health/page-integrity-dispatch.js
+
+## Dependants
+
+- dispatcher:review-fix
+
+## Mermaid Pipeline
+
+```mermaid
+flowchart TD
+  trigger["Trigger: schedule + workflow_dispatch"]
+  workflow["Workflow: Page Integrity Health"]
+  trigger --> workflow
+  job1["Job: page-integrity-health"]
+  workflow --> job1
+  outputs["Outputs: GitHub step summary, Uploaded artifacts"]
+  job1 --> outputs
+```
+
+## Frailty And Risk
+
+- Contains advisory steps with `continue-on-error`, so failures may be softened rather than fully blocking.
+- Scheduled execution can hide drift until the next cron window.
+
+## Consolidation Notes
+
+Dispatcher suggestion: `review-fix`. Second-pass target: `dispatcher:review-fix`. This is a governance recommendation, not an automatic rewrite instruction.
+
+## Cleanup Rationale
+
+- This workflow is advisory-shaped, which is useful for audits but can also hide unresolved failures.
+
+## Handover Notes
+
+Use this page as the human-facing workflow brief during audits, cleanup, and handover. Promote any missing operational knowledge back into the canonical page rather than leaving it in chat.

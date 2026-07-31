@@ -1,0 +1,148 @@
+---
+title: Livepeer Network
+sidebarTitle: Livepeer Network
+description: >-
+  A high-level introduction to the key concepts workings of the Livepeer open,
+  on-demand AI & Media infrastructure substrate and the distributed
+  crypto-primitive coordination system.
+keywords:
+  - livepeer
+  - about
+  - core concepts
+  - mental model
+  - introduction
+  - key
+  - architecture
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+## Network Overview
+
+The Livepeer Network is a decentralised video streaming and AI processing protocol implemented in Go as `go-livepeer`.
+
+It provides a fully decentralised, highly scalable, and crypto-token incentivised network for live media processing in the Web3 stack.
+
+<Card title="Go-Livepeer Implementation" href="https://github.com/livepeer/go-livepeer/" icon="github" horizontal />
+
+## Network Role
+
+The network is the actual running system and execution layer - the mesh of hardware and software nodes performing work:
+- Orchestrators (GPU nodes)
+- Transcoders / AI Workers
+- Gateways (aka Broadcasters)
+- Verification processes
+- Job routing
+- Real-time AI & video compute
+
+These are the deployable, off-chain, operational actors in the network that are contributing to executing video + AI jobs. These nodes can be run and operated by anyone who wants to participate or contribute their resources to the network.
+
+<Accordion icon="network-wired" title="Network Services">
+    Network services include:
+    - Job routing
+    - Verification
+    - Payment
+    - AI inference
+    - Video Transcoding
+    - Real-time AI Video Streaming
+</Accordion>
+
+## Key Actors and Participants
+
+The network consists of four primary node types:
+
+<DynamicTableV2
+  headerList={["Node Type", "Role", "Key Components"]}
+  itemsList={[
+    {
+      "Node Type": <strong>Gateway (Broadcaster)</strong>,
+      "Role": "Ingests media streams and AI requests, discovers orchestrators",
+      "Key Components": <><code>LivepeerServer</code>, <code>BroadcastSessionsManager</code>, <code>AISessionManager</code></>,
+    },
+    {
+      "Node Type": <strong>Orchestrator</strong>,
+      "Role": "Coordinates work distribution, manages payments, handles worker pools",
+      "Key Components": <><code>orchestrator struct</code>, <code>RemoteTranscoderManager</code>, <code>RemoteAIWorkerManager</code></>,
+    },
+    {
+      "Node Type": <strong>Transcoder</strong>,
+      "Role": "Performs video transcoding with hardware acceleration",
+      "Key Components": <><code>Transcoder interface</code>, <code>LocalTranscoder</code>, <code>NvidiaTranscoder</code></>,
+    },
+    {
+      "Node Type": <strong>AI Worker</strong>,
+      "Role": "Executes AI inference tasks",
+      "Key Components": <><code>AI interface</code>, <code>worker.Runner</code></>,
+    },
+  ]}
+/>
+
+## Video vs AI Pipelines
+
+### Video Transcoding Pipeline
+- **Ingest**: RTMP/HTTP streams via `LivepeerServer.HandlePush()`
+- **Segmentation**: RTMPSegmenter converts to HLS segments
+- **Processing**: `processSegment()` handles transcoding
+- **Distribution**: `BroadcastSessionsManager` selects orchestrators and submits segments
+
+### AI Processing Pipeline
+- **Request**: HTTP endpoints for different AI tasks (text-to-image, image-to-video, etc.)
+- **Session Management**: `AISessionManager` maintains warm/cold model pools
+- **Execution**: AI workers run in Docker containers or locally
+- **Live Video**: Specialised real-time pipeline using Trickle protocol for bidirectional streaming
+
+## Key Capabilities
+
+1. **Video Transcoding**: Multi-format transcoding with hardware acceleration (Nvidia, Netint)
+2. **AI Inference**: Multiple pipelines including:
+   - Text-to-image (Stable Diffusion variants)
+   - Image-to-image and image-to-video
+   - Live video-to-video streaming
+   - LLM inference
+   - Audio-to-text
+   - Image segmentation
+3. **Bring Your Own Container (BYOC)**: Generic processing pipeline for custom workloads
+4. **Live Streaming**: Real-time AI processing with WHIP/WHEP protocols
+
+## Key Value Propositions
+
+- **Decentralisation**: No single point of control or failure
+- **Scalability**: Horizontal scaling through worker pools
+- **Cost Efficiency**: Crypto-token incentivised resource sharing
+- **Open Infrastructure**: Permissionless participation in the network
+- **Web3 Integration**: Native support for blockchain-based payments and identity
+
+## Job Routing
+
+Jobs are routed through a multi-stage discovery and selection process:
+
+1. **Discovery**: `DBOrchestratorPoolCache` syncs orchestrator info from blockchain and polls `/getOrchInfo` endpoints
+2. **Selection**: Algorithms consider price, stake, performance, and random factors
+3. **Session Management**: `SessionPool` maintains active connections with performance tracking
+4. **Load Balancing**: `MinLSSelector` uses latency heap for optimal orchestrator selection
+
+## Economic Model
+
+The network uses probabilistic micropayments with a ticket-based system:
+
+- **Tickets**: Probabilistic payment tickets included with each segment/request
+- **Validation**: Immediate validation with expected value credited to sender balance
+- **Redemption**: Winning tickets redeemed on-chain via TicketBroker contract
+- **Pricing**: Per-pixel pricing for video, per-unit pricing for AI models
+- **Live AI**: Time-based billing (1 ticket per second of compute)
+
+---
+
+## Notes
+
+- The network supports both on-chain and off-chain modes, with remote signer capability for enhanced security
+- AI workers can run in Docker containers with configurable images per pipeline
+- The system includes comprehensive monitoring via OpenCensus and Prometheus metrics
+- Storage is pluggable with support for S3, GCS, and local file systems
+
+Wiki pages you might want to explore:
+- [Overview (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#1)
+- [Architecture (livepeer/go-livepeer)](/wiki/livepeer/go-livepeer#1.1)

@@ -1,0 +1,68 @@
+---
+title: Play an asset
+description: Play VOD assets with the Livepeer Player or a custom HLS/MP4 player.
+lifecycleStage: discover
+complexity: intermediate
+purpose: operations
+pageType: guide
+keywords:
+  - livepeer
+  - solutions
+  - livepeer studio
+  - video on demand
+  - playback asset
+  - play
+  - asset
+  - assets
+  - with
+  - player
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: platform-builder
+lastVerified: 2026-03-17T00:00:00.000Z
+---
+<Warning>
+ Prefer calling the API from your backend. CORS-enabled API keys are deprecated.
+</Warning>
+
+## Livepeer Player (recommended)
+
+Fetch playback info on the server, then pass the source to the Player:
+
+```tsx icon="terminal"
+import * as Player from "@livepeer/react/player";
+import { getSrc } from "@livepeer/react/external";
+
+export async function getPlaybackSource(playbackId) {
+  const playbackInfo = await livepeer.playback.get(playbackId);
+  return getSrc(playbackInfo.playbackInfo);
+}
+
+export function AssetPlayer({ src }) {
+  return (
+    <Player.Root src={src}>
+      <Player.Container>
+        <Player.Video />
+        <Player.Controls><Player.PlayPauseTrigger /></Player.Controls>
+      </Player.Container>
+    </Player.Root>
+  );
+}
+```
+
+See [Player and embed](../player).
+
+## Custom player
+
+Call the [Playback Info API](https://livepeer.studio/docs/api-reference/playback/get) with the playback ID. Use the returned HLS or MP4 URLs in any player that supports them. Short assets (under ~2 min) often have MP4 renditions for fast start.
+
+## Embed
+
+```html icon="terminal"
+<iframe src="https://lvpr.tv?v=PLAYBACK_ID" allowfullscreen allow="autoplay" frameborder="0"></iframe>
+```
+
+Options: `&muted=false`, `&autoplay=false`, `&loop=true`. See [Play a livestream](../livestream/playback-livestream) for stream-specific options.

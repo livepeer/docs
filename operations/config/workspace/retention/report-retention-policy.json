@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "default_action": "keep_latest",
+  "rules": [
+    {
+      "pattern": "workspace/reports/repo-ops/*_LATEST.*",
+      "action": "keep_latest",
+      "reason": "active governance latest reports",
+      "retention_days": 30
+    },
+    {
+      "pattern": "workspace/reports/repo-ops/SCRIPT_INVENTORY_FULL.*",
+      "action": "keep_latest",
+      "reason": "active governance inventory reports",
+      "retention_days": 30
+    },
+    {
+      "pattern": "workspace/quarantine/repo-audit/**",
+      "action": "quarantine",
+      "reason": "quarantined report artifacts",
+      "retention_days": 30
+    },
+    {
+      "pattern": "workspace/reports/**",
+      "action": "keep_latest",
+      "reason": "active report area",
+      "retention_days": 30
+    },
+    {
+      "pattern": "operations/tests/reports/**",
+      "action": "keep_latest",
+      "reason": "test output snapshots",
+      "retention_days": 14
+    }
+  ],
+  "size_thresholds": {
+    "warn_bytes": 524288,
+    "high_bytes": 2097152,
+    "critical_bytes": 10485760
+  }
+}

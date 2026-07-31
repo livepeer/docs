@@ -1,0 +1,469 @@
+---
+title: 'VOD Upload and Playback'
+sidebarTitle: 'VOD Tutorial'
+description: >-
+  Build a video upload and playback app. TUS resumable upload, asset lifecycle, HLS playback, Next.js 15 + @livepeer/react.
+keywords:
+  - livepeer
+  - vod
+  - video on demand
+  - upload
+  - tus
+  - playback
+  - hls
+  - tutorial
+  - nextjs
+  - assets
+pageType: tutorial
+audience: developer
+purpose: build
+complexity: intermediate
+lifecycleStage: build
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-12
+veracityStatus: verified
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Resumable upload via TUS, asset lifecycle status, HLS playback. Next.js 15 + @livepeer/react. Production-shape from the first commit.</Tip>
+</CenteredContainer>
+
+---
+
+By the end of this tutorial you'll have a Next.js 15 app that accepts video files, uploads them via TUS (resumable, multi-gigabyte capable), tracks transcoding status, and plays back the finished asset via HLS in the `@livepeer/react` Player. The path uses the standard Livepeer Asset API; any Gateway provider that exposes it works without code changes.
+
+This is the Persona 2 activation moment for VOD. The live streaming tutorial proved the real-time path; this one proves the persistent-asset path. Most video platforms ship both; the Asset API plus the Stream API together cover the full "Mux with AI bolted on" surface.
+
+<CustomDivider />
+
+## Required Tools
+
+- Node.js 20 or later
+- A Livepeer Gateway endpoint that exposes the Asset API (paid provider or self-hosted)
+- API key for the Gateway provider
+- A code editor
+
+The Asset API is standardised across providers. The tutorial below works against any provider that implements the Livepeer Asset API or a self-hosted Gateway built on the open spec.
+
+<CustomDivider />
+
+## Asset Lifecycle
+
+An asset passes through four phases between upload and playback.
+
+| Phase | What's happening | Player state |
+|---|---|---|
+| `waiting` | Upload URL issued; file not yet received | Cannot play |
+| `uploading` | Bytes streaming to storage | Cannot play |
+| `processing` | Transcoding to HLS renditions and MP4 fallbacks | Cannot play |
+| `ready` | All renditions available | Plays |
+
+The transition from `uploading` to `processing` to `ready` happens server-side after the TUS upload completes. Five webhook events expose lifecycle transitions to your backend: `asset.created`, `asset.updated`, `asset.ready`, `asset.failed`, `asset.deleted`. For development the tutorial below polls `GET /asset/{id}`; production setups use the webhooks.
+
+<CustomDivider />
+
+## Project Bootstrap
+
+<Steps>
+  <Step title="Create the project">
+    ```bash
+    npx create-next-app@latest livepeer-vod \
+      --typescript \
+      --tailwind \
+      --app \
+      --src-dir \
+      --import-alias "@/*"
+    cd livepeer-vod
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    ```bash
+    npm install livepeer @livepeer/react tus-js-client
+    ```
+
+    The `livepeer` Node SDK runs server-side (asset creation, status checks). `@livepeer/react` powers the playback Player. `tus-js-client` handles the resumable upload from the browser.
+  </Step>
+
+  <Step title="Configure environment">
+    Save as `.env.local`:
+
+    ```bash
+    LIVEPEER_API_URL=https://<your-gateway-provider>/api
+    LIVEPEER_API_KEY=<your-api-key>
+    ```
+
+    Both are server-side only; neither leaves your Next.js host. The browser never sees the API key.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Upload Endpoints
+
+Two server routes handle the asset lifecycle: one creates the asset and returns a TUS URL, the other polls status by ID.
+
+Save as `src/app/api/assets/route.ts`:
+
+```ts
+import { Livepeer } from 'livepeer';
+
+const livepeer = new Livepeer({
+  apiKey: process.env.LIVEPEER_API_KEY!,
+  serverURL: process.env.LIVEPEER_API_URL!,
+});
+
+export async function POST(req: Request) {
+  const { name } = (await req.json()) as { name: string };
+
+  const result = await livepeer.asset.create({ name });
+
+  return Response.json({
+    assetId: result.data?.asset?.id,
+    playbackId: result.data?.asset?.playbackId,
+    tusUploadUrl: result.data?.tusEndpoint,
+  });
+}
+```
+
+Save as `src/app/api/assets/[id]/route.ts`:
+
+```ts
+import { Livepeer } from 'livepeer';
+
+const livepeer = new Livepeer({
+  apiKey: process.env.LIVEPEER_API_KEY!,
+  serverURL: process.env.LIVEPEER_API_URL!,
+});
+
+export async function GET(
+  req: Request,
+  ctx: { params: Promise<{ id: string }> },
+) {
+  const { id } = await ctx.params;
+
+  const result = await livepeer.asset.get(id);
+  const asset = result.asset;
+
+  return Response.json({
+    id: asset?.id,
+    playbackId: asset?.playbackId,
+    status: asset?.status?.phase,
+    errorMessage: asset?.status?.errorMessage,
+  });
+}
+```
+
+The status endpoint returns the asset phase (`waiting`, `uploading`, `processing`, `ready`, `failed`). The client polls this endpoint until `ready` arrives.
+
+<CustomDivider />
+
+## Upload Component
+
+Save as `src/app/components/Uploader.tsx`:
+
+```tsx
+'use client';
+
+const { useState } = React;
+import * as tus from 'tus-js-client';
+
+interface UploadResult {
+  assetId: string;
+  playbackId: string;
+}
+
+export function Uploader({
+  onComplete,
+}: {
+  onComplete: (result: UploadResult) => void;
+}) {
+  const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState<string>('idle');
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleFile(file: File) {
+    setError(null);
+    setPhase('creating asset');
+
+    // Step 1: create the asset on the server
+    const createRes = await fetch('/api/assets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: file.name }),
+    });
+    const { assetId, playbackId, tusUploadUrl } = await createRes.json();
+
+    if (!tusUploadUrl) {
+      setError('No TUS endpoint returned');
+      return;
+    }
+
+    setPhase('uploading');
+
+    // Step 2: upload the file via TUS
+    await new Promise<void>((resolve, reject) => {
+      const upload = new tus.Upload(file, {
+        endpoint: tusUploadUrl,
+        uploadUrl: tusUploadUrl, // Pre-allocated URL; skip POST creation
+        metadata: { filename: file.name, filetype: file.type },
+        chunkSize: 5 * 1024 * 1024, // 5 MB chunks
+        onError: (err) => reject(err),
+        onProgress: (bytesUploaded, bytesTotal) => {
+          setProgress(Math.round((bytesUploaded / bytesTotal) * 100));
+        },
+        onSuccess: () => resolve(),
+      });
+      upload.start();
+    });
+
+    setPhase('processing');
+
+    // Step 3: poll until the asset is ready
+    let attempts = 0;
+    while (attempts < 120) {
+      // 10 minutes at 5s intervals
+      const statusRes = await fetch(`/api/assets/${assetId}`);
+      const status = await statusRes.json();
+
+      if (status.status === 'ready') {
+        setPhase('ready');
+        onComplete({ assetId, playbackId });
+        return;
+      }
+      if (status.status === 'failed') {
+        setError(status.errorMessage ?? 'Asset processing failed');
+        return;
+      }
+
+      await new Promise((r) => setTimeout(r, 5000));
+      attempts += 1;
+    }
+
+    setError('Asset did not become ready within the timeout');
+  }
+
+  return (
+    <div className="space-y-4 p-4 border rounded">
+      <input
+        type="file"
+        accept="video/*"
+        onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+        disabled={phase !== 'idle' && phase !== 'ready'}
+        className="block"
+      />
+      {phase !== 'idle' && (
+        <div className="space-y-2">
+          <p className="text-sm">Phase: {phase}</p>
+          {phase === 'uploading' && (
+            <progress
+              value={progress}
+              max={100}
+              className="w-full h-2"
+              aria-label="Upload progress"
+            />
+          )}
+        </div>
+      )}
+      {error && <p className="text-red-600">{error}</p>}
+    </div>
+  );
+}
+```
+
+Three things to notice. The TUS client uploads in 5 MB chunks, which means a dropped network connection resumes from the last successful chunk on retry. The polling loop runs at 5-second intervals for 10 minutes; production replaces this with a webhook subscription. The component is fully client-side after the asset is created; the file never touches your Next.js host.
+
+<CustomDivider />
+
+## Playback Page
+
+Save as `src/app/watch/[playbackId]/page.tsx`:
+
+```tsx
+import * as Player from '@livepeer/react/player';
+import { getSrc } from '@livepeer/react/external';
+import { Livepeer } from 'livepeer';
+
+const livepeer = new Livepeer({
+  apiKey: process.env.LIVEPEER_API_KEY!,
+  serverURL: process.env.LIVEPEER_API_URL!,
+});
+
+interface PageProps {
+  params: Promise<{ playbackId: string }>;
+}
+
+export default async function WatchPage({ params }: PageProps) {
+  const { playbackId } = await params;
+
+  const playback = await livepeer.playback.get(playbackId);
+  const src = getSrc(playback.playbackInfo);
+
+  return (
+    <main className="max-w-2xl mx-auto p-8 space-y-4">
+      <h1 className="text-2xl font-bold">Playback</h1>
+      <Player.Root src={src} autoPlay volume={1}>
+        <Player.Container className="w-full aspect-video bg-black rounded overflow-hidden">
+          <Player.Video title="VOD" className="w-full h-full" />
+        </Player.Container>
+      </Player.Root>
+      <p className="text-sm text-gray-600">
+        Playback ID: <code>{playbackId}</code>
+      </p>
+    </main>
+  );
+}
+```
+
+This is a server component. The `livepeer.playback.get()` call runs at request time on the server, builds the source array via `getSrc()`, and hands it to the Player. The Player accepts HLS, MP4, and WebRTC source candidates; for VOD it picks HLS by default and falls through to MP4 if the asset has static MP4 renditions enabled.
+
+<CustomDivider />
+
+## Home Page
+
+Save as `src/app/page.tsx`:
+
+```tsx
+'use client';
+
+const { useState } = React;
+// Import Uploader from ./components/Uploader.
+
+export default function HomePage() {
+  const [uploaded, setUploaded] = useState<{
+    assetId: string;
+    playbackId: string;
+  } | null>(null);
+
+  return (
+    <main className="max-w-2xl mx-auto p-8 space-y-6">
+      <header>
+        <h1 className="text-2xl font-bold">VOD Upload</h1>
+        <p className="text-gray-600">
+          Upload a video file. The asset transcodes and becomes playable.
+        </p>
+      </header>
+      <Uploader onComplete={setUploaded} />
+      {uploaded && (
+        <div className="p-4 border rounded bg-green-50">
+          <p className="font-semibold">Upload complete</p>
+          <p className="text-sm">
+            <a
+              href={`/watch/${uploaded.playbackId}`}
+              className="text-blue-600 underline"
+            >
+              Watch the asset
+            </a>
+          </p>
+        </div>
+      )}
+    </main>
+  );
+}
+```
+
+Run the dev server:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`. Pick a video file; watch the upload progress bar, then the processing phase, then the watch link. Click through to playback.
+
+<CustomDivider />
+
+## Production Webhooks
+
+Polling works for development. Production replaces it with webhook subscriptions. The Gateway emits five events:
+
+| Event | Fires when | Use for |
+|---|---|---|
+| `asset.created` | Asset record created (TUS URL issued) | Initialise database row |
+| `asset.updated` | Asset metadata changed | Sync metadata to your DB |
+| `asset.ready` | Transcoding complete; playback URLs available | Mark asset as playable in your app |
+| `asset.failed` | Transcoding failed | Surface error to user, clean up |
+| `asset.deleted` | Asset deleted from the Gateway | Cascade delete in your DB |
+
+Register a webhook endpoint at your Gateway provider's webhook configuration page. The endpoint receives signed JSON payloads containing the asset object and event type. Verify signatures server-side before trusting the payload.
+
+The polling loop in the `Uploader` component above is replaceable with a webhook listener that updates a database row, which the client subscribes to via Server-Sent Events or WebSocket.
+
+<CustomDivider />
+
+## Production Considerations
+
+Six things change between this local setup and a production deployment.
+
+**Webhooks over polling.** Replace the polling loop with webhook subscriptions. Polling is fine for ten files a day; webhooks scale to ten thousand.
+
+**Access control.** Add JWT-based access control on playback for paid or gated content. Public playbacks need no token; gated ones use Livepeer's playback access control with signed JWTs.
+
+**Static MP4 renditions.** Set `staticMp4: true` in `asset.create()` for assets that need fast time-to-first-frame. Short-form video benefits; long-form prefers HLS.
+
+**Encryption.** For content that must not be downloaded raw, enable encryption on asset creation. The Gateway encrypts assets with AES-CBC and serves decryption keys gated by access control.
+
+**Storage policies.** Decide which assets persist on IPFS for permanence and which stay in regional cloud storage for cost. Long-tail catalogue goes to IPFS; trending content stays in fast cache.
+
+**Webhook signature verification.** Always verify the signature header before trusting webhook payloads. Replay attacks are trivial without verification.
+
+Full hardening guidance in <LinkArrow href="/v2/developers/guides/production-hardening-checklist" label="Production Hardening Checklist" newline={false} />.
+
+<CustomDivider />
+
+## Common Errors
+
+<AccordionGroup>
+  <Accordion title="TUS upload returns 404 on first chunk">
+    The `tusUploadUrl` field on the asset response is empty or stale. Confirm the Gateway provider exposes `tusEndpoint` (some implementations use `tusUploadUrl`; check the response shape). Adjust the `assets/route.ts` handler to match.
+  </Accordion>
+  <Accordion title="Upload progresses but processing never starts">
+    The TUS upload completed locally but the Gateway didn't finalise. Check the asset status; if it sits at `uploading` after the file completes, the TUS endpoint may not have received the final chunk. Lower `chunkSize` to 1 MB and retry; some intermediate proxies cap large chunk sizes.
+  </Accordion>
+  <Accordion title="Asset reaches `processing` then stalls">
+    The transcoding queue is backed up, or the file is in an unsupported format. Most providers process common formats (MP4, MOV, WebM, MKV) without issue; exotic codecs or DRM-protected files fail at the transcode step. Check `status.errorMessage` for the specific reason.
+  </Accordion>
+  <Accordion title="Playback shows black screen with HLS source selected">
+    The asset is in the `ready` state but the playback URL hasn't propagated to the CDN. Wait 30 seconds and retry. If it persists, the asset may have failed silently; query `GET /asset/{id}` and inspect the `status` object.
+  </Accordion>
+  <Accordion title="`livepeer.playback.get(playbackId)` returns null">
+    The playback ID is wrong, or the asset belongs to a different account. Confirm the playback ID matches the asset created with the same API key. Cross-account playback requires explicit permission grants on the asset.
+  </Accordion>
+</AccordionGroup>
+
+<CustomDivider />
+
+You have a working upload-to-playback pipeline. The asset lifecycle (upload, transcode, play) is the same for all VOD content; the next step is adding [access control](/v2/developers/guides/auth-and-security/access-control) for gated content.
+
+## AI agent prompt
+
+```text
+Build the "VOD Upload and Playback" tutorial as a Next.js App Router project. Create a TypeScript app, install livepeer, @livepeer/react, and tus-js-client, and use placeholders LIVEPEER_API_URL=<gateway provider Asset API base URL>, LIVEPEER_API_KEY=<gateway provider API key>, and NEXT_PUBLIC_PLAYBACK_BASE_URL=<provider playback base URL if needed>. Implement server routes for asset creation, upload URL retrieval, and asset status polling; implement a browser uploader with TUS resumable upload and progress display; and implement a playback page that loads the asset by playbackId and renders it through @livepeer/react/player. Include npm run dev, upload verification with a small MP4, status transition checks, and playback verification. Keep API keys server-side and do not use Livepeer Studio-specific endpoints.
+```
+
+<CustomDivider />
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Low-Latency Live Streaming" icon="bolt" href="/v2/developers/build/tutorials/low-latency-live-streaming-app">
+    The live-streaming counterpart to this tutorial.
+  </Card>
+  <Card title="Transcoding Quickstart" icon="film" href="/v2/developers/build/video/transcoding-direct-quickstart">
+    Self-hosted RTMP-to-HLS for full control of the transcoding path.
+  </Card>
+  <Card title="Multi-Tenant Billing" icon="dollar-sign" href="/v2/developers/build/tutorials/multi-tenant-billing-with-pymthouse">
+    Add per-customer auth, quotas, and usage tracking.
+  </Card>
+  <Card title="Production Hardening" icon="shield" href="/v2/developers/guides/production-hardening-checklist">
+    Webhook signatures, access control, encryption, storage policies.
+  </Card>
+</CardGroup>

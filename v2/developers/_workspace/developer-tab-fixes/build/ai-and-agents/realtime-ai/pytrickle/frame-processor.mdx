@@ -1,0 +1,294 @@
+---
+title: 'Frame Processor Reference'
+sidebarTitle: 'Frame Processor'
+description: >-
+  Reference for the PyTrickle FrameProcessor API: VideoFrame, AudioFrame,
+  StreamServer configuration, and the update_params protocol.
+keywords:
+  - livepeer
+  - PyTrickle
+  - FrameProcessor
+  - VideoFrame
+  - AudioFrame
+  - StreamServer
+  - update_params
+  - trickle
+  - API reference
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: reference
+audience: developer
+status: current
+lastVerified: '2026-05-13'
+---
+
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>All methods on FrameProcessor are async. The SDK calls them from an asyncio event loop; blocking calls in process_video_async will stall the pipeline. Run blocking model inference in a thread pool using asyncio.to_thread.</Tip>
+</CenteredContainer>
+
+---
+
+PyTrickle's processing surface is the `FrameProcessor` base class. Subclass it, implement the async methods below, and pass an instance to `StreamServer`. The SDK manages connection lifecycle, decoding, encoding, and transport.
+
+<CustomDivider />
+
+## FrameProcessor
+
+### initialize()
+
+```python
+async def initialize(self) -> None
+```
+
+Called once before the first frame is delivered. Load AI models, allocate CUDA tensors, or warm up any resources that must be ready before processing begins. Raises are propagated and halt startup.
+
+---
+
+### process_video_async()
+
+```python
+async def process_video_async(self, frame: VideoFrame) -> Optional[VideoFrame]
+```
+
+Called for each decoded video frame. Return a `VideoFrame` to include it in the output stream, or `None` to drop the frame.
+
+Blocking operations (model inference on CPU, disk I/O) stall the processing loop and increase output latency. Run them in a thread pool:
+
+```python
+import asyncio
+
+async def process_video_async(self, frame: VideoFrame) -> Optional[VideoFrame]:
+    tensor = frame.tensor.clone()
+    result_tensor = await asyncio.to_thread(self._run_model, tensor)
+    return frame.replace_tensor(result_tensor)
+
+def _run_model(self, tensor):
+    # Blocking model inference here
+    return self.model(tensor)
+```
+
+---
+
+### process_audio_async()
+
+```python
+async def process_audio_async(self, frame: AudioFrame) -> Optional[List[AudioFrame]]
+```
+
+Called for each decoded audio frame. Return a list of `AudioFrame` objects (pass-through returns `[frame]`), or `None` to drop the frame. The SDK automatically detects and converts between mono, stereo, and multi-channel formats.
+
+---
+
+### update_params()
+
+```python
+def update_params(self, params: dict) -> None
+```
+
+Called when the Livepeer orchestrator forwards a parameter update from the gateway. `params` is a plain dict; the schema is defined by your service. Updates are applied immediately to the running processor without interrupting the stream.
+
+Example:
+
+```python
+def update_params(self, params: dict):
+    if "prompt" in params:
+        self.prompt = params["prompt"]
+    if "strength" in params:
+        self.strength = float(params["strength"])
+```
+
+<CustomDivider />
+
+## VideoFrame
+
+Represents a single decoded video frame.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Attribute / Method</TableCell>
+      <TableCell header>Type</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`frame.tensor`</TableCell>
+      <TableCell>`torch.Tensor`</TableCell>
+      <TableCell>CPU tensor, shape [H, W, C], float32, values in [0, 1], RGB channel order</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`frame.pts`</TableCell>
+      <TableCell>`int`</TableCell>
+      <TableCell>Presentation timestamp in stream time base units</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`frame.width`</TableCell>
+      <TableCell>`int`</TableCell>
+      <TableCell>Frame width in pixels</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`frame.height`</TableCell>
+      <TableCell>`int`</TableCell>
+      <TableCell>Frame height in pixels</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`frame.replace_tensor(tensor)`</TableCell>
+      <TableCell>`VideoFrame`</TableCell>
+      <TableCell>Returns a new VideoFrame with the given tensor and the same metadata</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## AudioFrame
+
+Represents a decoded audio buffer.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Attribute</TableCell>
+      <TableCell header>Type</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`frame.tensor`</TableCell>
+      <TableCell>`torch.Tensor`</TableCell>
+      <TableCell>Audio samples as a float32 tensor, shape [channels, samples]</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`frame.sample_rate`</TableCell>
+      <TableCell>`int`</TableCell>
+      <TableCell>Sample rate in Hz</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`frame.pts`</TableCell>
+      <TableCell>`int`</TableCell>
+      <TableCell>Presentation timestamp</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## StreamServer
+
+```python
+StreamServer(
+    frame_processor: FrameProcessor,
+    port: int = 8000,
+    capability_name: str = "custom-processor",
+)
+```
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Parameter</TableCell>
+      <TableCell header>Type</TableCell>
+      <TableCell header>Description</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`frame_processor`</TableCell>
+      <TableCell>`FrameProcessor`</TableCell>
+      <TableCell>The processor instance to call for each frame. Must be started before passing to StreamServer.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`port`</TableCell>
+      <TableCell>`int`</TableCell>
+      <TableCell>HTTP port to listen on. Default: 8000.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`capability_name`</TableCell>
+      <TableCell>`str`</TableCell>
+      <TableCell>Name advertised to the orchestrator as the BYOC capability identifier.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+### HTTP endpoints
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Endpoint</TableCell>
+      <TableCell header>Method</TableCell>
+      <TableCell header>Purpose</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>`/api/stream/start`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>Start a processing session. Body: `subscribe_url`, `publish_url`, `gateway_request_id`, `params`.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/api/stream/stop`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>Stop the active session. Body: `gateway_request_id`.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/api/stream/update`</TableCell>
+      <TableCell>POST</TableCell>
+      <TableCell>Send parameter updates. Body: any JSON object; forwarded to `update_params`.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/api/stream/status`</TableCell>
+      <TableCell>GET</TableCell>
+      <TableCell>Returns current session status and frame counts.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>`/health`</TableCell>
+      <TableCell>GET</TableCell>
+      <TableCell>Returns `{"status": "ok"}`. Required for BYOC registration.</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+<CustomDivider />
+
+## Framerate and Throughput
+
+The `max_framerate` parameter in the `/api/stream/start` request body controls the maximum number of frames passed to `process_video_async` per second. Frames arriving faster than `max_framerate` are dropped before the processor sees them. This prevents backpressure from accumulating when model inference is slower than the input frame rate.
+
+Set `max_framerate` to the throughput your model can sustain. For StreamDiffusion workflows on an RTX 4090, this is typically 15-30 FPS depending on resolution. For lighter processing, match the input stream frame rate.
+
+<CustomDivider />
+
+The [PyTrickle quickstart](/v2/developers/build/ai-and-agents/realtime-ai/pytrickle/pytrickle-quickstart) walks through a complete FrameProcessor from scratch. The [PyTrickle reference](/v2/developers/resources/reference/pytrickle-reference) covers the full API surface.
+
+## Related Pages
+
+<CardGroup cols={2}>
+  <Card
+    title="PyTrickle Quickstart"
+    icon="bolt"
+    href="/v2/developers/build/ai-and-agents/pytrickle/quickstart"
+    arrow
+    horizontal
+  >
+    Working example of a FrameProcessor running against a local test stream.
+  </Card>
+  <Card
+    title="ComfyStream as BYOC"
+    icon="box"
+    href="/v2/developers/build/ai-and-agents/comfystream/comfystream-as-byoc"
+    arrow
+    horizontal
+  >
+    How to register a trickle service with a Livepeer orchestrator.
+  </Card>
+</CardGroup>

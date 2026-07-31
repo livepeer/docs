@@ -1,0 +1,119 @@
+# type: remediator
+# concern: health
+# pipeline: P6
+name: WCAG Accessibility Repair
+
+on:
+  schedule:
+    # Monthly first Monday 05:00 UTC
+    - cron: '0 5 1-7 * 1'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        type: choice
+        default: 'dry-run'
+        options:
+          - dry-run
+          - write
+      scope:
+        description: "Scope"
+        required: false
+        type: choice
+        default: 'full'
+        options:
+          - full
+          - staged
+      fail_impact:
+        description: "Fix findings at or above this impact"
+        required: false
+        type: choice
+        default: 'serious'
+        options:
+          - minor
+          - moderate
+          - serious
+          - critical
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  repair-wcag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: cd tools && npm ci
+
+      - name: Resolve mode
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "mode=dry-run" >> "$GITHUB_OUTPUT"
+            echo "scope=full" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+            echo "scope=${{ inputs.scope || 'full' }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run WCAG repair
+        run: |
+          MODE_FLAG=""
+          if [ "${{ steps.resolve.outputs.mode }}" = "write" ]; then
+            MODE_FLAG="--write --verify"
+          else
+            MODE_FLAG="--dry-run"
+          fi
+          node operations/scripts/remediators/content/health/repair-wcag.js \
+            $MODE_FLAG \
+            --${{ steps.resolve.outputs.scope }} \
+            --fail-impact "${{ inputs.fail_impact || 'serious' }}"
+
+      - name: Check for changes
+        if: steps.resolve.outputs.mode == 'write'
+        id: diff
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open PR with fixes
+        if: steps.resolve.outputs.mode == 'write' && steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          base: ${{ vars.DEPLOY_BRANCH || 'docs-v2' }}
+          title: 'fix(wcag): auto-remediate accessibility findings'
+          body: |
+            Automated WCAG accessibility fixes from the scheduled remediator.
+
+            **Scope:** ${{ steps.resolve.outputs.scope }}
+            **Impact threshold:** ${{ inputs.fail_impact || 'serious' }}
+
+            Per-file revert applied via `--verify`: only successful fixes remain. Reverted files are excluded from this PR.
+
+            Review with a human eye before merging. Accessibility fixes can shift heading hierarchy or alt text in ways that need editorial confirmation.
+          branch: fix/wcag-remediation
+          commit-message: 'fix(wcag): auto-remediate accessibility findings'
+          labels: needs-review
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wcag-repair-report
+          path: workspace/reports/health/wcag/
+          retention-days: 30

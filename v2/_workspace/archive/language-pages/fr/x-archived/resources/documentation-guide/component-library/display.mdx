@@ -1,0 +1,918 @@
+---
+title: Composants d'affichage
+sidebarTitle: Affichage
+description: >-
+  Composants pour afficher des médias, du contenu visuel et des éléments en mode
+  cadre : vidéos, images, intégrations, citations, galeries, diagrammes et liens
+  sociaux
+keywords:
+  - livepeer
+  - components
+  - display
+  - video
+  - image
+  - embed
+---
+{/* codex-i18n: eyJraW5kIjoiY29kZXgtaTE4biIsInZlcnNpb24iOjEsInNvdXJjZVBhdGgiOiJ2Mi9yZXNvdXJjZXMvZG9jdW1lbnRhdGlvbi1ndWlkZS9jb21wb25lbnQtbGlicmFyeS9kaXNwbGF5Lm1keCIsInNvdXJjZVJvdXRlIjoidjIvcmVzb3VyY2VzL2RvY3VtZW50YXRpb24tZ3VpZGUvY29tcG9uZW50LWxpYnJhcnkvZGlzcGxheSIsInNvdXJjZUhhc2giOiJmMzQ5MjVhMTE4YmVlMjRiNGVmMTk4NDFkZWY2Y2RlODg1YTBkZDFjNWMyZDk1N2MzYzQxODU5OGQ3ZGJiYzU0IiwibGFuZ3VhZ2UiOiJmciIsInByb3ZpZGVyIjoib3BlbnJvdXRlciIsIm1vZGVsIjoicXdlbi9xd2VuLXR1cmJvIiwiZ2VuZXJhdGVkQXQiOiIyMDI2LTAzLTAxVDEzOjI3OjIxLjc1NVoifQ== */}
+import { YouTubeVideo, Video, TitledVideo, ShowcaseVideo, CardVideo, LinkedInEmbed, YouTubeVideoData, YouTubeVideoDownload } from '/snippets/components/displays/video/Video.jsx'
+import { Image, LinkImage } from '/snippets/components/elements/images/Image.jsx'
+import { ScrollableDiagram } from '/snippets/components/displays/diagrams/ScrollableDiagram.jsx'
+import { MarkdownEmbed, EmbedMarkdown, TwitterTimeline } from '/snippets/components/integrators/embeds/DataEmbed.jsx'
+import { Quote, FrameQuote } from '/snippets/components/displays/quotes/Quote.jsx'
+import { CardCarousel } from '/snippets/components/displays/grids/Grids.jsx'
+import { ShowcaseCards } from '/snippets/components/displays/cards/Cards.jsx'
+import { SocialLinks } from '/snippets/components/elements/links/Links.jsx'
+// frameMode components commented out - require ThemeData (DEPRECATED per style guide - components are immutable)
+// import { PageHeader, H1, H2, H3, H4, H5, H6, P, Divider } from '/snippets/components/scaffolding/frame-mode/FrameMode.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+
+<Card title="Back to Component Library" icon="arrow-left" href="../component-library" arrow>
+  Return to the main component library index
+</Card>
+
+<CustomDivider />
+
+## Composants vidéo
+
+### YouTubeVideo
+
+Intègre une vidéo YouTube avec une légende optionnelle et une attribution de l'auteur. Affiche une vidéo YouTube dans un cadre réactif au sein d'un composant Frame.
+
+**Importation :**
+```jsx
+import { YouTubeVideo } from "/snippets/components/displays/video/Video.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `embedUrl` | `string` | - | **Oui** | URL d'intégration YouTube (par exemple, "https://www.youtube.com/embed/VIDEO_ID") |
+| `title` | `string` | `""` | Non | Titre de la vidéo pour l'accessibilité et l'affichage des légendes |
+| `author` | `string` | `""` | Non | Nom de l'auteur à afficher dans la légende |
+| `hint` | `string` | `""` | Non | Texte d'astuce facultatif à afficher |
+| `caption` | `string` | - | Non | Legende personnalisée (remplace le format auteur/titre) |
+
+**Exemples :**
+
+{/* YouTubeVideo commented out - component bug: convertToPrivacyEnhancedUrl is not defined */}
+{/*
+<Tabs>
+  <Tab title="Basic">
+    <YouTubeVideo embedUrl="https://www.youtube.com/embed/DKAChLmC0uk" />
+  </Tab>
+  <Tab title="With Author">
+    <YouTubeVideo 
+      embedUrl="https://www.youtube.com/embed/DKAChLmC0uk"
+      author="Livepeer"
+      title="What is Livepeer?"
+    />
+  </Tab>
+  <Tab title="Code">
+*/}
+<Tabs>
+  <Tab title="Code">
+```jsx
+<YouTubeVideo embedUrl="https://www.youtube.com/embed/VIDEO_ID" />
+
+<YouTubeVideo 
+  embedUrl="https://www.youtube.com/embed/VIDEO_ID"
+  author="Livepeer"
+  title="Video Title"
+  hint="Click to play"
+/>
+```
+  </Tab>
+</Tabs>
+
+**Remarque :**YouTubeVideo actuellement indisponible en raison d'un bug du composant. Voir component-bugs.md pour plus de détails.
+
+---
+
+### Vidéo
+
+Composant vidéo auto-hébergé avec un enveloppe Frame. Affiche un fichier vidéo auto-hébergé dans un composant Frame.
+
+**Importer :**
+```jsx
+import { Video } from "/snippets/components/displays/video/Video.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `src` | `string` | - | **Oui** | Chemin du fichier vidéo (par exemple, "/snippets/assets/media/videos/HeroBackground.mp4") |
+| `title` | `string` | `""` | Non | Titre de la vidéo pour l'accessibilité |
+| `author` | `string` | `""` | Non | Nom de l'auteur à afficher avec l'icône du micro |
+| `caption` | `string` | - | Non | Texte de légende facultatif (si l'auteur l'a fourni, stylisé avec une icône) |
+| `href` | `string` | `""` | Non | URL du lien facultatif pour l'auteur |
+| `controls` | `boolean` | `true` | Non | Afficher les contrôles vidéo |
+| `autoPlay` | `boolean` | `false` | Non | Activer la lecture automatique de la vidéo |
+| `loop` | `boolean` | `false` | Non | Activer la boucle de la vidéo |
+| `muted` | `boolean` | `false` | Non | Si le vidéo est muet |
+| `children` | `ReactNode` | - | Non | Enfants optionnels à afficher à l'intérieur de Frame |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Basic">
+    <Video src="/snippets/assets/media/videos/HeroBackground.mp4" title="Demo Video" />
+  </Tab>
+  <Tab title="Autoplay Loop">
+    <Video 
+      src="/snippets/assets/media/videos/HeroBackground.mp4" 
+      title="Demo"
+      autoPlay
+      muted
+      loop
+    />
+  </Tab>
+  <Tab title="With Author">
+    <Video 
+      src="/snippets/assets/media/videos/livepeer-founders-post.mp4" 
+      author="Doug Petkanics"
+      title="Livepeer Vision"
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<Video src="/snippets/assets/media/videos/HeroBackground.mp4" title="Demo Video" />
+
+<Video 
+  src="/snippets/assets/media/videos/HeroBackground.mp4" 
+  autoPlay
+  muted
+  loop
+  author="Author Name"
+  title="Video Title"
+/>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### TitledVideo
+
+Un composant vidéo avec un titre superposé. Affiche une vidéo en boucle avec un titre superposé facultatif et une bordure stylisée.
+
+**Importer :**
+```jsx
+import { TitledVideo } from "/snippets/components/displays/video/Video.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `src` | `string` | - | **Oui** | URL de la source vidéo |
+| `title` | `string` | - | Non | Texte du titre à superposer sur la vidéo |
+| `subtitle` | `string` | - | Non | Texte de sous-titre à superposer |
+| `arrow` | `boolean` | `false` | Non | Afficher ou non l'indicateur de flèche |
+| `borderRadius` | `string` | `"12px"` | Non | Rayon de bordure de la vidéo |
+| `style` | `object` | `{}` | Non | Styles supplémentaires pour le conteneur |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="With Title">
+    <TitledVideo
+      src="/snippets/assets/media/videos/daydream.mp4"
+      title="Daydream Demo"
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<TitledVideo
+  src="/snippets/assets/media/videos/HeroBackground.mp4"
+  title="Demo Title"
+  subtitle="Subtitle text"
+  arrow={true}
+/>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### ShowcaseVideo
+
+Composant Showcase video avec un style personnalisé pour les pages de présentation.
+
+**Importer :**
+```jsx
+import { ShowcaseVideo } from "/snippets/components/displays/video/Video.jsx";
+```
+
+**Props :** Même que `TitledVideo` (utilise TitledVideo en interne avec un style spécifique à la présentation)
+
+---
+
+### CardVideo
+
+Vidéo YouTube intégrée dans un composant Card. Affiche une vidéo YouTube dans un composant Card avec une légende en dessous.
+
+**Importation :**
+```jsx
+import { CardVideo } from "/snippets/components/displays/video/Video.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `embedUrl` | `string` | - | **Oui** | URL d'intégration YouTube |
+| `title` | `string` | - | **Oui** | Titre de la vidéo à afficher en dessous de la vidéo |
+| `style` | `object` | - | Non | Styles supplémentaires |
+
+**Exemples :**
+
+{/* CardVideo commented out - component bug: convertToPrivacyEnhancedUrl is not defined */}
+{/*
+<Tabs>
+  <Tab title="Example">
+    <CardVideo
+      embedUrl="https://www.youtube.com/embed/DKAChLmC0uk"
+      title="Getting Started with Livepeer"
+    />
+  </Tab>
+  <Tab title="Code">
+*/}
+<Tabs>
+  <Tab title="Code">
+```jsx
+<CardVideo
+  embedUrl="https://www.youtube.com/embed/VIDEO_ID"
+  title="Video Title"
+/>
+```
+  </Tab>
+</Tabs>
+
+**Remarque :**CardVideo actuellement indisponible en raison d'un bug du composant. Voir component-bugs.md pour plus de détails.
+
+---
+
+### LinkedInEmbed
+
+Intègre un post LinkedIn avec une légende et un indice optionnels. Respecte les exigences officielles d'intégration de LinkedIn.
+
+**Importation :**
+```jsx
+import { LinkedInEmbed } from "/snippets/components/displays/video/Video.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `embedUrl` | `string` | - | **Oui** | URL d'intégration LinkedIn (doit inclure ?compact=1) |
+| `title` | `string` | `"Embedded post"` | Non | Titre de la publication pour l'accessibilité |
+| `hint` | `string` | `""` | Non | Texte d'indication facultatif |
+| `caption` | `string` | - | Non | Texte de légende facultatif |
+| `height` | `string` | `"399"` | Non | Hauteur de la fenêtre intégrée |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+<LinkedInEmbed
+  embedUrl="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7387171661868933120?compact=1"
+  title="Livepeer Update"
+  caption="Latest news from the Livepeer team"
+  height="500"
+/>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### YouTubeVideoData
+
+Affiche des vidéos YouTube au format youtubeData.jsx. Convertit les liens YouTube en liens d'intégration et les affiche dans une grille.
+
+**Importation :**
+```jsx
+import { YouTubeVideoData } from "/snippets/components/displays/video/Video.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `items` | `Array` | `[]` | Non | Tableau d'objets vidéo provenant de youtubeData.jsx |
+| `limit` | `number` | - | Non | Limite optionnelle sur le nombre de vidéos |
+| `cols` | `number` | `2` | Non | Nombre de colonnes pour le layout en grille |
+
+**Remarque :** Requiert des données depuis `snippets/data/social-feeds/youtubeData.jsx`
+
+---
+
+### YouTubeVideoDownload
+
+Espace réservé pour une vidéo YouTube avec fonctionnalité de téléchargement. Actuellement non fonctionnel (obsolète).
+
+**Remarque :** Ce composant est obsolète. Utilisez `YouTubeVideo` au lieu de cela.
+
+<CustomDivider />
+
+## Composants d'image
+
+### Image
+
+Composant d'image avec un wrapper Frame. Affiche une image dans un composant Frame avec une légende et un indice optionnels.
+
+**Importer :**
+```jsx
+import { Image } from "/snippets/components/elements/images/Image.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `src` | `string` | - | **Oui** | URL de la source de l'image |
+| `alt` | `string` | - | **Oui** | Texte alternatif pour l'accessibilité |
+| `caption` | `string` | - | Non | Légende facultative à afficher sous l'image |
+| `icon` | `string` | - | Non | Nom de l'icône (actuellement non utilisé) |
+| `hint` | `string` | - | Non | Texte d'indication facultatif |
+| `fullwidth` | `boolean` | `true` | Non | Afficher l'image en largeur maximale |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Basic">
+    <Image 
+      src="/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg" 
+      alt="Livepeer Logo"
+    />
+  </Tab>
+  <Tab title="With Caption">
+    <Image 
+      src="/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg" 
+      alt="Livepeer Logo"
+      caption="The Livepeer Documentation Logo"
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<Image 
+  src="/snippets/assets/media/images/Livepeer%20Stats.png" 
+  alt="System Diagram"
+  caption="Figure 1: Architecture"
+/>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### LinkImage
+
+Image cliquable qui s'ouvre dans un nouvel onglet. Affiche une image dans un composant Frame qui relie à une URL.
+
+**Importer :**
+```jsx
+import { LinkImage } from "/snippets/components/elements/images/Image.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `src` | `string` | - | **Oui** | URL de l'origine de l'image |
+| `alt` | `string` | - | **Oui** | Texte alternatif pour l'accessibilité |
+| `caption` | `string` | - | Non | Légende facultative à afficher sous l'image |
+| `icon` | `string` | - | Non | Nom de l'icône (actuellement non utilisé) |
+| `hint` | `string` | - | Non | Texte d'indication facultatif |
+| `href` | `string` | - | **Oui** | URL à naviguer lorsqu'une image est cliquée |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Example">
+    <LinkImage 
+      src="/snippets/assets/domain/SHARED/LivepeerDocsLogo.svg" 
+      alt="Logo"
+      href="/snippets/assets/media/images/nytv-logo.png"
+      caption="Click to view full size"
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<LinkImage 
+  src="/snippets/assets/media/images/GPUImg.webp" 
+  alt="Preview"
+  href="/snippets/assets/media/images/DelegatorImg.avif"
+  caption="Click to view full size"
+/>
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Composants d'intégration
+
+### MarkdownEmbed
+
+Récupère et affiche du contenu markdown à partir d'une URL. Récupère dynamiquement le contenu markdown à partir d'une URL distante et l'affiche.
+
+**Importer :**
+```jsx
+import { MarkdownEmbed } from "/snippets/components/integrators/embeds/DataEmbed.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `url` | `string` | - | **Oui** | URL du fichier markdown à charger et afficher |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+<MarkdownEmbed url="https://raw.githubusercontent.com/user/repo/main/README.md" />
+```
+  </Tab>
+</Tabs>
+
+---
+
+### EmbedMarkdown
+
+Alias pour `MarkdownEmbed`. Nom alternatif pour le même composant.
+
+**Importation :**
+```jsx
+import { EmbedMarkdown } from "/snippets/components/integrators/embeds/DataEmbed.jsx";
+```
+
+---
+
+### TwitterTimeline
+
+Intègre un fil Twitter/X à l'aide d'un widget iframe.
+
+**Importation :**
+```jsx
+import { TwitterTimeline } from "/snippets/components/integrators/embeds/DataEmbed.jsx";
+```
+
+**Props :**Aucun (utilise une URL de widget codée en dur)
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+<TwitterTimeline />
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Composants de citation
+
+### Citation
+
+Composant de citation simple avec une bordure stylisée et du texte en italique.
+
+**Importer :**
+```jsx
+import { Quote } from "/snippets/components/displays/quotes/Quote.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Oui** | Contenu de citation |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Basic">
+    <Quote>
+      "Livepeer is the future of decentralized video infrastructure."
+    </Quote>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<Quote>
+  "Your quote text here"
+</Quote>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### FrameQuote
+
+Composant de citation avec un conteneur Frame, auteur, source et image optionnels.
+
+**Importer :**
+```jsx
+import { FrameQuote } from "/snippets/components/displays/quotes/Quote.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Oui** | Contenu de citation |
+| `author` | `string` | - | Non | Nom de l'auteur |
+| `source` | `string` | - | Non | Nom de la source |
+| `href` | `string` | - | Non | Lien URL pour la source |
+| `frame` | `boolean` | `true` | Non | Si l'on doit l'encadrer dans un Frame |
+| `align` | `string` | `"right"` | Non | Alignement : "gauche", "centré", "droite" |
+| `borderColor` | `string` | - | Non | Couleur de la bordure |
+| `img` | `object` | - | Non | Objet image avec `src` et `alt` |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="With Author">
+    <FrameQuote author="Doug Petkanics" source="Livepeer Blog">
+      "Livepeer enables decentralized video streaming at scale."
+    </FrameQuote>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<FrameQuote 
+  author="Author Name" 
+  source="Source Name"
+  href="https://example.com"
+  align="center"
+>
+  "Quote text here"
+</FrameQuote>
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Composants Carousel et Showcase
+
+### CardCarousel
+
+Affiche un simple carousel qui pagine à travers un nombre fixe de cartes.
+
+**Importer :**
+```jsx
+import { CardCarousel } from "/snippets/components/displays/grids/Grids.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Oui** | Éléments de carte à afficher |
+| `visibleCount` | `number` | `3` | Non | Nombre de cartes à afficher par vue |
+| `gap` | `string\|number` | `"1.5rem"` | Non | Espace entre les cartes (valeur CSS) |
+| `showDots` | `boolean` | `true` | Non | Afficher les points d'indicateur de page |
+| `style` | `object` | - | Non | Remplacements de style du conteneur |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+<CardCarousel visibleCount={3}>
+  <Card title="Card 1">Content 1</Card>
+  <Card title="Card 2">Content 2</Card>
+  <Card title="Card 3">Content 3</Card>
+  <Card title="Card 4">Content 4</Card>
+</CardCarousel>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### ShowcaseCards
+
+Composant de cartes d'exposition interactives avec recherche, filtrage et pagination.
+
+**Importer :**
+```jsx
+import { ShowcaseCards } from "/snippets/components/displays/cards/Cards.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `items` | `Array` | `[]` | Non | Tableau d'objets d'élément de démonstration |
+| `limit` | `number` | `null` | Non | Limite optionnelle sur le nombre d'éléments |
+| `pageSize` | `number` | `10` | Aucun | Nombre d'éléments par page |
+
+**Structure de l'objet élément :**
+- `title` - Titre de la carte
+- `subtitle` - Sous-titre de la carte
+- `description` - Description de la carte
+- `href` - Lien URL
+- `categoryTags` - Tableau de chaînes de catégories
+- `productTags` - Tableau de chaînes de produits
+- `mediaSrc` - Source d'image/vidéo
+- `mediaType` - « image » ou « vidéo »
+- `logo` - URL de l'image du logo
+- `links` - Tableau d'objets de lien
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Code">
+```jsx
+const items = [
+  {
+    title: "Project Name",
+    subtitle: "Subtitle",
+    description: "Description",
+    href: "/project",
+    categoryTags: ["Apps"],
+    productTags: ["Livepeer"],
+    mediaSrc: "/images/project.png",
+    mediaType: "image"
+  }
+];
+
+<ShowcaseCards items={items} limit={10} pageSize={6} />
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Composants du diagramme
+
+### ScrollableDiagram
+
+Visionneuse de diagramme interactive avec des contrôles de zoom (25 % à 200 %) et un support de défilement.
+
+**Importer :**
+```jsx
+import { ScrollableDiagram } from "/snippets/components/displays/diagrams/ScrollableDiagram.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Oui** | Diagramme ou contenu à afficher |
+| `title` | `string` | `""` | Non | Titre facultatif à afficher au-dessus du diagramme |
+| `maxHeight` | `string` | `"500px"` | Non | Hauteur maximale du conteneur déroulable |
+| `minWidth` | `string` | `"100%"` | Non | Largeur minimale de la zone de contenu |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Basic">
+    <ScrollableDiagram title="Example Diagram" maxHeight="200px">
+      <div style={{ 
+        width: "600px", 
+        height: "150px", 
+        background: "linear-gradient(135deg, #00cc88 0%, #0066ff 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "white",
+        fontWeight: "bold",
+        borderRadius: "8px"
+      }}>
+        Scroll and Zoom!
+      </div>
+    </ScrollableDiagram>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<ScrollableDiagram title="System Architecture" maxHeight="600px">
+  <img src="/snippets/assets/media/images/Livepeer%20Stats.png" alt="Architecture" />
+</ScrollableDiagram>
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Composants sociaux
+
+### SocialLinks
+
+Liens des icônes des réseaux sociaux pour Livepeer. Affiche une rangée de liens d'icônes de réseaux sociaux avec les couleurs officielles de la marque.
+
+**Importer :**
+```jsx
+import { SocialLinks } from "/snippets/components/elements/links/Links.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `size` | `number` | `20` | Non | Taille de l'icône |
+| `gap` | `string` | `"0.75rem"` | Non | Espace entre les icônes |
+| `justify` | `string` | `"center"` | Non | Justifier le contenu : « center », « flex-start », « flex-end » |
+| `color` | `string` | - | Non | Remplacer la couleur pour toutes les icônes |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Default">
+    <SocialLinks />
+  </Tab>
+  <Tab title="Custom">
+    <SocialLinks size={24} justify="flex-start" gap="1rem" />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<SocialLinks />
+<SocialLinks size={24} justify="flex-start" />
+```
+  </Tab>
+</Tabs>
+
+<CustomDivider />
+
+## Composants en mode cadre
+
+Composants à utiliser dans les pages en mode cadre Mintlify. Ils fournissent des titres et du texte stylisés qui fonctionnent correctement lorsque`mode: frame`est défini dans le frontmatter.
+
+### PageHeader
+
+Composant d'en-tête de page complète avec titre, sous-titre, description et séparateur.
+
+**Importer :**
+```jsx
+import { PageHeader } from "/snippets/components/scaffolding/frame-mode/FrameMode.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `title` | `string` | - | **Oui** | Texte du titre principal |
+| `subtitle` | `string` | - | Non | Texte du sous-titre |
+| `description` | `string` | - | Non | Texte de la description |
+| `titleColor` | `string` | `"var(--hero-text)"` | Non | Couleur du titre |
+| `subtitleColor` | `string` | `"var(--accent)"` | Non | Couleur du sous-titre |
+| `descriptionColor` | `string` | - | Non | Couleur de la description |
+| `children` | `ReactNode` | - | Non | Contenu supplémentaire |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Basic">
+    <PageHeader 
+      title="Page Title"
+      subtitle="Subtitle"
+      description="Page description text"
+    />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<PageHeader 
+  title="Page Title"
+  subtitle="Subtitle"
+  description="Description"
+/>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### H1, H2, H3, H4, H5, H6
+
+Composants d'en-tête personnalisés pour le mode cadre avec des icônes optionnelles.
+
+**Importer :**
+```jsx
+import { H1, H2, H3, H4, H5, H6 } from "/snippets/components/scaffolding/frame-mode/FrameMode.jsx";
+```
+
+**Props (tous les titres) :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Oui** | Texte de titre |
+| `icon` | `string` | - | Non | Nom de l'icône ou chemin vers un SVG adapté au thème |
+| `iconSize` | `number` | varie | Non | Taille de l'icône (H1 : 32, H2 : 28, H3 : 24, H4 : 20, H5 : 18, H6 : 16) |
+| `iconColor` | `string` | `"var(--accent)"` | Non | Couleur de l'icône |
+| `align` | `string` | `"left"` | Non | Alignement du texte : « gauche », « centre », « droite » |
+| `gap` | `string` | varie | Aucun | Espace entre l'icône et le texte |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Headings">
+    <H1 icon="rocket">Heading 1</H1>
+    <H2 icon="star">Heading 2</H2>
+    <H3>Heading 3</H3>
+    <H4 align="center">Centered Heading 4</H4>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<H1 icon="rocket">Main Title</H1>
+<H2 icon="star" align="center">Section Title</H2>
+<H3>Subsection</H3>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### P
+
+Composant de paragraphe personnalisé pour le mode cadre avec une icône facultative.
+
+**Importer :**
+```jsx
+import { P } from "/snippets/components/scaffolding/frame-mode/FrameMode.jsx";
+```
+
+**Props :**
+
+| Prop | Type | Défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `children` | `ReactNode` | - | **Oui** | Texte paragraphe |
+| `icon` | `string` | - | Non | Nom ou chemin de l'icône |
+| `iconSize` | `number` | `16` | Non | Taille de l'icône |
+| `iconColor` | `string` | Conscient du thème | Non | Couleur de l'icône |
+| `align` | `string` | `"left"` | Non | Alignement du texte |
+| `gap` | `string` | `"0.5rem"` | Non | Espace entre l'icône et le texte |
+
+**Exemples :**
+
+{/* P component with icon commented out - component bug: resolvedIconColor is not defined */}
+{/*
+<Tabs>
+  <Tab title="Example">
+    <P icon="info-circle">Paragraph with icon</P>
+    <P align="center">Centered paragraph</P>
+  </Tab>
+  <Tab title="Code">
+```jsx
+<P icon="info-circle">Paragraph text</P>
+<P align="center">Centered text</P>
+```
+  </Tab>
+</Tabs>
+*/}
+<Tabs>
+  <Tab title="Code">
+```jsx
+// P component with icon currently unavailable due to component bug
+// Use P without icon prop, or see component-bugs.md for details
+<P align="center">Centered text</P>
+```
+  </Tab>
+</Tabs>
+
+---
+
+### Diviseur
+
+Ligne horizontale de diviseur pour le mode cadre. Affiche une règle horizontale avec un style approprié.
+
+**Importer :**
+```jsx
+import { Divider } from "/snippets/components/scaffolding/frame-mode/FrameMode.jsx";
+```
+
+**Props :**
+
+| Propriété | Type | Par défaut | Requis | Description |
+|------|------|---------|----------|-------------|
+| `color` | `string` | `"var(--border)"` | Non | Couleur personnalisée pour le séparateur |
+| `margin` | `string` | `"1.5rem 0"` | Non | Marge verticale |
+| `opacity` | `number` | `0.2` | Non | Opacité du séparateur |
+
+**Exemples :**
+
+<Tabs>
+  <Tab title="Example">
+    <Divider />
+    <Divider margin="2rem 0" opacity={0.5} />
+  </Tab>
+  <Tab title="Code">
+```jsx
+<Divider />
+<Divider margin="2rem 0" opacity={0.5} />
+```
+  </Tab>
+</Tabs>
+
+---
+
+<Card title="Next: Content Components" icon="arrow-right" href="./content" arrow>
+  Continue to Content Components →
+</Card>

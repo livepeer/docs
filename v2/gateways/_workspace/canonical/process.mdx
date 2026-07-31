@@ -1,0 +1,150 @@
+# Page Remediation Process
+
+> How pages move from raw → checked → remediated → shipped. Five discrete agent steps with a mandatory checkpoint between check and remediation. Update this file as prompts and steps are refined.
+
+**Status:** Active — process is being refined. Do not run steps 3–5 at scale until checks framework and Frameworks.mdx are confirmed to standard.
+
+---
+
+## The Five Steps
+
+```
+[1] Check agent          → findings report
+[2] Critical review agent → reviewed report
+       ↓
+ CHECKPOINT (learnings + prompt updates — human sign-off required)
+       ↓
+[3] Remediation agent    → updated page (structural/taxonomy fixes)
+[4] Copy edit agent      → prose fixes only
+[5] Layout agent         → MDX components, frontmatter completion, render validation
+```
+
+### Sub process
+- Agent reviews and reports
+- second agent verifies and critcally analyses first agents report
+
+---
+
+## Step 1 — Check
+
+**What it does:** Reads the page, runs all 9 check categories from `checks.mdx`, produces a findings report.
+
+**Output:** One `.md` report file per page, written to `v2/orchestrators/_workspace/canonical/check/<same path as page>`.
+
+**Prompt source:** `checks.mdx` — read in full before running. Contains all check categories, pass criteria, mandatory report format, and reporting rules.
+
+**Runs:** Per page. Batch of 3 in parallel (no more).
+
+**Output format (mandatory):**
+- Frontmatter table (all fields present/absent/value)
+- Banned construction scan (all text including frontmatter description, Tips, Notes, card descriptions)
+- Heading score table (5-dimension breakdown per heading: Precision, Depth, Stability, Clarity, Conciseness × 5)
+- Spelling/typo pass (list any found)
+- Component matrix (flag any component not in preferred list for this pageType)
+- Cross-category connections (link related findings across categories)
+- Blocking decisions section (findings the agent cannot resolve from repo files alone)
+- TESTED/NOT-TESTED label on every check
+
+---
+
+## Step 2 — Critical Review
+
+**What it does:** Reads the check report AND the original page. Identifies false positives, missed findings, severity miscalibration, vague/unexecutable fixes, skipped checks.
+
+**Output:** One `-review.md` file alongside the check report.
+
+**Runs:** One critical review agent per check report, after the check batch completes.
+
+**What to look for:**
+1. False positives — findings that are wrong or overstated
+2. Missed findings — issues the checker didn't catch
+3. Severity miscalibration — findings at the wrong severity level
+4. Vague fixes — "add appropriate X" is not actionable
+5. Process issues — did the checker verify claims or just assert them?
+
+---
+
+## CHECKPOINT — Learnings + Prompt Updates
+
+**Runs after every batch** (check + critical review complete). Human sign-off required before proceeding to Step 3.
+
+**What happens:**
+1. Synthesise critical review findings into actionable prompt improvements
+2. Update `decision-log.md` with any decisions made
+3. Update `learnings.md` with what changed and why
+4. Update `checks.mdx` with any new/revised check requirements
+5. Confirm process is stable before launching remediation agents
+
+**Gate:** No remediation agents (steps 3–5) until this checkpoint clears and checks framework is confirmed to standard.
+
+---
+
+## Step 3 — Remediation (Structural + Taxonomy)
+
+**What it does:** Applies approved findings from the check report. Structural fixes, taxonomy corrections, frontmatter updates. Does NOT rewrite prose.
+
+**Input:** Approved check report (post-critical-review, post-checkpoint).
+
+**Output:** Updated page file.
+
+**Scope:** Minor edits only — frontmatter, pageType/pageVariant migration, banned construction removal, heading renames, dead link fixes, undefined jargon definitions. Does not touch voice, copy quality, or layout.
+
+**Related Pages section:** Do NOT flag "Related Pages" as a heading failure (check 3.2). It is an approved structural element. During remediation, populate the Related Pages CardGroup based on the page's position in the IA structure — use `docs.json` navigation order and the page's tab map to determine what comes logically before and after. Do not leave it empty. If the page has no logical neighbours in the IA, flag as a blocking decision rather than removing the section.
+
+**Script pipeline reference:** `scripts/script-pipeline-index.mdx` — use this to identify which scripts/tools apply to each finding type before running agents manually.
+
+**Not yet running at scale.** Validate on 1–2 pages before batch.
+
+---
+
+## Step 4 — Copy Edit
+
+**What it does:** Prose quality pass only. Voice, register, banned words/phrases, paragraph discipline, opening order, hedging.
+
+**Input:** Page after Step 3.
+
+**Output:** Updated page file.
+
+**Scope:** Copy and voice only — no structural changes, no frontmatter, no MDX component changes.
+
+**Not yet running at scale.**
+
+---
+
+## Step 5 — Layout + Style
+
+**What it does:** MDX component compliance, frontmatter field completion, render validation.
+
+**Input:** Page after Step 4.
+
+**Output:** Final page file ready for content-pass review.
+
+**Scope:** Component matrix compliance, OG image block, related-resources-section.mdx present, no dead imports, render passes `npx mintlify dev`.
+
+**Not yet running at scale.**
+
+---
+
+## Supporting Files
+
+| File | Purpose |
+|---|---|
+| `checks.mdx` | Full check framework — all 9 categories, pass criteria, mandatory report format |
+| `Frameworks.mdx` | Canonical taxonomy, voice rules, component matrix |
+| `scripts/script-pipeline-index.mdx` | Index of scripts, tools, prompts, skills for each check/fix type |
+| `check/decision-log.md` | Decisions made during check batches |
+| `check/learnings.md` | Prompt improvements from critical reviews |
+
+---
+
+## Batch Rules
+
+- Max 3 check agents in parallel
+- Critical review agents: one per check report, run after full batch completes
+- No remediation agents until checkpoint clears
+- All findings surface in chat AND as files — agents write reports, main context receives summary
+- Decision log and learnings updated after every batch, before next batch starts
+
+---
+
+_Owner: Alison Haire · Last updated: 2026-03-24_

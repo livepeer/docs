@@ -2,8 +2,8 @@
 
 Canonical policy and ownership:
 
-- `docs-guide/quality-testing/infrastructure-principles.mdx`
-- `docs-guide/quality-testing/quality-gates.mdx`
+- `docs-guide/policies/infrastructure-principles.mdx`
+- `docs-guide/policies/quality-gates.mdx`
 
 This file is intentionally brief. Rule text should live in canonical policy docs above.
 
@@ -23,19 +23,28 @@ lpd hooks install
 
 ### `pre-commit`
 
-Owned concerns:
+**Hard gates only** — blocks commits that would break syntax, security, or safety.
+Target runtime: **< 5 seconds**.
 
-- fast staged local/offline checks
-- structure + style + staged static test validations
-- staged generator sync for managed artifacts
-- runtime budget enforcement (default: `<= 60s`)
+Owned concerns (5 hard gates):
 
-Out-of-scope concerns:
+1. **Codex branch isolation** — prevents AI sessions from committing to docs-v2
+2. **File deletion guard** — blocks deletions without human `--trailer "allow-deletions=true"`
+3. **.allowlist protection** — blocks AI from editing .allowlist
+4. **docs.json redirect integrity + root structure** — prevents orphaned redirects and unauthorized root files
+5. **v1/ freeze** — blocks any changes to frozen v1/ directory
 
-- browser sweeps
-- WCAG crawls
-- broad/full link sweeps
-- codex issue-readiness governance
+Everything else runs in GitHub Actions PR workflows (`test-suite.yml`):
+
+- Style guide compliance, copy linting, structure linting
+- Component governance, anchor validation, description quality
+- MDX-safe markdown validation, grammar checks
+- Generated artifact freshness, index/catalog regeneration (post-commit only)
+
+Install behavior:
+
+- configures worktree-local `core.hooksPath=.githooks`
+- runs hooks directly from tracked repo files instead of copying stale hook files into `.git/hooks`
 
 ### `pre-push` (`codex/*`)
 
@@ -55,5 +64,6 @@ When explicit human override is requested, follow:
 
 ## Additional References
 
-- Contributor hook guide: `contribute/CONTRIBUTING/GIT-HOOKS.md`
+- Contributor hook guide: `docs-guide/contributing/git-hooks.mdx`
 - Test execution matrix: `tests/WHEN-TESTS-RUN.md`
+- Codex lifecycle: `.codex/README.md` (`task-preflight` -> `validate-locks` -> `task-finalize` -> `lock-release` -> `task-cleanup`)

@@ -1,0 +1,105 @@
+---
+title: Automations
+sidebarTitle: Automations
+description: Map of GitHub Actions, CI gates, scheduled jobs, dispatchers, remediators, and automation governance in the Livepeer Docs repo.
+audience: developer
+pageType: overview
+purpose: overview
+status: current
+lastVerified: 2026-05-14
+keywords:
+  - livepeer
+  - automation
+  - github actions
+  - ci
+  - pipelines
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+---
+
+# Automations
+
+Automations are the repo's operating layer. They validate content, generate derived artifacts, ingest external data, repair deterministic drift, and surface cleanup work. The target architecture is ownerless: every automation should be discoverable, classified, bounded, and repairable.
+
+## Automation Taxonomy
+
+The live workflow taxonomy is visible in `.github/workflows/`:
+
+| Prefix | Count | Role |
+| --- | ---: | --- |
+| `validator-*` | 14 | Blocking or advisory checks for content, health, governance, discoverability, and maintenance. |
+| `generator-*` | 9 | Regenerate derived artifacts such as AI sitemap, llms files, docs indexes, SDK clients, component registry, catalogs, and action docs. |
+| `integrator-*` | 9 | Pull or update external/internal data feeds, releases, translations, contract addresses, exchanges, and large assets. |
+| `interface-*` | 5 | GitHub issue and review interfaces, including labels, reviewers, linked issues, and Discord intake. |
+| `remediator-*` | 5 | Deterministic repair workflows for brand, frontmatter, style tokens, SEO metadata, and governance pipelines. |
+| `audit-*` | 5 | Scheduled or manual scans for workspace retention, content quality, freshness, links, and page integrity. |
+| `dispatch-*` | 3 | Manual dispatchers for social feeds, post-merge governance sync, and catalog checks. |
+
+## GitHub Actions Surface
+
+| Workflow family | Examples | Owned risk |
+| --- | --- | --- |
+| Content quality and health | `validator-copy-check-content-quality-suite.yml`, `validator-health-check-page-rendering.yml`, `validator-health-check-broken-links.yml` | Broken pages, content quality drift, dead links, render failures. |
+| Governance | `validator-governance-check-codex-compliance.yml`, `validator-governance-check-governance-map.yml`, `validator-governance-check-workflow-governance.yml` | Contract drift, stale maps, workflow policy drift. |
+| Discoverability | `generator-discoverability-generate-ai-sitemap.yml`, `generator-discoverability-generate-llms-files.yml`, `validator-discoverability-check-ai-sitemap.yml` | AI/SEO artifacts out of sync with navigation and docs. |
+| Maintenance catalogs | `generator-maintenance-generate-catalogs.yml`, `validator-maintenance-check-catalogs.yml`, `validator-maintenance-check-docs-index.yml` | Generated catalogs and docs index drift. |
+| Data feeds | `integrator-maintenance-update-release-version.yml`, `integrator-maintenance-update-contract-addresses.yml`, `integrator-maintenance-update-exchanges-data.yml` | Stale structured data rendered in docs. |
+| Contributor interfaces | `interface-governance-intake-discord-issues.yml`, `interface-governance-label-issues.yml`, `interface-governance-assign-reviewers.yml` | Issue intake and review routing. |
+
+## Script Automation Surface
+
+Operational scripts live in `operations/scripts/` and follow the script framework taxonomy:
+
+| Type folder | Live file count | Purpose |
+| --- | ---: | --- |
+| `audits/` | 22 | Read-only scans and reports. |
+| `generators/` | 31 | Produce derived files from canonical sources. |
+| `validators/` | 51 | Exit-code checks for hooks, CI, and manual validation. |
+| `remediators/` | 29 | Deterministic repairs to existing files. |
+| `dispatch/` | 36 | Coordinate pipelines and agent/workflow execution. |
+| `integrators/` | 58 | Fetch, transform, or synchronize external and internal data. |
+| `interfaces/` | 8 | GitHub and other contributor-facing integration interfaces. |
+| `archive/` and `x-archive/` | 23 | Deprecated or legacy scripts retained for review or compatibility. |
+
+## Gate Layers
+
+| Layer | What belongs here | What does not belong here |
+| --- | --- | --- |
+| Pre-commit | Fast staged checks, generated artifact drift checks, root structure guardrails, v1 frozen-file guard. | Browser sweeps, network calls, long full-site audits. |
+| Pre-push | Codex branch contract, lock checks, issue readiness, branch safety. | Style checks already handled by pre-commit or PR CI. |
+| PR CI | Changed-file quality, docs-index, OpenAPI references, component and governance checks. | Local-only setup checks. |
+| Scheduled CI | Broad freshness, links, page integrity, data refresh, and advisory scans. | Mutating source files without deterministic PR or repair path. |
+| Manual dispatch | One-off migrations, approvals, repair waves, large data updates. | Routine drift that should be covered by a gate. |
+
+## Ownerless Automation Requirements
+
+Each production automation should declare:
+
+| Requirement | Implementation target |
+| --- | --- |
+| Canonical source | Policy, config, source data, docs tree, or workflow definition that owns truth. |
+| Validator | Local or CI command that fails deterministically when drift exists. |
+| Repair command | Exact command or workflow that restores derived state. |
+| Primary gate | One layer only: pre-commit, PR changed-file CI, scheduled CI, or manual. |
+| Output contract | Where reports, generated files, or PR comments are written. |
+| Retention policy | Whether outputs are committed, archived, summarized, or purged. |
+
+## Current Automation Gaps
+
+| Gap | Evidence | Implementation action |
+| --- | --- | --- |
+| Stale generated governance map | `node operations/scripts/generators/governance/reports/generate-repo-governance-status.js --check` reports `docs-guide/repo-ops/config/repo-governance-map.mdx is stale.` | Regenerate the repo governance map in a focused governance artifact change and rerun the check. |
+| Script metadata compliance | Script footprint audit reports 218 scripts marked template non-compliant in `workspace/reports/repo-ops/SCRIPT_AUDIT.json`. | Run the script header repair workflow, then rerun script governance validation. |
+| Archived workflow residue | `.github/workflows/deprecated/update-blog-data.yml` remains tracked. | Decide whether this is an intentional compatibility alias or schedule governed deletion with approval. |
+| Feature-doc drift | Old automation docs referenced workflow names and `tasks/staging/deprecated-n8n/`, which is not a current root. | Keep this page tied to live workflow prefixes and current `operations/scripts/` paths. |
+
+## Related
+
+- `docs-guide/frameworks/github-actions.mdx`
+- `docs-guide/frameworks/script-framework.mdx`
+- `docs-guide/policies/infrastructure-principles.mdx`
+- `docs-guide/catalog/workflows-catalog.mdx`
+- `docs-guide/catalog/scripts-catalog.mdx`

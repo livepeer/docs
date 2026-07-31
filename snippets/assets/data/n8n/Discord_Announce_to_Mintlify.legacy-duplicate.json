@@ -1,0 +1,335 @@
+{
+  "name": "Discord_Announce_to_Mintlify",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "38f769ec-ef3c-41d6-9805-81f98b0e86e6",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -576,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "getAll",
+        "guildId": {
+          "__rl": true,
+          "value": "={{ $json.discordServerID }}",
+          "mode": "id"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $json.discordChannelID }}",
+          "mode": "id"
+        },
+        "limit": 50,
+        "options": {}
+      },
+      "id": "c463d2b2-caca-423a-aaa3-b1f4a80e21d8",
+      "name": "Get Discord Messages",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -336
+      ],
+      "webhookId": "1a6cec03-797e-4a28-b0a0-0c7d848eddb3",
+      "credentials": {
+        "discordBotApi": {
+          "id": "w1Jsx7w9upr3KgFD",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "filter-recent",
+              "leftValue": "={{ new Date($json.timestamp).getTime() }}",
+              "rightValue": "={{ Date.now() - (96 * 60 * 60 * 1000) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "23a51220-2e7b-454c-886d-1dfb1701c009",
+      "name": "Filter Recent Messages",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [
+        16,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const announcements = [];\n\nfor (const item of $input.all()) {\n  const message = item.json;\n  \n  // Skip non-normal messages (type 12 is channel follow notification)\n  if (message.type !== 0) continue;\n  \n  // Extract content from message snapshots (cross-posted messages)\n  let content = message.content;\n  if (!content && message.message_snapshots && message.message_snapshots.length > 0) {\n    content = message.message_snapshots[0].message.content;\n  }\n  \n  // Skip if still no content\n  if (!content) continue;\n  \n  // Get original message reference for better URL\n  const originalGuildId = message.message_reference?.guild_id || message.guild_id;\n  const originalChannelId = message.message_reference?.channel_id || message.channel_id;\n  const originalMessageId = message.message_reference?.message_id || message.id;\n  \n  announcements.push({\n    id: message.id,\n    content: content,\n    author: message.author.global_name || message.author.username,\n    timestamp: message.message_snapshots && message.message_snapshots.length > 0 \n      ? message.message_snapshots[0].message.timestamp \n      : message.timestamp,\n    url: `https://discord.com/channels/${originalGuildId}/${originalChannelId}/${originalMessageId}`,\n    attachments: message.attachments || [],\n    embeds: message.embeds || []\n  });\n}\n\n// Sort by timestamp, newest first\nannouncements.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));\n\nreturn [{ json: { announcements } }];"
+      },
+      "id": "6337e61c-c39e-4db0-b742-07a99bddf5dd",
+      "name": "Process Announcements",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -336
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const announcements = $input.first().json.announcements;\n\n// Helper function to escape JSX content\nfunction escapeJSX(str) {\n  if (!str) return '';\n  return str\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;')\n    .replace(/'/g, '&#039;')\n    .replace(/\\{/g, '&#123;')\n    .replace(/\\}/g, '&#125;');\n}\n\n// Helper function to format Discord markdown to HTML\nfunction formatContent(content) {\n  if (!content) return '';\n  \n  let formatted = escapeJSX(content);\n  \n  // Convert Discord markdown\n  formatted = formatted\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>') // Bold\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>') // Italic\n    .replace(/\\n/g, '<br />'); // Line breaks\n  \n  return formatted;\n}\n\n// Generate JSX content\nconst jsxContent = `export const discordAnnouncementsData = () => {\n  const announcements = [\n${announcements.map(ann => `    {\n      id: \"${ann.id}\",\n      content: \"${formatContent(ann.content)}\",\n      author: \"${escapeJSX(ann.author)}\",\n      timestamp: \"${ann.timestamp}\",\n      url: \"${ann.url}\"\n    }`).join(',\\n')}\n  ];\n\n  return (\n    <div className=\"discord-announcements\">\n      <div className=\"announcements-header\">\n        <h3>Latest Livepeer Announcements</h3>\n        <p className=\"text-sm text-gray-600\">From Discord</p>\n      </div>\n      <div className=\"announcements-list space-y-4 mt-4\">\n        {announcements.map((announcement) => (\n          <div key={announcement.id} className=\"announcement-card border rounded-lg p-4\">\n            <div className=\"announcement-meta flex items-center gap-2 text-sm text-gray-600 mb-2\">\n              <span className=\"font-semibold\">{announcement.author}</span>\n              <span>•</span>\n              <time dateTime={announcement.timestamp}>\n                {new Date(announcement.timestamp).toLocaleDateString('en-US', {\n                  month: 'short',\n                  day: 'numeric',\n                  year: 'numeric'\n                })}\n              </time>\n            </div>\n            <div \n              className=\"announcement-content\" \n              dangerouslySetInnerHTML={{ __html: announcement.content }}\n            />\n            <a \n              href={announcement.url} \n              target=\"_blank\" \n              rel=\"noopener noreferrer\"\n              className=\"text-sm text-blue-600 hover:text-blue-800 mt-2 inline-block\"\n            >\n              View in Discord →\n            </a>\n          </div>\n        ))}\n      </div>\n    </div>\n  );\n};\n`;\n\nreturn [{ json: { content: jsxContent, announcements } }];"
+      },
+      "id": "013f9f4a-baca-4fb0-ac7e-c51965c4f55e",
+      "name": "Generate JSX",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        -112
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "={{ $json.githubOwner }}",
+          "mode": ""
+        },
+        "repository": {
+          "__rl": true,
+          "value": "={{ $json.githubRepo }}",
+          "mode": ""
+        },
+        "filePath": "={{ $json.githubFilePath }}",
+        "fileContent": "={{ $json.content }}",
+        "commitMessage": "=commitMessage: `chore: create Discord announcements file from workflow - ${new Date().toISOString()}`",
+        "additionalParameters": {
+          "branch": {
+            "branch": "={{ $json.githubBranch }}"
+          }
+        }
+      },
+      "id": "98eb0352-31ab-4a2e-b9d7-9070f459917b",
+      "name": "Update GitHub File",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -400
+      ],
+      "webhookId": "a1db9fa1-0d11-4d5c-89c8-28f69cbfb60e",
+      "credentials": {
+        "githubApi": {
+          "id": "vAAQD9gcQcGNKMOH",
+          "name": "Github Livepeer/docs Write Commit Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "github_owner",
+              "name": "githubOwner",
+              "value": "livepeer",
+              "type": "string"
+            },
+            {
+              "id": "github_repo",
+              "name": "githubRepo",
+              "value": "docs",
+              "type": "string"
+            },
+            {
+              "id": "github_path",
+              "name": "githubFilePath",
+              "value": "snippets/data/social-feeds/discordAnnouncementsData.jsx",
+              "type": "string"
+            },
+            {
+              "id": "077c994c-4563-4210-8690-3b00fe4dba99",
+              "name": "githubBranch",
+              "value": "docs-v2-preview",
+              "type": "string"
+            },
+            {
+              "id": "293846b3-b346-4a17-96fc-880b2917db8d",
+              "name": "discordServerID",
+              "value": "1066890817425387581",
+              "type": "string"
+            },
+            {
+              "id": "5cf8e964-1dad-40bd-9813-1b23ecc6e10e",
+              "name": "discordChannelID",
+              "value": "1463391944746078319",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -384,
+        -336
+      ],
+      "id": "a0ccaed1-687b-4ac9-8f5a-50ff9d10cd21"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        784,
+        -496
+      ],
+      "id": "ec413328-ecc7-46ed-8f7a-10cb3eb00c77",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "const announcements = $input.first().json.announcements;\n\n// Helper function to escape JSX content\nfunction escapeJSX(str) {\n  if (!str) return '';\n  return str\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    .replace(/\"/g, '&quot;')\n    .replace(/'/g, '&#039;')\n    .replace(/\\{/g, '&#123;')\n    .replace(/\\}/g, '&#125;');\n}\n\n// Helper function to format Discord markdown to HTML\n// Keep markdown links [text](url) intact - DiscordAnnouncements component handles them\nfunction formatContent(content) {\n  if (!content) return '';\n  \n  let formatted = escapeJSX(content);\n  \n  // Convert Discord markdown\n  formatted = formatted\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>') // Bold\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>') // Italic\n    .replace(/\\n/g, '<br />'); // Line breaks\n  \n  // Restore markdown links that got escaped\n  formatted = formatted.replace(/\\[([^\\]]+)\\]\\(([^)]+)\\)/g, '[$1]($2)');\n  \n  return formatted;\n}\n\n// Generate JSX content - just the data array\nconst jsxContent = `export const discordAnnouncementsData = [\n${announcements.map(ann => `  {\n    id: \"${ann.id}\",\n    content: \"${formatContent(ann.content)}\",\n    author: \"${escapeJSX(ann.author)}\",\n    timestamp: \"${ann.timestamp}\",\n    url: \"${ann.url}\"\n  }`).join(',\\n')}\n];\n`;\n\nreturn [{ json: { content: jsxContent, announcements } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        -336
+      ],
+      "id": "80ad02a4-50d1-4158-9edb-15be5e2ab3ea",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Discord Messages": {
+      "main": [
+        [
+          {
+            "node": "Filter Recent Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Recent Messages": {
+      "main": [
+        [
+          {
+            "node": "Process Announcements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Announcements": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate JSX": {
+      "main": [
+        []
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get Discord Messages",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update GitHub File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9f72d75f-f005-42f8-be97-334d4d7bfbfe",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b77ce31e344450acd6ad20bd6cde79f46c1e07d55921483122bfba86e8350352"
+  },
+  "id": "zmXdoAYwgqwSESAV",
+  "tags": []
+}

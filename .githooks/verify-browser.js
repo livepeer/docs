@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 /**
- * @script            verify-browser
- * @category          utility
- * @purpose           tooling:dev-tools
- * @scope             .githooks
- * @owner             docs
- * @needs             E-C6, F-C1
- * @purpose-statement Verifies browser availability for Puppeteer-based integration tests
- * @pipeline          manual — developer tool
- * @usage             node .githooks/verify-browser.js [flags]
+ * @script      verify-browser
+ * @type        dispatch
+ * @concern     governance
+ * @niche       hooks
+ * @purpose     tooling:dev-tools
+ * @description Verifies browser availability for Puppeteer-based integration tests
+ * @mode        dispatch
+ * @pipeline    manual — developer tool
+ * @scope       .githooks
+ * @usage       node .githooks/verify-browser.js [flags]
  */
 /**
  * Headless browser validation for staged MDX files
@@ -64,10 +65,19 @@ function toPosix(filePath) {
 function getStagedMdxFiles() {
   try {
     const repoRoot = execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
-    const files = getStagedDocsPageFiles(repoRoot)
+    const allFiles = getStagedDocsPageFiles(repoRoot)
       .map((filePath) => toPosix(path.relative(repoRoot, filePath)))
-      .filter((filePath) => filePath.endsWith('.mdx') && filePath.startsWith('v2/'))
+      .filter((filePath) => filePath.endsWith('.mdx') && filePath.startsWith('v2/'));
+
+    const files = allFiles
+      // Internal hub/report pages are validated by link/import checks, not public-route smoke tests.
+      .filter((filePath) => !filePath.startsWith('v2/internal/'))
       .slice(0, MAX_PAGES); // Limit for speed
+
+    const skippedInternal = allFiles.length - files.length;
+    if (skippedInternal > 0) {
+      console.log(`ℹ️  Skipping ${skippedInternal} staged internal MDX file(s) in browser validation.`);
+    }
     
     return files;
   } catch (error) {
@@ -86,12 +96,19 @@ function filePathToUrls(filePath) {
     .replace(/^v2\/pages\//, '')
     .replace(/^v2\//, '');
   const normalizedRoute = routeWithoutPrefix.replace(/\/index$/, '');
+  const folderOverviewRoute = normalizedRoute.replace(/\/overview$/, '');
+  const legacyRoute = withoutExt.replace(/^v2\//, '').replace(/\/index$/, '');
+  const legacyFolderOverviewRoute = legacyRoute.replace(/\/overview$/, '');
 
   const candidates = [
     `/${normalizedRoute}`,
-    `/${withoutExt.replace(/^v2\//, '').replace(/\/index$/, '')}`,
+    `/${legacyRoute}`,
     `/v2/${normalizedRoute}`,
-    `/v2/pages/${normalizedRoute}`
+    `/v2/pages/${normalizedRoute}`,
+    `/${folderOverviewRoute}`,
+    `/${legacyFolderOverviewRoute}`,
+    `/v2/${folderOverviewRoute}`,
+    `/v2/pages/${folderOverviewRoute}`
   ];
 
   return [...new Set(candidates)];
@@ -239,7 +256,21 @@ async function testPage(browser, filePath, baseUrl) {
       warnings
     };
   } finally {
-    await page.close();
+    if (!page.isClosed()) {
+      try {
+        await page.close();
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        const transientCloseFailure =
+          message.includes('Connection closed') ||
+          message.includes('Target closed') ||
+          message.includes('Session closed');
+
+        if (!transientCloseFailure) {
+          throw error;
+        }
+      }
+    }
   }
 }
 
@@ -261,7 +292,8 @@ async function main() {
   // Ensure server is running (start if needed)
   let serverStarted = false;
   try {
-    serverStarted = await ensureServerRunning();
+    const probePath = stagedFiles[0] ? filePathToUrls(stagedFiles[0])[0] : '';
+    serverStarted = await ensureServerRunning({ probePath, allowCommonPorts: false });
     // Get actual server URL (may differ if port was auto-selected)
     const actualUrl = getServerUrl();
     if (actualUrl !== BASE_URL) {

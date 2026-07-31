@@ -1,0 +1,285 @@
+---
+title: Deploy a local testnet
+sidebarTitle: Local testnet
+description: >-
+  Deploy the full Livepeer protocol stack locally using Hardhat and connect go-livepeer nodes to your own contracts for
+  development and testing.
+lifecycleStage: operate
+complexity: intermediate
+keywords:
+  - livepeer
+  - testnet
+  - local development
+  - hardhat
+  - deploy contracts
+  - go-livepeer
+  - developer
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: instruction
+purpose: build
+audience: developer
+lastVerified: 2026-03-28T00:00:00.000Z
+---
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow } from '/snippets/components/elements/links/Links.jsx'
+
+Running a local Livepeer stack lets you develop against real protocol contracts without spending ETH or affecting mainnet state. The protocol repo ships a Hardhat deploy script that deploys every contract automatically, seeds the faucet with test LPT, and writes a deployments JSON you can point go-livepeer at.
+
+<Tip>
+  local Hardhat deployment only. For Arbitrum Sepolia testnet deployment the same deploy script applies – swap the Hardhat network target for `arbitrumSepolia` and provide a funded Sepolia wallet.
+</Tip>
+
+<CustomDivider />
+
+## Prerequisites
+
+You need the following installed before starting:
+
+- **Node.js** v18 or later and **yarn**
+- **Go** 1.21 or later (for building go-livepeer)
+- **git**
+- An Ethereum wallet with a private key (for Hardhat, the default accounts are pre-funded – no setup needed)
+
+<CustomDivider />
+
+## Deploy the protocol contracts
+
+<Steps>
+  <Step title="Clone the protocol repo">
+    ```bash icon="terminal"
+    git clone https://github.com/livepeer/protocol.git
+    cd protocol
+    git checkout delta
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    ```bash icon="terminal"
+    yarn install
+    ```
+  </Step>
+
+  <Step title="Compile the contracts">
+    ```bash icon="terminal"
+    yarn compile
+    ```
+
+    This compiles all Solidity contracts in `contracts/` using the compiler version specified in `hardhat.config.ts`. Output goes to `artifacts/`.
+  </Step>
+
+  <Step title="Start a local Hardhat node">
+    Open a separate terminal and leave this running for the duration of your development session.
+
+    ```bash icon="terminal"
+    yarn hardhat node
+    ```
+
+    Hardhat starts a local JSON-RPC node at `http://127.0.0.1:8545` with chain ID `31337`. It pre-funds 20 accounts with 10,000 ETH each and prints their private keys to stdout.
+  </Step>
+
+  <Step title="Deploy all contracts">
+    In your original terminal, run the deploy script against the local node:
+
+    ```bash icon="terminal"
+    yarn hardhat deploy --network gethDev
+    ```
+
+    The `gethDev` network config (from `deploy/migrations.config.ts`) sets short round lengths and unlock periods suitable for local testing:
+
+    | Parameter | Value |
+    |---|---|
+    | `roundLength` | 50 blocks |
+    | `unbondingPeriod` | 7 rounds |
+    | `unlockPeriod` | 50 blocks |
+    | `faucet.requestAmount` | 10 LPT |
+    | `faucet.requestWait` | 1 hour |
+
+    On completion, contract addresses are written to `deployments/gethDev/`. The deployer account is set as Controller owner and Governor owner. The faucet is seeded with `6,343,700 LPT` (`genesis.crowdSupply`) and the deployer receives `500,000 LPT` (`genesis.companySupply`).
+  </Step>
+
+  <Step title="Note the Controller address">
+    Every contract address is resolvable from the Controller. Find it in the deployment output:
+
+    ```bash icon="terminal"
+    cat deployments/gethDev/Controller.json | grep '"address"'
+    ```
+
+    You will need this address to configure go-livepeer in the next section.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Deployed components
+
+The deploy script (`deploy/deploy_contracts.ts`) deploys and registers the following contracts automatically. All proxy contracts are registered in the Controller.
+
+| Contract | Notes |
+|---|---|
+| Controller | Central registry. Owner set to Governor after deployment. |
+| Minter | Inflation schedule. Granted MINTER_ROLE on LivepeerToken. |
+| LivepeerToken | ERC-20. Deployed fresh for non-Arbitrum networks. |
+| LivepeerTokenFaucet | Test LPT distribution. Seeded with `crowdSupply`. |
+| TicketBroker | Proxy + target. Also registered as `JobsManager` for legacy Minter compatibility. |
+| BondingManager | Proxy + target. Linked with SortedDoublyLL library. |
+| BondingVotes | Proxy + target. Checkpoint store for governance voting power. |
+| RoundsManager | Deployed as `AdjustableRoundsManager` on non-live networks, allowing round length to be changed programmatically in tests. |
+| ServiceRegistry | Proxy + target. |
+| MerkleSnapshot | Registered in Controller. |
+| Governor | Ownership transferred to deployer account (or governance multisig on mainnet). |
+| Treasury | OpenZeppelin TimelockController. |
+| LivepeerGovernor | Proxy + target. Initialised with voting parameters from `migrations.config.ts`. |
+
+<Info>
+  `LivepeerTokenFaucet` is the only contract that is skipped on production networks (`mainnet`, `arbitrumMainnet`). The deploy script gates it with `if (!isProdNetwork(hre.network.name))`.
+</Info>
+
+<CustomDivider />
+
+## Connect go-livepeer to your local contracts
+
+With contracts deployed, you can run go-livepeer nodes against your local stack.
+
+<Steps>
+  <Step title="Build go-livepeer">
+    ```bash icon="terminal"
+    git clone https://github.com/livepeer/go-livepeer.git
+    cd go-livepeer
+    make
+    ```
+
+    The binary is built to `./livepeer`.
+  </Step>
+
+  <Step title="Get the Controller address">
+    From your protocol repo:
+
+    ```bash icon="terminal"
+    cat deployments/gethDev/Controller.json | grep '"address"'
+    # "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    ```
+  </Step>
+
+  <Step title="Start an orchestrator node">
+    Replace `<CONTROLLER_ADDRESS>` with the address from the previous step and `<KEYSTORE_PATH>` with a path to an Ethereum keystore file (you can export one of the Hardhat accounts).
+
+    ```bash icon="terminal"
+    ./livepeer \
+      -network offchain \
+      -ethUrl http://127.0.0.1:8545 \
+      -ethController <CONTROLLER_ADDRESS> \
+      -ethKeystorePath <KEYSTORE_PATH> \
+      -ethPassword "" \
+      -orchestrator \
+      -transcoder \
+      -serviceAddr 127.0.0.1:8935 \
+      -pricePerUnit 0 \
+      -initializeRound
+    ```
+
+    The key flags for local contract targeting:
+
+    | Flag | Purpose |
+    |---|---|
+    | `-network offchain` | Disables built-in network configs so `-ethController` is used directly |
+    | `-ethUrl` | JSON-RPC endpoint of your local Hardhat node |
+    | `-ethController` | Address of the Controller contract from your deployment |
+    | `-initializeRound` | Automatically initialises a new round when needed; essential for local testing |
+  </Step>
+
+  <Step title="Start a gateway node">
+    In a separate terminal, using a different keystore account:
+
+    ```bash icon="terminal"
+    ./livepeer \
+      -network offchain \
+      -ethUrl http://127.0.0.1:8545 \
+      -ethController <CONTROLLER_ADDRESS> \
+      -ethKeystorePath <GATEWAY_KEYSTORE_PATH> \
+      -ethPassword "" \
+      -gateway \
+      -orchAddr 127.0.0.1:8935 \
+      -maxPricePerUnit 0
+    ```
+
+    Using `-orchAddr` directly bypasses the ServiceRegistry lookup and connects the Gateway to your local Orchestrator immediately.
+  </Step>
+
+  <Step title="Request test LPT from the faucet">
+    The faucet address is in `deployments/gethDev/LivepeerTokenFaucet.json`. Call `request()` directly using cast or the go-livepeer CLI:
+
+    ```bash icon="terminal"
+    cast send <FAUCET_ADDRESS> "request()" \
+      --rpc-url http://127.0.0.1:8545 \
+      --private-key <PRIVATE_KEY>
+    ```
+
+    Each call transfers 10 LPT to the caller. The rate limit is 1 hour between requests, but whitelisted addresses bypass it entirely. Add your test addresses to the whitelist by calling `addToWhitelist(address)` from the deployer account.
+  </Step>
+
+  <Step title="Bond LPT and activate an orchestrator">
+    With test LPT in your Orchestrator wallet, bond and register:
+
+    ```bash icon="terminal"
+    # Approve BondingManager to spend LPT
+    cast send <LPT_ADDRESS> \
+      "approve(address,uint256)" <BONDING_MANAGER_ADDRESS> 1000000000000000000000 \
+      --rpc-url http://127.0.0.1:8545 \
+      --private-key <PRIVATE_KEY>
+
+    # Bond 1000 LPT to yourself (self-delegation = orchestrator registration)
+    cast send <BONDING_MANAGER_ADDRESS> \
+      "bond(uint256,address)" 1000000000000000000000 <YOUR_ADDRESS> \
+      --rpc-url http://127.0.0.1:8545 \
+      --private-key <PRIVATE_KEY>
+    ```
+
+    After the next round initialises (triggered automatically by `-initializeRound` on your Orchestrator node), your Orchestrator enters the Active Set and can call `reward()`.
+  </Step>
+</Steps>
+
+<CustomDivider />
+
+## Deploying to Arbitrum Sepolia
+
+The same deploy script targets Arbitrum Sepolia with a different network name. You need a funded Sepolia wallet (Sepolia ETH from a faucet) and an Arbitrum Sepolia RPC URL.
+
+```bash icon="terminal"
+# Set your deployer private key
+export PRIVATE_KEY=0x...
+
+# Deploy to Arbitrum Sepolia
+yarn hardhat deploy --network arbitrumSepolia
+```
+
+Add an `arbitrumSepolia` entry to `hardhat.config.ts` pointing at your RPC URL, then use the `defaultConfig` from `migrations.config.ts` as your parameter baseline. The faucet deploys and is seeded the same as local – `crowdSupply` worth of test LPT.
+
+<Warning>
+  `arbitrumSepolia` is not a named network in `migrations.config.ts` as of the current delta branch. It falls through to `defaultConfig`, which has sensible testnet defaults. Confirm `roundLength: 5760` is acceptable for your testing cadence before deploying.
+</Warning>
+
+<CustomDivider />
+
+The local testnet gives you a complete protocol stack for development without real ETH. Use it for testing payment flows, BYOC registration, and Gateway-Orchestrator interaction before deploying to mainnet.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Blockchain Contracts" icon="file-contract" href="/v2/about/protocol/blockchain-contracts" arrow>
+    Full technical reference for every protocol contract: purpose, key functions, and source code.
+  </Card>
+  <Card title="Contract Addresses" icon="address-card" href="/v2/about/resources/reference/livepeer-contract-addresses" arrow>
+    Current and historical mainnet contract addresses across Arbitrum One and Ethereum Mainnet.
+  </Card>
+  <Card title="Protocol repo on GitHub" icon="github" href="https://github.com/livepeer/protocol/tree/delta" arrow>
+    Source code, deploy scripts, and migration configs for the Livepeer Protocol.
+  </Card>
+  <Card title="go-livepeer on GitHub" icon="github" href="https://github.com/livepeer/go-livepeer" arrow>
+    Node implementation. Build from source or use pre-built binaries.
+  </Card>
+</CardGroup>

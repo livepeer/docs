@@ -1,0 +1,66 @@
+{/*
+  @composable  overview-intro-section
+  @purpose     Page opening block — optional media slot above intro prose; sets context before body sections.
+  @pageTypes   concept (overview), tutorial, instruction, reference
+  @variables
+    - Media slot (optional, commented):  Quote | Tip | Card (CTA) | CustomCodeBlock | AccordionGroup — pick at most ONE
+    - Intro prose:                       value prop (sentence 1) + context sentence (sentence 2) + scope note (sentence 3, optional)
+    - Section heading:                   use "## Overview" or omit and let the prose follow <CustomDivider /> directly
+  @notes       Media slot options are shown commented below — uncomment at most ONE based on page purpose:
+                 orient / concept  → Quote (value prop) or Tip (key clarification)
+                 start / build     → CustomCodeBlock (first command) or Card (CTA link)
+                 learn / explain   → AccordionGroup (mental model or key definitions)
+               Intro prose rules: lead with the value proposition; no jargon without a link; no qualifiers;
+               do not restate the page title; do not use "this page" or "in this guide".
+  @promoted    2026-03-21
+*/}
+
+{/*
+  ── OPTIONAL MEDIA SLOT ──────────────────────────────────────────────────────
+  Uncomment at most ONE of the following blocks.
+  Place it ABOVE the <CustomDivider /> and intro prose.
+
+  ── Option A: Value prop quote (orient / concept pages) ──
+  <Quote>
+    One sentence defining the concept or its value in the reader's context.
+  </Quote>
+
+  ── Option B: Key clarification callout (any page where one fact changes everything) ──
+  <Tip>
+    One sentence surfacing the most important constraint or decision the reader needs upfront.
+  </Tip>
+
+  ── Option C: Direct CTA card (start / quickstart pages) ──
+  <Card
+    title={<CustomCardTitle icon="rocket" title="Get Started" />}
+    href="/path-to-quickstart"
+    horizontal
+    arrow
+  />
+
+  ── Option D: Opening code block (start / build pages only) ──
+  <CustomCodeBlock filename="Terminal" icon="terminal">
+    # The first command the reader will run
+  </CustomCodeBlock>
+
+  ── Option E: Mental model accordion (learn / explain pages) ──
+  <AccordionGroup>
+    <Accordion title="Key concept name" icon="lightbulb">
+      Short definition that reframes how the reader should think about this before reading further.
+    </Accordion>
+  </AccordionGroup>
+  ─────────────────────────────────────────────────────────────────────────────
+*/}
+
+<CustomDivider />
+
+## Overview
+
+Value proposition: what this is and why it matters to the reader — one sentence.
+
+Context: the constraint, tradeoff, or prior knowledge that shapes everything that follows.
+
+{/*
+  OPTIONAL — scope sentence (use on pages where boundary is non-obvious):
+  This page covers [specific scope]. For [adjacent topic], see [/path-to-adjacent].
+*/}

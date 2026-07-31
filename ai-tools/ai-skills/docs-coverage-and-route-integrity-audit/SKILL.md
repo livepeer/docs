@@ -1,6 +1,10 @@
 ---
 name: docs-coverage-and-route-integrity-audit
-description: Audit docs.json route integrity, legacy path drift, and potential orphan docs files in v2.
+description: >-
+  Audit docs navigation coverage, route integrity, and orphaned documentation files so route drift is visible before it becomes broken documentation behavior. Use when auditing docs route integrity, finding orphan docs files, or checking navigation coverage against repo files.
+metadata:
+  version: "1.2"
+  category: audit
 ---
 
 SKILL: Docs Coverage and Route Integrity Audit
@@ -10,12 +14,13 @@ Surface navigation and route correctness gaps before they become broken-doc regr
 
 Command
 ```bash
-node tools/scripts/docs-coverage-and-route-integrity-audit.js --scope full
+# Script not yet implemented. Planned path:
+# node operations/scripts/audits/content/coverage/docs-coverage-and-route-integrity-audit.js --scope full
 ```
 
 Outputs
-- `tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.md`
-- `tasks/reports/repo-ops/docs-coverage-and-route-integrity-audit.json`
+- `workspace/reports/repo-ops/docs-coverage-and-route-integrity-audit.md`
+- `workspace/reports/repo-ops/docs-coverage-and-route-integrity-audit.json`
 
 Checks
 - Missing routes from navigation reports

@@ -1,0 +1,130 @@
+---
+sidebarTitle: Changelog
+title: "{PRODUCT_NAME} Changelog"
+description: >-
+  Release history for {PRODUCT_NAME} — {PRODUCT_DESCRIPTION}.
+keywords:
+  - {PRODUCT_KEY}
+  - livepeer
+  - changelog
+  - releases
+  - {KEYWORDS}
+'og:image': /snippets/assets/media/og-images/fallback.png
+'og:image:alt': "{PRODUCT_NAME} Docs social preview image"
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+pageType: changelog
+purpose: changelog
+audience: builder
+lastVerified: YYYY-MM-DD
+---
+
+{/*
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  CHANGELOG TEMPLATE — Solutions Products                               │
+  │                                                                        │
+  │  Purpose:  Automated changelog page for any solution product that      │
+  │            publishes GitHub releases. Populated by the                  │
+  │            update-{product}-changelog.yml GitHub Action.               │
+  │                                                                        │
+  │  Usage:                                                                │
+  │  1. Copy this file to v2/solutions/{product}/changelog.mdx             │
+  │  2. Replace all {PLACEHOLDERS} with product-specific values            │
+  │  3. Add the page to docs.json under the product's nav group            │
+  │  4. Create a matching workflow + script (see setup instructions below) │
+  │                                                                        │
+  │  Placeholders:                                                         │
+  │    {PRODUCT_NAME}        — Display name (e.g. "Daydream")              │
+  │    {PRODUCT_KEY}         — kebab-case key (e.g. "daydream")            │
+  │    {PRODUCT_DESCRIPTION} — One-line product description                │
+  │    {GITHUB_ORG}          — GitHub org (e.g. "daydreamlive")            │
+  │    {GITHUB_REPO}         — Main repo (e.g. "scope")                    │
+  │    {DISCORD_URL}         — Product Discord invite URL                  │
+  │    {KEYWORDS}            — Comma-separated keywords for SEO            │
+  │                                                                        │
+  │  GitHub Action setup:                                                  │
+  │  1. Ensure product is in product-social-config.json with               │
+  │     releasesActive: true (single repo) or changelogRepos[] (multi)     │
+  │  2. Create this changelog.mdx page and add to docs.json                │
+  │  3. The shared workflow update-solutions-changelog.yml handles the     │
+  │     rest — no per-product script or workflow needed                    │
+  │  4. (Optional) Add OPENROUTER_API_KEY secret for LLM enhancement       │
+  │                                                                        │
+  │  The script supports two modes:                                        │
+  │    - Default:    Extracts highlights from GitHub release notes          │
+  │    - --enhance:  Uses LLM (OpenRouter/Copilot) to summarise, with      │
+  │                  per-release fallback to default on failure             │
+  │                                                                        │
+  │  Reference implementation: v2/solutions/daydream/changelog.mdx         │
+  └─────────────────────────────────────────────────────────────────────────┘
+*/}
+
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { LinkArrow, DoubleIconLink } from '/snippets/components/elements/links/Links.jsx'
+import { ScrollBox } from '/snippets/components/wrappers/containers/Layout.jsx'
+import { BorderedBox } from '/snippets/components/wrappers/containers/Containers.jsx'
+import { LazyLoad } from '/snippets/components/wrappers/containers/Layout.jsx'
+
+<Tip>
+  This page is an automated workflow.
+  <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--hero-text)", marginTop: "0.25rem"}}>Subscribe to this changelog's <LinkArrow label="RSS Feed" href="/v2/solutions/{PRODUCT_KEY}/changelog/rss.xml" newline={false} /></div>
+</Tip>
+
+<CustomDivider style={{margin: "-0.5rem 0 -1.5rem 0"}} />
+
+Track releases for <LinkArrow label="{PRODUCT_NAME}" href="https://github.com/{GITHUB_ORG}/{GITHUB_REPO}/releases" newline={false} /> on GitHub.
+
+<CustomDivider />
+
+{/* ──────────────────────────────────────────────
+  AUTOMATION ZONE — entries below are populated by workflow.
+
+  Each release uses a Mintlify <Update> block. Two content modes:
+
+  ── MODE A: Enhanced (--enhance flag, LLM summary + raw notes) ──
+
+  <Update label="vX.Y.Z" tags={["Features", "Fixes"]}
+    rss={{ title: "{PRODUCT_NAME} vX.Y.Z", description: "One sentence for feed readers" }}
+    description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>Month YYYY</div>}>
+    ## vX.Y.Z
+
+    <Icon icon="user-robot" size={14} /> **_AI Summary_**
+
+    - **Feature name** — One sentence. Terse. Product-facing only.
+    - **Fixed issue** — What was broken and how it was resolved.
+
+    <span style={{display: "block", borderBottom: "1px solid var(--border)", margin: "1rem 0 1rem 0"}} />
+
+    <ScrollBox maxHeight="250px" showHint={true}>
+      Full release notes from the maintainer (raw, unedited).
+      These are the engineer's original notes preserved for detail.
+    </ScrollBox>
+
+    <DoubleIconLink label="View release on GitHub" href="https://github.com/{GITHUB_ORG}/{GITHUB_REPO}/releases/tag/vX.Y.Z" iconLeft="github" />
+  </Update>
+
+  ── MODE B: Raw extraction (no LLM, default) ──
+
+  <Update label="vX.Y.Z" tags={["Release"]}
+    rss={{ title: "{PRODUCT_NAME} vX.Y.Z", description: "One sentence" }}
+    description={<div style={{fontSize: "0.8rem", fontWeight: 700, color: "var(--hero-text)"}}>Month YYYY</div>}>
+    ## vX.Y.Z
+
+    <ScrollBox maxHeight="250px" showHint={true}>
+      Extracted highlights from the release notes.
+    </ScrollBox>
+
+    <DoubleIconLink label="View release on GitHub" href="https://github.com/{GITHUB_ORG}/{GITHUB_REPO}/releases/tag/vX.Y.Z" iconLeft="github" />
+  </Update>
+
+  ── RULES ──
+  - label: version only (e.g. "v0.1.9" or "Scope: v0.1.9" for multi-repo)
+  - description: date in styled div (Month YYYY)
+  - tags: Features, Fixes, Performance, Breaking, Release, {RepoLabel}
+  - LLM summary: Icon user-robot + italic "AI Summary" label, divider span underneath
+  - Raw notes: in ScrollBox maxHeight="250px" — scrollable detail
+  - Link: DoubleIconLink with github or gitlab icon
+  - For GitLab sources: iconLeft="gitlab", label="View release on GitLab"
+
+  ────────────────────────────────────────────── */}

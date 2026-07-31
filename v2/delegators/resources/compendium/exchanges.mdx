@@ -1,0 +1,63 @@
+---
+title: Exchanges with LPT Listed
+sidebarTitle: LPT Exchanges
+description: "A list of exchanges where the Livepeer Token (LPT) is listed. Note: this information is fetched from Coingecko weekly"
+lifecycleStage: discover
+complexity: intermediate
+pageType: reference
+pageVariant: compendium
+keywords:
+  - livepeer
+  - delegators
+  - token resources
+  - lpt exchanges
+  - exchanges
+  - listed
+  - where
+  - buy
+  - trade
+'og:image': /snippets/assets/site/og-image/fallback.png
+'og:image:alt': Livepeer Docs social preview image
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+audience: delegators
+purpose: reference
+lastVerified: 2026-04-08T00:00:00.000Z
+---
+
+import { SearchTable } from '/snippets/components/displays/tables/Tables.jsx'
+import { DynamicTable } from '/snippets/components/displays/tables/Tables.jsx'
+import { LinkIcon } from '/snippets/components/elements/links/Links.jsx'
+import { CopyText } from '/snippets/components/elements/text/Text.jsx'
+import { exchangesData, exchangesMetadata } from '/snippets/data/exchanges/exchangesData.jsx'
+
+<Info>
+  **Last Updated:** {exchangesMetadata.lastUpdated} | Data sourced from [CoinGecko](https://www.coingecko.com/en/coins/livepeer)
+</Info>
+
+<Note>
+  **Trust Score Legend:** 🟢 High | 🟡 Medium | 🔴 Low | ⚪ Unknown
+</Note>
+
+## LPT Exchanges
+
+<Tip>
+  {exchangesMetadata.totalExchanges} exchanges listed ({exchangesMetadata.cex} centralised, {exchangesMetadata.dex} decentralised). Use the search and category filters to find specific exchanges.
+</Tip>
+
+<SearchTable
+  TableComponent={DynamicTable}
+  tableTitle="Exchanges with LPT Listed"
+  headerList={['Exchange', 'Type', 'TrustScore', 'Trading Pair', 'Volume24h']}
+  itemsList={exchangesData}
+  searchPlaceholder="Search exchanges..."
+  searchColumns={['Exchange', 'Type', 'Trading Pair']}
+  categoryColumn="Type"
+/>
+
+## About This Data
+
+Exchange data is fetched weekly from the [CoinGecko API](https://www.coingecko.com/en/api/documentation) via GitHub Actions (`update-exchanges-data.yml`). The data file lives at `snippets/automations/exchanges/exchangesData.jsx`.
+
+Trust scores are assigned by CoinGecko based on exchange liquidity, web traffic, API quality, and regulatory compliance.

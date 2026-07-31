@@ -1,0 +1,183 @@
+---
+title: "Video and livestream on Livepeer"
+sidebarTitle: "Video and livestream"
+description: >-
+  How video transcoding and livestreaming work on the Livepeer network:
+  RTMP ingest, ABR HLS output, self-hosted gateways, and the Livepeer
+  REST API and SDKs.
+pageType: concept
+audience: developer
+purpose: evaluate
+complexity: intermediate
+lifecycleStage: evaluate
+keywords:
+  - livepeer video
+  - livestream
+  - transcoding
+  - VOD
+  - HLS
+  - WebRTC
+  - RTMP
+  - self-hosted gateway
+  - go-livepeer
+  - video SDK
+'og:image': /snippets/assets/site/og-image/en/developers.png
+'og:image:alt': Livepeer Docs social preview image for Developers
+'og:image:type': image/png
+'og:image:width': 1200
+'og:image:height': 630
+status: current
+lastVerified: 2026-05-14
+---
+
+import { StyledTable, TableRow, TableCell } from '/snippets/components/displays/tables/Tables.jsx'
+import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
+import { CenteredContainer } from '/snippets/components/wrappers/containers/Containers.jsx'
+
+<CenteredContainer preset="readable90">
+  <Tip>Video is the original Livepeer use case and the most mature part of the network. Orchestrators transcode RTMP into ABR HLS using GPU hardware, paid per pixel through Probabilistic Micropayments.</Tip>
+</CenteredContainer>
+
+<CustomDivider />
+
+Livepeer provides GPU-backed video transcoding and delivery for both live streams and recorded video. An encoder pushes a single-quality RTMP stream to a Gateway node; the network's Orchestrators transcode it into multiple adaptive bitrate renditions and return the output as HLS for viewers.
+
+Video workloads use LPT stake-weighted routing and round-based rewards. This is the protocol's original economic model, running since 2018.
+
+<CustomDivider />
+
+## Video workload types
+
+**Livestreams** accept a continuous RTMP push from OBS, FFmpeg, or any RTMP-capable encoder. The Gateway segments the stream, routes segments to Orchestrators for transcoding, and serves the transcoded output as adaptive bitrate HLS. Sub-second WebRTC playback is available for latency-sensitive applications.
+
+**VOD assets** accept an uploaded video file. The network transcodes it to multiple renditions. The asset is playable via HLS or short-form MP4.
+
+**Multistream** simultaneously pushes a live stream to additional RTMP destinations (YouTube Live, Twitch, custom RTMP servers) alongside Livepeer transcoding.
+
+**Recording** archives a livestream as a VOD asset when the stream ends. The recording is available for playback after transcoding completes.
+
+<CustomDivider />
+
+## Access paths
+
+Two paths exist for video developers, depending on how much infrastructure you want to operate.
+
+<StyledTable variant="bordered">
+  <thead>
+    <TableRow header>
+      <TableCell header>Path</TableCell>
+      <TableCell header>What it provides</TableCell>
+      <TableCell header>Requirements</TableCell>
+    </TableRow>
+  </thead>
+  <tbody>
+    <TableRow>
+      <TableCell>**Livepeer REST API + SDKs**</TableCell>
+      <TableCell>Managed stream lifecycle, asset storage, playback URLs, webhooks, access control, viewership metrics</TableCell>
+      <TableCell>API key. No infrastructure to operate.</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>**Self-hosted Gateway (go-livepeer)**</TableCell>
+      <TableCell>Direct network access with custom Orchestrator selection, pricing control, and RTMP-to-HLS without a managed API layer</TableCell>
+      <TableCell>go-livepeer binary, ETH on Arbitrum One for TicketBroker deposit, Arbitrum RPC endpoint</TableCell>
+    </TableRow>
+  </tbody>
+</StyledTable>
+
+The REST API is the faster path: create a stream with four lines of code and get an RTMP ingest URL and HLS playback URL. The self-hosted Gateway gives full pricing and routing control but requires operating a node and funding a payment deposit.
+
+<CustomDivider />
+
+## REST API and SDKs
+
+The Livepeer REST API covers streams, assets, webhooks, playback, access control, and viewership metrics. SDKs wrap the API in TypeScript, Python, Go, and React:
+
+<Tabs>
+  <Tab title="TypeScript">
+    ```typescript icon="terminal"
+    import { Livepeer } from 'livepeer';
+
+    const client = new Livepeer({ apiKey: process.env.LIVEPEER_API_KEY });
+
+    const { stream } = await client.stream.create({
+      name: 'my-stream',
+      profiles: [
+        { name: '720p', bitrate: 3000000, fps: 30, width: 1280, height: 720 },
+        { name: '360p', bitrate: 1000000, fps: 30, width: 640, height: 360 },
+      ],
+    });
+
+    console.log(stream.rtmpIngestUrl); // push here from OBS / FFmpeg
+    console.log(stream.playbackId);    // use in @livepeer/react Player
+    ```
+  </Tab>
+  <Tab title="Python">
+    ```python icon="terminal"
+    from livepeer import Livepeer
+    import os
+
+    client = Livepeer(api_key=os.environ['LIVEPEER_API_KEY'])
+
+    result = client.stream.create(request={'name': 'my-stream'})
+    print(result.stream.rtmp_ingest_url)
+    print(result.stream.playback_id)
+    ```
+  </Tab>
+</Tabs>
+
+The `@livepeer/react` package provides a `Player` component for HLS and WebRTC playback and a `Broadcast` component for browser-based WHIP publishing:
+
+```bash icon="terminal"
+npm install @livepeer/react
+```
+
+<CustomDivider />
+
+## Self-hosted Gateway
+
+Running a go-livepeer broadcaster node gives direct network access. The node accepts RTMP on port 1935, segments the stream, routes segments to Orchestrators for transcoding, and serves HLS on port 8935.
+
+```bash icon="terminal"
+livepeer \
+  -broadcaster \
+  -network arbitrum-one-mainnet \
+  -ethUrl <ARBITRUM_RPC_URL> \
+  -ethKeystorePath /path/to/keystore \
+  -maxPricePerUnit 0 \
+  -rtmpAddr 127.0.0.1:1935 \
+  -httpAddr 127.0.0.1:8935
+```
+
+The Gateway's ETH deposit in TicketBroker on Arbitrum One must be funded before jobs are accepted. Orchestrators check the deposit before processing segments.
+
+Self-hosted Gateways give you control over Orchestrator selection (price filtering, explicit inclusion/exclusion), payment parameters, and routing. This path is relevant when operating at scale where per-pixel cost matters, or when you need to run alongside custom middleware.
+
+See [local Gateway setup](/v2/developers/guides/local-development/local-Gateway) for the step-by-step development path.
+
+<CustomDivider />
+
+## Transport protocols
+
+| Layer | Protocol | Direction |
+|---|---|---|
+| Live ingest | RTMP | Encoder to Gateway |
+| VOD and standard live playback | HLS (ABR) | Gateway/CDN to player |
+| Low-latency live playback | WebRTC (WHEP) | Gateway to browser |
+| Browser publish | WebRTC (WHIP) | Browser to Gateway |
+| Segment submission (internal) | HTTP/HTTPS | Gateway to Orchestrator |
+
+RTMP is the standard ingest format. HLS carries 5-15 seconds of glass-to-glass latency for live streams due to segment buffering. WebRTC provides sub-second latency; the `@livepeer/react` Player uses WHEP automatically for live streams when the Gateway supports it.
+
+<CustomDivider />
+
+## Pricing
+
+Video transcoding on the Livepeer Network is priced in wei per pixel. Total output pixels across all rendition profiles per segment, multiplied by the Orchestrator's price, gives the expected payment for that segment.
+
+Orchestrators set their price via `-pricePerUnit`. Gateways set a maximum acceptable price via `-maxPricePerUnit`. Orchestrators above the maximum are excluded from selection.
+
+The Livepeer Explorer at `explorer.livepeer.org` shows historical per-pixel prices across the active Orchestrator set.
+
+<CustomDivider />
+
+The [video overview](/v2/developers/build/video/overview) in the Build section covers ingest configuration, transcoding profiles, VOD upload, and player integration in detail.
