@@ -1,0 +1,112 @@
+---
+title: "Contract addresses"
+description: "The Livepeer protocol contracts orchestrators and delegators interact with, and how to verify any address on-chain."
+---
+
+Livepeer protocol contracts are deployed on **Arbitrum One** (active) and **Ethereum Mainnet** (legacy
+bridge and governance). Most use a proxy/target pattern: the **proxy** address is stable across
+governance upgrades, while the target changes when a new implementation is deployed.
+
+<Warning>
+  **Always verify an address on-chain before using it.** Confirm you are on the official
+  `docs.livepeer.org` site, and cross-check against the on-chain Controller (below) and a block
+  explorer. An address with no label, unverified bytecode, or zero transactions is **not** a Livepeer
+  contract.
+</Warning>
+
+## Deployed addresses (Arbitrum One)
+
+Resolved from the on-chain **Controller** (`getContract(keccak256(name))`) — **last verified
+30 July 2026**. These are the stable proxy addresses.
+
+| Contract | Address | Used by / for |
+| --- | --- | --- |
+| `Controller` | [`0xD8E8328501E9645d16Cf49539efC04f734606ee4`](https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4) | Registry that resolves every address below |
+| `BondingManager` | [`0x35Bcf3c30594191d53231E4FF333E8A770453e40`](https://arbiscan.io/address/0x35bcf3c30594191d53231e4ff333e8a770453e40) | Stake, bond/unbond, reward & fee cuts |
+| `TicketBroker` | [`0xa8bB618B1520E284046F3dFc448851A1Ff26e41B`](https://arbiscan.io/address/0xa8bb618b1520e284046f3dfc448851a1ff26e41b) | Redeem winning payment tickets for ETH |
+| `RoundsManager` | [`0xdd6f56DcC28D3F5f27084381fE8Df634985cc39f`](https://arbiscan.io/address/0xdd6f56dcc28d3f5f27084381fe8df634985cc39f) | Round progression; gates the reward call |
+| `Minter` | [`0xc20DE37170B45774e6CD3d2304017fc962f27252`](https://arbiscan.io/address/0xc20de37170b45774e6cd3d2304017fc962f27252) | Inflation issuance |
+| `ServiceRegistry` | [`0xC92d3A360b8f9e083bA64DE15d95Cf8180897431`](https://arbiscan.io/address/0xc92d3a360b8f9e083ba64de15d95cf8180897431) | Orchestrator service URI for discovery |
+| `LivepeerToken` (L2) | [`0x289ba1701C2F088cf0faf8B3705246331cB8A839`](https://arbiscan.io/address/0x289ba1701c2f088cf0faf8b3705246331cb8a839) | The LPT ERC-20 on Arbitrum |
+| `LivepeerGovernor` | [`0xcFE4E2879B786C3aa075813F0E364bb5acCb6aa0`](https://arbiscan.io/address/0xcfe4e2879b786c3aa075813f0e364bb5accb6aa0) | Proposals and voting (protocol + treasury) |
+| `Treasury` | [`0xf82C1FF415F1fCf582554fDba790E27019c8E8C4`](https://arbiscan.io/address/0xf82c1ff415f1fcf582554fdba790e27019c8e8c4) | Governance-controlled community funds |
+| `BondingVotes` | [`0x0B9C254837E72Ebe9Fe04960C43B69782E68169A`](https://arbiscan.io/address/0x0b9c254837e72ebe9fe04960c43b69782e68169a) | Stake snapshots for voting power |
+
+These Arbitrum One contracts are **not** registered in the Controller. Addresses come from Livepeer's
+own deployment artifacts ([livepeer/protocol](https://github.com/livepeer/protocol/tree/confluence/deployments/arbitrumMainnet),
+[livepeer/arbitrum-lpt-bridge](https://github.com/livepeer/arbitrum-lpt-bridge/tree/main/deployments)),
+cross-checked against on-chain state:
+
+| Contract | Address | Used by / for |
+| --- | --- | --- |
+| `AIServiceRegistry` | [`0x04C0b249740175999E5BF5c9ac1dA92431EF34C5`](https://arbiscan.io/address/0x04C0b249740175999E5BF5c9ac1dA92431EF34C5) | AI capability registration (`-aiServiceRegistry`) |
+| `L2LPTGateway` | [`0x6D2457a4ad276000A615295f7A80F79E48CcD318`](https://arbiscan.io/address/0x6D2457a4ad276000A615295f7A80F79E48CcD318) | Arbitrum side of the canonical LPT bridge |
+| `L2LPTDataCache` | [`0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1`](https://arbiscan.io/address/0xd78b6bD09cd28A83cFb21aFa0DA95c685A6bb0B1) | Caches L1 LPT supply data on Arbitrum |
+| `Governor` | [`0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6`](https://arbiscan.io/address/0xD9dEd6f9959176F0A04dcf88a0d2306178A736a6) | Protocol admin / parameter execution (pre-treasury governance) |
+| `PollCreator` | [`0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6`](https://arbiscan.io/address/0x8bb50806D60c492c0004DAD5D9627DAA2d9732E6) | Poll-based LIP voting |
+| `MerkleSnapshot` | [`0x10736ffaCe687658F88a46D042631d182C7757f7`](https://arbiscan.io/address/0x10736ffaCe687658F88a46D042631d182C7757f7) | Merkle-proof earnings claims |
+
+## Deployed addresses (Ethereum Mainnet)
+
+The genesis LPT token and the L1 side of the canonical bridge. Verified on-chain (token
+`name()`/`symbol()`, gateway `l1Lpt()`/`l2Lpt()` cross-references, and source-verified contract
+names) — **last verified 30 July 2026**:
+
+| Contract | Address | Used by / for |
+| --- | --- | --- |
+| `LivepeerToken` (L1) | [`0x58b6A8A3302369DAEc383334672404Ee733aB239`](https://etherscan.io/address/0x58b6A8A3302369DAEc383334672404Ee733aB239) | The original LPT ERC-20 (2018 genesis deployment) |
+| `BridgeMinter` | [`0x8dDDB96CF36AC8860f1DE5C7c4698fd499FAB405`](https://etherscan.io/address/0x8dddb96cf36ac8860f1de5c7c4698fd499fab405) | Owns L1 LPT minting; backs the bridge when escrow is short |
+| `L1Escrow` | [`0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A`](https://etherscan.io/address/0x6A23F4940BD5BA117Da261f98aae51A8BFfa210A) | Holds all L1 LPT locked into the bridge |
+| `L1LPTGateway` | [`0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676`](https://etherscan.io/address/0x6142f1C8bBF02E6A6bd074E8d564c9A5420a0676) | Ethereum side of the canonical LPT bridge |
+| `L1LPTDataCache` | [`0x1d24838b35A9c138Ac157A852e19e948aD6323D7`](https://etherscan.io/address/0x1d24838b35A9c138Ac157A852e19e948aD6323D7) | Publishes L1 LPT supply data to Arbitrum |
+| `L1Migrator` | [`0x2a69191B43c9DB47C927bD7287F9C93838d07759`](https://etherscan.io/address/0x2a69191B43c9DB47C927bD7287F9C93838d07759) | L1→L2 state migration (Confluence, 2022) |
+
+<Note>
+  **Historical:** before the 2022 Confluence migration the protocol ran on Ethereum mainnet; those
+  contracts remain deployed but are **permanently paused** — if you find an old mainnet
+  `BondingManager` or staking link, it is not the live protocol. All protocol activity is on
+  Arbitrum One. Migration-era and genesis-era contracts are cataloged in the
+  [protocol repo](https://github.com/livepeer/protocol).
+</Note>
+
+## Verify against the on-chain Controller
+
+Every Arbitrum One protocol address is registered in the **Controller** at
+`0xD8E8328501E9645d16Cf49539efC04f734606ee4` (chain 42161). Query it directly — no trust in docs
+required:
+
+```bash
+# Example: resolve the BondingManager proxy address
+cast call 0xD8E8328501E9645d16Cf49539efC04f734606ee4 \
+  "getContract(bytes32)(address)" \
+  $(cast keccak "BondingManager") \
+  --rpc-url https://arb1.arbitrum.io/rpc
+```
+
+A registered contract returns a non-zero address. `0x000…000` means the name is misspelled or not on
+this chain. Then cross-check the returned address on
+[Arbiscan](https://arbiscan.io/accounts/label/livepeer) or
+[Blockscout](https://arbitrum.blockscout.com): it should carry a `Livepeer:` label and verified
+source.
+
+## Canonical sources
+
+<CardGroup cols={2}>
+  <Card title="Protocol source" icon="github" href="https://github.com/livepeer/protocol">
+    The deployed contract code (commit-pinned).
+  </Card>
+  <Card title="Livepeer on Arbiscan" icon="cubes" href="https://arbiscan.io/accounts/label/livepeer">
+    On-chain verified contract labels.
+  </Card>
+</CardGroup>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    Governance values read from these contracts.
+  </Card>
+  <Card title="How the network works" icon="diagram-project" href="/network/explanation/how-the-network-works">
+    What each contract does in the job and reward flow.
+  </Card>
+</CardGroup>

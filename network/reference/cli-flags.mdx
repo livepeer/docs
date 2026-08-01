@@ -1,0 +1,89 @@
+---
+title: "CLI flags"
+description: "The go-livepeer flags orchestrators use most, grouped by purpose, plus how on-chain settings differ from node flags."
+---
+
+This is a working reference for the `go-livepeer` flags an orchestrator uses. It is not exhaustive —
+run `livepeer -help` for the complete list, and see [Configure your orchestrator](/network/guides/orchestrator-configure)
+for how to choose values.
+
+## Network & identity
+
+| Flag | Value | Purpose |
+| --- | --- | --- |
+| `-network` | `arbitrum-one-mainnet` | Network to join (default `offchain` does not participate) |
+| `-ethUrl` | RPC URL | Arbitrum One endpoint for on-chain reads/writes |
+| `-ethAcctAddr` | ETH address | Orchestrator identity; holds stake, receives fees. Omit to create a new account |
+| `-serviceAddr` | `ip:port` | Public address gateways use to reach the node |
+| `-dataDir` | path | Where keystore and node data are stored (default `~/.lpData`) |
+
+## Roles
+
+| Flag | Purpose |
+| --- | --- |
+| `-orchestrator` | Enable the on-chain protocol role (routing, reward calls, discovery) |
+| `-transcoder` | Enable local GPU transcoding |
+| `-orchAddr` | (transcoder mode) Address of the orchestrator to connect to |
+| `-orchSecret` | Shared secret authenticating remote transcoders to an orchestrator |
+
+## GPU & capacity
+
+| Flag | Value | Purpose |
+| --- | --- | --- |
+| `-nvidia` | `0`, `0,1`, `all` | NVIDIA GPU device IDs for transcoding/AI |
+| `-maxSessions` | integer | Max concurrent transcode sessions (default 10) |
+
+## Pricing
+
+| Flag | Value | Purpose |
+| --- | --- | --- |
+| `-pricePerUnit` | wei/pixel | Base transcoding price (**wei**, not ETH) |
+| `-pixelsPerUnit` | integer | Pricing granularity (usually `1`) |
+| `-autoAdjustPrice` | bool | Adjust price to network conditions |
+| `-pricePerGateway` | JSON | Per-gateway price overrides |
+| `-pricePerCapability` | path | Per-pipeline/model AI pricing (JSON) |
+
+## AI inference
+
+| Flag | Value | Purpose |
+| --- | --- | --- |
+| `-aiWorker` | — | Enable the AI worker (without it, AI config is ignored) |
+| `-aiModels` | path | Path to `aiModels.json` |
+| `-aiModelsDir` | path | Host directory for cached model weights |
+| `-aiRunnerImage` | image:tag | AI runner Docker image (pin in production) |
+| `-aiServiceRegistry` | — | Register AI capabilities on the AI service registry |
+
+## Rewards & operations
+
+| Flag | Value | Purpose |
+| --- | --- | --- |
+| `-reward` | bool | Call `reward()` automatically each round (default `true`) |
+| `-v` | level | Log verbosity (`6` is useful while setting up) |
+
+<Note>
+  **Not everything configurable is a flag.** `rewardCut` (block reward cut) and `feeShare` are
+  **on-chain economic settings** configured via `livepeer_cli` during activation, not node flags.
+  See [Activate on Arbitrum](/network/guides/orchestrator-activate).
+</Note>
+
+## livepeer_cli
+
+`livepeer_cli` is an interactive tool that connects to a running node for one-off on-chain actions —
+activating as an orchestrator, staking/bonding LPT, updating price, updating the service URI, and
+viewing node status. It does **not** need to stay running; only the `livepeer` daemon does.
+
+```bash
+# Against a Docker node:
+docker exec -it livepeer-orchestrator livepeer_cli
+```
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Configure your orchestrator" icon="sliders" href="/network/guides/orchestrator-configure">
+    How to choose values for these flags.
+  </Card>
+  <Card title="FAQ" icon="circle-question" href="/network/reference/faq">
+    Common errors and fixes.
+  </Card>
+</CardGroup>

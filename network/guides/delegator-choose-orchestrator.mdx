@@ -1,0 +1,100 @@
+---
+title: "Choose an orchestrator"
+description: "Evaluate orchestrators on the factors that actually drive returns — reliability first, commission second — before you bond."
+---
+
+Choosing an orchestrator is the most consequential decision you make as a delegator. A well-run
+operator with consistent reward calls and fair commission earns you meaningful returns; a poorly run
+one can earn you nothing even with an attractive headline commission. Do this work in the
+[Explorer](https://explorer.livepeer.org) before you bond.
+
+## Before you start
+
+You need LPT on Arbitrum One, a little ETH there for gas, and a wallet connected to the Explorer. If
+that's not done yet, see [Acquire LPT on Arbitrum](/network/guides/delegator-acquire-lpt).
+
+## Step 1 — Confirm active-set status
+
+In the Explorer, filter to **currently active** orchestrators and open each candidate's profile. If
+an operator isn't active now, your stake helps them compete for activation but **earns no round
+rewards** until they're active.
+
+## Step 2 — Check reward-call reliability
+
+This is the first real quality gate — check it **before** commission or branding. Look at the recent
+reward-call history.
+
+| Strong signal | Weak signal |
+| --- | --- |
+| Near-perfect reward calling across recent rounds | Frequent missed rounds |
+| No recent streak of misses | Long gaps |
+| No sign of being underfunded for gas or absent | Recent inactivity with no recovery |
+
+A missed `reward()` means the whole delegator pool simply misses that round's inflation — there's no
+catch-up. Common causes are operator downtime, poor automation, or running out of gas.
+
+## Step 3 — Compare commission terms
+
+Two settings, moving in **opposite** directions for you:
+
+- **`rewardCut`** — the % of inflationary LPT the orchestrator keeps. **Lower is better.** `10%` means delegators share the other `90%`.
+- **`feeShare`** — the % of ETH fees passed to delegators. **Higher is better.** `80%` means delegators share `80%` of fee revenue.
+
+<Warning>
+  Current Explorer surfaces show **Fee Share** (passed to delegators), not "fee cut." So for fee
+  share, higher is better; for reward cut, lower is better. Don't let a great `rewardCut` distract
+  you from weak reliability (Step 2).
+</Warning>
+
+## Step 4 — Check concentration and resilience
+
+After reliability and commission, look at how much of total bonded stake the operator already
+controls:
+
+- Are they comfortably active, or just above the cutoff?
+- Are they already highly dominant?
+- Are you comfortable adding to that concentration?
+
+From a pure-yield view, big operators aren't automatically better. From a network-health view,
+delegating only to already-dominant operators worsens centralization.
+
+## Step 5 — Look for durability
+
+For meaningful positions, also weigh: how long they've been active, visible governance participation,
+whether they communicate publicly, and whether their history shows consistency rather than one good
+month.
+
+## Selection checklist
+
+- [ ] currently active
+- [ ] reliable recent reward-call history
+- [ ] acceptable `rewardCut` (lower is better)
+- [ ] acceptable `feeShare` (higher is better)
+- [ ] not uncomfortably concentrated
+- [ ] durable enough for your risk tolerance
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="Can I delegate to more than one orchestrator from one wallet?">
+    No. One bonded position maps to one orchestrator per wallet. Use separate wallets to split.
+  </Accordion>
+  <Accordion title="What if my orchestrator later becomes inactive?">
+    Your stake stays bonded but stops earning round rewards until they return or you redelegate.
+  </Accordion>
+  <Accordion title="How much ETH should I keep for gas?">
+    A small, reusable Arbitrum ETH balance for the initial delegation plus later claims,
+    redelegation, or unbonding. Think "small reusable balance," not a fixed dollar amount.
+  </Accordion>
+</AccordionGroup>
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Delegate your first LPT" icon="hand-holding-dollar" href="/network/tutorials/delegate-your-first-lpt">
+    Execute the bond now that you've chosen.
+  </Card>
+  <Card title="Manage your delegation" icon="gauge" href="/network/guides/delegator-manage">
+    Claim, compound, redelegate, and exit.
+  </Card>
+</CardGroup>

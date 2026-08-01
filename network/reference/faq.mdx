@@ -1,0 +1,143 @@
+---
+title: "FAQ & troubleshooting"
+description: "Fixes for the most common orchestrator errors, plus answers to frequent orchestrator and delegator questions."
+---
+
+Find your symptom or question below. Each entry is self-contained.
+
+## Orchestrator: not receiving jobs
+
+This is the most common question after activation. There are four distinct causes — work through all
+of them before concluding the network is at fault.
+
+<AccordionGroup>
+  <Accordion title="Not in the active set (top 100 by stake)">
+    Gateways only route to the top orchestrators by total LPT stake (self + delegated). If your stake
+    is below the 100th orchestrator's, you won't receive jobs. Find the current threshold on the
+    [Explorer](https://explorer.livepeer.org), then increase your stake (self-bond more, or attract
+    delegators with a competitive `rewardCut`) and re-activate via `livepeer_cli` if needed.
+  </Accordion>
+  <Accordion title="pricePerUnit set too high" id="price-too-high">
+    Gateways select on stake **and** price. If your price is well above market, jobs go elsewhere with
+    no error in your logs. `-pricePerUnit` is **wei per pixel** — a common mistake is entering an ETH
+    value (e.g. `0.0001`), which is orders of magnitude too high. Check market rates at
+    [tools.livepeer.cloud](https://tools.livepeer.cloud) and update via `livepeer_cli`. See
+    [Set pricing](/network/guides/orchestrator-pricing).
+  </Accordion>
+  <Accordion title="Node not activated via livepeer_cli">
+    Running in orchestrator mode does **not** auto-register the node. Activation is a one-time on-chain
+    step: run `livepeer_cli`, choose the multi-step "become an orchestrator" flow, set your cuts,
+    price, service address, and stake. Each step is an on-chain transaction needing ETH for gas.
+  </Accordion>
+  <Accordion title="serviceAddr not externally reachable" id="port-8935-not-reachable">
+    Gateways read your address from the chain but can't connect. Open port `8935/tcp` in your firewall
+    (`sudo ufw allow 8935/tcp`), configure NAT/port-forwarding or cloud security groups, then verify
+    from another machine: `curl -k https://YOUR_PUBLIC_IP:8935/status`. Any response means it's
+    reachable. If your IP changed, update the service URI in `livepeer_cli` (costs gas) — or register
+    a domain name instead of a bare IP.
+  </Accordion>
+</AccordionGroup>
+
+## Orchestrator: installation & GPU
+
+<AccordionGroup>
+  <Accordion title="GPU not detected (-nvidia returns no devices)">
+    The driver is below the minimum, or (in Docker) the NVIDIA Container Toolkit isn't installed.
+    Check `nvidia-smi` for the driver version; update if needed. For Docker, verify with
+    `docker run --gpus all nvidia/cuda:12.0-base nvidia-smi`, and install the toolkit if it fails:
+    `sudo apt-get install -y nvidia-container-toolkit && sudo systemctl restart docker`.
+  </Accordion>
+  <Accordion title="OrchestratorCapped error">
+    The node hit its session limit. Raise `-maxSessions`, or if it appears at startup with `-nvidia`,
+    the GPU itself hit its hardware NVENC session cap (consumer cards cap at 3–5). See the
+    [NVENC limits table](/network/reference/hardware#nvenc-session-limits).
+  </Accordion>
+  <Accordion title="Arbitrum RPC connection failing — node won't start">
+    Confirm `-ethUrl` is an **Arbitrum One** endpoint (chain ID `0xa4b1`), not Ethereum L1. Test it
+    with an `eth_chainId` call. If rate-limited, switch providers or upgrade the plan; check the API
+    key hasn't expired.
+  </Accordion>
+  <Accordion title="“Service address did not match discovered address”">
+    Your current public IP differs from the address registered on-chain. Update the service URI in
+    `livepeer_cli`, or override locally with `-serviceAddr YOUR_PUBLIC_IP:8935`. Use a domain name to
+    avoid this when your IP changes.
+  </Accordion>
+</AccordionGroup>
+
+## Orchestrator: AI pipelines
+
+<AccordionGroup>
+  <Accordion title="AI runner container won't start">
+    Usually the NVIDIA Container Toolkit isn't configured, the GPU lacks VRAM for the model, the image
+    tag doesn't match the go-livepeer version, or a host port conflicts. Check `docker logs <container>`.
+    For OOM, load a smaller model or use a higher-VRAM GPU.
+  </Accordion>
+  <Accordion title="aiModels.json valid but no AI jobs arrive">
+    If go-livepeer can't load a valid config it won't advertise AI capabilities. Verify the JSON is
+    well-formed, `model_id` matches a Livepeer-verified Hugging Face model, the runner is reachable
+    (`curl http://localhost:8000/health`), and **restart** — `aiModels.json` is not hot-reloaded.
+  </Accordion>
+  <Accordion title="Model fails to load — VRAM error">
+    Multiple warm models add up. Set some to `"warm": false` to load on demand, or enable `SFAST`
+    optimization to reduce VRAM. Don't combine `SFAST` and `DEEPCACHE`, and avoid `DEEPCACHE` on
+    Lightning/Turbo models.
+  </Accordion>
+</AccordionGroup>
+
+## Orchestrator: earnings
+
+<AccordionGroup>
+  <Accordion title="Reward call not being made — missing LPT rewards">
+    In a split O-T setup, only the **orchestrator** process should call `reward()` — add `-reward=false`
+    to all transcoder processes (and drop `-ethUrl` from transcoders sharing the wallet). Ensure the
+    wallet has enough ETH for gas. A combined node handles reward calls automatically.
+  </Accordion>
+  <Accordion title="Earnings not appearing in the Explorer">
+    Explorer indexing can lag minutes to hours (allow up to 24h for new nodes). LPT rewards only mint
+    if a reward call was made that round. Confirm you're on Arbitrum One, not a testnet.
+  </Accordion>
+</AccordionGroup>
+
+## General questions
+
+<AccordionGroup>
+  <Accordion title="What's the difference between an orchestrator and a transcoder?">
+    An **orchestrator** is the on-chain participant — it holds staked LPT, is registered, receives
+    routing, sets pricing, and calls rewards. A **transcoder** is a compute process that does the
+    actual encoding/inference and has no on-chain identity. Most solo setups run both in one process
+    with `-orchestrator -transcoder`.
+  </Accordion>
+  <Accordion title="What's the minimum LPT stake to receive jobs?">
+    There's no fixed minimum. The active set is the top 100 by total stake; the effective minimum is
+    the 100th orchestrator's stake, which moves over time. Check the [Explorer](https://explorer.livepeer.org).
+  </Accordion>
+  <Accordion title="Can I run an orchestrator on Windows?">
+    Yes for **video transcoding**. **AI inference requires Linux** (AI runner containers, aiModels.json).
+  </Accordion>
+  <Accordion title="Can I run from a home network?">
+    Possible, but you must port-forward `8935`, handle dynamic IPs (use dynamic DNS), and have enough
+    upload bandwidth. A VPS or data center is strongly recommended for production.
+  </Accordion>
+  <Accordion title="(Delegator) Can I delegate to more than one orchestrator from one wallet?">
+    No — one bonded position per wallet maps to one orchestrator. Use separate wallets to split.
+  </Accordion>
+  <Accordion title="(Delegator) Will I lose rewards if I redelegate or claim?">
+    Not from switching itself — earnings stay attributed to your position. The risk is **timing**:
+    claiming or moving before your orchestrator calls `reward()` for the round can skip that round.
+    See [Manage your delegation](/network/guides/delegator-manage).
+  </Accordion>
+</AccordionGroup>
+
+## Still stuck?
+
+<CardGroup cols={3}>
+  <Card title="Discord" icon="discord" href="https://discord.gg/livepeer">
+    The most active real-time support. Search before posting.
+  </Card>
+  <Card title="Forum" icon="comments" href="https://forum.livepeer.org/c/transcoding">
+    Longer-form troubleshooting.
+  </Card>
+  <Card title="GitHub Issues" icon="github" href="https://github.com/livepeer/go-livepeer/issues">
+    Confirmed bugs in go-livepeer.
+  </Card>
+</CardGroup>

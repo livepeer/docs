@@ -1,0 +1,84 @@
+---
+title: "Submit a protocol LIP"
+description: "Propose a change to the Livepeer protocol itself: draft a Livepeer Improvement Proposal, shepherd it through review, and submit it on-chain."
+---
+
+This guide is for changing the **protocol's on-chain rules** — inflation parameters, a contract
+upgrade, or a protocol constant. Those changes are made through a **Livepeer Improvement Proposal
+(LIP)**, Livepeer's equivalent of an Ethereum EIP. It's a specialized, technical task; for the
+concepts, see [Governance & the treasury](/network/explanation/governance).
+
+<Note>
+  A protocol LIP changes how the protocol works. If instead you want to **request funding** from the
+  treasury, that's the other track — see [Submit a treasury proposal](/network/guides/submit-a-treasury-proposal).
+  The on-chain vote is the same for both; the preparation is not.
+</Note>
+
+## Before you start
+
+- A change to the protocol you can specify precisely — the affected contract/parameter and the intended effect.
+- Enough technical detail for a **full specification** (and, for a contract change, an implementation plan).
+- **100 LPT** to submit on-chain — locked during the vote, returned if the proposal passes.
+- A little ETH on **Arbitrum One** for gas.
+
+## Propose a LIP
+
+<Steps>
+  <Step title="Raise the idea">
+    Post the idea on the [Livepeer Forum](https://forum.livepeer.org/c/lips/18) or Discord. Most ideas
+    are refined or dropped here — the forum is where the early technical feedback happens.
+  </Step>
+  <Step title="Draft the LIP">
+    Write a structured LIP: a header preamble (number, title, author, type, status) and a full
+    specification. Open it as a pull request against the [LIPs repository](https://github.com/livepeer/LIPs)
+    for editorial review.
+  </Step>
+  <Step title="Last Call">
+    Once editors approve the draft, it enters a **10-day Last Call** — the community's final window to
+    surface objections before it moves to a vote.
+  </Step>
+  <Step title="Submit on-chain">
+    Anyone with **100 LPT** can submit the LIP on-chain to the Governor contract. The 100 LPT is locked
+    during voting and returned if it passes — a threshold high enough to filter serious proposals from
+    frivolous ones.
+  </Step>
+  <Step title="Voting period">
+    An on-chain voting window opens — **10 rounds (~9 days)** as verified on-chain (see [Protocol parameters](/network/reference/protocol-parameters)
+    for the current length). Anyone with bonded LPT can vote; this is the [same vote](/network/guides/vote-on-a-proposal)
+    used for every proposal.
+  </Step>
+  <Step title="Quorum & approval">
+    It passes only if **≥33% of all bonded LPT participates** (quorum) **and** **>50% of votes cast are
+    For**. Both are required — either alone isn't enough.
+  </Step>
+  <Step title="Execution">
+    On success, the Governor contract executes the change automatically — a parameter update or a
+    contract upgrade. No separate signer, no multisig.
+  </Step>
+</Steps>
+
+## What a strong LIP has
+
+The 100 LPT threshold filters noise, but passing quorum takes substance:
+
+- **A precise specification** — exactly which contract/parameter changes, and to what.
+- **An implementation plan** for any contract change — reviewers need to see it's buildable and safe.
+- **Economic and security analysis** — what the change does to incentives and to the protocol's safety.
+- **Community buy-in** — a LIP that skipped forum discussion and Last Call rarely clears quorum.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Governance & the treasury" icon="landmark" href="/network/explanation/governance">
+    Why governance is on-chain, what it can change, and how the two tracks differ.
+  </Card>
+  <Card title="Vote on a proposal" icon="check-to-slot" href="/network/guides/vote-on-a-proposal">
+    The vote step — identical for protocol and treasury proposals.
+  </Card>
+  <Card title="Submit a treasury proposal" icon="hand-holding-dollar" href="/network/guides/submit-a-treasury-proposal">
+    The other track: requesting funds instead of changing the rules.
+  </Card>
+  <Card title="LIPs repository" icon="github" href="https://github.com/livepeer/LIPs">
+    Every LIP, draft and final, with full specifications.
+  </Card>
+</CardGroup>

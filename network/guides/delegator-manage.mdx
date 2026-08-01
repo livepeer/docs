@@ -1,0 +1,111 @@
+---
+title: "Manage your delegation"
+description: "Claim and compound rewards, switch orchestrators, and exit — without losing avoidable rewards to bad timing."
+---
+
+Once you're delegated, the work shifts from opening the position to managing it well. This guide
+covers claiming, compounding, redelegating, and exiting — including the timing edge case that can
+silently cost you a round's rewards.
+
+## Rewards accrue automatically
+
+If your orchestrator stays active and keeps calling `reward()`, your pending earnings update in
+protocol state on their own. You don't need to "collect every round" for accrual to happen. What you
+*do* manage is **when to checkpoint** those earnings, whether to **stay**, and when to **exit**.
+
+## Claim your earnings
+
+From the [Explorer](https://explorer.livepeer.org): connect your wallet → open your account page →
+**Claim Earnings** → sign. This calls `claimEarnings()`, moving accrued rewards into your bonded
+balance.
+
+<Warning>
+  **Claim late in the round.** The protocol records `lastClaimRound` when `claimEarnings()` runs. If
+  your orchestrator has **not yet** called `reward()` for the current round when you claim, you can
+  skip that round's rewards and fees entirely. The Explorer may not warn you. Safe default: claim
+  **after** your orchestrator has already called `reward()` for the round.
+</Warning>
+
+## Compound your position
+
+Claiming increases your bonded balance, so future rewards are earned on a larger base. If you intend
+to stay delegated, compounding is usually the default. There's no forced schedule — pick a cadence
+that fits your position size and the small gas cost of acting on Arbitrum. Not claiming for many
+rounds doesn't forfeit rewards, but it delays compounding.
+
+## Redelegate to switch operators
+
+Redelegation moves your stake to a different orchestrator **without** the full unbonding wait. Use it
+when the problem is the operator:
+
+- they start missing reward calls,
+- commission terms become unattractive,
+- they drop out of the active set,
+- you want to move away from an over-concentrated operator.
+
+<Warning>
+  Redelegation also triggers earnings checkpointing. Moving at the **start** of a round, before your
+  current operator has called `reward()`, can create the same skipped-round problem as a mistimed
+  claim. Move late in the round when possible.
+</Warning>
+
+## Unbond and withdraw to exit
+
+Full exit is a different path from switching — use it when you want **liquid tokens back**.
+
+```
+bond() → [Bonded] → unbond() → [Unbonding] → (wait the unbonding period) → [Withdrawable] → withdrawStake()
+            ▲                                                                     │
+            └──────────────────────────── rebond() ───────────────────────────┘
+```
+
+<Steps>
+  <Step title="Initiate unbonding">
+    Start unbonding from your Explorer account page. You can unbond part of your balance and leave the rest bonded.
+  </Step>
+  <Step title="Wait the unbonding period">
+    The on-chain unbonding period is currently **7 rounds** — verify the live value in
+    [Protocol parameters](/network/reference/protocol-parameters).
+  </Step>
+  <Step title="Withdraw">
+    Return once the position is withdrawable and withdraw to your wallet.
+  </Step>
+</Steps>
+
+Changed your mind during unbonding? **`rebond()`** cancels the exit and returns the position to
+bonded status.
+
+## Keep an eye on your position
+
+At a minimum, periodically check: active/inactive status, reward-call consistency, `rewardCut` and
+`feeShare` changes, and any governance proposals affecting delegator economics.
+
+## Common questions
+
+<AccordionGroup>
+  <Accordion title="Do I lose earnings if I redelegate?">
+    No — earnings are accounted against your position, not abandoned with the old orchestrator. The
+    risk is timing, not loss of ownership.
+  </Accordion>
+  <Accordion title="Can I partially unbond?">
+    Yes. Part of the balance can enter unbonding while the rest stays bonded and earning.
+  </Accordion>
+  <Accordion title="Can I rebond during the unbonding period?">
+    Yes. Rebonding cancels the exit and returns that stake to bonded status.
+  </Accordion>
+  <Accordion title="Is there a minimum delegation amount?">
+    There's no protocol-enforced minimum. The practical question is whether the position justifies the
+    gas and effort of managing it.
+  </Accordion>
+</AccordionGroup>
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    Confirm the live unbonding period before you act.
+  </Card>
+  <Card title="Choose an orchestrator" icon="list-check" href="/network/guides/delegator-choose-orchestrator">
+    Re-evaluate operators before redelegating.
+  </Card>
+</CardGroup>

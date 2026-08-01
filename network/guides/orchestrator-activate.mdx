@@ -1,0 +1,128 @@
+---
+title: "Activate on Arbitrum"
+description: "Fund your wallet, stake LPT, register your service URI, and enter the active set so gateways can send you jobs."
+---
+
+A configured node isn't earning yet. This guide connects it to the Livepeer protocol on Arbitrum One:
+fund the wallet, stake LPT, activate on-chain, and confirm reward calling.
+
+<Warning>
+  Start this **after** ETH and LPT are already in your orchestrator wallet on Arbitrum One. Acquiring
+  LPT often involves exchange settlement and bridging — plan for hours to days. See
+  [Acquire LPT on Arbitrum](/network/guides/delegator-acquire-lpt).
+</Warning>
+
+## 1. Point at a reliable Arbitrum RPC
+
+`-ethUrl` connects the node to Arbitrum One. Free tiers from **Alchemy** (300M compute units/mo) or
+**Infura** (100K req/day) work for most operators. Public endpoints like `arb1.arbitrum.io/rpc` are
+for testing only — a dropped connection during round initialization can forfeit that round's reward.
+
+Verify the endpoint is actually Arbitrum One:
+
+```bash
+curl -s -X POST -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+  YOUR_RPC_URL
+# Expect "result":"0xa4b1" (42161). "0x1" means you're on Ethereum L1 — switch endpoints.
+```
+
+## 2. Identify and back up the wallet
+
+On first start, `go-livepeer` creates an account and prints the address in the logs. Record it — this
+address receives ETH fees and holds your staked LPT.
+
+```bash
+docker compose logs 2>&1 | grep -i "account\|address"
+```
+
+<Warning>
+  The private key lives at `~/.lpData/arbitrum-one-mainnet/keystore`. **Back it up offline now.**
+  Losing the keystore means permanent loss of the account and all bonded LPT.
+</Warning>
+
+## 3. Fund the wallet with ETH on Arbitrum
+
+Every on-chain action (activation, reward calls, ticket redemption) costs gas. Keep at least
+**0.05 ETH** on Arbitrum One to start, and never let it fall below ~0.01 ETH. Get arbETH by
+withdrawing from an exchange that supports Arbitrum, or bridging from L1 at
+[bridge.arbitrum.io](https://bridge.arbitrum.io). Verify the balance on [Arbiscan](https://arbiscan.io).
+
+## 4. Stake LPT
+
+LPT bonded to your address is what puts you in the active set (top orchestrators by total stake).
+Check the current threshold on the [Explorer](https://explorer.livepeer.org/orchestrators) before
+deciding how much to acquire. Then open the CLI and bond:
+
+```bash
+docker exec -it livepeer-orchestrator livepeer_cli
+```
+
+Select the bond/stake option and enter an amount. Two transactions are submitted — `approve`, then
+`bond`. Wait for both to confirm.
+
+## 5. Activate on-chain
+
+In `livepeer_cli`, select **"Invoke multi-step 'become an orchestrator'"** and set your commission:
+
+| Prompt | Example | Meaning |
+| --- | --- | --- |
+| Reward Cut | `10` | % of LPT inflation you keep (10% → delegators get 90%) |
+| Fee Cut | `95` | % of ETH fees you keep (95% → delegators get 5%) |
+| Service address | `YOUR_PUBLIC_IP:8935` | Must match `-serviceAddr` exactly |
+
+<Warning>
+  **The Explorer displays Fee Cut inverted, as "Fee Share."** Set Fee Cut `95` here and your profile
+  will show **Fee Share 5%** — the portion passed to delegators. That's the same setting, not a
+  misconfiguration. (Reward Cut displays as-is.)
+</Warning>
+
+<Note>
+  Your node joins the active set at the **start of the next round** (~22h), and only if your total
+  stake is in the top 100. The Explorer may show **Registered** until then.
+</Note>
+
+See [Economics](/network/explanation/economics) for how these two settings affect both your earnings and your
+appeal to delegators.
+
+## 6. Confirm reward calling
+
+`go-livepeer` calls `reward()` automatically each round by default. Make sure it isn't disabled:
+
+```bash
+docker compose logs 2>&1 | grep -i reward
+```
+
+The startup command should **not** include `-reward=false`. A missed round forfeits that round's LPT
+permanently — there is no catch-up.
+
+<Note>
+  **Exception for very low stake:** if reward-call gas costs more than the LPT you'd earn, disabling
+  automatic calling and calling manually until your stake grows can be the rational choice. Reward
+  calls use ~350k–450k gas (cents at typical Arbitrum prices).
+</Note>
+
+## 7. Verify
+
+On [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators), search your
+address and confirm **Status**, **Service URI**, **Stake**, **Reward Cut**, and **Fee Cut**. Then
+confirm external reachability:
+
+```bash
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+If the Service URI is wrong or unreachable, update it in `livepeer_cli` (this costs gas). A bad or
+unreachable service address is the most common reason an active node still receives no jobs — see the
+[FAQ](/network/reference/faq).
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Set pricing" icon="tag" href="/network/guides/orchestrator-pricing">
+    The other half of getting selected by gateways.
+  </Card>
+  <Card title="Add AI inference" icon="microchip" href="/network/guides/orchestrator-add-ai">
+    Open a second revenue stream.
+  </Card>
+</CardGroup>

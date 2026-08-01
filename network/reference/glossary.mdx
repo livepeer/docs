@@ -1,0 +1,86 @@
+---
+title: "Glossary"
+description: "The Livepeer-specific terms used throughout these orchestrator and delegator docs."
+---
+
+## Roles & network
+
+**Orchestrator** — A GPU operator that runs `go-livepeer`, executes video and AI jobs, and earns ETH
+fees plus LPT rewards. The on-chain participant that holds staked LPT.
+
+**Transcoder** — The compute process that performs video encoding (or, via the AI runner, inference).
+Has no on-chain identity; runs in-process or split out from the orchestrator.
+
+**Delegator** — An LPT holder who bonds tokens to an orchestrator to share in its rewards without
+running hardware.
+
+**Gateway** — The demand-side node that aggregates application requests, selects orchestrators, and
+pays for work. Out of scope for these docs, but it's what sends you jobs.
+
+**Active set** — The top orchestrators by total bonded stake (commonly 100) eligible to receive jobs
+and inflation rewards in a round.
+
+## Staking & economics
+
+**LPT** — The Livepeer Token. A work/coordination token used for staking, rewards, and governance —
+**not** used to pay for jobs (that's ETH).
+
+**Bond / Bonding** — Attributing your LPT stake to an orchestrator. Tokens stay in the
+`BondingManager` contract; the operator never takes custody.
+
+**Unbond / Unbonding period** — Starting a full exit. After unbonding you must wait the unbonding
+period (currently 7 rounds) before withdrawing. **Rebond** cancels it.
+
+**Redelegate** — Move bonded stake to a different orchestrator without the unbonding wait.
+
+**Reward cut (`rewardCut`)** — The % of LPT inflation an orchestrator keeps; the rest goes to
+delegators. Lower is better for delegators.
+
+**Fee share (`feeShare`)** — The % of ETH fees an orchestrator passes to delegators. Higher is better
+for delegators.
+
+**Reward call (`reward()`)** — The once-per-round on-chain call that mints an orchestrator's
+inflation reward. Missing it forfeits that round for the whole pool, with no catch-up.
+
+**Claim earnings (`claimEarnings()`)** — Checkpointing accrued rewards into your bonded balance.
+Timing relative to the reward call matters.
+
+**Inflation** — New LPT minted each round and distributed to bonded stake. The rate adjusts toward a
+target bonding rate (~50%).
+
+**Treasury** — An on-chain fund for community/public-goods spending, governed by proposal. Funded by
+a cut of LPT inflation (LIP-92 set 10%, with a balance ceiling that pauses contributions when full).
+
+## Payments
+
+**Probabilistic micropayment (PM) ticket** — How gateways pay. Each ticket has a face value and a win
+probability; orchestrators redeem only winning tickets on-chain for ETH. Expected earnings = face
+value × win probability.
+
+**Round** — The protocol's accounting unit (~1 day). Governs active-set election, inflation, reward
+calls, and governance snapshots.
+
+## Infrastructure
+
+**NVENC / NVDEC** — NVIDIA's hardware video encoder/decoder used for transcoding. Consumer GPUs cap
+concurrent NVENC sessions.
+
+**AI runner** — A Docker container that performs AI inference for a configured pipeline/model, spawned
+and managed by the orchestrator process.
+
+**Pipeline** — A category of AI task (e.g. `text-to-image`, `audio-to-text`, `llm`) mapped to
+compatible models. Configured in `aiModels.json`.
+
+**Service URI / `serviceAddr`** — The public address gateways use to reach an orchestrator, stored
+on-chain via the ServiceRegistry.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="How the network works" icon="diagram-project" href="/network/explanation/how-the-network-works">
+    See these terms in context.
+  </Card>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    The live values behind these concepts.
+  </Card>
+</CardGroup>

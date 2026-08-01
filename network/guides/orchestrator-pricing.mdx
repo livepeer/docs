@@ -1,0 +1,110 @@
+---
+title: "Set competitive pricing"
+description: "Price video and AI work so gateways select you — without leaving money on the table or pricing yourself out."
+---
+
+Price is one of the strongest levers on whether gateways send you jobs. Every gateway filters
+orchestrators against its own `-maxPricePerUnit` ceiling, then ranks the rest. Too high and you get
+no work; too low and you under-earn per job. This guide covers how to set each price.
+
+## How gateways use your price
+
+Gateways don't assign jobs randomly. For each session they rank orchestrators by **capability match,
+price, latency, performance history, and stake weight**. Price is the lever you can change instantly
+— and the most common reason an otherwise healthy node receives nothing.
+
+<Tip>
+  Survey the market before setting anything. Check live per-pixel rates for comparable orchestrators
+  at [tools.livepeer.cloud](https://tools.livepeer.cloud/ai/network-capabilities) and on the
+  [Explorer](https://explorer.livepeer.org), then price near or slightly below the going rate.
+</Tip>
+
+## Video transcoding price
+
+Set with `-pricePerUnit`, in **wei per pixel** — not ETH.
+
+```bash
+-pricePerUnit 1000          # a typical starting point is ~500–2,000 wei/pixel
+-autoAdjustPrice=true       # optional: adjust to network conditions automatically
+```
+
+<Warning>
+  The number-one pricing mistake: entering the value in **ETH** (e.g. `0.0001`) instead of wei. That
+  prices you orders of magnitude above market, and gateways route around you with no error in your
+  logs. Remember: 1 ETH = 1,000,000,000,000,000,000 wei.
+</Warning>
+
+### Sanity-check the math
+
+You're paid per pixel of video you **encode** — so what a price means in ETH depends on the
+renditions a stream asks for. Work one example before you commit to a number. Say a gateway requests
+three output renditions at 30 fps:
+
+```
+pixels per second = (1280×720 + 854×480 + 640×360) × 30 ≈ 46.9M px/s
+pixels per hour   ≈ 46.9M × 3600 ≈ 1.69 × 10¹¹ px
+
+at -pricePerUnit 1000 (wei/pixel):
+1.69 × 10¹¹ px × 1,000 wei ≈ 1.69 × 10¹⁴ wei ≈ 0.00017 ETH per stream-hour
+```
+
+If your own calculation comes out at whole ETH per hour, your price is off by orders of magnitude —
+almost always the ETH-instead-of-wei mistake above. (Numbers are illustrative; actual pixel counts
+depend on the profiles each gateway requests, and `pixelsPerUnit` defaults to `1`.)
+
+## AI capability price
+
+AI is priced **per pipeline and per model** in `aiModels.json` via the `price_per_unit` field (wei
+per unit). Example:
+
+```json
+{
+  "capabilities_prices": [
+    { "pipeline": "text-to-image", "model_id": "stabilityai/stable-diffusion-3-medium-diffusers", "price_per_unit": 4768371, "pixels_per_unit": 1 },
+    { "pipeline": "audio-to-text", "model_id": "openai/whisper-large-v3", "price_per_unit": 15000, "pixels_per_unit": 1 }
+  ]
+}
+```
+
+Each pipeline/model pair is advertised and priced independently, so you can be aggressive on
+workloads your hardware runs efficiently and conservative on the rest.
+
+## Per-gateway pricing
+
+Commercial orchestrators can negotiate a different rate with a specific high-volume gateway,
+independent of the base network price:
+
+```bash
+-pricePerGateway='{"0xGatewayAddress": 800}'
+```
+
+## Updating price on a running node
+
+You can change price two ways:
+
+- **Live, via `livepeer_cli`** — select the update-price option and enter a new wei value. No restart.
+- **On restart** — change the `-pricePerUnit` flag.
+
+<Note>
+  `-pricePerUnit` sets the **startup** price. The on-chain price used for discovery is set during
+  activation and can be adjusted separately in `livepeer_cli`. Keep them consistent so gateways see
+  what you intend to charge.
+</Note>
+
+## A sensible starting strategy
+
+1. **Survey** current rates for orchestrators with similar GPUs.
+2. **Match or slightly undercut** the median to start attracting sessions.
+3. **Watch job flow** in your logs and on the Explorer for a few rounds.
+4. **Raise gradually** once you have steady work and reliable performance — reputation and low latency let you command more.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Economics" icon="coins" href="/network/explanation/economics">
+    How fee revenue splits with your delegators.
+  </Card>
+  <Card title="Not receiving jobs?" icon="circle-question" href="/network/reference/faq">
+    Price is one of four common causes — check them all.
+  </Card>
+</CardGroup>

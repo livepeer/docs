@@ -1,0 +1,170 @@
+---
+title: "Run your first orchestrator"
+description: "A guided, end-to-end walkthrough from a bare GPU machine to a node earning on Livepeer mainnet."
+---
+
+By the end of this tutorial you'll have a `go-livepeer` orchestrator running on **Arbitrum One**,
+registered on-chain, visible in the Explorer, and ready to receive video transcoding jobs.
+
+This is a **learning path** — it makes opinionated choices so you can get to a working node in about
+an hour. When you want to change those choices, the [how-to guides](/network/guides/orchestrator-configure)
+cover each step in depth.
+
+<Note>
+  We'll use **Docker** and **GPU video transcoding** throughout. Adding AI inference is a separate
+  step once this is working — see [Add AI inference](/network/guides/orchestrator-add-ai).
+</Note>
+
+## Before you start
+
+You need:
+
+| Requirement | Details |
+| --- | --- |
+| **GPU** | NVIDIA with NVENC (GTX 1060+ for transcoding) |
+| **OS** | Linux (recommended for production) |
+| **Docker** | Docker Engine + NVIDIA Container Toolkit |
+| **Wallet funds** | ETH **and** LPT on Arbitrum One |
+| **Network** | Port `8935/tcp` open to the public internet |
+| **RPC** | An Arbitrum One endpoint (Alchemy or Infura free tier) |
+
+<Warning>
+  Acquiring LPT on Arbitrum can take **hours to days** (exchange settlement + bridging). Start that
+  now — it's the slowest part. See [Acquire LPT](/network/guides/delegator-acquire-lpt), which applies to
+  orchestrators too.
+</Warning>
+
+## Step 1 — Confirm your GPU and Docker
+
+```bash
+# List your NVIDIA GPUs (note the device IDs)
+nvidia-smi -L
+
+# Confirm Docker can see the GPU
+docker run --gpus all nvidia/cuda:12.0-base nvidia-smi
+```
+
+If the second command fails, install the NVIDIA Container Toolkit before continuing
+(`sudo apt-get install -y nvidia-container-toolkit && sudo systemctl restart docker`).
+
+## Step 2 — Get an Arbitrum One RPC URL
+
+Create a free app at [Alchemy](https://www.alchemy.com) (select **Arbitrum** → **Mainnet**) and copy
+the HTTPS URL. Verify it points at Arbitrum One — the chain ID must be `0xa4b1` (42161):
+
+```bash
+curl -s -X POST -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_chainId","params":[],"id":1}' \
+  YOUR_RPC_URL
+# Expect: {"result":"0xa4b1"}
+```
+
+A `0x1` result means you're on Ethereum L1 — switch to an Arbitrum endpoint.
+
+## Step 3 — Start the node
+
+Run `go-livepeer` in combined orchestrator + transcoder mode. On first start it creates an Ethereum
+account and prompts for a passphrase.
+
+```bash
+docker run --name livepeer-orchestrator \
+  -v ~/.lpData/:/root/.lpData/ \
+  --network host \
+  --gpus all \
+  livepeer/go-livepeer:latest \
+  -network arbitrum-one-mainnet \
+  -ethUrl YOUR_RPC_URL \
+  -orchestrator \
+  -transcoder \
+  -nvidia 0 \
+  -maxSessions 10 \
+  -pricePerUnit 1000 \
+  -serviceAddr YOUR_PUBLIC_IP:8935
+```
+
+<Warning>
+  Mounting `~/.lpData/` is what persists your keystore between restarts. Without it, a **new wallet
+  is created every run** and any staked LPT becomes unreachable. Back up
+  `~/.lpData/arbitrum-one-mainnet/keystore` to offline storage immediately — a lost keystore cannot
+  be recovered.
+</Warning>
+
+A quick orientation on the flags you just used:
+
+- `-pricePerUnit 1000` — wei **per pixel**, not ETH. (Setting this in ETH prices you far above market.)
+- `-maxSessions 10` — concurrent transcode sessions; tune later in [Configure](/network/guides/orchestrator-configure).
+- `-serviceAddr` — the **public** address gateways will reach. A domain name is more resilient than a bare IP.
+
+## Step 4 — Fund the wallet, stake LPT, and activate
+
+Find your orchestrator address in the startup logs, then send it **ETH on Arbitrum** (≥ 0.05 ETH for
+gas) and **LPT**. Once both are in the wallet, open the CLI:
+
+```bash
+docker exec -it livepeer-orchestrator livepeer_cli
+```
+
+Then:
+
+1. Select the **bond/stake** option and stake your LPT (two transactions: `approve`, then `bond`).
+2. Select **"Invoke multi-step 'become an orchestrator'"** and set:
+
+| Prompt | Suggested start | Meaning |
+| --- | --- | --- |
+| Reward Cut | `10` | You keep 10% of LPT inflation; delegators get 90% |
+| Fee Cut | `95` | You keep 95% of ETH fees; delegators get 5% |
+| Service address | `YOUR_PUBLIC_IP:8935` | Must match `-serviceAddr` exactly |
+
+<Note>
+  Your node enters the active set at the **start of the next round** (~22h) — and only if your total
+  stake is in the top 100. Check the current threshold on the
+  [Explorer](https://explorer.livepeer.org/orchestrators) before acquiring LPT.
+</Note>
+
+## Step 5 — Verify
+
+Open [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators) and search
+your address. Confirm:
+
+- **Status** is Active (may show Registered until the next round),
+- **Service URI** matches your `-serviceAddr`,
+- **Stake**, **Reward Cut**, and **Fee Cut** match what you set.
+
+Confirm external reachability from a *different* machine:
+
+```bash
+curl -k https://YOUR_PUBLIC_IP:8935/status
+```
+
+Any response (even an error) means the port is reachable. A timeout means port `8935` is blocked —
+see the [FAQ](/network/reference/faq#port-8935-not-reachable).
+
+## Step 6 — Confirm reward calling
+
+`go-livepeer` calls `reward()` automatically each round by default. Make sure it isn't disabled:
+
+```bash
+docker logs livepeer-orchestrator 2>&1 | grep -i reward
+```
+
+Your command should **not** contain `-reward=false`. A missed round forfeits that round's LPT
+permanently — there's no catch-up.
+
+## You're live
+
+Your orchestrator is on mainnet and discoverable. Where to go next:
+
+<CardGroup cols={2}>
+  <Card title="Set competitive pricing" icon="tag" href="/network/guides/orchestrator-pricing">
+    The biggest lever on whether gateways actually select you.
+  </Card>
+  <Card title="Add AI inference" icon="microchip" href="/network/guides/orchestrator-add-ai">
+    Earn from AI pipelines alongside transcoding.
+  </Card>
+  <Card title="Monitor your node" icon="chart-line" href="/network/guides/orchestrator-monitor">
+    Metrics, dashboards, and an alert for missed reward calls.
+  </Card>
+  <Card title="Not receiving jobs?" icon="circle-question" href="/network/reference/faq">
+    Work through the four common causes.
+  </Card>
+</CardGroup>

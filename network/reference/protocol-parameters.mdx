@@ -1,0 +1,81 @@
+---
+title: "Protocol parameters"
+description: "Governance-controlled values that shape orchestrator and delegator behavior — verified on-chain, with the exact getters to re-check them."
+---
+
+These values are **governance-controlled**. They can change without a docs release if governance
+updates them on-chain.
+
+<Note>
+  **Last verified: 1 July 2026**, read directly from the contracts on Arbitrum One
+  (`eth_call` via `arb1.arbitrum.io/rpc`, round `4253`). Anything can have changed since — the
+  getters below let you re-check in seconds.
+</Note>
+
+## Staking & rewards
+
+| Parameter | Verified value | Getter | Why it matters |
+| --- | --- | --- | --- |
+| Unbonding period | `7` rounds | `BondingManager.unbondingPeriod()` | Full exit is delayed this long after you unbond |
+| Active set size | `100` orchestrators | `BondingManager.getTranscoderPoolMaxSize()` | Only the top 100 by stake earn rewards and receive jobs |
+| Treasury reward cut | `0%` — **paused** (see below) | `BondingManager.treasuryRewardCutRate()` | When active, reduces the issuance shared by orchestrators + delegators |
+| Treasury balance ceiling | `750,000 LPT` | `BondingManager.treasuryBalanceCeiling()` | Contributions pause when the treasury reaches this balance |
+| Target bonding rate | `50%` | `Minter.targetBondingRate()` | Inflation adjusts around this target |
+| Inflation adjustment step | `500` (per round, parts-per-billion) | `Minter.inflationChange()` | How fast inflation moves toward the target |
+| Current inflation | `560,500` parts-per-billion per round (~0.056%/round) | `Minter.inflation()` | Changes every round — always read live |
+| Round length | `6,377` L1 blocks (~21.3 hours) | `RoundsManager.roundLength()` | The protocol's clock; "a round ≈ a day" is shorthand |
+
+<Warning>
+  **The treasury cut is currently paused.** LIP-92 set a 10% treasury reward cut with a balance
+  ceiling; the ceiling has been reached, so both `treasuryRewardCutRate()` and
+  `nextRoundTreasuryRewardCutRate()` currently read `0`. Older docs (including Livepeer's own) still
+  say "10%" — treat that as the *design*, not the live state. Governance can resume contributions.
+</Warning>
+
+## Governance thresholds
+
+| Parameter | Verified value | Getter |
+| --- | --- | --- |
+| Proposal threshold | `100 LPT` bonded | `LivepeerGovernor.proposalThreshold()` |
+| Quorum | `33.33%` of voting power | `LivepeerGovernor.quorumNumerator()` / `quorumDenominator()` (333300 / 1000000) |
+| Voting delay | `1` round | `LivepeerGovernor.votingDelay()` |
+| Voting period | `10` rounds (~9 days) | `LivepeerGovernor.votingPeriod()` |
+| Timelock minimum delay | `0` | `Treasury.getMinDelay()` |
+
+<Note>
+  Some public Livepeer guides describe a "30-round (~3.75 days)" voting window. The chain says
+  otherwise: `votingPeriod()` returns `10`, and at ~21.3h per round that's roughly nine days. The
+  same window applies to both protocol and treasury proposals.
+</Note>
+
+## Verify these yourself
+
+Every value above is one `eth_call` away — no tooling beyond `curl` required. Example, reading the
+voting period:
+
+```bash
+# votingPeriod() on LivepeerGovernor — selector 0x02a251a3
+curl -s -X POST -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"eth_call","params":[{"to":"0xcFE4E2879B786C3aa075813F0E364bb5acCb6aa0","data":"0x02a251a3"},"latest"],"id":1}' \
+  https://arb1.arbitrum.io/rpc
+# → 0x...0a = 10 rounds
+```
+
+Or browse the contracts directly:
+
+- [BondingManager on Arbiscan](https://arbiscan.io/address/0x35bcf3c30594191d53231e4ff333e8a770453e40)
+- [Minter on Arbiscan](https://arbiscan.io/address/0xc20de37170b45774e6cd3d2304017fc962f27252)
+- [RoundsManager on Arbiscan](https://arbiscan.io/address/0xdd6f56dcc28d3f5f27084381fe8df634985cc39f)
+- [LivepeerGovernor on Arbiscan](https://arbiscan.io/address/0xcfe4e2879b786c3aa075813f0e364bb5accb6aa0)
+- [Treasury on Arbiscan](https://arbiscan.io/address/0xf82c1ff415f1fcf582554fdba790e27019c8e8c4)
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Contract addresses" icon="file-contract" href="/network/reference/contracts">
+    The full set of deployed addresses, Controller-resolved.
+  </Card>
+  <Card title="Economics" icon="coins" href="/network/explanation/economics">
+    How these values translate into returns.
+  </Card>
+</CardGroup>

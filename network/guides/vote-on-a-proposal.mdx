@@ -1,0 +1,78 @@
+---
+title: "Vote on a proposal"
+description: "Cast your bonded stake on any Livepeer proposal — protocol (LIP) or treasury — through the Explorer."
+---
+
+This guide walks through casting a vote on any active proposal — a **protocol change (LIP)** or a
+**treasury spend**. It assumes you already hold **bonded LPT** — that's what carries voting weight.
+For *why* staking gives you a vote and how the process works end to end, see
+[Governance & the treasury](/network/explanation/governance).
+
+<Note>
+  **The vote is identical for both proposal types.** Protocol proposals (LIPs) and treasury spends are
+  prepared and executed differently, but you cast a vote on them the exact same way — same quorum, same
+  threshold, same bonded-stake weighting. The only practical difference is *where you find them*,
+  covered in step 1.
+</Note>
+
+## Before you start
+
+- **Bonded LPT.** Only bonded stake can vote; unbonded tokens carry no weight. Not bonded yet? Do [Delegate your first LPT](/network/tutorials/delegate-your-first-lpt) first.
+- A wallet you can connect to the [Livepeer Explorer](https://explorer.livepeer.org), on **Arbitrum One**.
+- A little ETH on Arbitrum for gas.
+
+<Note>
+  Your voting weight is your share of total bonded LPT **at the moment the proposal was created** —
+  not when you vote. Bonding more after a proposal opens won't increase your weight on it.
+</Note>
+
+## Cast your vote
+
+<Steps>
+  <Step title="Find the proposal">
+    Both types are voted from the Explorer's voting view —
+    [explorer.livepeer.org/voting](https://explorer.livepeer.org/voting) — which lists each active
+    proposal with its current tally and deadline. Treasury proposals are *also* tracked, alongside
+    treasury balances, at [explorer.livepeer.org/treasury](https://explorer.livepeer.org/treasury). If
+    you came looking for a specific treasury spend and don't see it under voting, check there.
+  </Step>
+  <Step title="Open the proposal">
+    Read it and its linked material so you understand exactly what executes if it passes — a **protocol
+    proposal (LIP)** links its [specification](https://github.com/livepeer/LIPs); a **treasury proposal**
+    links its [forum RFP](https://forum.livepeer.org/c/lips/18) and budget. This is also how you tell
+    the two types apart at a glance.
+  </Step>
+  <Step title="Connect your wallet">
+    Connect the wallet holding your bonded LPT. Confirm you're on **Arbitrum One**.
+  </Step>
+  <Step title="Choose Yes, No, or Abstain">
+    Cast your vote and sign the transaction. **Abstain** still counts toward quorum without taking a side.
+  </Step>
+  <Step title="Confirm it registered">
+    Your vote appears in the proposal tally, weighted by your bonded stake at the snapshot.
+  </Step>
+</Steps>
+
+## What happens next
+
+A proposal passes only if it clears both thresholds — **33% quorum** (enough bonded stake
+participated) and **>50% approval**. If it does, it enters a **timelock** and then executes
+automatically; nothing more is required from you. You can watch its status on the Explorer through to
+execution.
+
+<Tip>
+  Delegators who don't vote are effectively represented by their orchestrator's vote — so if you feel
+  strongly, cast your own. If you'd rather not track proposals, factor an operator's governance stance
+  into [choosing one](/network/guides/delegator-choose-orchestrator).
+</Tip>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Governance & the treasury" icon="landmark" href="/network/explanation/governance">
+    The full picture: who votes, what can change, and how the treasury is funded.
+  </Card>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    Live quorum, thresholds, voting delay/period, and timelock values.
+  </Card>
+</CardGroup>

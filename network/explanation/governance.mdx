@@ -1,0 +1,144 @@
+---
+title: "Governance & the treasury"
+description: "Bonded stake is voting power. How Livepeer governance and the community treasury work — and why staking gives you a say."
+---
+
+Staking LPT does more than earn rewards — it gives you a **vote**. Livepeer is governed on-chain by
+its bonded stakeholders: the same orchestrators and delegators who secure the network also decide how
+it changes. This page explains how that works and how the community treasury is funded and spent.
+
+<Tip>
+  **Voting power comes only from bonded LPT.** Your weight equals your share of total bonded stake.
+  Unbonded tokens earn nothing *and* carry no vote — another reason "doing nothing" isn't neutral.
+</Tip>
+
+## Who votes, and how
+
+Governance authority derives entirely from bonded stake, so both supply-side roles participate:
+
+- **Orchestrators** vote with their self-bonded stake and publicly signal their stance.
+- **Delegators** vote directly with their own bonded stake. If you don't cast a vote, the orchestrator you're bonded to effectively votes on your behalf — which is why an operator's governance positions are part of [choosing one](/network/guides/delegator-choose-orchestrator).
+
+<Note>
+  Voting power is **snapshotted when a proposal is created** (via the `BondingVotes` contract), so
+  moving stake at the last minute can't swing an active vote.
+</Note>
+
+## What governance can — and can't — change
+
+Governance operates at the **protocol layer** (on-chain). It sets the rules; it doesn't run the
+network.
+
+| Governance **can** change | Governance **can't** touch |
+| --- | --- |
+| Inflation parameters (target bonding rate, adjustment rate) | Which orchestrator a gateway selects |
+| Contract implementations (upgrades, where enabled) | GPU scheduling / job execution |
+| Treasury allocations | Gateway pricing strategy |
+| Protocol constants (e.g. active-set size, unbonding period) | Any off-chain operational behavior |
+
+Everything in the right column is the **network layer** — it happens off-chain, inside the rules the
+left column defines.
+
+## How a change happens: two proposal tracks
+
+Governance has **two proposal tracks** — but they're more alike than they first appear. Both run
+through the **same on-chain lifecycle** and the **same vote**; what actually differs is the
+*preparation* and the *effect*. Conflating the two is the most common mistake new proposers make.
+
+|  | Protocol proposal (LIP) | Treasury proposal |
+| --- | --- | --- |
+| **Changes** | The protocol's rules — parameters, contract upgrades | Releases treasury funds to a recipient |
+| **Preparation** | A technical spec + implementation, reviewed in the [LIPs repo](https://github.com/livepeer/LIPs) with a 10-day Last Call | A budget + deliverable, workshopped as a [forum RFP](https://forum.livepeer.org/c/lips/18) |
+| **The vote** | Identical (below) | Identical (below) |
+
+The **shared lifecycle**, conceptually:
+
+1. **Prepare** — an idea is raised on the forum, then worked into either a drafted LIP or a budgeted RFP.
+2. **Submit on-chain** — anyone with **100 LPT** submits it; the stake is returned if it passes.
+3. **Vote** — a stake-weighted, on-chain voting window opens, with bonded LPT as the weight.
+4. **Decide** — it passes only with **≥33% quorum** and **>50% approval**.
+5. **Execute** — on success, the Governor contract applies the change automatically.
+
+Doing either is a task, not a concept — see [Submit a protocol LIP](/network/guides/submit-a-protocol-lip)
+or [Submit a treasury proposal](/network/guides/submit-a-treasury-proposal).
+
+## The on-chain rules
+
+A binding vote must clear two thresholds, both enforced by the contracts:
+
+- **Quorum — 33%** of all bonded LPT must participate, or the vote is invalid. This stops a small group from pushing changes through on low turnout.
+- **Approval — >50%** of participating votes must be in favor.
+
+Clear both and the proposal enters a **timelock** before execution — a delay that gives stakeholders
+time to react to an approved change.
+
+The exact numbers behind this — proposal threshold, quorum, voting delay and period, and the timelock
+— are governance-controlled and can change. See [Protocol parameters](/network/reference/protocol-parameters)
+for the live values and the contracts that hold them.
+
+<Note>
+  Ready to actually cast a vote? That's a task, not a concept — follow the
+  [Vote on a proposal](/network/guides/vote-on-a-proposal) how-to.
+</Note>
+
+## The community treasury
+
+The protocol can route a share of every round's LPT inflation to an on-chain **community treasury** —
+LIP-92 set a **10% treasury reward cut**, taken before orchestrators and delegators split the rest,
+with a **balance ceiling** that pauses contributions once the treasury is full. That ceiling has been
+reached: as of July 2026 the live cut rate reads **0% (paused)**, and governance can resume it — see
+[Protocol parameters](/network/reference/protocol-parameters) for the live value. Either way, the
+treasury itself remains funded and active: a protocol-owned pool for the public goods a pure market
+underprovides.
+
+**What it funds:**
+
+| Category | Examples |
+| --- | --- |
+| Ecosystem development | Apps, integrations, SDKs |
+| Protocol R&D | Security research, audits, economic modeling |
+| Infrastructure support | Operator tooling, monitoring, reliability |
+| Community programs | Education, onboarding, documentation, events |
+| Strategic interventions | Bootstrapping supply or demand where markets lag |
+
+**How it's spent:** a treasury proposal runs the same on-chain path as any other proposal — submit
+with 100 LPT, clear 33% quorum and >50% approval, execute automatically. What's specific to the
+treasury is the **preparation** and the **effect**: instead of a technical spec, it's a **budget and
+a deliverable** workshopped as a [forum RFP](https://forum.livepeer.org/c/lips/18); instead of a rule
+change, a passing vote **releases treasury LPT** to the recipient — no protocol-code change.
+
+The recipient is usually a **Special-Purpose Entity**: a community-chartered, funded working group
+that delivers a defined scope over time, draws its allocation against milestones, and reports back
+publicly. This is how one-time governance approval becomes ongoing execution — core protocol
+maintenance, research, real-time AI development, tooling. Track proposals and balances at
+[explorer.livepeer.org/treasury](https://explorer.livepeer.org/treasury).
+
+<Note>
+  Requesting treasury funding is its own task — see the
+  [Submit a treasury proposal](/network/guides/submit-a-treasury-proposal) how-to.
+</Note>
+
+<Note>
+  The treasury is only as sound as the governance controlling it. Its risks are governance risks —
+  stake concentration, low turnout, or mis-specified proposals — not a separate trust assumption.
+</Note>
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Vote on a proposal" icon="check-to-slot" href="/network/guides/vote-on-a-proposal">
+    Put this into practice — cast a vote with your bonded stake.
+  </Card>
+  <Card title="Economics" icon="coins" href="/network/explanation/economics">
+    Where the treasury cut fits in the reward split.
+  </Card>
+  <Card title="Choose an orchestrator" icon="list-check" href="/network/guides/delegator-choose-orchestrator">
+    An operator's governance stance is part of the decision.
+  </Card>
+  <Card title="Protocol parameters" icon="sliders" href="/network/reference/protocol-parameters">
+    Live governance thresholds and the contracts behind them.
+  </Card>
+  <Card title="Contract addresses" icon="file-contract" href="/network/reference/contracts">
+    Governor, BondingVotes, and Treasury on Arbitrum.
+  </Card>
+</CardGroup>

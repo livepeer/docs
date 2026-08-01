@@ -1,0 +1,141 @@
+---
+title: "Serve real-time AI"
+description: "Configure your orchestrator for the live-video-to-video (Cascade) pipeline: ComfyStream, the live-base runner, and continuous frame processing."
+---
+
+Real-time AI is Livepeer's flagship workload — the **`live-video-to-video`** pipeline (also called
+**Cascade**) that powers live style transfer and generative video apps like Daydream. Unlike
+[batch AI](/network/guides/orchestrator-add-ai), your node doesn't answer discrete requests: it
+continuously transforms a live WebRTC stream, **frame by frame, with a ~33 ms budget per frame at
+30 fps.**
+
+This guide assumes a working orchestrator (see the [tutorial](/network/tutorials/run-your-first-orchestrator))
+and familiarity with [batch AI setup](/network/guides/orchestrator-add-ai) — the flags are the same;
+the runner, models, and hardware bar are not.
+
+## How it differs from batch AI
+
+| | Batch AI | Real-time AI (Cascade) |
+| --- | --- | --- |
+| Input / output | Discrete request → result | Continuous WebRTC stream in → transformed stream out |
+| Latency target | Seconds per request | **< 100 ms per frame** |
+| Runner image | `livepeer/ai-runner` | `livepeer/ai-runner:live-base` |
+| Models | Standard diffusion, Whisper, BLIP | StreamDiffusion, ComfyUI DAGs, ControlNet |
+| Min VRAM | 4–24 GB by pipeline | **24 GB recommended** |
+
+<Warning>
+  GPUs below 24 GB VRAM (RTX 3080 10 GB, RTX 3060 12 GB) are typically insufficient — model weights,
+  ComfyStream overhead, and frame buffers exhaust VRAM. **RTX 4090 strongly recommended**; RTX 3090
+  works with less headroom; A100/H100 for production multi-stream. You'll also want 8+ CPU cores
+  (frame encode/decode is CPU-bound) and a low-latency, low-jitter connection — WebRTC punishes
+  packet loss.
+</Warning>
+
+## The moving parts
+
+Your orchestrator receives a WebRTC stream from a gateway, hands it to the AI runner, and streams
+processed frames back:
+
+```
+Gateway → go-livepeer AI worker → ai-runner:live-base (ComfyStream)
+          → frame loop: receive → inference → emit → processed stream back
+```
+
+**[ComfyStream](https://github.com/livepeer/comfystream)** is the runtime inside the container — it
+wraps ComfyUI's node-based workflows for continuous processing: WebRTC frame ingestion, an async
+frame queue, and warm-model management. **[StreamDiffusion](https://github.com/cumulo-autumn/StreamDiffusion)**
+is the primary model family, purpose-built for live inference (30+ fps on an RTX 4090) via frame
+batching, reduced-step sampling, and skipping near-identical frames.
+
+## Set it up
+
+<Steps>
+  <Step title="Verify GPU access">
+    ```bash
+    nvidia-smi
+    docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
+    ```
+    Both must show your GPU. CUDA 12.0+ and the NVIDIA Container Toolkit are required.
+  </Step>
+  <Step title="Pull the live-base runner">
+    ```bash
+    docker pull livepeer/ai-runner:live-base
+    ```
+    This is a **separate image** from the batch `livepeer/ai-runner` — it bundles ComfyStream and its
+    dependencies.
+  </Step>
+  <Step title="Configure aiModels.json">
+    Add a `live-video-to-video` entry:
+
+    ```json
+    [
+      {
+        "pipeline": "live-video-to-video",
+        "model_id": "streamdiffusion",
+        "price_per_unit": 500,
+        "warm": true
+      }
+    ]
+    ```
+
+    For live pipelines, `model_id` names the **ComfyUI workflow/pipeline**, not a Hugging Face model —
+    the models load inside the ComfyStream container. Your `price_per_unit` must be at or below the
+    gateway's `-maxPricePerCapability` for this pipeline — a hard filter, regardless of your hardware.
+  </Step>
+  <Step title="Download model weights">
+    Weights must exist before the container starts:
+
+    ```bash
+    git clone https://github.com/livepeer/comfystream
+    cd comfystream
+    pip install -r requirements.txt
+    python scripts/download_models.py
+    ```
+
+    Download into the directory your node exposes via `-aiModelsDir`.
+  </Step>
+  <Step title="Start with the AI worker flags">
+    The same three flags as batch AI — `-aiWorker`, `-aiModels`, `-aiModelsDir` — with your live
+    entry in `aiModels.json`. Run with `-v 6` initially to watch frame-loop activity in the logs.
+  </Step>
+  <Step title="Verify registration">
+    Your node should appear under **live-video-to-video** with *Warm* status at
+    [tools.livepeer.cloud/ai/network-capabilities](https://tools.livepeer.cloud/ai/network-capabilities).
+    Test end-to-end with the utilities in the [ComfyStream repo](https://github.com/livepeer/comfystream).
+  </Step>
+</Steps>
+
+## Tuning for the frame budget
+
+Everything about Cascade operation is a fight for milliseconds:
+
+- **Keep models warm.** A cold model load mid-stream is a dropped stream. `"warm": true` is not optional here.
+- **Trade steps for latency.** StreamDiffusion workflows run at inference steps as low as `2`; quality vs latency is tunable in the workflow definition.
+- **Watch VRAM headroom.** Frame buffers ride on top of model weights — a node that fits batch models exactly will OOM on live streams.
+- **Dedicate the GPU.** Sharing a Cascade GPU with transcoding or batch AI undermines the latency that gets you selected.
+
+## Going further
+
+Operators who want custom live pipelines (beyond ComfyUI workflows) can implement the AI runner's
+Python `Pipeline` interface and package it as an image extending `ai-runner:live-base` — see the
+[ai-runner docs](https://github.com/livepeer/ai-runner) and the
+[Pipeline interface](https://github.com/livepeer/ai-runner/blob/main/runner/src/runner/live/pipelines/interface.py).
+Note that custom pipelines currently require small upstream additions (the pipeline registry is a
+static mapping); a dynamic plugin architecture is in progress.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Add AI inference (batch)" icon="microchip" href="/network/guides/orchestrator-add-ai">
+    The batch pipelines — start here if you haven't run AI yet.
+  </Card>
+  <Card title="Hardware & GPU support" icon="server" href="/network/reference/hardware">
+    VRAM requirements across workloads.
+  </Card>
+  <Card title="Monitor your orchestrator" icon="chart-line" href="/network/guides/orchestrator-monitor">
+    Watch the AI runner container and frame latency.
+  </Card>
+  <Card title="Set pricing" icon="tag" href="/network/guides/orchestrator-pricing">
+    Price per capability, and gateway price caps.
+  </Card>
+</CardGroup>
