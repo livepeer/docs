@@ -89,6 +89,18 @@ this chain. Then cross-check the returned address on
 [Blockscout](https://arbitrum.blockscout.com): it should carry a `Livepeer:` label and verified
 source.
 
+### Checking a proxy's current Target implementation
+
+The proxy addresses above are stable and are what you should interact with. Behind each proxy, the
+**Target** (implementation) address changes when governance deploys an upgrade. If you need to see
+the current implementation, the Controller registers it under the contract name with a `Target`
+suffix, e.g. `BondingManagerTarget`:
+
+1. Compute `keccak256("BondingManagerTarget")` with any keccak-256 tool — [an online UI](https://webencrypt.org/onlinetoolsjs/keccak_256.html) or `cast keccak "BondingManagerTarget"`.
+2. Call `getContract` with that hash on the [Controller's Read Contract tab on Arbiscan](https://arbiscan.io/address/0xD8E8328501E9645d16Cf49539efC04f734606ee4#readContract) (or via `cast`, as above).
+
+The returned address is the live implementation behind that proxy.
+
 ## Canonical sources
 
 <CardGroup cols={2}>
