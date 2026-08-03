@@ -19,7 +19,7 @@ keywords:
 pageType: changelog
 purpose: changelog
 audience: builder
-lastVerified: 2026-03-25T00:00:00.000Z
+lastVerified: 2026-08-03T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -45,6 +45,23 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
   ────────────────────────────────────────────── */}
 
 <LazyLoad height="600px">
+
+<Update label="Week of August 3, 2026" tags={["Fixes", "Integrations"]} rss={{ title: "Daydream weekly update — August 3, 2026", description: "Bug fixes for the TouchDesigner plugin and the DEMON audio pipeline. No new Scope release this week." }} description={<Subtitle variant="changelog">August 2026</Subtitle>}>
+  ## Week of August 3, 2026
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  No new [Scope](https://github.com/daydreamlive/scope/releases) release this week. Two integration fixes shipped across the Daydream ecosystem.
+
+  #### Bug Fixes
+
+  - **TouchDesigner plugin – Resolution menu** – The Width and Height dropdowns in the [Daydream TouchDesigner](https://github.com/daydreamlive/daydream-touchdesigner) plugin now match what the Daydream API accepts (384–1024 in steps of 64). Previously, several of the offered values were below the API minimum and produced a validation error when starting a stream. Existing projects saved with the default of 512 continue to work unchanged.
+  - **DEMON audio references** – Fixed [`Semantic ref failed: binary payload not received within 10s`](https://github.com/daydreamlive/DEMON/pull/316) errors when sending timbre, structure, or source-swap references over ordinary uplinks. The upload deadline for these bulk audio payloads now scales to real-world clip sizes (up to a ~60 s stereo reference), so references and swaps no longer fail on sessions that stream fine otherwise. The timeout is tunable via the `DEMON_BINARY_PAYLOAD_TIMEOUT_S` environment variable.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="Browse Daydream on GitHub" href="https://github.com/daydreamlive" iconLeft="github" />
+</Update>
 
 <Update label="Scope: v0.2.1" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.1", description: "This release upgrades the default starter workflow to LTX 2.3, adds new Workflow Builder features including a schedul..." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.1
