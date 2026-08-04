@@ -17,7 +17,7 @@ keywords:
   - orchestrator
 purpose: changelog
 audience: everyone
-lastVerified: 2026-08-03T00:00:00.000Z
+lastVerified: 2026-08-04T00:00:00.000Z
 ---
 
 <Tip>
@@ -25,6 +25,22 @@ lastVerified: 2026-08-03T00:00:00.000Z
 </Tip>
 
 Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<Update label="Week of August 4, 2026 (weekly update)" tags={["Payments", "Live runners"]} description="August 4, 2026">
+  ## Weekly update — August 4, 2026
+
+  Two payments-related changes shipped for live-runner sessions.
+
+  ### New features
+
+  - **Session-scoped payment URL in the runner challenge.** Live-runner payment challenges now advertise a per-session payment endpoint (`POST /apps/{runner_id}/session/{session_id}/payment`) so ongoing single-shot payments are tied to a specific session. Clients get direct feedback on whether a payment applied to a valid session, instead of posting blindly to the orchestrator's generic `/payment` endpoint. The generic endpoint still works for callers that don't need session accounting.
+
+  ### Updates
+
+  - **Remote signer payment requests now include an `app` field.** The optional `app` field on payment requests and payment state lets remote signers scope authorization and accounting to the specific application (for example, `live-video-to-video/scope`) that a session belongs to. The orchestrator rejects payment requests whose `app` does not match the session's recorded app.
+
+  For orchestrators running priced live runners, no configuration change is required — the new payment URL is emitted automatically as part of the `402 Payment Required` challenge. Operators using a [remote signer](/v2/orchestrators) should update signer integrations to forward the new `app` field.
+</Update>
 
 <Update label="Week of August 3, 2026 (weekly update)" tags={["Quiet week"]} description="August 3, 2026">
   ## Weekly update — August 3, 2026
