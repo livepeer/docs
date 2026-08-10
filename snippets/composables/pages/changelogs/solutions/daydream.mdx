@@ -19,7 +19,7 @@ keywords:
 pageType: changelog
 purpose: changelog
 audience: builder
-lastVerified: 2026-03-25T00:00:00.000Z
+lastVerified: 2026-08-10T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -45,6 +45,28 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
   ────────────────────────────────────────────── */}
 
 <LazyLoad height="600px">
+
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update — August 10, 2026", description: "Stable Audio 3 sessions can now load LoRAs, and a running pod can fetch and register new LoRAs mid-session so freshly trained adapters are usable without a restart." }} description={<Subtitle variant="changelog">August 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **LoRA support on Stable Audio 3** — Stable Audio 3 sessions can now enable LoRAs, matching what was already available on ACE-Step. TensorRT refit engines keep LoRA-enabled SA3 runs close to base speed (measured overhead ~15% at a 3-LoRA stack), and hard family checks reject ACE files on SA3 (and vice-versa) with a clear error instead of silently no-op'ing.
+  - **Register LoRAs on a running pod** — A new `add_lora` command lets clients fetch a LoRA into an active session and register it into the live catalog, so an adapter trained while your session is open is immediately enable-able. Downloads run on a worker thread with allow-listed HTTPS hosts, and the catalog reflects the new id once the file lands — no pod restart required.
+
+  #### Bug Fixes
+
+  - **Session-scoped LoRA fetches** — Fetched LoRAs are now isolated per session and wiped on close, so an adapter added in one session no longer leaks into the next session's catalog.
+  - **SA3 loads again after the upstream ONNX rename** — Followed upstream Stable Audio 3's `dit_fp16mixed` → `dit_fp16` ONNX rename so SA3 sessions continue to load without a stale-name mismatch.
+  - **Consistent LoRA registration across Stable Audio 3 and ACE-Step** — `add_lora` now goes through the per-family registration path, so SA3-only checks (lineage, format, refit compatibility) run on SA3 sessions and ACE checks run on ACE sessions instead of a shared path silently skipping one.
+  - **`torchao` pinned to a known-good version** — Restored a working `torchao` version after older releases broke training and a newer release started requiring a PyTorch version DEMON doesn't ship with, which was breaking model load and inference.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
 
 <Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Batch render-anchor queue prewarms every sampler pad in one round trip (~1.4 s for a 12-pad kit), and the LoRA catalog now advertises which entries the loaded model can actually load — including scale-agnostic name lookup so \"Ambient\" resolves to the right variant." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
   ## DEMON: Weekly Update
