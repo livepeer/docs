@@ -19,7 +19,7 @@ keywords:
 pageType: changelog
 purpose: changelog
 audience: builder
-lastVerified: 2026-03-25T00:00:00.000Z
+lastVerified: 2026-08-17T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -45,6 +45,26 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
   ────────────────────────────────────────────── */}
 
 <LazyLoad height="600px">
+
+<Update label="DEMON: Live LoRA Support" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON: Live LoRA Support", description: "SA3 backend gains LoRA support with TensorRT refit, running pods can fetch and register new LoRAs mid-session, and st..." }} description={<Subtitle variant="changelog">August 2026</Subtitle>}>
+  ## DEMON: Live LoRA Support
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **SA3 LoRA Support** – The Stable Audio 3 backend now supports LoRAs with TensorRT refit, so custom styles apply without rebuilding an engine. Try it on the hosted demo at [music.daydream.live](https://music.daydream.live).
+  - **Live LoRA Loading** – A running session can fetch and register a new LoRA on demand, so a style trained while you are playing is usable in the same session without a restart.
+
+  #### Bug Fixes
+
+  - **Per-Session Style Isolation** – Fetched LoRAs are now isolated per session and wiped on session close, so styles you use never leak to the next user of the same pod.
+  - **SA3 LoRA Registration** – Fixed a path that prevented runtime-fetched LoRAs from registering on SA3 sessions.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
 
 <Update label="Scope: v0.2.1" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.1", description: "This release upgrades the default starter workflow to LTX 2.3, adds new Workflow Builder features including a schedul..." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.1
