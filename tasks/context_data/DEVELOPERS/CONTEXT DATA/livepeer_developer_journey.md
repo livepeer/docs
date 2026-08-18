@@ -118,7 +118,7 @@ The journey is non-linear.
 - [Protocol Economics](../../livepeer-protocol/protocol-economics)
 - [Livepeer Explorer](https://explorer.livepeer.org)
 - [Forum](https://forum.livepeer.org)
-- [Discord](https://discord.gg/livepeer)
+- [Discord](https://discord.gg/55SZFEEH5y)
 
 
 📎 End of `developer-journey.mdx`

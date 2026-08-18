@@ -64,7 +64,7 @@ Some of these received hybrid support via Forum grants + Livepeer Inc. co-sponso
 
 - DM `@rfp-admin` in Discord or post in `#rfps`
 - Or email: `grants@livepeer.org`
-- Discuss ideas with others in [#experimental](https://discord.gg/livepeer)
+- Discuss ideas with others in [#experimental](https://discord.gg/55SZFEEH5y)
 
 📎 End of `livepeer-rfps.mdx`
 

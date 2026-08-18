@@ -3734,7 +3734,7 @@ const docsJsonV1 = {
             },
             {
               anchor: 'Community                   ➚',
-              href: 'https://discord.gg/livepeer',
+              href: 'https://discord.gg/55SZFEEH5y',
               icon: {
                 name: 'discord',
                 style: 'brands',
@@ -4215,7 +4215,7 @@ const docsJsonV1 = {
             },
             {
               anchor: 'Community                   ➚',
-              href: 'https://discord.gg/livepeer',
+              href: 'https://discord.gg/55SZFEEH5y',
               icon: {
                 name: 'discord',
                 style: 'brands',
@@ -4709,7 +4709,7 @@ const docsJsonV1 = {
             },
             {
               anchor: 'Community                   ➚',
-              href: 'https://discord.gg/livepeer',
+              href: 'https://discord.gg/55SZFEEH5y',
               icon: {
                 name: 'discord',
                 style: 'brands',
@@ -5195,7 +5195,7 @@ const docsJsonV1 = {
             },
             {
               anchor: 'Community                   ➚',
-              href: 'https://discord.gg/livepeer',
+              href: 'https://discord.gg/55SZFEEH5y',
               icon: {
                 name: 'discord',
                 style: 'brands',

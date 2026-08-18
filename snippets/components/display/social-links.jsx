@@ -17,7 +17,7 @@
  */
 
     {/* <span style={{ display: "flex", justifyContent: "center", gap: "0.5rem", marginTop: "0.5rem" }}>
-    <a href="https://discord.com/invite/livepeer" target="_blank" rel="noopener noreferrer" style={{border: "0px solide white"}}></a>
+    <a href="https://discord.gg/55SZFEEH5y" target="_blank" rel="noopener noreferrer" style={{border: "0px solide white"}}></a>
     <a href="https://github.com/livepeer" target="_blank" rel="noopener noreferrer"></a>
     <a href="https://forum.livepeer.org" target="_blank" rel="noopener noreferrer"><Icon icon="discord" size={20} color="var(--accent)" /></a>
     <a href="https://github.com/livepeer" target="_blank" rel="noopener noreferrer"><Icon icon="github" size={20} color="var(--accent)" /></a>
@@ -65,7 +65,7 @@ export const SocialLinks = ({
         }}
       >
                 <a
-          href="https://discord.com/invite/livepeer"
+          href="https://discord.gg/55SZFEEH5y"
           target="_blank"
           rel="noopener noreferrer"
           style={linkStyle}

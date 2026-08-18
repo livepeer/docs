@@ -3,7 +3,7 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
-      "rawPath": "https://discord.gg/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -239,7 +239,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "https://discord.com/invite/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -356,7 +356,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "https://discord.com/invite/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -457,7 +457,7 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
-      "rawPath": "https://discord.gg/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -538,7 +538,7 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
-      "rawPath": "https://discord.gg/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -583,7 +583,7 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
-      "rawPath": "https://discord.gg/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -974,7 +974,7 @@ export const LINK_MAP = {
     {
       "sourceType": "jsx-attr",
       "linkType": "external-https",
-      "rawPath": "https://discord.com/invite/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",
@@ -1297,7 +1297,7 @@ export const LINK_MAP = {
     {
       "sourceType": "markdown-link",
       "linkType": "external-https",
-      "rawPath": "https://discord.com/invite/livepeer",
+      "rawPath": "https://discord.gg/55SZFEEH5y",
       "resolvedPath": null,
       "exists": null,
       "status": "🟡 untested-external",

@@ -102,7 +102,7 @@ const GatewayOnChainTTestnetNote = () => {
       contribute to the discussion on:
       <span>
         <Icon icon="arrow-up-right"></Icon>{" "}
-        <a href="https://discord.gg/livepeer">Discord</a>
+        <a href="https://discord.gg/55SZFEEH5y">Discord</a>
       </span>
       <span>
         <Icon icon="arrow-up-right"></Icon>{" "}

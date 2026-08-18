@@ -58,7 +58,7 @@ All code contributions should follow the [Livepeer Contribution Guide](../guides
 | Step | Action                             | Resource |
 |------|------------------------------------|----------|
 | 1    | Explore dev stack + SDKs           | [Developer Guide](../developer-guide) |
-| 2    | Join Discord + Community Calls     | [discord.gg/livepeer](https://discord.gg/livepeer) |
+| 2    | Join Discord + Community Calls     | [discord.gg/55SZFEEH5y](https://discord.gg/55SZFEEH5y) |
 | 3    | Open PR or Proposal in Forum       | [forum.livepeer.org](https://forum.livepeer.org) |
 | 4    | Apply for Grants or RFPs           | [Livepeer RFPs](../builder-opportunities/livepeer-rfps) |
 | 5    | Ship and open source your app/tool | GitHub or Community Hub               |

@@ -129,7 +129,7 @@ See: `experimental-features/`
 
 ---
 
-This guide evolves alongside the protocol. Join us in [Discord](https://discord.gg/livepeer), [Forum](https://forum.livepeer.org), or contribute to the [Livepeer Protocol GitHub](https://github.com/livepeer/protocol).
+This guide evolves alongside the protocol. Join us in [Discord](https://discord.gg/55SZFEEH5y), [Forum](https://forum.livepeer.org), or contribute to the [Livepeer Protocol GitHub](https://github.com/livepeer/protocol).
 
 📎 End of `developer-guide.mdx`.
 

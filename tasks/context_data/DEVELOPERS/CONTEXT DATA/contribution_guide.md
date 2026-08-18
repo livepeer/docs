@@ -99,7 +99,7 @@ You may be eligible for:
 - Builder grants
 - AI program referrals
 
-Join [#contributors](https://discord.gg/livepeer) to stay in the loop.
+Join [#contributors](https://discord.gg/55SZFEEH5y) to stay in the loop.
 
 📎 End of `contribution-guide.mdx`
 
