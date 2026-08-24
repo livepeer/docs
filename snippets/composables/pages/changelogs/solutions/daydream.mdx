@@ -19,7 +19,7 @@ keywords:
 pageType: changelog
 purpose: changelog
 audience: builder
-lastVerified: 2026-03-25T00:00:00.000Z
+lastVerified: 2026-08-24T00:00:00.000Z
 ---
 
 import { CustomDivider } from '/snippets/components/elements/spacing/Divider.jsx'
@@ -45,6 +45,25 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
   ────────────────────────────────────────────── */}
 
 <LazyLoad height="600px">
+
+<Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update — August 24, 2026", description: "Stable Audio 3 gets a corrected audio-to-audio sampler schedule and a recalibrated denoise dial that spreads audible change evenly across the control, plus a SAME-L decoder engine versioning fix so stale engines are no longer paired with incompatible plugin code." }} description={<Subtitle variant="changelog">August 2026</Subtitle>}>
+  ## DEMON: Weekly Update
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  #### New Features
+
+  - **Recalibrated SA3 denoise dial** — The Stable Audio 3 denoise knob is now mapped onto measured audio change, so equal dial movement produces roughly equal perceived change instead of most of the travel doing nearly nothing. `0.0` still preserves the source and `1.0` still generates from pure noise. Try it on the hosted demo at [music.daydream.live](https://music.daydream.live).
+
+  #### Bug Fixes
+
+  - **Monotonic SA3 audio-to-audio schedule** — Pinned Stable Audio 3 to the corrected sampler schedule so a higher denoise value now reliably produces more change than a lower one. Previously the ordering could invert on some inputs, making the dial feel unpredictable.
+  - **SAME-L decoder engine versioning** — The Stable Audio 3 decoder engine name and metadata now include the SAME-L plugin revision and implementation choice, so stale decoders are ignored instead of being paired with incompatible plugin code. Existing engines are kept alongside the new artifact for rollback.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View DEMON on GitHub" href="https://github.com/daydreamlive/DEMON" iconLeft="github" />
+</Update>
 
 <Update label="DEMON: Weekly Update" tags={["Features", "Fixes", "DEMON"]} rss={{ title: "Daydream DEMON weekly update", description: "Batch render-anchor queue prewarms every sampler pad in one round trip (~1.4 s for a 12-pad kit), and the LoRA catalog now advertises which entries the loaded model can actually load — including scale-agnostic name lookup so \"Ambient\" resolves to the right variant." }} description={<Subtitle variant="changelog">July 2026</Subtitle>}>
   ## DEMON: Weekly Update
