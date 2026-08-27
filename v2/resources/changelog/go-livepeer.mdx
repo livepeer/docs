@@ -17,7 +17,7 @@ keywords:
   - orchestrator
 purpose: changelog
 audience: everyone
-lastVerified: 2026-08-03T00:00:00.000Z
+lastVerified: 2026-08-27T00:00:00.000Z
 ---
 
 <Tip>
@@ -25,6 +25,23 @@ lastVerified: 2026-08-03T00:00:00.000Z
 </Tip>
 
 Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<Update label="Week of August 24, 2026 (weekly update)" tags={["Release", "Security", "Breaking change"]} description="August 27, 2026">
+  ## Weekly update — August 27, 2026
+
+  go-livepeer v0.9.2 shipped this week with security hardening for the node's local CLI web server. Download binaries from the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+  ### Updates
+
+  - **v0.9.2 released.** This release tightens the defaults for the CLI HTTP interface on port 7935. If you run a gateway, orchestrator, or transcoder node, review the breaking changes below before upgrading.
+
+  ### Breaking changes
+
+  - **Privileged CLI endpoints now require `POST`.** HTTP endpoints on port 7935 that perform privileged actions no longer accept `GET` requests. Update any scripts or tooling that call these endpoints to use `POST`.
+  - **Transaction routes are disabled by default.** Routes on port 7935 that submit Ethereum transactions, sign messages, or change gas controls are now off unless you start the node with the `-enableCliTxRoutes` flag. If you manage staking, deposits, or gas settings through the CLI web interface, add this flag to your node's startup command.
+
+  Read-only endpoints, such as the metrics endpoint used in the [orchestrator monitoring guide](/network/guides/orchestrator-monitor), are unaffected.
+</Update>
 
 <Update label="Week of August 3, 2026 (weekly update)" tags={["Quiet week"]} description="August 3, 2026">
   ## Weekly update — August 3, 2026
