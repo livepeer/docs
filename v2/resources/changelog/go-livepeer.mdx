@@ -17,7 +17,7 @@ keywords:
   - orchestrator
 purpose: changelog
 audience: everyone
-lastVerified: 2026-08-03T00:00:00.000Z
+lastVerified: 2026-08-28T00:00:00.000Z
 ---
 
 <Tip>
@@ -25,6 +25,21 @@ lastVerified: 2026-08-03T00:00:00.000Z
 </Tip>
 
 Changes merged to [go-livepeer](https://github.com/livepeer/go-livepeer) this week. For full release notes and binaries, see the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+
+<Update label="Week of August 28, 2026 (weekly update)" tags={["Quiet week", "Release"]} description="August 28, 2026">
+  ## Weekly update — August 28, 2026
+
+  No new changes merged to go-livepeer between August 27 and August 28.
+
+  ### Heads-up: v0.9.2 released August 26
+
+  The most recent shipped change is the [v0.9.2 release](https://github.com/livepeer/go-livepeer/releases/tag/v0.9.2), tagged on August 26. It includes two breaking changes to the node's CLI HTTP server on port 7935:
+
+  - **Privileged endpoints now require `POST`.** Scripts or tooling that call privileged routes with `GET` must switch to `POST`.
+  - **Transaction routes disabled by default.** Routes that submit Ethereum transactions, sign messages, or change gas controls are off unless you start the node with `-enableCliTxRoutes`.
+
+  If you operate an orchestrator or gateway, review your automation against these changes before upgrading. Port 7935 is the same port used for [node metrics and monitoring](/network/guides/orchestrator-monitor). Binaries are on the [GitHub releases page](https://github.com/livepeer/go-livepeer/releases).
+</Update>
 
 <Update label="Week of August 3, 2026 (weekly update)" tags={["Quiet week"]} description="August 3, 2026">
   ## Weekly update — August 3, 2026
