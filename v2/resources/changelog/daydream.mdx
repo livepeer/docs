@@ -1,0 +1,130 @@
+---
+sidebarTitle: Daydream
+title: Daydream changelog
+description: >-
+  Release history for Daydream, open-source real-time AI video and music tools on Livepeer.
+lifecycleStage: discover
+complexity: intermediate
+pageType: changelog
+keywords:
+  - daydream
+  - livepeer
+  - changelog
+  - releases
+  - scope
+  - demon
+  - real-time AI
+purpose: changelog
+audience: everyone
+lastVerified: 2026-08-31T00:00:00.000Z
+---
+
+<Tip>
+  Track releases for [Daydream](https://github.com/daydreamlive) on GitHub. For Scope builds and full release notes, see the [Scope releases page](https://github.com/daydreamlive/scope/releases).
+</Tip>
+
+<Update label="DEMON: Weekly update" tags={["Features", "Updates", "Fixes", "DEMON"]} description="August 31, 2026">
+  ## DEMON: Weekly update
+
+  Changes merged to [DEMON](https://github.com/daydreamlive/DEMON), Daydream's real-time AI music engine, in August. Try it live at [music.daydream.live](https://music.daydream.live).
+
+  #### New features
+
+  - **Custom styles in live sessions** - You can now bring your own trained style (LoRA) into a running Stable Audio 3 session. The session fetches and applies the style in a few seconds, with fast engine refitting so playback stays real time. ([#313](https://github.com/daydreamlive/DEMON/pull/313), [#315](https://github.com/daydreamlive/DEMON/pull/315), [#327](https://github.com/daydreamlive/DEMON/pull/327))
+  - **Recalibrated denoise dial** - The Stable Audio 3 denoise dial is now mapped to measured audible change, so equal dial movement produces roughly equal change instead of most of the travel doing nearly nothing. `0.0` still preserves the source and `1.0` still generates from pure noise. ([#321](https://github.com/daydreamlive/DEMON/pull/321))
+
+  #### Updates
+
+  - **Versioned decoder engines** - Stable Audio 3 decoder engines are now versioned, so out-of-date engines are no longer silently reused after an upgrade. If a matching engine is missing, sessions fall back to a slower decoder and stay real time. ([#319](https://github.com/daydreamlive/DEMON/pull/319))
+  - **More resilient model setup** - An upstream model file rename no longer breaks setup. When the engines on disk are already current, setup keeps them and logs a warning instead of failing. ([#322](https://github.com/daydreamlive/DEMON/pull/322))
+
+  #### Bug fixes
+
+  - **Predictable audio-to-audio denoise** - A higher denoise value now reliably produces more change than a lower one. Previously the ordering could invert on some inputs, making the dial feel unpredictable. ([#320](https://github.com/daydreamlive/DEMON/pull/320))
+  - **Private styles stay private** - Custom styles fetched during a session are now isolated per session and removed when the session ends. They no longer appear in the catalog of the next user on the same hardware. ([#326](https://github.com/daydreamlive/DEMON/pull/326))
+  - **Session startup and style training restored** - Corrected a dependency version that could prevent sessions from initializing and blocked custom style training. ([#323](https://github.com/daydreamlive/DEMON/pull/323), [#325](https://github.com/daydreamlive/DEMON/pull/325))
+</Update>
+
+<Update label="Scope: v0.2.5" tags={["Features", "Fixes", "Scope"]} description="May 15, 2026">
+  ## Scope: v0.2.5
+
+  This release focuses on LTX-2 improvements and a sweep of bug fixes and stability improvements.
+
+  #### Updates
+
+  - **LTX-2 improvements** - Scope skips CPU offload on high-VRAM GPUs for faster generation, flushes audio and video buffers on pipeline discontinuity to fix desync after hold and resume, and applies your prompt to the first generation instead of the second.
+  - **Portable workflow exports** - Exported workflow JSON now bundles referenced images, audio, and video, so workflows import cleanly on other machines.
+
+  #### Bug fixes
+
+  - **Pipeline errors surfaced in the UI** - Pipeline failures now show as toasts and inline overlays instead of failing silently.
+  - **Local sinks in cloud mode** - Syphon, NDI, and Spout outputs work again while connected to the cloud.
+  - **LoRA validation** - Incompatible LoRAs now fail fast with an error naming the mismatch, and the LoRA picker warns when a configured path is missing.
+
+  [View release on GitHub](https://github.com/daydreamlive/scope/releases/tag/v0.2.5)
+</Update>
+
+<Update label="Scope: v0.2.4" tags={["Features", "Fixes", "Scope"]} description="April 30, 2026">
+  ## Scope: v0.2.4
+
+  This release introduces the node abstraction, LTX-2 improvements, and UX polish.
+
+  #### New features
+
+  - **Custom node plugins** - You can now ship any custom node for Scope as a plugin. Sample plugins include a YouTube input source and a local LLM prompt enhancer.
+
+  #### Updates
+
+  - **LTX-2 improvements** - Real-time pacing controls, roughly 18x faster model loading, faster prompt changes, and Ampere GPU compatibility.
+  - **Graph editor UX** - Edge unattach, a quick-connect drag menu, in-node audio playback, a keyboard cheat sheet, and install hints for unavailable integrations (NDI, Spout, Syphon).
+
+  #### Bug fixes
+
+  - **Recording reliability** - More reliable recording and WebRTC timestamp handling, plus many smaller fixes.
+
+  [View release on GitHub](https://github.com/daydreamlive/scope/releases/tag/v0.2.4)
+</Update>
+
+<Update label="Scope: v0.2.3" tags={["Features", "Fixes", "Scope"]} description="April 21, 2026">
+  ## Scope: v0.2.3
+
+  This release introduces synced audio and video, the move to the Livepeer Network as the default cloud backend, and cloud billing.
+
+  #### New features
+
+  - **Synced audio and video** - Timestamps now travel with every video and audio packet end to end, with drift-aware pacing that keeps output steady over long runs.
+  - **Cloud billing** - Credit-based billing with subscription management.
+
+  #### Updates
+
+  - **Cloud runs on the Livepeer Network** - Cloud mode now runs on the Livepeer Network by default, with audio and multi-track support.
+  - **Graph mode redesign** - A visual refresh of graph mode with a brighter background grid.
+
+  #### Bug fixes
+
+  - Fixes for headless recording, Safari sink stats, Syphon reload, and macOS fullscreen output.
+
+  [View release on GitHub](https://github.com/daydreamlive/scope/releases/tag/v0.2.3)
+</Update>
+
+<Update label="Scope: v0.2.2" tags={["Features", "Fixes", "Scope"]} description="April 9, 2026">
+  ## Scope: v0.2.2
+
+  This release introduces multi source and multi sink graphs, an Audio In node, and bug fixes across graph mode, cloud, and recording.
+
+  #### New features
+
+  - **Multi source / multi sink** - Workflows can now contain multiple source and sink nodes in a single graph. Each source routes to its own input track, each sink shows its own stats, and per-node recording captures each sink independently. Works in local, cloud, and headless modes.
+  - **Audio In node** - A new graph node for audio inputs. Upload WAV, MP3, FLAC, or OGG files to the asset library and route them into pipelines.
+
+  #### Updates
+
+  - **Keyboard shortcuts and fullscreen** - New keyboard shortcuts and a fullscreen button on the Sink node.
+  - **External parameter sync** - OSC, REST, and MCP parameter updates now sync to graph mode.
+
+  #### Bug fixes
+
+  - Fixes around graph mode, cloud relay routing, NDI and Syphon sources, recording timestamps, and parameter sync.
+
+  [View release on GitHub](https://github.com/daydreamlive/scope/releases/tag/v0.2.2)
+</Update>
