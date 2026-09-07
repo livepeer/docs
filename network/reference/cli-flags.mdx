@@ -13,7 +13,8 @@ for how to choose values.
 | --- | --- | --- |
 | `-network` | `arbitrum-one-mainnet` | Network to join (default `offchain` does not participate) |
 | `-ethUrl` | RPC URL | Arbitrum One endpoint for on-chain reads/writes |
-| `-ethAcctAddr` | ETH address | Orchestrator identity; holds stake, receives fees. Omit to create a new account |
+| `-ethAcctAddr` | ETH address | Account the node signs with. Omit to create a new account. With `-ethOrchAddr` this can be a throwaway holding only gas |
+| `-ethOrchAddr` | ETH address | Registered orchestrator this node works and calls reward for. Fees and rewards accrue here. See [Activate on Arbitrum](/network/guides/orchestrator-activate#6-run-the-node-on-a-throwaway-wallet) |
 | `-serviceAddr` | `ip:port` | Public address gateways use to reach the node |
 | `-dataDir` | path | Where keystore and node data are stored (default `~/.lpData`) |
 
@@ -58,6 +59,8 @@ for how to choose values.
 | Flag | Value | Purpose |
 | --- | --- | --- |
 | `-reward` | bool | Call `reward()` automatically each round (default `true`) |
+| `-cliAddr` | `ip:port` | Where the CLI/metrics server listens (default `127.0.0.1:7935`). Never bind it to a public interface |
+| `-enableCliTxRoutes` | bool | Enable transaction, signing, and gas-control routes on the CLI port (default `false`). Turn on only for one-time setup, then remove |
 | `-v` | level | Log verbosity (`6` is useful while setting up) |
 
 <Note>
@@ -70,7 +73,9 @@ for how to choose values.
 
 `livepeer_cli` is an interactive tool that connects to a running node for one-off on-chain actions —
 activating as an orchestrator, staking/bonding LPT, updating price, updating the service URI, and
-viewing node status. It does **not** need to stay running; only the `livepeer` daemon does.
+viewing node status. It does **not** need to stay running; only the `livepeer` daemon does. Read-only
+status works out of the box. Any action that sends a transaction requires the node to run with
+`-enableCliTxRoutes`.
 
 ```bash
 # Against a Docker node:

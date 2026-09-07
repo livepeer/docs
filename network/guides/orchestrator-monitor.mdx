@@ -28,6 +28,11 @@ livepeer \
 The metrics are served at **`http://localhost:7935/metrics`** — the same port as the go-livepeer CLI;
 `-monitor` just activates the `/metrics` path on it.
 
+<Warning>
+  Port 7935 is the node's private CLI port. Keep `-cliAddr` on loopback and scrape it locally or over
+  a private network — never expose it to the internet.
+</Warning>
+
 | Flag | What it does |
 | --- | --- |
 | `-monitor` | Enables `/metrics`. Required for any Prometheus scraping. |
@@ -102,7 +107,7 @@ The metrics you'll actually act on:
 <Warning>
   The single highest-value alert: **a missed `reward()` call.** Miss a round and that round's LPT is
   gone permanently — there's no catch-up. Alert on it, and keep enough ETH on Arbitrum for gas. See
-  [Activate on Arbitrum](/network/guides/orchestrator-activate#6-confirm-reward-calling).
+  [Activate on Arbitrum](/network/guides/orchestrator-activate#8-confirm-reward-calling).
 </Warning>
 
 ## 4. Monitor the AI runner (if you serve AI)
