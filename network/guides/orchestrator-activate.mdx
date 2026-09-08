@@ -82,16 +82,26 @@ In `livepeer_cli`, select **"Invoke multi-step 'become an orchestrator'"** and s
 | Fee Cut | `95` | % of ETH fees you keep (95% → delegators get 5%) |
 | Service address | `YOUR_PUBLIC_IP:8935` | Must match `-serviceAddr` exactly |
 
-Without a keystore on the node, make the same two calls from your wallet: `transcoder` on the
-[`BondingManager`](/network/reference/contracts) and `setServiceURI` on the
-[`ServiceRegistry`](/network/reference/contracts), or on the
-[`AIServiceRegistry`](/network/reference/contracts) if you serve AI.
-
 <Warning>
   **The Explorer displays Fee Cut inverted, as "Fee Share."** Set Fee Cut `95` here and your profile
   will show **Fee Share 5%** — the portion passed to delegators. That's the same setting, not a
   misconfiguration. (Reward Cut displays as-is.)
 </Warning>
+
+Without a keystore on the node, make the same two calls from your wallet with
+[`cast`](https://getfoundry.sh/cast/overview). The contract takes fee share in millionths, so the
+example values above become:
+
+```bash
+# BondingManager: transcoder(rewardCut, feeShare)
+cast send 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
+  "transcoder(uint256,uint256)" 100000 50000 \
+  --rpc-url <ARBITRUM_RPC_URL> --keystore <ORCHESTRATOR_KEYSTORE>
+# ServiceRegistry (use 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 if you serve AI)
+cast send 0xC92d3A360b8f9e083bA64DE15d95Cf8180897431 \
+  "setServiceURI(string)" "https://YOUR_PUBLIC_IP:8935" \
+  --rpc-url <ARBITRUM_RPC_URL> --keystore <ORCHESTRATOR_KEYSTORE>
+```
 
 <Note>
   Your node joins the active set at the **start of the next round** (~22h), and only if your total
@@ -113,8 +123,10 @@ gas, and point it at your orchestrator:
 | `-ethOrchAddr` | your orchestrator address | Fees and rewards accrue here |
 
 <Warning>
-  If you activated from a keystore on this machine, finish step 7, then move it to cold storage and
-  delete it from the node. A compromised machine then yields a near-empty wallet, not your stake.
+  **Treat this host as compromisable.** It exposes port 8935 to the internet. Isolate it (dedicated
+  host or VM), firewall all other ports, keep `go-livepeer` updated, and store nothing on it beyond
+  the throwaway key. If you activated from a keystore here, finish step 7, then move it to cold
+  storage and delete it from the node.
 </Warning>
 
 ## 7. Set up a reward caller
@@ -151,6 +163,15 @@ cast send 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
   "setRewardCaller(address)" <REWARD_CALLER_ADDR> \
   --rpc-url <ARBITRUM_RPC_URL> \
   --keystore <ORCHESTRATOR_KEYSTORE>
+```
+
+Confirm it took effect with a simulated reward call (no key or gas needed). A
+`caller must be a reward caller set by the transcoder` revert means the address is wrong; any other
+result means the caller is set:
+
+```bash
+cast call --from <REWARD_CALLER_ADDR> 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
+  "rewardForTranscoder(address)" <ORCHESTRATOR_ADDR> --rpc-url <ARBITRUM_RPC_URL>
 ```
 
 Set it to `0x0000000000000000000000000000000000000000` to revoke. Arbiscan does not show this method
