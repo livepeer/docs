@@ -103,6 +103,11 @@ cast send 0xC92d3A360b8f9e083bA64DE15d95Cf8180897431 \
   --rpc-url <ARBITRUM_RPC_URL> --keystore <ORCHESTRATOR_KEYSTORE>
 ```
 
+On a hardware wallet, replace `--keystore <ORCHESTRATOR_KEYSTORE>` with `--ledger` or `--trezor`.
+From a Safe, make the same calls in the [Transaction Builder](https://app.safe.global) or
+[Den](https://www.onchainden.com). If the UI cannot load a function, paste the output of
+`cast calldata "transcoder(uint256,uint256)" 100000 50000` as custom hex data instead.
+
 <Note>
   Your node joins the active set at the **start of the next round** (~22h), and only if your total
   stake is in the top 100. The Explorer may show **Registered** until then.
@@ -156,7 +161,7 @@ funds, unbond, change settings, or vote — so the orchestrator wallet stays in 
 
 **Authorize it** from your orchestrator wallet — with [`cast`](https://getfoundry.sh/cast/overview)
 against the [`BondingManager`](/network/reference/contracts), or with **"Set reward caller"** in
-`livepeer_cli` if the keystore is on the node:
+`livepeer_cli` if the keystore is on the node (same hardware wallet and Safe swaps as step 4):
 
 ```bash
 cast send 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
@@ -166,7 +171,7 @@ cast send 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
 ```
 
 Confirm it took effect with a simulated reward call (no key or gas needed). A
-`caller must be a reward caller set by the transcoder` revert means the address is wrong; any other
+`caller must be a reward caller set by the transcoder` revert means the address is wrong. Any other
 result means the caller is set:
 
 ```bash
@@ -175,7 +180,8 @@ cast call --from <REWARD_CALLER_ADDR> 0x35Bcf3c30594191d53231E4FF333E8A770453e40
 ```
 
 Set it to `0x0000000000000000000000000000000000000000` to revoke. Arbiscan does not show this method
-on the proxy page yet, but it is live on-chain.
+on the proxy page yet, but it is live on-chain. From a Safe, paste the output of `cast calldata`
+as custom hex data.
 
 ## 8. Confirm reward calling
 
