@@ -46,6 +46,25 @@ Track releases for <LinkArrow label="Daydream" href="https://github.com/daydream
 
 <LazyLoad height="600px">
 
+<Update label="DEMON: Week of Sep 21, 2026" tags={["Fixes", "DEMON"]} rss={{ title: "Daydream DEMON – Week of Sep 21, 2026", description: "Prompt-handling fixes for DEMON solo instrument generation: variations no longer sneak backing bands into solo requests, invented rhythm and incompatible technique cues are rejected, and a concurrency fix prevents prompt-enhancer loading from disturbing in-flight audio generation." }} description={<Subtitle variant="changelog">September 2026</Subtitle>}>
+  ## DEMON: Week of Sep 21, 2026
+
+  <CustomCardTitle variant="tab" icon="user-robot" title="_AI Summary_" />
+
+  A week of prompt-quality and stability fixes for [DEMON](https://github.com/daydreamlive/DEMON), Daydream's real-time music generation engine. Solo instrument prompts now stay solo through enhancement and variations, and concurrent audio generation is no longer disturbed by prompt-enhancer initialization.
+
+  #### Bug Fixes
+
+  - **Solo prompts stay solo through variations** – Prompt variations no longer add backing accompaniment to solo instrument requests. The selected subject is preserved through final text cleanup, and the input is retained when a candidate is rejected. Radio-frequency filtering descriptions remain valid.
+  - **Invented rhythm clauses rejected in solo rewrites** – Enhancement no longer sneaks ambiguous rhythm, beat, or groove cues into non-percussion solo prompts. Explicit rhythm requests, percussion solos, ensembles, and instrument phrasing such as "syncopated guitar phrasing" remain valid.
+  - **Incompatible technique and genre cues normalized** – Solo drum prompts no longer retain wind-instrument techniques or track-level genre descriptions. Known incompatible clauses are normalized and genre clauses scoped to the solo instrument before enhancement and variation.
+  - **Prompt-enhancer loading no longer disturbs concurrent audio** – Loading the prompt enhancer can no longer corrupt LoRA weights used by in-flight audio generation, eliminating a class of intermittent failures under concurrent load.
+
+  <InlineDivider margin="1rem 0" />
+
+  <DoubleIconLink label="View pull requests on GitHub" href="https://github.com/daydreamlive/DEMON/pulls?q=is%3Apr+is%3Amerged+merged%3A2026-09-14..2026-09-21" iconLeft="github" />
+</Update>
+
 <Update label="Scope: v0.2.1" tags={["Features", "Fixes", "Scope"]} rss={{ title: "Daydream Scope v0.2.1", description: "This release upgrades the default starter workflow to LTX 2.3, adds new Workflow Builder features including a schedul..." }} description={<Subtitle variant="changelog">April 2026</Subtitle>}>
   ## Scope: v0.2.1
 
