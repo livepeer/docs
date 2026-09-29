@@ -14,9 +14,10 @@ fund the wallet, stake LPT, activate on-chain, and confirm reward calling.
 
 ## 1. Point at a reliable Arbitrum RPC
 
-`-ethUrl` connects the node to Arbitrum One. Free tiers from **Alchemy** (300M compute units/mo) or
-**Infura** (100K req/day) work for most operators. Public endpoints like `arb1.arbitrum.io/rpc` are
-for testing only — a dropped connection during round initialization can forfeit that round's reward.
+`-ethUrl` connects the node to Arbitrum One. The community-run [LiveInfra SPE](https://liveinfraspe.com/)
+endpoint is free for verified orchestrators. Free tiers from **Alchemy** (300M compute units/mo) or
+**Infura** (100K req/day) also work for most operators. Public endpoints like `arb1.arbitrum.io/rpc`
+are for testing only — a dropped connection during round initialization can forfeit that round's reward.
 
 Verify the endpoint is actually Arbitrum One:
 
@@ -27,18 +28,21 @@ curl -s -X POST -H "Content-Type: application/json" \
 # Expect "result":"0xa4b1" (42161). "0x1" means you're on Ethereum L1 — switch endpoints.
 ```
 
-## 2. Identify and back up the wallet
+## 2. Choose your orchestrator wallet
 
-On first start, `go-livepeer` creates an account and prints the address in the logs. Record it — this
-address receives ETH fees and holds your staked LPT.
+The orchestrator wallet holds your staked LPT and receives fees. **It never needs to run on the
+node** — you only use it to update orchestrator settings, move funds, and vote. Use a hardware wallet
+or a [Safe](https://safe.global) multisig.
+
+Alternatively, `go-livepeer` creates an account on first start and prints the address in the logs:
 
 ```bash
 docker compose logs 2>&1 | grep -i "account\|address"
 ```
 
 <Warning>
-  The private key lives at `~/.lpData/arbitrum-one-mainnet/keystore`. **Back it up offline now.**
-  Losing the keystore means permanent loss of the account and all bonded LPT.
+  If you use this keystore, its private key lives at `~/.lpData/arbitrum-one-mainnet/keystore`.
+  **Back it up offline now.** Losing it means permanent loss of the account and all bonded LPT.
 </Warning>
 
 ## 3. Fund the wallet with ETH on Arbitrum
@@ -52,14 +56,21 @@ withdrawing from an exchange that supports Arbitrum, or bridging from L1 at
 
 LPT bonded to your address is what puts you in the active set (top orchestrators by total stake).
 Check the current threshold on the [Explorer](https://explorer.livepeer.org/orchestrators) before
-deciding how much to acquire. Then open the CLI and bond:
+deciding how much to acquire. The orchestrator itself only needs a 1 LPT self-bond. **Stake the rest by
+delegating from a hardware wallet** rather than bonding it all from a keystore. Self-bond on the
+[Explorer](https://explorer.livepeer.org), or in the CLI if the keystore is on the node:
 
 ```bash
 docker exec -it livepeer-orchestrator livepeer_cli
 ```
 
-Select the bond/stake option and enter an amount. Two transactions are submitted — `approve`, then
-`bond`. Wait for both to confirm.
+<Warning>
+  Transactions in `livepeer_cli` require the node to be started with `-enableCliTxRoutes`. Add it for
+  these steps only and remove it afterwards. Keep `-cliAddr` on `127.0.0.1:7935` and never expose
+  port 7935 to the internet.
+</Warning>
+
+Either way, two transactions are submitted — `approve`, then `bond`. Wait for both to confirm.
 
 ## 5. Activate on-chain
 
@@ -77,6 +88,26 @@ In `livepeer_cli`, select **"Invoke multi-step 'become an orchestrator'"** and s
   misconfiguration. (Reward Cut displays as-is.)
 </Warning>
 
+Without a keystore on the node, make the same two calls from your wallet with
+[`cast`](https://getfoundry.sh/cast/overview). The contract takes fee share in millionths, so the
+example values above become:
+
+```bash
+# BondingManager: transcoder(rewardCut, feeShare)
+cast send 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
+  "transcoder(uint256,uint256)" 100000 50000 \
+  --rpc-url <ARBITRUM_RPC_URL> --keystore <ORCHESTRATOR_KEYSTORE>
+# ServiceRegistry (use 0x04C0b249740175999E5BF5c9ac1dA92431EF34C5 if you serve AI)
+cast send 0xC92d3A360b8f9e083bA64DE15d95Cf8180897431 \
+  "setServiceURI(string)" "https://YOUR_PUBLIC_IP:8935" \
+  --rpc-url <ARBITRUM_RPC_URL> --keystore <ORCHESTRATOR_KEYSTORE>
+```
+
+On a hardware wallet, replace `--keystore <ORCHESTRATOR_KEYSTORE>` with `--ledger` or `--trezor`.
+From a Safe, make the same calls in the [Transaction Builder](https://app.safe.global) or
+[Den](https://www.onchainden.com). If the UI cannot load a function, paste the output of
+`cast calldata "transcoder(uint256,uint256)" 100000 50000` as custom hex data instead.
+
 <Note>
   Your node joins the active set at the **start of the next round** (~22h), and only if your total
   stake is in the top 100. The Explorer may show **Registered** until then.
@@ -85,16 +116,86 @@ In `livepeer_cli`, select **"Invoke multi-step 'become an orchestrator'"** and s
 See [Economics](/network/explanation/economics) for how these two settings affect both your earnings and your
 appeal to delegators.
 
-## 6. Confirm reward calling
+## 6. Run the node on a throwaway wallet
 
-`go-livepeer` calls `reward()` automatically each round by default. Make sure it isn't disabled:
+The machine doing the work is your exposed surface. **Never run it with the orchestrator key.** Start
+the node with a fresh `-dataDir` so it generates a new account, send that address a little ETH for
+gas, and point it at your orchestrator:
+
+| Flag | Value | Purpose |
+| --- | --- | --- |
+| `-ethAcctAddr` | throwaway address | Signs for the node, redeems tickets, and can be the reward caller (step 7) |
+| `-ethOrchAddr` | your orchestrator address | Fees and rewards accrue here |
+
+<Warning>
+  **Treat this host as compromisable.** It exposes port 8935 to the internet. Isolate it (dedicated
+  host or VM), firewall all other ports, keep `go-livepeer` updated, and store nothing on it beyond
+  the throwaway key. If you activated from a keystore here, finish step 7, then move it to cold
+  storage and delete it from the node.
+</Warning>
+
+## 7. Set up a reward caller
+
+Delegate reward calling to a separate, low-privilege wallet. It can only call `reward()` — not move
+funds, unbond, change settings, or vote — so the orchestrator wallet stays in cold storage
+([LIP-118](https://github.com/livepeer/LIPs/blob/master/LIPs/LIP-118.md)).
+
+**Choose the caller:**
+
+<Tabs>
+  <Tab title="go-livepeer">
+    The throwaway wallet from step 6. The node reads the on-chain mapping and calls reward for
+    `-ethOrchAddr` itself — no extra flags.
+  </Tab>
+  <Tab title="Standalone caller">
+    The wallet of a caller you run yourself on a separate host — either
+    [livepeer-reward-caller](https://github.com/rickstaa/livepeer-reward-caller), a single static
+    binary with its own keystore, or a second `go-livepeer` started with only
+    `-reward -ethOrchAddr <ORCHESTRATOR_ADDR>` and that wallet's keystore. Start the node with
+    `-reward=false`.
+  </Tab>
+  <Tab title="Shared caller">
+    The community [livepeer.bot caller](https://forum.livepeer.org/t/livepeer-bot-put-your-orchestrator-keys-in-cold-storage-a-shared-lip-118-reward-caller-live-on-arbitrum-one/3330),
+    which calls reward for every orchestrator that authorizes its address. Nothing to run. Start the
+    node with `-reward=false`.
+  </Tab>
+</Tabs>
+
+**Authorize it** from your orchestrator wallet — with [`cast`](https://getfoundry.sh/cast/overview)
+against the [`BondingManager`](/network/reference/contracts), or with **"Set reward caller"** in
+`livepeer_cli` if the keystore is on the node (same hardware wallet and Safe swaps as step 4):
+
+```bash
+cast send 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
+  "setRewardCaller(address)" <REWARD_CALLER_ADDR> \
+  --rpc-url <ARBITRUM_RPC_URL> \
+  --keystore <ORCHESTRATOR_KEYSTORE>
+```
+
+Confirm it took effect with a simulated reward call (no key or gas needed). A
+`caller must be a reward caller set by the transcoder` revert means the address is wrong. Any other
+result means the caller is set:
+
+```bash
+cast call --from <REWARD_CALLER_ADDR> 0x35Bcf3c30594191d53231E4FF333E8A770453e40 \
+  "rewardForTranscoder(address)" <ORCHESTRATOR_ADDR> --rpc-url <ARBITRUM_RPC_URL>
+```
+
+Set it to `0x0000000000000000000000000000000000000000` to revoke. Arbiscan does not show this method
+on the proxy page yet, but it is live on-chain. From a Safe, paste the output of `cast calldata`
+as custom hex data.
+
+## 8. Confirm reward calling
+
+After the next round starts (~22h), your orchestrator's page on the
+[Explorer](https://explorer.livepeer.org/orchestrators) shows the reward call. With a standalone or
+shared caller, its wallet on Arbiscan shows it too. With go-livepeer, the node logs do:
 
 ```bash
 docker compose logs 2>&1 | grep -i reward
 ```
 
-The startup command should **not** include `-reward=false`. A missed round forfeits that round's LPT
-permanently — there is no catch-up.
+A missed round forfeits that round's LPT permanently — there is no catch-up.
 
 <Note>
   **Exception for very low stake:** if reward-call gas costs more than the LPT you'd earn, disabling
@@ -102,19 +203,29 @@ permanently — there is no catch-up.
   calls use ~350k–450k gas (cents at typical Arbitrum prices).
 </Note>
 
-## 7. Verify
+<Tip>
+  A caller that quietly stops looks exactly like one that is working. Send
+  `/subscribe <orchestrator address>` to [@OrchestratorWatcherBot](https://t.me/OrchestratorWatcherBot)
+  on Telegram for alerts on missed reward calls, and see
+  [Monitor your orchestrator](/network/guides/orchestrator-monitor).
+</Tip>
+
+## 9. Verify
 
 On [explorer.livepeer.org/orchestrators](https://explorer.livepeer.org/orchestrators), search your
-address and confirm **Status**, **Service URI**, **Stake**, **Reward Cut**, and **Fee Cut**. Then
-confirm external reachability:
+address and confirm **Status**, **Stake**, **Reward Cut**, and **Fee Cut**. The Explorer does not show
+the service URI — read it from the [`ServiceRegistry`](/network/reference/contracts), then confirm
+external reachability:
 
 ```bash
+cast call 0xC92d3A360b8f9e083bA64DE15d95Cf8180897431 \
+  "getServiceURI(address)(string)" <ORCHESTRATOR_ADDR> --rpc-url <ARBITRUM_RPC_URL>
 curl -k https://YOUR_PUBLIC_IP:8935/status
 ```
 
-If the Service URI is wrong or unreachable, update it in `livepeer_cli` (this costs gas). A bad or
-unreachable service address is the most common reason an active node still receives no jobs — see the
-[FAQ](/network/reference/faq).
+If the service URI is wrong or unreachable, update it in `livepeer_cli` or via `setServiceURI` on the
+contract (this costs gas). A bad or unreachable service address is the most common reason an active
+node still receives no jobs — see the [FAQ](/network/reference/faq).
 
 ## Next
 

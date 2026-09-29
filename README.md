@@ -60,7 +60,7 @@ live in [`docs.json`](./docs.json).
 ## Source & accuracy
 
 Content is rebuilt from first principles based on the Livepeer v2 docs at
-<https://docs.livepeer.org>. Network values (inflation, unbonding period, active-set size,
+[docs.livepeer.org](https://docs.livepeer.org). Network values (inflation, unbonding period, active-set size,
 contract addresses) are governance-controlled and change over time — the Reference pages carry a
 "last verified" date from on-chain reads, and you can always re-verify against the
 [Livepeer Explorer](https://explorer.livepeer.org) and on-chain state. Run `npm run check` to
