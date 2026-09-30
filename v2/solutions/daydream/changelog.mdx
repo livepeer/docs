@@ -1,0 +1,46 @@
+---
+sidebarTitle: Changelog
+title: Daydream Changelog
+description: >-
+  Release history for Daydream – open-source real-time AI video and music tools on Livepeer. Weekly summary of
+  product changes and Scope releases.
+lifecycleStage: operate
+complexity: intermediate
+pageType: changelog
+keywords:
+  - daydream
+  - livepeer
+  - changelog
+  - releases
+  - scope
+  - demon
+  - real-time AI
+purpose: changelog
+audience: builder
+lastVerified: 2026-09-07T00:00:00.000Z
+---
+
+<Tip>
+  Weekly digest of Daydream product changes. For tagged Scope builds, see the [Scope releases page](https://github.com/daydreamlive/scope/releases).
+</Tip>
+
+Track releases for [Daydream](https://github.com/daydreamlive) on GitHub.
+
+<Update label="Week of September 7, 2026 (weekly update)" tags={["Features", "Fixes", "DEMON"]} description="September 7, 2026">
+  ## Weekly update — September 7, 2026
+
+  This week's changes shipped in [DEMON](https://github.com/daydreamlive/DEMON), Daydream's real-time AI music generation engine. There were no new [Scope releases](https://github.com/daydreamlive/scope/releases) this week; the latest release remains [v0.2.5](https://github.com/daydreamlive/scope/releases/tag/v0.2.5).
+
+  ### New features
+
+  * **Text-only generation** – Sessions can now generate music from a prompt alone, with no source audio upload. Starting a prompt-only session is faster because the client no longer uploads a silent placeholder clip. ([#342](https://github.com/daydreamlive/DEMON/pull/342))
+  * **In-session loop resize on source swap** – Swapping in a clip with a different length now resizes the session in place. Previously the client reconnected, which played several seconds of silence. ([#338](https://github.com/daydreamlive/DEMON/pull/338))
+  * **Local prompt enhancer and prompt variations** – An optional in-process prompt enhancer runs at roughly a tenth of the hosted latency and needs no API key. A new variations endpoint suggests deterministic nearby prompts, so you can explore around a prompt and return to it losslessly. Both are opt-in and off by default. ([#333](https://github.com/daydreamlive/DEMON/pull/333))
+  * **Sound-aware prompt enhancement** – The prompt enhancer now tells a sound apart from a piece of music. Prompts that name a real-world source, place, or event, such as "thunderstorm", are described as recordings instead of being turned into orchestral arrangements. ([#334](https://github.com/daydreamlive/DEMON/pull/334))
+
+  ### Bug fixes
+
+  * **Loops no longer fade to silence at the end** – Two fixes remove the silent tail at the end of generated loops: the playable loop no longer includes the model's padded outro headroom ([#336](https://github.com/daydreamlive/DEMON/pull/336)), and each loop is now conditioned as a slice of a longer song so the model stops composing a fade-out ending ([#341](https://github.com/daydreamlive/DEMON/pull/341)).
+  * **Clean audio after a source swap** – Swapping the source no longer plays a second or more of the previous source's audio over the new one. ([#335](https://github.com/daydreamlive/DEMON/pull/335))
+  * **Prompt variations now vary** – The variations sampler no longer returns the original prompt verbatim. Every distance now returns a distinct, real-word suggestion. ([#339](https://github.com/daydreamlive/DEMON/pull/339))
+</Update>
