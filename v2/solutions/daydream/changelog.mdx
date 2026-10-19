@@ -1,0 +1,119 @@
+---
+sidebarTitle: Changelog
+title: Daydream changelog
+description: >-
+  Release history for Daydream, open-source real-time AI video and music tools on Livepeer. Weekly summary of
+  product changes and Scope releases.
+lifecycleStage: operate
+complexity: intermediate
+pageType: changelog
+keywords:
+  - daydream
+  - livepeer
+  - changelog
+  - releases
+  - scope
+  - demon
+  - real-time AI
+purpose: changelog
+audience: builder
+lastVerified: 2026-10-19T00:00:00.000Z
+---
+
+<Tip>
+  Weekly digest of Daydream product changes. For tagged Scope builds, see the [Scope releases page](https://github.com/daydreamlive/scope/releases).
+</Tip>
+
+Track releases for [Daydream](https://github.com/daydreamlive) on GitHub.
+
+<Update label="Week of October 19, 2026 (weekly update)" tags={["Features", "Improvements", "DEMON"]} description="October 19, 2026">
+  ## Weekly update: October 19, 2026
+
+  Live note transcription and tool proxy upgrades shipped in [DEMON](https://github.com/daydreamlive/DEMON). There were no new [Scope releases](https://github.com/daydreamlive/scope/releases) this week. The latest release remains [v0.2.5](https://github.com/daydreamlive/scope/releases/tag/v0.2.5).
+
+  ### New features
+
+  * **Live notes and piano roll** – Clients can turn on a live notes tap to see the MIDI notes in the audio while it plays. A new `/notes` demo draws a live piano roll from your microphone, an uploaded clip, or a Stable Audio 3 generator. Pick a small, medium, or large model, filter by instrument, and save the result as a `.mid` file. Check `ready.capabilities.analysis_taps` to see if a server supports it. ([#387](https://github.com/daydreamlive/DEMON/pull/387))
+  * **Audio input mode** – Start the server with `--checkpoint live-input` to transcribe your own audio without loading a generation model. Stream microphone audio to the server, or upload a clip that loops. ([#387](https://github.com/daydreamlive/DEMON/pull/387))
+
+  ### Improvements
+
+  * **Browsers can call tools directly** – The tool proxy now sends CORS headers, so web apps can send large uploads straight to a server's tools. Requests still need a live session ID. ([#385](https://github.com/daydreamlive/DEMON/pull/385))
+  * **More tool proxy options** – The tool proxy now forwards `PUT` and `DELETE` requests. Operators can limit a tool to one path prefix, and paths that try to leave it are rejected with a 400 error. Operators can also reset a tool when the last session ends, so one user's uploads never carry over to the next session. Existing configurations work unchanged. ([#389](https://github.com/daydreamlive/DEMON/pull/389))
+</Update>
+
+<Update label="Week of October 12, 2026 (weekly update)" tags={["Features", "Improvements", "Fixes", "DEMON"]} description="October 12, 2026">
+  ## Weekly update: October 12, 2026
+
+  New model families, a sound-effects mode, and faster Stable Audio 3 sessions shipped in [DEMON](https://github.com/daydreamlive/DEMON). There were no new [Scope releases](https://github.com/daydreamlive/scope/releases) this week. The latest release remains [v0.2.5](https://github.com/daydreamlive/scope/releases/tag/v0.2.5).
+
+  ### New features
+
+  * **YuE2 model family** – Start the server with `--checkpoint yue2-3b` to compose full songs (2–100 s) from a style prompt and lyrics. Change the style mid-session and DEMON re-composes the song while the current one keeps playing. A demo page is available at `/yue2`. YuE2 weights are licensed for non-commercial use only. ([#366](https://github.com/daydreamlive/DEMON/pull/366))
+  * **Magenta RealTime 2 model family** – Use `--checkpoint mrt2-sidecar` to stream endless music from Magenta RealTime 2 with low knob-to-ear latency. The model runs in a separate Linux or WSL process. A demo page is available at `/mrt2`. ([#368](https://github.com/daydreamlive/DEMON/pull/368))
+  * **MiniMax-Music3 model family** – Use `--checkpoint minimax-music3` to generate text-to-music pieces with optional lyrics, live re-prompting, and an endless mode. Set a seed to replay a piece. It needs a GPU with more than 20 GB free. A demo page is available at `/minimax`. ([#369](https://github.com/daydreamlive/DEMON/pull/369))
+  * **Stable Audio 3 small music and sound effects** – The `sa3-small` and new `sa3-sfx` models are now fully supported. A new `/sfx` demo lets you layer up to four sound effects or ambience loops, blend prompts, and save the result as WAV. Each server now runs up to four small-model sessions at once. ([#372](https://github.com/daydreamlive/DEMON/pull/372))
+  * **Bounce the current audio** – Clients can send a `bounce` command to receive the full playable window as one audio frame that reflects every earlier change. Check `ready.capabilities.bounce` to see if the model supports it. Supported on Stable Audio 3 and ACE-Step. ([#375](https://github.com/daydreamlive/DEMON/pull/375))
+  * **Tool proxy** – Operators can expose local side services through the main server port at `/tools/<name>/`. Requests need a live session ID, and healthy tools are listed in the `ready` message. The proxy is off unless you configure it. ([#380](https://github.com/daydreamlive/DEMON/pull/380))
+
+  ### Improvements
+
+  * **Faster first session** – Stable Audio 3 servers can load the model and engines at boot, so your first session starts in seconds instead of 10–30 s. ([#362](https://github.com/daydreamlive/DEMON/pull/362))
+  * **Faster Stable Audio 3 generation** – TensorRT engines are picked automatically at boot, and each generation step is about 19% faster. Audio output is unchanged. ([#372](https://github.com/daydreamlive/DEMON/pull/372), [#379](https://github.com/daydreamlive/DEMON/pull/379))
+
+  ### Bug fixes
+
+  * **No more slowdown in long Stable Audio 3 sessions** – Fixed a memory leak that made decoding slower and used more GPU and system memory over time. Decode time now stays flat for the length of a session. ([#383](https://github.com/daydreamlive/DEMON/pull/383))
+  * **Short sessions no longer stop early** – Stable Audio 3 small sessions no longer end after about 54 s, and short sound-effect loops no longer stop at the first loop. ([#372](https://github.com/daydreamlive/DEMON/pull/372))
+</Update>
+
+<Update label="Week of October 5, 2026 (weekly update)" tags={["Fixes", "DEMON"]} description="October 5, 2026">
+  ## Weekly update: October 5, 2026
+
+  A connection fix shipped in [DEMON](https://github.com/daydreamlive/DEMON). There were no new [Scope releases](https://github.com/daydreamlive/scope/releases) this week. The latest release remains [v0.2.5](https://github.com/daydreamlive/scope/releases/tag/v0.2.5).
+
+  ### Bug fixes
+
+  * **Stable sessions in Safari and on iOS** – The real-time server no longer compresses WebSocket messages. Safari and iOS clients no longer drop the connection (close code 1006) when large audio messages arrive. You do not need to change your client. ([#364](https://github.com/daydreamlive/DEMON/pull/364))
+</Update>
+
+<Update label="Week of September 28, 2026 (weekly update)" tags={["Features", "DEMON"]} description="September 28, 2026">
+  ## Weekly update: September 28, 2026
+
+  This week's changes shipped in [DEMON](https://github.com/daydreamlive/DEMON), Daydream's real-time AI music generation engine. There were no new [Scope releases](https://github.com/daydreamlive/scope/releases) this week. The latest release remains [v0.2.5](https://github.com/daydreamlive/scope/releases/tag/v0.2.5).
+
+  ### New features
+
+  * **Audio-to-MIDI export** – DEMON can now transcribe a generated clip to MIDI notes on demand. Plugins use this to let you drag MIDI out of the clip you are hearing, including frozen results. Transcription runs once per request, so live sessions carry no extra GPU cost. Pods without the transcription model report the feature as unavailable. ([#348](https://github.com/daydreamlive/DEMON/pull/348))
+  * **Model extension plugins** – Operators can now install model extensions for the Stable Audio 3 family as separately shipped plugins. Extension controls appear alongside the built-in controls and are validated the same way. Operators choose extensions at startup, and clients cannot load one. With no extension selected, output is unchanged. See the [plugin guide](https://github.com/daydreamlive/DEMON/blob/main/docs/PLUGINS.md). ([#331](https://github.com/daydreamlive/DEMON/pull/331))
+</Update>
+
+<Update label="Week of September 21, 2026 (weekly update)" tags={["Fixes", "DEMON"]} description="September 21, 2026">
+  ## Weekly update: September 21, 2026
+
+  Prompt and stability fixes shipped in [DEMON](https://github.com/daydreamlive/DEMON).
+
+  ### Bug fixes
+
+  * **Cleaner solo instrument prompts** – Prompt enhancement and variations no longer keep mismatched cues on solo prompts. For example, wind-instrument techniques are removed from a solo drum prompt. Saved prompts are repaired the next time they pass through enhancement or variations. ([#353](https://github.com/daydreamlive/DEMON/pull/353))
+  * **No invented rhythm on solo prompts** – Enhancement and variations no longer add backing rhythm, beat, or groove phrases to non-percussion solo prompts. Rhythm you ask for explicitly is kept. ([#352](https://github.com/daydreamlive/DEMON/pull/352))
+  * **Variations keep your audio seed** – Prompt variations no longer change the random seed used for audio generation, and invalid variation results fall back to your original prompt. ([#351](https://github.com/daydreamlive/DEMON/pull/351))
+  * **LoRA sessions stay stable** – Loading the prompt enhancer at the same time as a LoRA no longer corrupts the LoRA weights and breaks the session. ([#350](https://github.com/daydreamlive/DEMON/pull/350))
+</Update>
+
+<Update label="Scope v0.2.5" tags={["Release", "Scope"]} description="May 15, 2026">
+  ## Scope v0.2.5
+
+  [Scope v0.2.5](https://github.com/daydreamlive/scope/releases/tag/v0.2.5) focuses on LTX-2 improvements and stability.
+
+  ### Updates
+
+  * **LTX-2 improvements** – High-VRAM GPUs skip CPU offload, audio and video stay in sync after hold and resume, and your first prompt applies to the first generation.
+  * **Portable workflows** – Exported workflows now bundle referenced images, audio, and video, so imports work on another machine.
+
+  ### Bug fixes
+
+  * **Visible pipeline errors** – Pipeline failures now show as toasts and inline overlays.
+  * **LoRA checks** – Incompatible LoRAs fail fast with an error naming the mismatched layer.
+  * **Local outputs in cloud mode** – Syphon, NDI, and Spout outputs work again when connected to cloud.
+</Update>
