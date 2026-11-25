@@ -9,7 +9,8 @@ updates them on-chain.
 <Note>
   **Last verified: 1 July 2026**, read directly from the contracts on Arbitrum One
   (`eth_call` via `arb1.arbitrum.io/rpc`, round `4253`). Anything can have changed since — the
-  getters below let you re-check in seconds.
+  getters below let you re-check in seconds. The treasury reward cut row was updated on
+  25 November 2026 (round `4417`) to reflect LIP-123; the other values are as of 1 July.
 </Note>
 
 ## Staking & rewards
@@ -18,19 +19,25 @@ updates them on-chain.
 | --- | --- | --- | --- |
 | Unbonding period | `7` rounds | `BondingManager.unbondingPeriod()` | Full exit is delayed this long after you unbond |
 | Active set size | `100` orchestrators | `BondingManager.getTranscoderPoolMaxSize()` | Only the top 100 by stake earn rewards and receive jobs |
-| Treasury reward cut | `0%` — **paused** (see below) | `BondingManager.treasuryRewardCutRate()` | When active, reduces the issuance shared by orchestrators + delegators |
+| Treasury reward cut | `10%` — active since round `4377` (LIP-123; see below) | `BondingManager.treasuryRewardCutRate()` | Reduces the issuance shared by orchestrators + delegators |
 | Treasury balance ceiling | `750,000 LPT` | `BondingManager.treasuryBalanceCeiling()` | Contributions pause when the treasury reaches this balance |
 | Target bonding rate | `50%` | `Minter.targetBondingRate()` | Inflation adjusts around this target |
 | Inflation adjustment step | `500` (per round, parts-per-billion) | `Minter.inflationChange()` | How fast inflation moves toward the target |
 | Current inflation | `560,500` parts-per-billion per round (~0.056%/round) | `Minter.inflation()` | Changes every round — always read live |
 | Round length | `6,377` L1 blocks (~21.3 hours) | `RoundsManager.roundLength()` | The protocol's clock; "a round ≈ a day" is shorthand |
 
-<Warning>
-  **The treasury cut is currently paused.** LIP-92 set a 10% treasury reward cut with a balance
-  ceiling; the ceiling has been reached, so both `treasuryRewardCutRate()` and
-  `nextRoundTreasuryRewardCutRate()` currently read `0`. Older docs (including Livepeer's own) still
-  say "10%" — treat that as the *design*, not the live state. Governance can resume contributions.
-</Warning>
+<Note>
+  **How the treasury cut pauses and resumes.** LIP-92 set a 10% treasury reward cut with a balance
+  ceiling. When a reward call finds the treasury balance at or above the ceiling, it sets
+  `nextRoundTreasuryRewardCutRate()` to `0`, and the live `treasuryRewardCutRate()` becomes `0%` at
+  the next round initialization. This has happened twice: rounds `3740` → `3741` (31 March → 1 April
+  2025) and `4238` → `4239` (18 → 19 June 2026). Contributions do **not** resume on their own when
+  the balance falls back below the ceiling — governance has to set the rate again. LIP-123 did so: it
+  was [executed on 19 October 2026](https://arbiscan.io/tx/0xaf15f76a4cb755aa6190cce6a88e391ff36442214fa543b0f5c644dfc3c863b7)
+  and the 10% cut took effect when round `4377` was initialized on 20 October 2026. Check
+  `treasuryRewardCutRate()` for the live state, and compare `Treasury`'s LPT balance with
+  `treasuryBalanceCeiling()` to see how close the next pause is.
+</Note>
 
 ## Governance thresholds
 
